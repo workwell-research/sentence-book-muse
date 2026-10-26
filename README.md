@@ -8,7 +8,8 @@ This repository includes a **working handwriting and PDF prototype** at /. AI ge
 
 - Cream ruled notebook with SVG stroke animation, following pen, marker and annotation.
 - Pause/resume, fast-forward, completion and reduced motion.
-- Personal English line (session-only), vector A5/A4 PDF and binding margins.
+- Personal English line (session-only), six notebook ink sets and optional printed markers.
+- A5 portrait finished notes with binding margins; choose an A5 printer sheet or unscaled two-up on landscape A4.
 - [Handwriting architecture, research and font provenance](docs/handwriting-prototype.md).
 - Earlier interest/topic-note flow preserved at /setup.
 
@@ -50,7 +51,7 @@ The last command serves `dist` and the Functions on `http://127.0.0.1:8797`. `np
 
 ## Prototype verification
 
-Run npm test and npm run build. With npm run preview running, QA_BASE_URL=http://127.0.0.1:5308 node scripts/qa-handwriting.mjs exercises the notebook and downloads output/pdf/handwriting-note.pdf using disposable Chrome contexts. For the interest flow, use npm run pages:dev and node scripts/qa-scaffold.mjs. No real learning data is used.
+Run npm test and npm run build. With npm run preview running, QA_BASE_URL=http://127.0.0.1:5308 node scripts/qa-handwriting.mjs exercises the notebook and downloads output/pdf/handwriting-note.pdf using disposable Chrome contexts. QA_BASE_URL=http://127.0.0.1:5308 npm run qa:print checks the six palettes and downloads A5 marked / A4 two-up unmarked samples. For the interest flow, use npm run pages:dev and node scripts/qa-scaffold.mjs. No real learning data is used.
 
 ## Next implementation steps
 

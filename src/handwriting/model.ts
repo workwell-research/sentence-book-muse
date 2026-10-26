@@ -1,3 +1,5 @@
+import { palettes } from './palettes';
+import type { InkPalette } from './palettes';
 import { fontData } from './font-data';
 import { svgPathProperties } from 'svg-path-properties';
 
@@ -43,7 +45,8 @@ export function layoutText(text: string, x: number, y: number, width: number, si
   return glyphs;
 }
 
-export function createNote(content: NoteContent, width: number, options: {left?:number;right?:number} = {}): NoteLayout {
+export function createNote(content: NoteContent, width: number, options: {left?:number;right?:number;palette?:InkPalette} = {}): NoteLayout {
+  const ink = options.palette ?? palettes.green;
   const left = options.left ?? (width < 450 ? 30 : 64);
   const right = options.right ?? (width < 450 ? 26 : 46);
   const inner = width - left - right;
@@ -76,9 +79,9 @@ export function createNote(content: NoteContent, width: number, options: {left?:
       prev = glyph;
     }
   }
-  addGlyphs(title,'writing','#485747');
+  addGlyphs(title,'writing',ink.title);
   clock += 300;
-  addGlyphs(body,'writing','#3d443d');
+  addGlyphs(body,'writing',ink.body);
   clock += 420;
   const start = content.body.indexOf(content.phrase);
   if (start >= 0) {
@@ -88,12 +91,12 @@ export function createNote(content: NoteContent, width: number, options: {left?:
       const row = selected.filter(g=>g.y===y && g.char!==' ');
       if(!row.length) continue;
       const x1 = row[0].x-2, x2 = row.at(-1)!.x+row.at(-1)!.advance;
-      strokes.push({d:'M '+x1+' '+(y-6)+' L '+x2+' '+(y-7),length:x2-x1,x:0,y:0,scale:1,start:clock,duration:600,phase:'marking',width:small?14:17,color:'#d8c66b'});
+      strokes.push({d:'M '+x1+' '+(y-6)+' L '+x2+' '+(y-7),length:x2-x1,x:0,y:0,scale:1,start:clock,duration:600,phase:'marking',width:small?14:17,color:ink.marker});
       clock += 760;
     }
   }
   clock += 270;
-  addGlyphs(annotation,'annotating','#526a57');
+  addGlyphs(annotation,'annotating',ink.annotation);
   return {width,height,strokes,duration:clock+250,body,personal,personalTop,ruleStart:bodyTop+8,left,right,lineHeight,content};
 }
 

@@ -1,0 +1,31 @@
+{
+  "results": [
+    "Desktop 1440: all six ink sets, unchanged paused stroke progress, arrow-key radio selection, personal ink, A5/left/18mm defaults, print-only marker toggle, A5/A4 downloads, storage untouched, no overflow.",
+    "Mobile 390 + 320: all color targets >=44px, full content, reduced motion, A4/marker settings, no horizontal overflow."
+  ],
+  "errors": [],
+  "pdf": {
+    "a5": {
+      "widthMm": 148,
+      "heightMm": 210,
+      "pages": 1,
+      "imageObjects": 0,
+      "markers": true
+    },
+    "a4": {
+      "widthMm": 297,
+      "heightMm": 210,
+      "pages": 1,
+      "imageObjects": 0,
+      "markers": false,
+      "notePlacementsMm": [
+        0,
+        149
+      ],
+      "noteScale": 1
+    },
+    "viewerPrintScaling": "None",
+    "physicalPrint": "not performed",
+    "inspection": "Actual browser downloads parsed with pypdf/pdfplumber and Poppler renders visually inspected; full English, annotation, personal text, margins, rules and footer visible."
+  }
+}

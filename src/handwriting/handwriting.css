@@ -69,3 +69,30 @@ button:disabled,select:disabled{cursor:default}
  .ink-button{font-size:13px}.personal-section textarea{font-size:16px}.input-meta{font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){.ink-button{transition:none}}
+
+/* Color changes affect notebook ink; operation controls retain their quiet sage. */
+.ink-palettes{border:0;padding:0;margin:0 0 20px;min-width:0}
+.ink-palettes legend{font-size:11px;color:var(--muted);padding:0;margin-bottom:6px}
+.palette-options{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
+.palette-option{min-height:44px;display:flex;align-items:center;justify-content:center;gap:5px;font-size:11px;color:var(--palette-ink);cursor:pointer;border-bottom:2px solid transparent}
+.palette-option:has(input:checked){border-bottom-color:var(--palette-ink);background:#fffdf566}
+.palette-option:hover{background:#fffdf5}
+.palette-option input{margin:0;width:13px;height:13px;accent-color:var(--palette-ink)}
+.palette-swatch{width:12px;height:18px;background:var(--palette-marker);border-top:2px solid var(--palette-ink);flex:none}
+.note-format{margin:12px 0 20px;font-size:12px;line-height:1.8}
+.note-format strong{font:24px "Lora",Georgia,serif;margin-left:12px}
+.note-format span{display:block;color:var(--muted);font-size:11px;margin-top:4px;font-variant-numeric:tabular-nums}
+.sheet-label{display:block;font-size:11px;color:var(--muted)}
+#print-sheet{width:100%}
+.print-plan{display:flex;align-items:center;gap:14px;margin:14px 0 16px}
+.print-plan svg{width:90px;height:66px;flex:none}
+.print-plan rect{fill:#fffdf5;stroke:#a0a696;stroke-width:.65}
+.print-plan .cut-guide{stroke:#62695c;stroke-width:.4;stroke-dasharray:1 1;fill:none}
+.print-plan text{font:9px "Lora",Georgia,serif;fill:#46533e;text-anchor:middle}
+.print-plan p{font-size:11px;line-height:1.8;color:var(--muted);margin:0}
+.marker-choice{min-height:44px;display:flex;align-items:center;gap:9px;font-size:12px;cursor:pointer}
+.marker-choice input{width:17px;height:17px;margin:0;accent-color:var(--sage)}
+.marker-choice+.field-help{margin:0 0 18px}
+.print-instructions{font-size:11px;line-height:1.9;color:var(--muted);margin:0 0 16px}
+.print-instructions strong{font-weight:600;color:var(--ink)}
+@media(max-width:1100px){.palette-options{grid-template-columns:repeat(3,minmax(0,1fr))}}

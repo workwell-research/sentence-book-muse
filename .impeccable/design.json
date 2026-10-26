@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-26T22:10:14.084000Z",
+  "generatedAt": "2026-10-26T22:48:41.531854Z",
   "title": "Design System: The Sentence Book",
   "extensions": {
     "colorMeta": {
@@ -258,16 +258,16 @@
       },
       "marker": {
         "role": "secondary",
-        "displayName": "Straw marker",
+        "displayName": "Pale green marker",
         "tonalRamp": [
-          "oklch(15% 0.11397 98.38)",
-          "oklch(27% 0.11397 98.38)",
-          "oklch(38% 0.11397 98.38)",
-          "oklch(50% 0.11397 98.38)",
-          "oklch(61% 0.11397 98.38)",
-          "oklch(73% 0.11397 98.38)",
-          "oklch(84% 0.11397 98.38)",
-          "oklch(95% 0.11397 98.38)"
+          "oklch(15% 0.04921 128.00)",
+          "oklch(27% 0.04921 128.00)",
+          "oklch(38% 0.04921 128.00)",
+          "oklch(50% 0.04921 128.00)",
+          "oklch(61% 0.04921 128.00)",
+          "oklch(73% 0.04921 128.00)",
+          "oklch(84% 0.04921 128.00)",
+          "oklch(95% 0.04921 128.00)"
         ]
       },
       "focus": {
@@ -296,6 +296,356 @@
           "oklch(73% 0.09959 27.92)",
           "oklch(84% 0.09959 27.92)",
           "oklch(95% 0.09959 27.92)"
+        ]
+      },
+      "pink-title": {
+        "role": "secondary",
+        "displayName": "Pink title",
+        "tonalRamp": [
+          "oklch(15% 0.07911 354.70)",
+          "oklch(27% 0.07911 354.70)",
+          "oklch(38% 0.07911 354.70)",
+          "oklch(50% 0.07911 354.70)",
+          "oklch(61% 0.07911 354.70)",
+          "oklch(73% 0.07911 354.70)",
+          "oklch(84% 0.07911 354.70)",
+          "oklch(95% 0.07911 354.70)"
+        ]
+      },
+      "pink-body": {
+        "role": "secondary",
+        "displayName": "Pink body",
+        "tonalRamp": [
+          "oklch(15% 0.02806 354.32)",
+          "oklch(27% 0.02806 354.32)",
+          "oklch(38% 0.02806 354.32)",
+          "oklch(50% 0.02806 354.32)",
+          "oklch(61% 0.02806 354.32)",
+          "oklch(73% 0.02806 354.32)",
+          "oklch(84% 0.02806 354.32)",
+          "oklch(95% 0.02806 354.32)"
+        ]
+      },
+      "pink-annotation": {
+        "role": "secondary",
+        "displayName": "Pink annotation",
+        "tonalRamp": [
+          "oklch(15% 0.05850 343.05)",
+          "oklch(27% 0.05850 343.05)",
+          "oklch(38% 0.05850 343.05)",
+          "oklch(50% 0.05850 343.05)",
+          "oklch(61% 0.05850 343.05)",
+          "oklch(73% 0.05850 343.05)",
+          "oklch(84% 0.05850 343.05)",
+          "oklch(95% 0.05850 343.05)"
+        ]
+      },
+      "pink-personal": {
+        "role": "secondary",
+        "displayName": "Pink personal ink",
+        "tonalRamp": [
+          "oklch(15% 0.04349 352.51)",
+          "oklch(27% 0.04349 352.51)",
+          "oklch(38% 0.04349 352.51)",
+          "oklch(50% 0.04349 352.51)",
+          "oklch(61% 0.04349 352.51)",
+          "oklch(73% 0.04349 352.51)",
+          "oklch(84% 0.04349 352.51)",
+          "oklch(95% 0.04349 352.51)"
+        ]
+      },
+      "pink-marker": {
+        "role": "secondary",
+        "displayName": "Pink marker",
+        "tonalRamp": [
+          "oklch(15% 0.05591 1.33)",
+          "oklch(27% 0.05591 1.33)",
+          "oklch(38% 0.05591 1.33)",
+          "oklch(50% 0.05591 1.33)",
+          "oklch(61% 0.05591 1.33)",
+          "oklch(73% 0.05591 1.33)",
+          "oklch(84% 0.05591 1.33)",
+          "oklch(95% 0.05591 1.33)"
+        ]
+      },
+      "lavender-title": {
+        "role": "secondary",
+        "displayName": "Lavender title",
+        "tonalRamp": [
+          "oklch(15% 0.06927 303.56)",
+          "oklch(27% 0.06927 303.56)",
+          "oklch(38% 0.06927 303.56)",
+          "oklch(50% 0.06927 303.56)",
+          "oklch(61% 0.06927 303.56)",
+          "oklch(73% 0.06927 303.56)",
+          "oklch(84% 0.06927 303.56)",
+          "oklch(95% 0.06927 303.56)"
+        ]
+      },
+      "lavender-body": {
+        "role": "secondary",
+        "displayName": "Lavender body",
+        "tonalRamp": [
+          "oklch(15% 0.03189 297.04)",
+          "oklch(27% 0.03189 297.04)",
+          "oklch(38% 0.03189 297.04)",
+          "oklch(50% 0.03189 297.04)",
+          "oklch(61% 0.03189 297.04)",
+          "oklch(73% 0.03189 297.04)",
+          "oklch(84% 0.03189 297.04)",
+          "oklch(95% 0.03189 297.04)"
+        ]
+      },
+      "lavender-annotation": {
+        "role": "secondary",
+        "displayName": "Lavender annotation",
+        "tonalRamp": [
+          "oklch(15% 0.05844 302.16)",
+          "oklch(27% 0.05844 302.16)",
+          "oklch(38% 0.05844 302.16)",
+          "oklch(50% 0.05844 302.16)",
+          "oklch(61% 0.05844 302.16)",
+          "oklch(73% 0.05844 302.16)",
+          "oklch(84% 0.05844 302.16)",
+          "oklch(95% 0.05844 302.16)"
+        ]
+      },
+      "lavender-personal": {
+        "role": "secondary",
+        "displayName": "Lavender personal ink",
+        "tonalRamp": [
+          "oklch(15% 0.05478 300.91)",
+          "oklch(27% 0.05478 300.91)",
+          "oklch(38% 0.05478 300.91)",
+          "oklch(50% 0.05478 300.91)",
+          "oklch(61% 0.05478 300.91)",
+          "oklch(73% 0.05478 300.91)",
+          "oklch(84% 0.05478 300.91)",
+          "oklch(95% 0.05478 300.91)"
+        ]
+      },
+      "lavender-marker": {
+        "role": "secondary",
+        "displayName": "Lavender marker",
+        "tonalRamp": [
+          "oklch(15% 0.05864 300.71)",
+          "oklch(27% 0.05864 300.71)",
+          "oklch(38% 0.05864 300.71)",
+          "oklch(50% 0.05864 300.71)",
+          "oklch(61% 0.05864 300.71)",
+          "oklch(73% 0.05864 300.71)",
+          "oklch(84% 0.05864 300.71)",
+          "oklch(95% 0.05864 300.71)"
+        ]
+      },
+      "blue-title": {
+        "role": "secondary",
+        "displayName": "Blue title",
+        "tonalRamp": [
+          "oklch(15% 0.06170 250.02)",
+          "oklch(27% 0.06170 250.02)",
+          "oklch(38% 0.06170 250.02)",
+          "oklch(50% 0.06170 250.02)",
+          "oklch(61% 0.06170 250.02)",
+          "oklch(73% 0.06170 250.02)",
+          "oklch(84% 0.06170 250.02)",
+          "oklch(95% 0.06170 250.02)"
+        ]
+      },
+      "blue-body": {
+        "role": "secondary",
+        "displayName": "Blue body",
+        "tonalRamp": [
+          "oklch(15% 0.03356 253.49)",
+          "oklch(27% 0.03356 253.49)",
+          "oklch(38% 0.03356 253.49)",
+          "oklch(50% 0.03356 253.49)",
+          "oklch(61% 0.03356 253.49)",
+          "oklch(73% 0.03356 253.49)",
+          "oklch(84% 0.03356 253.49)",
+          "oklch(95% 0.03356 253.49)"
+        ]
+      },
+      "blue-annotation": {
+        "role": "secondary",
+        "displayName": "Blue annotation",
+        "tonalRamp": [
+          "oklch(15% 0.04942 243.75)",
+          "oklch(27% 0.04942 243.75)",
+          "oklch(38% 0.04942 243.75)",
+          "oklch(50% 0.04942 243.75)",
+          "oklch(61% 0.04942 243.75)",
+          "oklch(73% 0.04942 243.75)",
+          "oklch(84% 0.04942 243.75)",
+          "oklch(95% 0.04942 243.75)"
+        ]
+      },
+      "blue-personal": {
+        "role": "secondary",
+        "displayName": "Blue personal ink",
+        "tonalRamp": [
+          "oklch(15% 0.05114 242.06)",
+          "oklch(27% 0.05114 242.06)",
+          "oklch(38% 0.05114 242.06)",
+          "oklch(50% 0.05114 242.06)",
+          "oklch(61% 0.05114 242.06)",
+          "oklch(73% 0.05114 242.06)",
+          "oklch(84% 0.05114 242.06)",
+          "oklch(95% 0.05114 242.06)"
+        ]
+      },
+      "blue-marker": {
+        "role": "secondary",
+        "displayName": "Blue marker",
+        "tonalRamp": [
+          "oklch(15% 0.04095 239.08)",
+          "oklch(27% 0.04095 239.08)",
+          "oklch(38% 0.04095 239.08)",
+          "oklch(50% 0.04095 239.08)",
+          "oklch(61% 0.04095 239.08)",
+          "oklch(73% 0.04095 239.08)",
+          "oklch(84% 0.04095 239.08)",
+          "oklch(95% 0.04095 239.08)"
+        ]
+      },
+      "yellow-title": {
+        "role": "secondary",
+        "displayName": "Yellow title",
+        "tonalRamp": [
+          "oklch(15% 0.07266 85.43)",
+          "oklch(27% 0.07266 85.43)",
+          "oklch(38% 0.07266 85.43)",
+          "oklch(50% 0.07266 85.43)",
+          "oklch(61% 0.07266 85.43)",
+          "oklch(73% 0.07266 85.43)",
+          "oklch(84% 0.07266 85.43)",
+          "oklch(95% 0.07266 85.43)"
+        ]
+      },
+      "yellow-body": {
+        "role": "secondary",
+        "displayName": "Yellow body",
+        "tonalRamp": [
+          "oklch(15% 0.03571 90.41)",
+          "oklch(27% 0.03571 90.41)",
+          "oklch(38% 0.03571 90.41)",
+          "oklch(50% 0.03571 90.41)",
+          "oklch(61% 0.03571 90.41)",
+          "oklch(73% 0.03571 90.41)",
+          "oklch(84% 0.03571 90.41)",
+          "oklch(95% 0.03571 90.41)"
+        ]
+      },
+      "yellow-annotation": {
+        "role": "secondary",
+        "displayName": "Yellow annotation",
+        "tonalRamp": [
+          "oklch(15% 0.06554 85.17)",
+          "oklch(27% 0.06554 85.17)",
+          "oklch(38% 0.06554 85.17)",
+          "oklch(50% 0.06554 85.17)",
+          "oklch(61% 0.06554 85.17)",
+          "oklch(73% 0.06554 85.17)",
+          "oklch(84% 0.06554 85.17)",
+          "oklch(95% 0.06554 85.17)"
+        ]
+      },
+      "yellow-personal": {
+        "role": "secondary",
+        "displayName": "Yellow personal ink",
+        "tonalRamp": [
+          "oklch(15% 0.05540 88.98)",
+          "oklch(27% 0.05540 88.98)",
+          "oklch(38% 0.05540 88.98)",
+          "oklch(50% 0.05540 88.98)",
+          "oklch(61% 0.05540 88.98)",
+          "oklch(73% 0.05540 88.98)",
+          "oklch(84% 0.05540 88.98)",
+          "oklch(95% 0.05540 88.98)"
+        ]
+      },
+      "yellow-marker": {
+        "role": "secondary",
+        "displayName": "Yellow marker",
+        "tonalRamp": [
+          "oklch(15% 0.10122 96.89)",
+          "oklch(27% 0.10122 96.89)",
+          "oklch(38% 0.10122 96.89)",
+          "oklch(50% 0.10122 96.89)",
+          "oklch(61% 0.10122 96.89)",
+          "oklch(73% 0.10122 96.89)",
+          "oklch(84% 0.10122 96.89)",
+          "oklch(95% 0.10122 96.89)"
+        ]
+      },
+      "gray-title": {
+        "role": "secondary",
+        "displayName": "Gray title",
+        "tonalRamp": [
+          "oklch(15% 0.01158 252.91)",
+          "oklch(27% 0.01158 252.91)",
+          "oklch(38% 0.01158 252.91)",
+          "oklch(50% 0.01158 252.91)",
+          "oklch(61% 0.01158 252.91)",
+          "oklch(73% 0.01158 252.91)",
+          "oklch(84% 0.01158 252.91)",
+          "oklch(95% 0.01158 252.91)"
+        ]
+      },
+      "gray-body": {
+        "role": "secondary",
+        "displayName": "Gray body",
+        "tonalRamp": [
+          "oklch(15% 0.00847 248.03)",
+          "oklch(27% 0.00847 248.03)",
+          "oklch(38% 0.00847 248.03)",
+          "oklch(50% 0.00847 248.03)",
+          "oklch(61% 0.00847 248.03)",
+          "oklch(73% 0.00847 248.03)",
+          "oklch(84% 0.00847 248.03)",
+          "oklch(95% 0.00847 248.03)"
+        ]
+      },
+      "gray-annotation": {
+        "role": "secondary",
+        "displayName": "Gray annotation",
+        "tonalRamp": [
+          "oklch(15% 0.01137 252.89)",
+          "oklch(27% 0.01137 252.89)",
+          "oklch(38% 0.01137 252.89)",
+          "oklch(50% 0.01137 252.89)",
+          "oklch(61% 0.01137 252.89)",
+          "oklch(73% 0.01137 252.89)",
+          "oklch(84% 0.01137 252.89)",
+          "oklch(95% 0.01137 252.89)"
+        ]
+      },
+      "gray-personal": {
+        "role": "secondary",
+        "displayName": "Gray personal ink",
+        "tonalRamp": [
+          "oklch(15% 0.01438 248.14)",
+          "oklch(27% 0.01438 248.14)",
+          "oklch(38% 0.01438 248.14)",
+          "oklch(50% 0.01438 248.14)",
+          "oklch(61% 0.01438 248.14)",
+          "oklch(73% 0.01438 248.14)",
+          "oklch(84% 0.01438 248.14)",
+          "oklch(95% 0.01438 248.14)"
+        ]
+      },
+      "gray-marker": {
+        "role": "secondary",
+        "displayName": "Gray marker",
+        "tonalRamp": [
+          "oklch(15% 0.00707 247.91)",
+          "oklch(27% 0.00707 247.91)",
+          "oklch(38% 0.00707 247.91)",
+          "oklch(50% 0.00707 247.91)",
+          "oklch(61% 0.00707 247.91)",
+          "oklch(73% 0.00707 247.91)",
+          "oklch(84% 0.00707 247.91)",
+          "oklch(95% 0.00707 247.91)"
         ]
       }
     },
@@ -441,24 +791,41 @@
       "kind": "custom",
       "refersTo": "handwriting",
       "description": "A completed static fragment using actual Sentence Study Strokes paths (SIL OFL 1.1). The app supplies sequential drawing and pen motion; this snippet makes no runtime animation claim.",
-      "html": "<svg class=\"ds-ink\" viewBox=\"0 0 180 90\" role=\"img\" aria-label=\"The word time, in Sentence Study Strokes with a pale marker\"><title>Sentence Study Strokes — Cutlings Singularis derivative, SIL OFL 1.1</title><rect width=\"180\" height=\"90\" fill=\"#fffdf5\"/><path d=\"M11 70H169\" stroke=\"#d8ddd1\" stroke-width=\".8\"/><path d=\"M14 56L104.026 55\" stroke=\"#d8c66b\" stroke-width=\"17\" opacity=\".48\" stroke-linecap=\"round\"/><g fill=\"none\" stroke=\"#3d443d\" stroke-width=\"5.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M25.9-118.6C31.9-113.95 16.8-36.2 27.7-2.31 33.5 15.59 68.1-5.25 64.9-12.25\" transform=\"translate(16.000 62) scale(0.235)\"/><path d=\"M9.6-73.12C23.7-72.35 31.3-66.56 54-72.42\" transform=\"translate(16.000 62) scale(0.235)\"/><path d=\"M19.7-70.15C24-36.16 22.9-18.47 21.8-0.88\" transform=\"translate(34.586 62) scale(0.235)\"/><path d=\"M12-0.19C22.7-1.72 32.1-3.89 46.2-3.68\" transform=\"translate(34.586 62) scale(0.235)\"/><path d=\"M24.1-119.13C24.1-119.13 11.1-115.81 12-110.24 13.4-101.29 25.2-104.63 31.9-110.73 37.2-115.65 24.4-121.6 24.4-121.6\" transform=\"translate(34.586 62) scale(0.235)\"/><path d=\"M65.99-60.35C75.39-75.88 85.39-85.79 99.99-80.56 123.39-67.37 111.19-29.79 116.59-1.37\" transform=\"translate(50.068 62) scale(0.235)\"/><path d=\"M14.99-46.16C18.75-64.21 42.3-84.26 52.19-78.54 73.94-65.98 62.29-30.48 66.39-2.83\" transform=\"translate(50.068 62) scale(0.235)\"/><path d=\"M10.19-74.74C14.89-58.12 15.09-29.7 15.99-2.97\" transform=\"translate(50.068 62) scale(0.235)\"/><path d=\"M72.3-20.28C72.3-14.65 36.6 5.47 23-14.93 12.2-31.11 5.2-60.9 27-75.5 43.3-86.41 77.4-69.54 73.7-65.8 59.6-58.18 34.98-40.33 16.78-28.57\" transform=\"translate(82.930 62) scale(0.235)\"/></g></svg>",
+      "html": "<svg class=\"ds-ink\" viewBox=\"0 0 180 90\" role=\"img\" aria-label=\"The word time, in Sentence Study Strokes with a pale marker\"><title>Sentence Study Strokes — Cutlings Singularis derivative, SIL OFL 1.1</title><rect width=\"180\" height=\"90\" fill=\"#fffdf5\"/><path d=\"M11 70H169\" stroke=\"#d8ddd1\" stroke-width=\".8\"/><path d=\"M14 56L104.026 55\" stroke=\"#c3d3b1\" stroke-width=\"17\" opacity=\".48\" stroke-linecap=\"round\"/><g fill=\"none\" stroke=\"#3d443d\" stroke-width=\"5.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M25.9-118.6C31.9-113.95 16.8-36.2 27.7-2.31 33.5 15.59 68.1-5.25 64.9-12.25\" transform=\"translate(16.000 62) scale(0.235)\"/><path d=\"M9.6-73.12C23.7-72.35 31.3-66.56 54-72.42\" transform=\"translate(16.000 62) scale(0.235)\"/><path d=\"M19.7-70.15C24-36.16 22.9-18.47 21.8-0.88\" transform=\"translate(34.586 62) scale(0.235)\"/><path d=\"M12-0.19C22.7-1.72 32.1-3.89 46.2-3.68\" transform=\"translate(34.586 62) scale(0.235)\"/><path d=\"M24.1-119.13C24.1-119.13 11.1-115.81 12-110.24 13.4-101.29 25.2-104.63 31.9-110.73 37.2-115.65 24.4-121.6 24.4-121.6\" transform=\"translate(34.586 62) scale(0.235)\"/><path d=\"M65.99-60.35C75.39-75.88 85.39-85.79 99.99-80.56 123.39-67.37 111.19-29.79 116.59-1.37\" transform=\"translate(50.068 62) scale(0.235)\"/><path d=\"M14.99-46.16C18.75-64.21 42.3-84.26 52.19-78.54 73.94-65.98 62.29-30.48 66.39-2.83\" transform=\"translate(50.068 62) scale(0.235)\"/><path d=\"M10.19-74.74C14.89-58.12 15.09-29.7 15.99-2.97\" transform=\"translate(50.068 62) scale(0.235)\"/><path d=\"M72.3-20.28C72.3-14.65 36.6 5.47 23-14.93 12.2-31.11 5.2-60.9 27-75.5 43.3-86.41 77.4-69.54 73.7-65.8 59.6-58.18 34.98-40.33 16.78-28.57\" transform=\"translate(82.930 62) scale(0.235)\"/></g></svg>",
       "css": ".ds-ink{display:block;width:100%;height:auto;max-width:360px}"
+    },
+    {
+      "name": "Notebook ink selection",
+      "kind": "input",
+      "refersTo": "palette-choice",
+      "description": "Six native radio choices with role-specific ink and marker swatches; green is the default. The application recolors screen and PDF together without restarting writing. This standalone snippet demonstrates selection styling only.",
+      "html": "<fieldset class=\"ds-palettes\"><legend>文字のカラーセット</legend><div class=\"ds-palette-options\"><label class=\"ds-palette-option\" style=\"--palette-ink:#7c465c;--palette-marker:#edbeca\"><input type=\"radio\" name=\"ds-palette\" value=\"pink\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>ピンク</label><label class=\"ds-palette-option\" style=\"--palette-ink:#66547e;--palette-marker:#cbbde6\"><input type=\"radio\" name=\"ds-palette\" value=\"lavender\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>ラベンダー</label><label class=\"ds-palette-option\" style=\"--palette-ink:#415f7e;--palette-marker:#b8d4e8\"><input type=\"radio\" name=\"ds-palette\" value=\"blue\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>ブルー</label><label class=\"ds-palette-option\" style=\"--palette-ink:#485747;--palette-marker:#c3d3b1\"><input type=\"radio\" name=\"ds-palette\" value=\"green\" checked/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>グリーン</label><label class=\"ds-palette-option\" style=\"--palette-ink:#76602f;--palette-marker:#e5d384\"><input type=\"radio\" name=\"ds-palette\" value=\"yellow\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>イエロー</label><label class=\"ds-palette-option\" style=\"--palette-ink:#565b61;--palette-marker:#ccd0d4\"><input type=\"radio\" name=\"ds-palette\" value=\"gray\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>グレー</label></div></fieldset>",
+      "css": ".ds-palettes{border:0;padding:0;margin:0 0 20px;min-width:0;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif}.ds-palettes legend{font-size:11px;color:var(--muted,#62695c);padding:0;margin-bottom:6px}.ds-palette-options{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}.ds-palette-option{min-height:44px;display:flex;align-items:center;justify-content:center;gap:5px;font-size:11px;color:var(--palette-ink);cursor:pointer;border-bottom:2px solid transparent}.ds-palette-option:has(input:checked){border-bottom-color:var(--palette-ink);background:#fffdf566}.ds-palette-option:hover{background:#fffdf5}.ds-palette-option input{margin:0;width:13px;height:13px;accent-color:var(--palette-ink)}.ds-palette-option input:focus-visible{outline:2px solid #667752;outline-offset:4px}.ds-palette-swatch{width:12px;height:18px;background:var(--palette-marker);border-top:2px solid var(--palette-ink);flex:none}@media(max-width:1100px){.ds-palette-options{grid-template-columns:repeat(3,minmax(0,1fr))}}"
+    },
+    {
+      "name": "A5 print settings",
+      "kind": "custom",
+      "refersTo": "select",
+      "description": "Fixed 148 × 210mm A5 finished note, with A5 single-page or 297 × 210mm landscape A4 carrier. A4 places two copies at x=0/149mm with cut guides at 148/149mm. Defaults: A5 sheet, left binding, 18mm, printed markers on. The print-only model uses 7/5/4.3/5mm title/body/annotation/personal sizes and 8mm body/personal/review lines. This snippet shows native settings at rest; application wiring supplies the placement diagram, feedback and PDF. Future measured formats remain unavailable.",
+      "html": "<div class=\"ds-print\"><p class=\"ds-note-format\">完成ノート <strong>A5</strong><span>148 × 210 mm・縦向き</span></p><label class=\"ds-sheet-label\" for=\"ds-print-sheet\">印刷用紙</label><select id=\"ds-print-sheet\"><option>A5 · 1ページ</option><option>A4横 · 2面付け</option></select><div class=\"ds-print-fields\"><label>綴じる側<select><option>左</option><option>右</option></select></label><label>穴あけ・綴じ代<select><option>12 mm</option><option selected>18 mm</option><option>24 mm</option></select></label></div><label class=\"ds-marker-choice\"><input type=\"checkbox\" checked/>PDFにマーカーを入れる</label><p class=\"ds-print-help\">外すと、印刷したあとに自分で引けます。</p><p class=\"ds-print-instructions\">印刷倍率は<strong>100%（実際のサイズ）</strong>。用紙に合わせる拡大・縮小はオフにしてください。</p></div>",
+      "css": ".ds-print{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;color:var(--ink,#3d443d)}.ds-note-format{margin:12px 0 20px;font-size:12px;line-height:1.8}.ds-note-format strong{font:24px \"Lora\",Georgia,serif;margin-left:12px}.ds-note-format span{display:block;color:var(--muted,#62695c);font-size:11px;margin-top:4px;font-variant-numeric:tabular-nums}.ds-sheet-label{display:block;font-size:11px;color:var(--muted,#62695c)}.ds-print select{font-family:inherit;border:0;border-bottom:1px solid #a9af9e;background:transparent;color:#46533e;padding:10px 20px 10px 4px;min-height:44px;font-size:12px;border-radius:0;cursor:pointer}.ds-print select:focus-visible,.ds-print input:focus-visible{outline:2px solid #667752;outline-offset:4px}#ds-print-sheet{width:100%}.ds-print-fields{display:flex;gap:13px;margin:14px 0 18px}.ds-print-fields label{font-size:10px;color:var(--muted,#62695c);flex:1}.ds-print-fields select{display:block;width:100%;padding-right:15px}.ds-marker-choice{min-height:44px;display:flex;align-items:center;gap:9px;font-size:12px;cursor:pointer}.ds-marker-choice input{width:17px;height:17px;margin:0;accent-color:var(--sage,#52634e)}.ds-print-help{font-size:11px;line-height:1.8;color:var(--muted,#62695c);margin:0 0 18px}.ds-print-instructions{font-size:11px;line-height:1.9;color:var(--muted,#62695c);margin:0 0 16px}.ds-print-instructions strong{font-weight:600;color:var(--ink,#3d443d)}"
     }
   ],
   "narrative": {
     "northStar": "The Handwritten Study Notebook",
-    "overview": "The Sentence Book — Learn digitally. Keep it beautifully. Korean Studygram meets a restrained editorial notebook: warm cream paper, fine rules, real monoline handwriting, a pale marker and small handwritten annotations. The page is the keepsake; calm sage controls and compact Japanese labels support it. The typewriter motif and key/case animations are retired.\n\nThis document captures the implemented identity at `/`, extracted on 2026-10-27 from `src/handwriting/handwriting.css`, `HandwritingDemo.tsx`, `model.ts`, `usePersonalInk.ts`, `personal.ts` and `pdf.ts`. `/setup` retains the earlier interest and topic-note scaffold; its visual refresh is deferred. The current handwriting page is a labeled sample and session-only personal line, not a completed learning record. The source of truth for this surface’s composition and delivery limits is [the handwriting prototype note](docs/handwriting-prototype.md).",
+    "overview": "Owner correction, 2026-10-27: the current lettering and page density were rejected as too elementary-school-like. Target: small consistent handwriting, organized study density, clear hierarchy, white/subtle ivory paper and restrained accent colors. Current font is temporary; materials will be remade later. No visual implementation change in this documentation update. The following tokens/components describe the current prototype, not accepted final art direction. The Sentence Book — Learn digitally. Keep it beautifully. Korean Studygram meets a restrained editorial notebook: warm cream paper, fine rules, real monoline handwriting, a pale marker and small handwritten annotations. The page is the keepsake; calm sage controls and compact Japanese labels support it. The typewriter motif and key/case animations are retired.\n\nThis document captures the implemented identity at `/`, extracted on 2026-10-27 from `src/handwriting/handwriting.css`, `HandwritingDemo.tsx`, `model.ts`, `usePersonalInk.ts`, `personal.ts`, `palettes.ts`, `print-layout.ts` and `pdf.ts`. `/setup` retains the earlier interest and topic-note scaffold; its visual refresh is deferred. The current handwriting page is a labeled sample and session-only personal line, not a completed learning record. The source of truth for this surface’s composition and delivery limits is [the handwriting prototype note](docs/handwriting-prototype.md).",
     "keyCharacteristics": [
       "Cream ruled paper with one ambient page shadow.",
       "Actual vector handwriting with a following pen, then marker and annotation.",
       "Lora for the wordmark, Japanese Mincho for headings, system sans for controls.",
       "Readable completion, visible keyboard focus and reduced-motion behavior.",
-      "A separate vector print composition that preserves the handwriting."
+      "Six coordinated ink sets for the notebook; sage controls retain their existing colors.",
+      "A separate vector print composition for a fixed A5 note, on A5 or landscape A4 paper."
     ],
     "rules": [
       {
         "name": "The Marker Rule",
-        "body": "Keep the marker beneath the written letters. It appears after the main writing phase and before the annotation; it never replaces readable ink.",
+        "body": "Keep the marker beneath the written letters. It appears after the main writing phase and before the annotation; it never replaces readable ink. Printed markers are optional: omitting them leaves the screen marker, written content and annotations intact.",
         "section": "colors"
       },
       {
@@ -477,7 +844,7 @@
       "Do keep the same stroke geometry for the sample, the personal line and the completed PDF.",
       "Do preserve visible focus, native control behavior, pause/finish actions and direct completion for reduced motion.",
       "Do retain unsupported input, identify it beside the field and block export until it is supported.",
-      "Do keep print layout independent of viewport width and the animation clock.",
+      "Do keep print layout independent of viewport width and the animation clock, and distinguish the finished A5 note from its printer sheet.",
       "Do label the sample and the session-only input honestly; animation completion is not evidence of learning completion."
     ],
     "donts": [

@@ -16,6 +16,7 @@
     "test": "vitest run",
     "qa": "node scripts/qa-scaffold.mjs",
     "qa:handwriting": "node scripts/qa-handwriting.mjs",
+    "qa:print": "node scripts/qa-print.mjs",
     "font:build": "node scripts/build-stroke-font.mjs"
   },
   "dependencies": {

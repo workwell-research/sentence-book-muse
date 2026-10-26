@@ -4,6 +4,7 @@ import { PDFDocument } from 'pdf-lib';
 import { createNote,layoutText,sampleNote,supported,penPosition,strokePoint,inkProgress } from '../src/handwriting/model';
 import { emptyPersonal,reconcilePersonal } from '../src/handwriting/personal';
 import { exportNote } from '../src/handwriting/pdf';
+import { defaultPrintOptions } from '../src/handwriting/print-layout';
 const content={...sampleNote,date:'27 Oct 2026',personal:'I make time for a quiet morning.'};
 describe('handwriting document',()=>{
  it('keeps existing stroke identities when text is inserted, replaced, or deleted',()=>{
@@ -55,16 +56,16 @@ describe('handwriting document',()=>{
      expect(s.length).toBeLessThanOrEqual(note.width-note.left-note.right+4);
    }
  });
- it('exports a complete vector page at the exact A5/A4 dimensions',async()=>{
-   for(const size of ['A5','A4'] as const){
-     const bytes=await exportNote(content,{size,binding:18,side:'left'});
+ it('exports a complete vector page at the exact A5 portrait / A4 landscape dimensions',async()=>{
+   for(const sheet of ['A5','A4'] as const){
+     const bytes=await exportNote(content,{...defaultPrintOptions,sheet});
      const doc=await PDFDocument.load(bytes);
      expect(doc.getPageCount()).toBe(1);
-     expect(doc.getPage(0).getWidth()).toBeCloseTo((size==='A5'?148:210)*72/25.4,4);
-     expect(doc.getPage(0).getHeight()).toBeCloseTo((size==='A5'?210:297)*72/25.4,4);
+     expect(doc.getPage(0).getWidth()).toBeCloseTo((sheet==='A5'?148:297)*72/25.4,4);
+     expect(doc.getPage(0).getHeight()).toBeCloseTo(210*72/25.4,4);
    }
  });
  it('rejects unsupported handwriting rather than exporting missing characters',async()=>{
-   await expect(exportNote({...content,personal:'朝のコーヒー'},{size:'A5',binding:18,side:'left'})).rejects.toThrow('対応');
+   await expect(exportNote({...content,personal:'朝のコーヒー'},defaultPrintOptions)).rejects.toThrow('対応');
  });
 });

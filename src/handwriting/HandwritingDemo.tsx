@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createNote, currentPhase, inkProgress, penPosition, sampleNote, unsupported } from './model';
 import type { NoteLayout, Stroke } from './model';
-import type { PrintOptions } from './pdf';
+import type { CSSProperties } from 'react';
+import { defaultPrintOptions } from './print-layout';
+import type { PrintOptions } from './print-layout';
+import { palettes, paletteIds } from './palettes';
 import './handwriting.css';
 import { usePersonalInk } from './usePersonalInk';
 
@@ -56,13 +59,14 @@ export function HandwritingDemo() {
  const [running,setRunning]=useState(true);
  const [time,setTime]=useState(0);
  const [reduced,setReduced]=useState(()=>window.matchMedia('(prefers-reduced-motion: reduce)').matches);
- const [print,setPrint]=useState<PrintOptions>({size:'A5',binding:18,side:'left'});
+ const [print,setPrint]=useState<PrintOptions>(defaultPrintOptions);
  const [exporting,setExporting]=useState(false);
  const [feedback,setFeedback]=useState('');
  const date=useMemo(()=>new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'short',year:'numeric'}).format(new Date()),[]);
  const content=useMemo(()=>({...sampleNote,date,personal}),[date,personal]);
- const note=useMemo(()=>createNote(content,width),[content,width]);
- const personalInk=usePersonalInk(personal,note.personal,reduced);
+ const ink=palettes[print.palette];
+ const note=useMemo(()=>createNote(content,width,{palette:ink}),[content,width,ink]);
+ const personalInk=usePersonalInk(personal,note.personal,reduced,ink.personal);
  const elapsed=useRef(0), duration=useRef(note.duration);
  duration.current=note.duration;
  const missing=unsupported(personal);
@@ -101,9 +105,9 @@ export function HandwritingDemo() {
      const bytes=await exportNote(content,print);
      const blob=new Blob([new Uint8Array(bytes)],{type:'application/pdf'});
      const url=URL.createObjectURL(blob),link=document.createElement('a');
-     link.href=url;link.download='sentence-book-note.pdf';link.click();
+     link.href=url;link.download=print.sheet==='A4'?'sentence-book-a5-on-a4.pdf':'sentence-book-a5.pdf';link.click();
      window.setTimeout(()=>URL.revokeObjectURL(url),10000);
-     setFeedback('PDFを作成しました。印刷は「実際のサイズ」で。');
+     setFeedback('PDFを作成しました。100%（実際のサイズ）で印刷してください。');
    }catch(error){setFeedback(error instanceof Error?error.message:'PDFを作れませんでした。もう一度お試しください。');}
    finally{setExporting(false);}
  }
@@ -116,6 +120,13 @@ export function HandwritingDemo() {
    <main className="ink-workspace">
     <div className="paper-column">
       <div className="paper-caption"><span>筆記デモ · サンプル教材</span><span>English / everyday moments</span></div>
+      <fieldset className="ink-palettes">
+        <legend>文字のカラーセット</legend>
+        <div className="palette-options">{paletteIds.map(id=><label key={id} className="palette-option" style={{'--palette-ink':palettes[id].title,'--palette-marker':palettes[id].marker} as CSSProperties}>
+          <input type="radio" name="palette" value={id} checked={print.palette===id} onChange={()=>{setPrint({...print,palette:id});setFeedback('');}}/>
+          <span className="palette-swatch" aria-hidden="true"/>{palettes[id].label}
+        </label>)}</div>
+      </fieldset>
       <div ref={paper} className="paper-sheet"><Notebook note={note} time={time} reduceMotion={reduced} personalInk={personalInk}/></div>
       <p className="below-paper">読む。書く。残しておきたくなる。</p>
     </div>
@@ -150,12 +161,24 @@ export function HandwritingDemo() {
       </section>
       <section className="print-section" aria-label="PDF出力">
         <h2>この一枚を、手元に。</h2>
-        <p className="field-help">書き終えたページを、印刷用のPDFに。</p>
-        <div className="print-fields">
-          <label>用紙<select value={print.size} onChange={e=>setPrint({...print,size:e.target.value as PrintOptions['size']})}><option>A5</option><option>A4</option></select></label>
-          <label>綴じる側<select value={print.side} onChange={e=>setPrint({...print,side:e.target.value as PrintOptions['side']})}><option value="left">左</option><option value="right">右</option></select></label>
-          <label>余白<select value={print.binding} onChange={e=>setPrint({...print,binding:Number(e.target.value)})}><option value={12}>12 mm</option><option value={18}>18 mm</option><option value={24}>24 mm</option></select></label>
+        <p className="note-format">完成ノート <strong>A5</strong><span>148 × 210 mm・縦向き</span></p>
+        <label className="sheet-label" htmlFor="print-sheet">印刷用紙</label>
+        <select id="print-sheet" value={print.sheet} onChange={e=>{setPrint({...print,sheet:e.target.value as PrintOptions['sheet']});setFeedback('');}}>
+          <option value="A5">A5 · 1ページ</option><option value="A4">A4横 · 2面付け</option>
+        </select>
+        <div className="print-plan">
+          <svg viewBox="0 0 100 73" role="img" aria-label={print.sheet==='A4'?'A4横にA5ノートを原寸で2部配置':'A5縦の完成ノート1ページ'}>
+            {print.sheet==='A4'?<><rect x="1" y="2" width="98" height="69"/><path d="M 49.8 2 V 71 M 50.2 2 V 71" className="cut-guide"/><text x="25" y="39">A5</text><text x="75" y="39">A5</text></>:<><rect x="25" y="2" width="49" height="69"/><text x="50" y="39">A5</text></>}
+          </svg>
+          <p>{print.sheet==='A4'?'同じページを2部、原寸で配置。中央の2本の線で裁断します。':'1ページをそのまま印刷。A5ルーズリーフやバインダーに。'}</p>
         </div>
+        <div className="print-fields">
+          <label>綴じる側<select value={print.side} onChange={e=>setPrint({...print,side:e.target.value as PrintOptions['side']})}><option value="left">左</option><option value="right">右</option></select></label>
+          <label>穴あけ・綴じ代<select value={print.binding} onChange={e=>setPrint({...print,binding:Number(e.target.value)})}><option value={12}>12 mm</option><option value={18}>18 mm</option><option value={24}>24 mm</option></select></label>
+        </div>
+        <label className="marker-choice"><input type="checkbox" checked={print.markers} onChange={e=>{setPrint({...print,markers:e.target.checked});setFeedback('');}}/>PDFにマーカーを入れる</label>
+        <p className="field-help">外すと、印刷したあとに自分で引けます。</p>
+        <p className="print-instructions">印刷倍率は<strong>100%（実際のサイズ）</strong>。{print.sheet==='A4'?'このPDFは面付け済みです。印刷画面の「1枚あたりのページ数」は1にしてください。':'用紙に合わせる拡大・縮小はオフにしてください。'}</p>
         <button className="ink-button export-button" disabled={exporting||!!missing} onClick={savePDF}>{exporting?'PDFを作っています…':'完成ページをPDFに'}</button>
         <p className="export-feedback" role="status">{feedback}</p>
       </section>
