@@ -1,0 +1,492 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-26T22:10:14.084000Z",
+  "title": "Design System: The Sentence Book",
+  "extensions": {
+    "colorMeta": {
+      "sage": {
+        "role": "primary",
+        "displayName": "Sage",
+        "tonalRamp": [
+          "oklch(15% 0.03902 139.72)",
+          "oklch(27% 0.03902 139.72)",
+          "oklch(38% 0.03902 139.72)",
+          "oklch(50% 0.03902 139.72)",
+          "oklch(61% 0.03902 139.72)",
+          "oklch(73% 0.03902 139.72)",
+          "oklch(84% 0.03902 139.72)",
+          "oklch(95% 0.03902 139.72)"
+        ]
+      },
+      "sage-deep": {
+        "role": "primary",
+        "displayName": "Sage Deep",
+        "tonalRamp": [
+          "oklch(15% 0.03901 140.87)",
+          "oklch(27% 0.03901 140.87)",
+          "oklch(38% 0.03901 140.87)",
+          "oklch(50% 0.03901 140.87)",
+          "oklch(61% 0.03901 140.87)",
+          "oklch(73% 0.03901 140.87)",
+          "oklch(84% 0.03901 140.87)",
+          "oklch(95% 0.03901 140.87)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "oklch(15% 0.01492 145.27)",
+          "oklch(27% 0.01492 145.27)",
+          "oklch(38% 0.01492 145.27)",
+          "oklch(50% 0.01492 145.27)",
+          "oklch(61% 0.01492 145.27)",
+          "oklch(73% 0.01492 145.27)",
+          "oklch(84% 0.01492 145.27)",
+          "oklch(95% 0.01492 145.27)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted",
+        "tonalRamp": [
+          "oklch(15% 0.02183 130.41)",
+          "oklch(27% 0.02183 130.41)",
+          "oklch(38% 0.02183 130.41)",
+          "oklch(50% 0.02183 130.41)",
+          "oklch(61% 0.02183 130.41)",
+          "oklch(73% 0.02183 130.41)",
+          "oklch(84% 0.02183 130.41)",
+          "oklch(95% 0.02183 130.41)"
+        ]
+      },
+      "desk": {
+        "role": "neutral",
+        "displayName": "Warm gray desk",
+        "tonalRamp": [
+          "oklch(15% 0.01276 86.83)",
+          "oklch(27% 0.01276 86.83)",
+          "oklch(38% 0.01276 86.83)",
+          "oklch(50% 0.01276 86.83)",
+          "oklch(61% 0.01276 86.83)",
+          "oklch(73% 0.01276 86.83)",
+          "oklch(84% 0.01276 86.83)",
+          "oklch(95% 0.01276 86.83)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Cream paper",
+        "tonalRamp": [
+          "oklch(15% 0.01073 95.16)",
+          "oklch(27% 0.01073 95.16)",
+          "oklch(38% 0.01073 95.16)",
+          "oklch(50% 0.01073 95.16)",
+          "oklch(61% 0.01073 95.16)",
+          "oklch(73% 0.01073 95.16)",
+          "oklch(84% 0.01073 95.16)",
+          "oklch(95% 0.01073 95.16)"
+        ]
+      },
+      "field": {
+        "role": "neutral",
+        "displayName": "Field",
+        "tonalRamp": [
+          "oklch(15% 0.01077 95.16)",
+          "oklch(27% 0.01077 95.16)",
+          "oklch(38% 0.01077 95.16)",
+          "oklch(50% 0.01077 95.16)",
+          "oklch(61% 0.01077 95.16)",
+          "oklch(73% 0.01077 95.16)",
+          "oklch(84% 0.01077 95.16)",
+          "oklch(95% 0.01077 95.16)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Notebook rule",
+        "tonalRamp": [
+          "oklch(15% 0.01702 125.31)",
+          "oklch(27% 0.01702 125.31)",
+          "oklch(38% 0.01702 125.31)",
+          "oklch(50% 0.01702 125.31)",
+          "oklch(61% 0.01702 125.31)",
+          "oklch(73% 0.01702 125.31)",
+          "oklch(84% 0.01702 125.31)",
+          "oklch(95% 0.01702 125.31)"
+        ]
+      },
+      "divider": {
+        "role": "neutral",
+        "displayName": "Divider",
+        "tonalRamp": [
+          "oklch(15% 0.02058 113.00)",
+          "oklch(27% 0.02058 113.00)",
+          "oklch(38% 0.02058 113.00)",
+          "oklch(50% 0.02058 113.00)",
+          "oklch(61% 0.02058 113.00)",
+          "oklch(73% 0.02058 113.00)",
+          "oklch(84% 0.02058 113.00)",
+          "oklch(95% 0.02058 113.00)"
+        ]
+      },
+      "control-ink": {
+        "role": "primary",
+        "displayName": "Control Ink",
+        "tonalRamp": [
+          "oklch(15% 0.04067 137.25)",
+          "oklch(27% 0.04067 137.25)",
+          "oklch(38% 0.04067 137.25)",
+          "oklch(50% 0.04067 137.25)",
+          "oklch(61% 0.04067 137.25)",
+          "oklch(73% 0.04067 137.25)",
+          "oklch(84% 0.04067 137.25)",
+          "oklch(95% 0.04067 137.25)"
+        ]
+      },
+      "control-border": {
+        "role": "primary",
+        "displayName": "Control Border",
+        "tonalRamp": [
+          "oklch(15% 0.03266 128.12)",
+          "oklch(27% 0.03266 128.12)",
+          "oklch(38% 0.03266 128.12)",
+          "oklch(50% 0.03266 128.12)",
+          "oklch(61% 0.03266 128.12)",
+          "oklch(73% 0.03266 128.12)",
+          "oklch(84% 0.03266 128.12)",
+          "oklch(95% 0.03266 128.12)"
+        ]
+      },
+      "control-hover": {
+        "role": "primary",
+        "displayName": "Control Hover",
+        "tonalRamp": [
+          "oklch(15% 0.01884 113.37)",
+          "oklch(27% 0.01884 113.37)",
+          "oklch(38% 0.01884 113.37)",
+          "oklch(50% 0.01884 113.37)",
+          "oklch(61% 0.01884 113.37)",
+          "oklch(73% 0.01884 113.37)",
+          "oklch(84% 0.01884 113.37)",
+          "oklch(95% 0.01884 113.37)"
+        ]
+      },
+      "field-border": {
+        "role": "neutral",
+        "displayName": "Field Border",
+        "tonalRamp": [
+          "oklch(15% 0.02763 123.56)",
+          "oklch(27% 0.02763 123.56)",
+          "oklch(38% 0.02763 123.56)",
+          "oklch(50% 0.02763 123.56)",
+          "oklch(61% 0.02763 123.56)",
+          "oklch(73% 0.02763 123.56)",
+          "oklch(84% 0.02763 123.56)",
+          "oklch(95% 0.02763 123.56)"
+        ]
+      },
+      "export-tint": {
+        "role": "primary",
+        "displayName": "Export Tint",
+        "tonalRamp": [
+          "oklch(15% 0.02024 115.98)",
+          "oklch(27% 0.02024 115.98)",
+          "oklch(38% 0.02024 115.98)",
+          "oklch(50% 0.02024 115.98)",
+          "oklch(61% 0.02024 115.98)",
+          "oklch(73% 0.02024 115.98)",
+          "oklch(84% 0.02024 115.98)",
+          "oklch(95% 0.02024 115.98)"
+        ]
+      },
+      "export-border": {
+        "role": "primary",
+        "displayName": "Export Border",
+        "tonalRamp": [
+          "oklch(15% 0.04154 128.47)",
+          "oklch(27% 0.04154 128.47)",
+          "oklch(38% 0.04154 128.47)",
+          "oklch(50% 0.04154 128.47)",
+          "oklch(61% 0.04154 128.47)",
+          "oklch(73% 0.04154 128.47)",
+          "oklch(84% 0.04154 128.47)",
+          "oklch(95% 0.04154 128.47)"
+        ]
+      },
+      "title-ink": {
+        "role": "secondary",
+        "displayName": "Title Ink",
+        "tonalRamp": [
+          "oklch(15% 0.03192 143.36)",
+          "oklch(27% 0.03192 143.36)",
+          "oklch(38% 0.03192 143.36)",
+          "oklch(50% 0.03192 143.36)",
+          "oklch(61% 0.03192 143.36)",
+          "oklch(73% 0.03192 143.36)",
+          "oklch(84% 0.03192 143.36)",
+          "oklch(95% 0.03192 143.36)"
+        ]
+      },
+      "annotation-ink": {
+        "role": "secondary",
+        "displayName": "Annotation Ink",
+        "tonalRamp": [
+          "oklch(15% 0.04141 150.96)",
+          "oklch(27% 0.04141 150.96)",
+          "oklch(38% 0.04141 150.96)",
+          "oklch(50% 0.04141 150.96)",
+          "oklch(61% 0.04141 150.96)",
+          "oklch(73% 0.04141 150.96)",
+          "oklch(84% 0.04141 150.96)",
+          "oklch(95% 0.04141 150.96)"
+        ]
+      },
+      "personal-ink": {
+        "role": "secondary",
+        "displayName": "Personal Ink",
+        "tonalRamp": [
+          "oklch(15% 0.03055 150.21)",
+          "oklch(27% 0.03055 150.21)",
+          "oklch(38% 0.03055 150.21)",
+          "oklch(50% 0.03055 150.21)",
+          "oklch(61% 0.03055 150.21)",
+          "oklch(73% 0.03055 150.21)",
+          "oklch(84% 0.03055 150.21)",
+          "oklch(95% 0.03055 150.21)"
+        ]
+      },
+      "marker": {
+        "role": "secondary",
+        "displayName": "Straw marker",
+        "tonalRamp": [
+          "oklch(15% 0.11397 98.38)",
+          "oklch(27% 0.11397 98.38)",
+          "oklch(38% 0.11397 98.38)",
+          "oklch(50% 0.11397 98.38)",
+          "oklch(61% 0.11397 98.38)",
+          "oklch(73% 0.11397 98.38)",
+          "oklch(84% 0.11397 98.38)",
+          "oklch(95% 0.11397 98.38)"
+        ]
+      },
+      "focus": {
+        "role": "primary",
+        "displayName": "Focus",
+        "tonalRamp": [
+          "oklch(15% 0.05865 128.26)",
+          "oklch(27% 0.05865 128.26)",
+          "oklch(38% 0.05865 128.26)",
+          "oklch(50% 0.05865 128.26)",
+          "oklch(61% 0.05865 128.26)",
+          "oklch(73% 0.05865 128.26)",
+          "oklch(84% 0.05865 128.26)",
+          "oklch(95% 0.05865 128.26)"
+        ]
+      },
+      "error": {
+        "role": "secondary",
+        "displayName": "Warm error ink",
+        "tonalRamp": [
+          "oklch(15% 0.09959 27.92)",
+          "oklch(27% 0.09959 27.92)",
+          "oklch(38% 0.09959 27.92)",
+          "oklch(50% 0.09959 27.92)",
+          "oklch(61% 0.09959 27.92)",
+          "oklch(73% 0.09959 27.92)",
+          "oklch(84% 0.09959 27.92)",
+          "oklch(95% 0.09959 27.92)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Lora wordmark; mobile sizing is documented in Layout and the navigation snippet."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Japanese Mincho invitation."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Japanese Mincho print heading."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Introductory interface explanation, not the SVG body lettering."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Field help and supporting interface text."
+      },
+      "input": {
+        "displayName": "Input",
+        "purpose": "Personal textarea value; 16px on mobile."
+      }
+    },
+    "shadows": [
+      {
+        "name": "paper-ambient",
+        "value": "0 12px 34px #4d4c3820, 0 2px 5px #4d4c3812",
+        "purpose": "The square notebook sheet only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "button-background",
+        "value": "background .15s ease",
+        "purpose": "Button hover; removed under prefers-reduced-motion: reduce."
+      },
+      {
+        "name": "ink-progress",
+        "value": "t - 0.105 * sin(2 * PI * t)",
+        "purpose": "Monotonic progress used by sample and personal strokes, and by their pen coordinates."
+      },
+      {
+        "name": "sample-stroke-duration",
+        "value": "max(45, pathLength * glyphScale * 3.1) ms",
+        "purpose": "Distance-based duration of a sample glyph stroke, before playback speed scaling."
+      },
+      {
+        "name": "personal-stroke-duration",
+        "value": "max(32, min(105, pathLength * glyphScale * 2.1)) ms",
+        "purpose": "Bounded sequential personal stroke queue; unchanged character IDs keep their progress through edits."
+      },
+      {
+        "name": "marker-duration",
+        "value": "600ms",
+        "purpose": "Each expression-row marker is scheduled after the main writing."
+      },
+      {
+        "name": "pen-lift",
+        "value": "t*t*(3-2*t), y offset -8*sin(PI*t)",
+        "purpose": "The sample pen moves between stroke endpoints, fades to opacity .55 and lifts along a shallow arc."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "mobile-max",
+        "value": "760px"
+      },
+      {
+        "name": "compact-desktop-max",
+        "value": "1100px"
+      },
+      {
+        "name": "wide-desktop-min",
+        "value": "1450px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary playback",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The main playback action; the application changes the label with playback state.",
+      "html": "<button type=\"button\" class=\"ds-button-primary\">一時停止</button>",
+      "css": ".ds-button-primary{min-height:44px;border:1px solid #87917c;background:transparent;color:#45553f;border-radius:3px;padding:10px 15px;font-family:-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif;font-size:12px;line-height:1.5;cursor:pointer;transition:background .15s;background:var(--sage,#52634e);color:#fffdf5;border-color:var(--sage,#52634e)}.ds-button-primary:hover{background:#40513d}.ds-button-primary:focus-visible{outline:2px solid #667752;outline-offset:4px}.ds-button-primary:disabled{opacity:.5;cursor:default}@media(prefers-reduced-motion:reduce){.ds-button-primary{transition:none}}"
+    },
+    {
+      "name": "Quiet completion",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Secondary completion and personal queue actions.",
+      "html": "<button type=\"button\" class=\"ds-button-quiet\">完成を見る</button>",
+      "css": ".ds-button-quiet{min-height:44px;border:1px solid #87917c;background:transparent;color:#45553f;border-radius:3px;padding:10px 15px;font-family:-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif;font-size:12px;line-height:1.5;cursor:pointer;transition:background .15s;border-color:transparent}.ds-button-quiet:hover{background:#e1e3d5}.ds-button-quiet:focus-visible{outline:2px solid #667752;outline-offset:4px}.ds-button-quiet:disabled{opacity:.5;cursor:default}@media(prefers-reduced-motion:reduce){.ds-button-quiet{transition:none}}"
+    },
+    {
+      "name": "PDF export",
+      "kind": "button",
+      "refersTo": "button-export",
+      "description": "A lightly filled full-width action, below the print settings.",
+      "html": "<button type=\"button\" class=\"ds-button-export\">完成ページをPDFに</button>",
+      "css": ".ds-button-export{min-height:44px;border:1px solid #87917c;background:transparent;color:#45553f;border-radius:3px;padding:10px 15px;font-family:-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif;font-size:12px;line-height:1.5;cursor:pointer;transition:background .15s;width:100%;background:#e4e7d8;border-color:#8d9a7f;font-size:13px}.ds-button-export:hover{background:#e1e3d5}.ds-button-export:focus-visible{outline:2px solid #667752;outline-offset:4px}.ds-button-export:disabled{opacity:.5;cursor:default}@media(prefers-reduced-motion:reduce){.ds-button-export{transition:none}}"
+    },
+    {
+      "name": "Personal line",
+      "kind": "input",
+      "refersTo": "input-personal",
+      "description": "Session-only personal English input; the preview shows the same label, help and input styling.",
+      "html": "<div class=\"ds-personal\"><label for=\"ds-personal-input\">今日、大切にしたいことは？</label><p class=\"ds-field-help\" id=\"ds-personal-help\">英語でひとこと。ノートの余白に加わります。</p><textarea id=\"ds-personal-input\" rows=\"2\" maxlength=\"80\" placeholder=\"I make time for...\" aria-describedby=\"ds-personal-help\"></textarea><div class=\"ds-input-meta\"><span>このデモの入力は保存されません</span><span>0/80</span></div></div>",
+      "css": ".ds-personal{font-family:-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif;color:var(--ink,#3d443d)}.ds-personal>label{font-size:13px}.ds-field-help{font-size:11px;line-height:1.8;color:var(--muted,#62695c);margin:7px 0 10px}.ds-personal textarea{width:100%;resize:vertical;min-height:81px;max-height:180px;background:#faf8f0;border:1px solid #aeb5a2;border-radius:3px;line-height:1.65;font-size:15px;font-family:-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif;padding:12px;color:var(--ink,#3d443d);caret-color:var(--sage,#52634e)}.ds-personal textarea::placeholder{font:italic 15px/1.65 \"Lora\",Georgia,serif;color:#737969}.ds-personal textarea:focus-visible{outline:2px solid #667752;outline-offset:4px}.ds-input-meta{display:flex;justify-content:space-between;gap:8px;font-size:9px;line-height:1.7;color:#68705f;margin-top:5px;font-variant-numeric:tabular-nums}@media(max-width:760px){.ds-personal textarea{font-size:16px}.ds-input-meta{font-size:10px}}"
+    },
+    {
+      "name": "Native tempo select",
+      "kind": "input",
+      "refersTo": "select",
+      "description": "The understated native selector used for tempo and adapted to print fields.",
+      "html": "<div class=\"ds-tempo\"><label for=\"ds-tempo-select\">筆記の速さ</label><select id=\"ds-tempo-select\"><option>ゆっくり · 1×</option><option>軽やか · 2×</option><option>すばやく · 4×</option></select></div>",
+      "css": ".ds-tempo{display:flex;align-items:center;justify-content:space-between;gap:8px;font-family:-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif;font-size:11px;color:var(--ink,#3d443d)}.ds-tempo select{font-family:-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif;border:0;border-bottom:1px solid #a9af9e;background:transparent;color:#46533e;padding:10px 20px 10px 4px;min-height:44px;font-size:12px;border-radius:0;cursor:pointer}.ds-tempo select:focus-visible{outline:2px solid #667752;outline-offset:4px}.ds-tempo select:disabled{cursor:default}"
+    },
+    {
+      "name": "Editorial wordmark navigation",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Wordmark, promise and the link to the preserved setup flow. Lora falls back to Georgia where the host has not loaded it.",
+      "html": "<header class=\"ds-header\"><a href=\"/\" class=\"ds-wordmark\">The Sentence Book<span>Learn digitally. Keep it beautifully.</span></a><a href=\"/setup\" class=\"ds-setup-link\">関心とメモ</a></header>",
+      "css": ".ds-header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:34px 0 28px;color:var(--ink,#3d443d)}.ds-header a{color:inherit;text-underline-offset:5px}.ds-wordmark{font:400 26px/1.3 \"Lora\",Georgia,serif;text-decoration:none;letter-spacing:-.03em}.ds-wordmark span{display:block;font:11px/1.7 \"Lora\",Georgia,serif;letter-spacing:0;color:var(--muted,#62695c);margin-top:5px}.ds-setup-link{font-family:-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif;font-size:12px;padding:12px 0 12px 16px}.ds-header a:focus-visible{outline:2px solid #667752;outline-offset:4px}@media(max-width:760px){.ds-header{padding:22px 0 24px}.ds-wordmark{font-size:22px}.ds-wordmark span{font-size:9px}.ds-setup-link{font-size:11px}}"
+    },
+    {
+      "name": "Notebook paper",
+      "kind": "card",
+      "refersTo": "paper-sheet",
+      "description": "The actual square sheet material, shown as a blank ruled fragment. Preview dimensions are a crop, not the responsive page layout.",
+      "html": "<div class=\"ds-sheet\"><svg class=\"ds-paper\" viewBox=\"0 0 360 180\" role=\"img\" aria-label=\"Cream ruled notebook paper\"><rect width=\"360\" height=\"180\" fill=\"#fffdf5\"/><path d=\"M25 57H339M25 106H339M25 155H339\" fill=\"none\" stroke=\"#d8ddd1\" stroke-width=\".8\"/></svg></div>",
+      "css": ".ds-sheet{background:#fffdf5;box-shadow:0 12px 34px #4d4c3820,0 2px 5px #4d4c3812;border-radius:0}.ds-paper{display:block;width:100%;height:auto}"
+    },
+    {
+      "name": "Completed handwriting",
+      "kind": "custom",
+      "refersTo": "handwriting",
+      "description": "A completed static fragment using actual Sentence Study Strokes paths (SIL OFL 1.1). The app supplies sequential drawing and pen motion; this snippet makes no runtime animation claim.",
+      "html": "<svg class=\"ds-ink\" viewBox=\"0 0 180 90\" role=\"img\" aria-label=\"The word time, in Sentence Study Strokes with a pale marker\"><title>Sentence Study Strokes — Cutlings Singularis derivative, SIL OFL 1.1</title><rect width=\"180\" height=\"90\" fill=\"#fffdf5\"/><path d=\"M11 70H169\" stroke=\"#d8ddd1\" stroke-width=\".8\"/><path d=\"M14 56L104.026 55\" stroke=\"#d8c66b\" stroke-width=\"17\" opacity=\".48\" stroke-linecap=\"round\"/><g fill=\"none\" stroke=\"#3d443d\" stroke-width=\"5.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M25.9-118.6C31.9-113.95 16.8-36.2 27.7-2.31 33.5 15.59 68.1-5.25 64.9-12.25\" transform=\"translate(16.000 62) scale(0.235)\"/><path d=\"M9.6-73.12C23.7-72.35 31.3-66.56 54-72.42\" transform=\"translate(16.000 62) scale(0.235)\"/><path d=\"M19.7-70.15C24-36.16 22.9-18.47 21.8-0.88\" transform=\"translate(34.586 62) scale(0.235)\"/><path d=\"M12-0.19C22.7-1.72 32.1-3.89 46.2-3.68\" transform=\"translate(34.586 62) scale(0.235)\"/><path d=\"M24.1-119.13C24.1-119.13 11.1-115.81 12-110.24 13.4-101.29 25.2-104.63 31.9-110.73 37.2-115.65 24.4-121.6 24.4-121.6\" transform=\"translate(34.586 62) scale(0.235)\"/><path d=\"M65.99-60.35C75.39-75.88 85.39-85.79 99.99-80.56 123.39-67.37 111.19-29.79 116.59-1.37\" transform=\"translate(50.068 62) scale(0.235)\"/><path d=\"M14.99-46.16C18.75-64.21 42.3-84.26 52.19-78.54 73.94-65.98 62.29-30.48 66.39-2.83\" transform=\"translate(50.068 62) scale(0.235)\"/><path d=\"M10.19-74.74C14.89-58.12 15.09-29.7 15.99-2.97\" transform=\"translate(50.068 62) scale(0.235)\"/><path d=\"M72.3-20.28C72.3-14.65 36.6 5.47 23-14.93 12.2-31.11 5.2-60.9 27-75.5 43.3-86.41 77.4-69.54 73.7-65.8 59.6-58.18 34.98-40.33 16.78-28.57\" transform=\"translate(82.930 62) scale(0.235)\"/></g></svg>",
+      "css": ".ds-ink{display:block;width:100%;height:auto;max-width:360px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Handwritten Study Notebook",
+    "overview": "The Sentence Book — Learn digitally. Keep it beautifully. Korean Studygram meets a restrained editorial notebook: warm cream paper, fine rules, real monoline handwriting, a pale marker and small handwritten annotations. The page is the keepsake; calm sage controls and compact Japanese labels support it. The typewriter motif and key/case animations are retired.\n\nThis document captures the implemented identity at `/`, extracted on 2026-10-27 from `src/handwriting/handwriting.css`, `HandwritingDemo.tsx`, `model.ts`, `usePersonalInk.ts`, `personal.ts` and `pdf.ts`. `/setup` retains the earlier interest and topic-note scaffold; its visual refresh is deferred. The current handwriting page is a labeled sample and session-only personal line, not a completed learning record. The source of truth for this surface’s composition and delivery limits is [the handwriting prototype note](docs/handwriting-prototype.md).",
+    "keyCharacteristics": [
+      "Cream ruled paper with one ambient page shadow.",
+      "Actual vector handwriting with a following pen, then marker and annotation.",
+      "Lora for the wordmark, Japanese Mincho for headings, system sans for controls.",
+      "Readable completion, visible keyboard focus and reduced-motion behavior.",
+      "A separate vector print composition that preserves the handwriting."
+    ],
+    "rules": [
+      {
+        "name": "The Marker Rule",
+        "body": "Keep the marker beneath the written letters. It appears after the main writing phase and before the annotation; it never replaces readable ink.",
+        "section": "colors"
+      },
+      {
+        "name": "The Stroke Rule",
+        "body": "Handwriting is centerline vector geometry with round caps and joins. A CSS handwriting font, text mask or typewriter character reveal does not implement this identity.",
+        "section": "typography"
+      },
+      {
+        "name": "The Paper Rule",
+        "body": "Reserve the ambient shadow for the notebook sheet. The control rail stays flat, divided by fine rules.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use the cream page, fine rules and subdued sage controls as the current identity.",
+      "Do keep the same stroke geometry for the sample, the personal line and the completed PDF.",
+      "Do preserve visible focus, native control behavior, pause/finish actions and direct completion for reduced motion.",
+      "Do retain unsupported input, identify it beside the field and block export until it is supported.",
+      "Do keep print layout independent of viewport width and the animation clock.",
+      "Do label the sample and the session-only input honestly; animation completion is not evidence of learning completion."
+    ],
+    "donts": [
+      "Don't restore the retired typewriter, key or case motif.",
+      "Don't substitute a font-outline wipe or character reveal for the centerline handwriting.",
+      "Don't place solid highlight color over the letters or reveal annotation before the main writing and marker phases.",
+      "Don't spread paper shadows to every control or turn the control rail into decorative cards.",
+      "Don't add rankings, confetti or a chat interface to this notebook world.",
+      "Don't describe `/setup` as redesigned, or claim Japanese stroke support, saved completed notes, live generation or verified physical printing."
+    ]
+  }
+}

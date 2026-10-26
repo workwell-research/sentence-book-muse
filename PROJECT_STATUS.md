@@ -28,6 +28,7 @@ The separate prior app remains untouched. Existing interest selection and topic-
 - Regression: scripts/qa-scaffold.mjs passed at /setup against local Pages port 8798. Interest selection/custom text/save/reload/cancel/skip/quota failure, note preservation, corrupt-storage protection, HTTP health 200 and generation 503/405 remain correct. Results: docs/qa/setup-regression-2026-10-27.json.
 - Visual: desktop/mobile batched inspection, one correction/confirmation, then a fresh Impeccable review. The reviewer requested sequential personal handwriting; one correction batch was recaptured and the reviewer scored that single finding resolved, disposition ship. The verdict pass is not a new whole-surface audit. Screenshots and results: .impeccable/review/.
 - PDF: actual browser download at output/pdf/handwriting-note.pdf. Pypdf verified one A5 page (419.5276 × 595.2756 pt), no embedded image objects. Poppler raster reviewed for complete lettering, annotation, margins and footer. Initial Poppler fontconfig failure was resolved with a temporary font/cache configuration; no system font settings changed.
+- Documentation: fresh documenter replaced the retired DESIGN.md and generated schemaVersion 2 .impeccable/design.json from actual tokens/components. Parent read the design, parsed the sidecar and verified the route/feature limits. Source implementation commit: d52e85d.
 - Tool limits: Impeccable context/concept-seed/detector launcher could not execute (permission denied). User-pinned direction, direct context, actual screenshots and fresh reviewer were used; no generated seed/card/comp is claimed.
 - Local preview remains available on http://127.0.0.1:5317 while its process runs. The temporary Pages regression server was stopped after checks. No other contributor server was stopped.
 
@@ -44,8 +45,7 @@ No Meta/API call, credential setup, Pages deployment, physical-device test or ph
 ## Work in progress
 | Owner | Files | Work |
 | --- | --- | --- |
-| Codex | PROJECT_STATUS.md, README.md, docs/handwriting-prototype.md, QA evidence, commit | Finish reviewed handwriting prototype; final handoff and repository update |
-| impeccable_documenter | DESIGN.md, .impeccable/design.json | Document the implemented handwriting identity from code; no application edits |
+| — | — | No active edits; handwriting prototype and design documentation complete |
 
 ## History
 - 2026-10-27: Started new code from the supplied design. No old source, lesson corpus, illustrations or saved audio copied. Prior concepts/theme names and intended schema provenance recorded.
@@ -61,3 +61,5 @@ No Meta/API call, credential setup, Pages deployment, physical-device test or ph
 - 2026-10-27: Received the notebook-first redesign concept and proposed Flutter screen/component structure, shared content/evidence/note models, Studygram/editorial design rules, independent PDF rendering and a submission-sized vertical slice. No code or platform migration. Existing implementation and local data preserved; prior test results were not rerun. Flutter choice, initial paper size and learning-stage scope remain open.
 
 - 2026-10-27: Implemented the requested Web handwriting identity in the new repository: sequential vector pen strokes, marker/annotation, personal writing with edit preservation, and independent vector PDF. Retained the /setup flow and prior storage. Added licensed third-party font provenance. 33 tests, production/Functions builds, disposable desktop/mobile and regression checks, PDF parsing/render inspection passed. Fresh reviewer requested one input-motion fix and scored it resolved after correction. No Meta call, deployment, hardware or physical-print claim.
+
+- 2026-10-27: Documented the implemented handwriting design and sidecar; preserved font-source bytes and original readme (upstream CRLF/trailing spaces retained). First-party staged diff checks passed; original vendor formatting is intentionally unchanged.
