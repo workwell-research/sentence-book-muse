@@ -1,5 +1,4 @@
 import { useId, useState } from 'react';
-import { PRESET_THEMES } from './lib/binders';
 import { EMPTY_NOTE, readNote, saveNote } from './lib/composer';
 import type { ComposerNote, Level, NoteRead } from './lib/composer';
 
@@ -49,16 +48,14 @@ export function App() {
       </section>
       <div className="workspace">
         <section className="library" id="shelf" aria-labelledby="shelf-title">
-          <div className="section-heading"><h2 id="shelf-title">あなたの本棚</h2><span>5つのテーマ</span></div>
-          <ul className="binder-shelf">
-            {PRESET_THEMES.map(theme => <li className={`binder ${theme.color}`} key={theme.id}>
-              <div className="binder-label"><h3>{theme.title}</h3><p>{theme.description}</p></div>
-              <span className="binder-count">0 ページ</span>
-              <span className="binder-ring" aria-hidden="true" />
-            </li>)}
-          </ul>
+          <div className="section-heading"><h2 id="shelf-title">あなたの本棚</h2><span>0 冊</span></div>
+          <div className="empty-shelf">
+            <span className="empty-shelf-rule" aria-hidden="true" />
+            <h3>はじまりは、まだ白紙。</h3>
+            <p>テーマは、これから。<br />話したいことに合わせて育てていく本棚です。</p>
+          </div>
           <div className="shelf-edge" aria-hidden="true" />
-          <p className="shelf-caption">まだ空っぽの本棚。<br />ここに、あなたのページを少しずつ。</p>
+          <p className="shelf-caption">教材づくりが始まったら、仕舞う先を提案します。<br />新しい本を増やすときは、あなたが確認してから。</p>
           <div className="inbox-line"><span>仕分けを待つページ</span><span>0 ページ</span></div>
         </section>
         <section className="writing-paper" id="compose" aria-labelledby="compose-title">

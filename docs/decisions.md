@@ -2,12 +2,12 @@
 
 The owner requested a new implementation rather than extending the prior prototype. The new repository name is `sentence-book-muse`.
 
-- Start with Everyday, Travel, Conversation, Love and Quiet Thoughts as an empty classification vocabulary.
-- Work themes can be proposed when appropriate and require explicit confirmation.
+- Owner clarification: start with an empty shelf. Do not fix the number or names of themes.
+- Propose a new binder when no existing one fits, including the first page; create it only with explicit confirmation. Work themes follow the same rule.
 - Build minimal Copy practice first. Detailed typewriter mechanics are optional.
 - Candidate demo: prepare an English presentation, approve a work binder, then file a later page into that same binder. Actual speech content is still needed.
 - Target models: Binder, Page, FilingProposal and PracticeState, with a new local persistence envelope at schemaVersion 1.
-- Generation uses the prior lesson-schema-v2 plus filing. The source schema is outstanding, so no response contract has been fabricated.
+- Owner clarification: the standalone lesson-schema-v2 is unavailable. Define a new sentence_book_page_v1 contract from the supplied design, documented in docs/generation-contract.md. It does not claim compatibility with the unseen prior schema.
 - The draft identifier should be issued by the application, reused for retries and remembered when filed. This prevents duplicate adoption locally; it does not by itself guarantee provider billing idempotency.
 - Estimated duration is a forecast, not a measured learning time. User-reported reasons such as being busy must not be inferred from counts alone.
 

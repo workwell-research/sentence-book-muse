@@ -15,7 +15,8 @@ try {
   await page.goto(base);
   await page.getByRole('heading', { name: 'あなたの本棚' }).waitFor();
   await page.screenshot({ path: `${out}/desktop.png`, fullPage: true });
-  assert.equal(await page.locator('.binder').count(), 5);
+  assert.equal(await page.locator('.binder').count(), 0);
+  await page.getByRole('heading', { name: 'はじまりは、まだ白紙。' }).waitFor();
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   assert.equal(await page.getByRole('button', { name: '教材を作る · 準備中' }).isDisabled(), true);
   await page.getByLabel('話したいこと', { exact: true }).fill('Disposable QA note.');
@@ -25,7 +26,7 @@ try {
   await page.reload();
   assert.equal(await page.getByLabel('話したいこと', { exact: true }).inputValue(), 'Disposable QA note.');
   assert.equal(await page.getByLabel('練習する英語').inputValue(), 'B1');
-  results.push('Desktop 1440x1040: 5 empty binders, no overflow, disabled generation, save/reload passed.');
+  results.push('Desktop 1440x1040: empty shelf without preset themes, no overflow, disabled generation, save/reload passed.');
 
   const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   const phone = await mobile.newPage();

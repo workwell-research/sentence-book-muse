@@ -1,4 +1,4 @@
-/** Fail closed until the approved lesson schema and provider integration are implemented. */
+/** Fail closed until the provider adapter and both validation boundaries are connected. */
 export const onRequest: PagesFunction = ({ request }) => {
   if (request.method !== 'POST') return Response.json(
     { error: { code: 'method_not_allowed', message: 'Use POST.' } },

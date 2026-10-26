@@ -1,4 +1,5 @@
-export type Level = 'A2' | 'B1' | 'B2';
+import type { Level } from '../../shared/lesson-schema';
+export type { Level } from '../../shared/lesson-schema';
 export interface ComposerNote { topic: string; level: Level; nativeLanguage: string }
 export const COMPOSER_KEY = 'sentence-book-muse:composer:v1';
 export const EMPTY_NOTE: ComposerNote = { topic: '', level: 'A2', nativeLanguage: 'ja' };

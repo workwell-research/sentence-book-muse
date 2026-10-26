@@ -1,6 +1,6 @@
 {
   "results": [
-    "Desktop 1440x1040: 5 empty binders, no overflow, disabled generation, save/reload passed.",
+    "Desktop 1440x1040: empty shelf without preset themes, no overflow, disabled generation, save/reload passed.",
     "Mobile Chrome simulation 390x844: no overflow, jump link, input/save/reload passed.",
     "Unreadable note preserved; save blocked and recovery message displayed.",
     "Local Functions: GET health 200; POST generate 503; GET generate 405 with Allow: POST; no-store.",

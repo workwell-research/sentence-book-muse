@@ -4,6 +4,6 @@ Read PROJECT_STATUS.md before working and update it at the end with actual check
 
 This is a new first-party implementation. Do not copy application code, private lessons, old assets or audio from the separate personal prototype. Do not touch its app, browser storage or deployment. A prior design or schema must be identified as such.
 
-Keep secrets server-side in Cloudflare Pages encrypted secrets or a gitignored .dev.vars. Never use VITE_* for a model key. Do not infer missing lesson-schema-v2 types. Keep generation disabled until server/client validation and a bounded real adapter exist.
+Keep secrets server-side in Cloudflare Pages encrypted secrets or a gitignored .dev.vars. Never use VITE_* for a model key. The owner confirmed the standalone lesson-schema-v2 is unavailable. Define this rebuild contract in shared/lesson-schema.ts and docs/generation-contract.md; do not claim legacy v2 compatibility. Start with no preset themes; create proposed binders only after explicit learner approval. Keep generation disabled until server/client validation and a bounded real adapter are connected.
 
 Preserve local user data; unreadable storage must not be overwritten automatically. Use a disposable browser context and separate origin for tests. Commands: npm test, npm run build, npm run pages:build. No deployment or real model call is implied by passing local checks.
