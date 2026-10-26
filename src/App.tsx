@@ -1,4 +1,7 @@
 import { useId, useState } from 'react';
+import { InterestSetup } from './InterestSetup';
+import { readInterests } from './lib/interests';
+import type { InterestRead } from './lib/interests';
 import { EMPTY_NOTE, readNote, saveNote } from './lib/composer';
 import type { ComposerNote, Level, NoteRead } from './lib/composer';
 
@@ -6,7 +9,17 @@ function restore(): NoteRead {
   try { return readNote(window.localStorage); } catch { return { kind: 'unreadable' }; }
 }
 
+function restoreInterests(): InterestRead {
+  try { return readInterests(window.localStorage); } catch { return { kind: 'unreadable' }; }
+}
+
 export function App() {
+  const [profile, setProfile] = useState<InterestRead>(restoreInterests);
+  const [choosingInterests, setChoosingInterests] = useState(profile.kind !== 'ready');
+  function finishInterests() {
+    setChoosingInterests(false);
+    requestAnimationFrame(() => document.getElementById('compose-title')?.focus());
+  }
   const [initial] = useState(restore);
   const [note, setNote] = useState<ComposerNote>(initial.kind === 'ready' ? initial.note : EMPTY_NOTE);
   const [message, setMessage] = useState('');
@@ -36,12 +49,14 @@ export function App() {
   }
 
   return <>
-    <a className="skip-link" href="#compose">メモを書く</a>
+    <a className="skip-link" href={choosingInterests ? "#interests" : "#compose"}>{choosingInterests ? "関心を選ぶ" : "メモを書く"}</a>
     <header className="masthead">
-      <a className="wordmark" href="#shelf">The Sentence Book<span>自分の言葉を、自分の本に。</span></a>
-      <a className="header-link" href="#compose">メモを書く <span aria-hidden="true">→</span></a>
+      <a className="wordmark" href={choosingInterests ? "#interests" : "#shelf"}>The Sentence Book<span>自分の言葉を、自分の本に。</span></a>
+      <a className="header-link" href={choosingInterests ? "#interests" : "#compose"}>{choosingInterests ? "関心を選ぶ" : "メモを書く"} <span aria-hidden="true">→</span></a>
     </header>
     <main>
+      {choosingInterests ? <InterestSetup initial={profile} onDismiss={finishInterests}
+        onSaved={saved => { setProfile({ kind: 'ready', profile: saved }); finishInterests(); }} /> : <>
       <section className="intro" aria-labelledby="intro-title">
         <h1 id="intro-title">話したいことから、<br />一ページずつ。</h1>
         <p>旅のこと、日々のこと、大切なこと。<br />自分の言葉で練習するための、小さな本棚です。</p>
@@ -59,15 +74,20 @@ export function App() {
           <div className="inbox-line"><span>仕分けを待つページ</span><span>0 ページ</span></div>
         </section>
         <section className="writing-paper" id="compose" aria-labelledby="compose-title">
-          <h2 id="compose-title">今日は、何を話したい？</h2>
-          <p className="paper-intro">思い浮かんだことを、いつもの言葉で。</p>
+          <h2 id="compose-title" tabIndex={-1}>今日は、何を話したい？</h2>
+          <p className="paper-intro">今日のひとことや、SNSに書いた短いメモでも。</p>
+          <div className="interest-summary">
+            <div><span>いまの関心</span><p>{profile.kind === 'ready' && profile.profile.interests.length
+              ? profile.profile.interests.join('、') : profile.kind === 'unreadable' ? '保存した関心を読み込めません' : 'まだ選んでいません'}</p></div>
+            <button className="text-button" type="button" onClick={() => setChoosingInterests(true)}>関心を変更</button>
+          </div>
           <form onSubmit={save}>
             <label htmlFor={topicId}>話したいこと</label>
             <textarea id={topicId} value={note.topic} maxLength={2000} rows={5}
-              placeholder="たとえば、旅先で自分の仕事について紹介したい。"
+              placeholder="たとえば、今日は電車が遅れて、コーヒーを買う時間がなかった。"
               onChange={event => update({ topic: event.target.value })}
               aria-describedby={`${topicId}-hint`} />
-            <div className="field-hint" id={`${topicId}-hint`}><span>短いメモで大丈夫です。</span><span>{note.topic.length} / 2,000</span></div>
+            <div className="field-hint" id={`${topicId}-hint`}><span>ひとことでも、空欄でも大丈夫。</span><span>{note.topic.length} / 2,000</span></div>
             <div className="preferences">
               <label>説明に使う言語<select value={note.nativeLanguage} onChange={event => update({ nativeLanguage: event.target.value })}>
                 <option value="ja">日本語</option><option value="en">English</option><option value="es">Español</option>
@@ -80,10 +100,11 @@ export function App() {
             {blocked && <p className="error" role="alert">保存したメモを読み込めませんでした。元のデータを守るため、保存を停止しています。入力する場合は、文章をコピーして控えてください。</p>}
             <div className="form-actions"><button className="save-button" type="submit" disabled={blocked || !dirty}>メモを保存</button><span>このブラウザだけに保存</span></div>
             <p className={failed ? 'save-status error' : 'save-status'} role="status">{message || (dirty ? 'まだ保存されていない変更があります。' : '')}</p>
-            <div className="generation-note"><button type="button" disabled>教材を作る · 準備中</button><p>教材づくりは、ただいま準備中です。<br />話したいことをメモしておけます。</p></div>
+            <div className="generation-note"><button type="button" disabled>教材を作る · 準備中</button><p>教材づくりは、ただいま準備中です。<br />関心領域と、話したいことをメモしておけます。</p></div>
           </form>
         </section>
       </div>
+      </>}
     </main>
     <footer><span>The Sentence Book <i>with Muse</i></span><span>あなたのペースで、一文ずつ。</span></footer>
   </>;

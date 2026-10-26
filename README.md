@@ -7,7 +7,9 @@ A new implementation for the 2026 Meta Global AI Developer Hackathon. Turn somet
 This repository is a **scaffold**, not a working AI demo yet.
 
 - Vite + React + TypeScript application with an empty shelf; themes have no fixed names or count.
+- First-run interest selection with multiple choices, custom additions, skip, edit and local persistence. Interest selection does not create binders.
 - A topic, explanation-language and level note saved locally in this browser.
+- Validated interest-aware request and Muse prompt preparation. These helpers do not make a model request yet.
 - Cloudflare Pages Functions routes for health and the future generation endpoint.
 - `/api/generate` deliberately returns HTTP 503 and makes **no model request**.
 
@@ -29,7 +31,7 @@ npm run types
 npm run dev
 ```
 
-The browser app uses `http://127.0.0.1:5307`. This is a separate origin from the prior app. Its only storage key is `sentence-book-muse:composer:v1`; it does not read or migrate the prior application's data.
+The browser app uses `http://127.0.0.1:5307`. This is a separate origin from the prior app. Its isolated storage keys are `sentence-book-muse:composer:v1` and `sentence-book-muse:interests:v1`; it does not read or migrate the prior application’s data. Existing topic notes are preserved when interests are added or changed.
 
 ```sh
 npm test
@@ -42,7 +44,7 @@ The last command serves `dist` and the Functions on `http://127.0.0.1:8797`. `np
 
 ## Next implementation steps
 
-1. Connect the shared response validator and request-context checks on both server and client.
+1. Connect the interest-aware generation request, Muse prompt and response validator on both server and client; verify actual model output with varied ordinary notes.
 2. Confirm the accessible model ID in the Meta portal. `muse-spark-1.3` is only a candidate.
 3. Set `META_MODEL_API_KEY` as an encrypted Pages secret, never a `VITE_*` variable. For local Functions, use an ignored `.dev.vars` file based on `.dev.vars.example`.
 4. Implement a bounded server request, structured output and server/client validation. Add request limits before a paid public endpoint becomes reachable.

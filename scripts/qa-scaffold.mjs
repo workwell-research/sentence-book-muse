@@ -13,7 +13,18 @@ try {
   const page = await context.newPage();
   page.on('pageerror', error => errors.push(error.message));
   await page.goto(base);
+  await page.getByRole('heading', { name: /心が動きますか/ }).waitFor();
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+  await page.screenshot({ path: out + '/interests-desktop.png', fullPage: true });
+  await page.getByRole('checkbox', { name: '旅行・お出かけ', exact: true }).focus();
+  await page.keyboard.press('Space');
+  await page.getByRole('checkbox', { name: '食べもの・料理', exact: true }).check();
+  await page.getByLabel('自分の言葉で追加').fill('Astronomy');
+  await page.getByLabel('自分の言葉で追加').press('Enter');
+  assert.equal(await page.getByRole('checkbox', { name: 'Astronomy', exact: true }).isChecked(), true);
+  await page.getByRole('button', { name: '関心を保存して進む' }).click();
   await page.getByRole('heading', { name: 'あなたの本棚' }).waitFor();
+  await page.getByRole('heading', { name: '今日は、何を話したい？' }).focus();
   await page.screenshot({ path: `${out}/desktop.png`, fullPage: true });
   assert.equal(await page.locator('.binder').count(), 0);
   await page.getByRole('heading', { name: 'はじまりは、まだ白紙。' }).waitFor();
@@ -26,12 +37,32 @@ try {
   await page.reload();
   assert.equal(await page.getByLabel('話したいこと', { exact: true }).inputValue(), 'Disposable QA note.');
   assert.equal(await page.getByLabel('練習する英語').inputValue(), 'B1');
+  assert.equal(await page.getByRole('heading', { name: /心が動きますか/ }).count(), 0);
+  await page.getByRole('button', { name: '関心を変更' }).click();
+  assert.equal(await page.getByRole('checkbox', { name: '旅行・お出かけ', exact: true }).isChecked(), true);
+  await page.getByRole('checkbox', { name: '旅行・お出かけ', exact: true }).uncheck();
+  await page.getByRole('button', { name: '保存せずメモへ' }).click();
+  assert.equal(await page.getByLabel('話したいこと', { exact: true }).inputValue(), 'Disposable QA note.');
+  await page.getByRole('button', { name: '関心を変更' }).click();
+  assert.equal(await page.getByRole('checkbox', { name: '旅行・お出かけ', exact: true }).isChecked(), true);
+  await page.getByRole('checkbox', { name: '旅行・お出かけ', exact: true }).uncheck();
+  await page.getByRole('button', { name: '関心を保存して進む' }).click();
+  await page.reload();
+  const savedInterests = await page.evaluate(() => JSON.parse(localStorage.getItem('sentence-book-muse:interests:v1')).interests);
+  assert.deepEqual(savedInterests, ['食べもの・料理', 'Astronomy']);
+  results.push('First-run interests: keyboard multi-select, custom input, save/reload, cancel/edit and independent note preservation passed. No binders created.');
   results.push('Desktop 1440x1040: empty shelf without preset themes, no overflow, disabled generation, save/reload passed.');
 
   const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   const phone = await mobile.newPage();
   phone.on('pageerror', error => errors.push(error.message));
   await phone.goto(base);
+  await phone.getByRole('heading', { name: /心が動きますか/ }).waitFor();
+  await phone.screenshot({ path: out + '/interests-mobile.png', fullPage: true });
+  assert.equal(await phone.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+  await phone.getByRole('checkbox', { name: '食べもの・料理', exact: true }).check();
+  await phone.getByRole('button', { name: '関心を保存して進む' }).click();
+  await phone.getByRole('heading', { name: '今日は、何を話したい？' }).focus();
   assert.equal(await phone.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   await phone.screenshot({ path: `${out}/mobile.png`, fullPage: true });
   await phone.locator('.header-link').click();
@@ -49,6 +80,40 @@ try {
   assert.equal(await page.evaluate(() => localStorage.getItem('sentence-book-muse:composer:v1')), '{invalid');
   results.push('Unreadable note preserved; save blocked and recovery message displayed.');
 
+  const skipContext = await browser.newContext();
+  const skipPage = await skipContext.newPage();
+  skipPage.on('pageerror', error => errors.push(error.message));
+  await skipPage.goto(base);
+  await skipPage.getByRole('button', { name: 'あとで選ぶ' }).click();
+  await skipPage.reload();
+  await skipPage.getByRole('heading', { name: 'あなたの本棚' }).waitFor();
+  assert.equal(await skipPage.getByRole('heading', { name: /心が動きますか/ }).count(), 0);
+  await skipPage.evaluate(() => localStorage.setItem('sentence-book-muse:interests:v1', '{invalid-profile'));
+  await skipPage.reload();
+  assert.equal(await skipPage.getByRole('button', { name: '関心を保存して進む' }).isDisabled(), true);
+  await skipPage.getByRole('alert').filter({ hasText: '関心領域を読み込めませんでした' }).waitFor();
+  await skipPage.getByRole('button', { name: '保存せずメモへ' }).click();
+  assert.equal(await skipPage.evaluate(() => localStorage.getItem('sentence-book-muse:interests:v1')), '{invalid-profile');
+  results.push('Explicit skip persists; unreadable interest profile preserved while note access remains available.');
+
+  const quotaContext = await browser.newContext();
+  await quotaContext.addInitScript(() => {
+    const original = Storage.prototype.setItem;
+    Storage.prototype.setItem = function(key, value) {
+      if (key === 'sentence-book-muse:interests:v1') throw new DOMException('Quota exceeded', 'QuotaExceededError');
+      return original.call(this, key, value);
+    };
+  });
+  const quotaPage = await quotaContext.newPage();
+  quotaPage.on('pageerror', error => errors.push(error.message));
+  await quotaPage.goto(base);
+  await quotaPage.getByRole('checkbox', { name: '旅行・お出かけ', exact: true }).check();
+  await quotaPage.getByRole('button', { name: '関心を保存して進む' }).click();
+  await quotaPage.getByRole('status').filter({ hasText: '関心領域を保存できませんでした' }).waitFor();
+  assert.equal(await quotaPage.getByRole('checkbox', { name: '旅行・お出かけ', exact: true }).isChecked(), true);
+  assert.equal(await quotaPage.evaluate(() => localStorage.getItem('sentence-book-muse:interests:v1')), null);
+  results.push('Interest quota failure leaves selection intact and does not mark setup complete.');
+
   const health = await page.request.get(`${base}/api/health`);
   assert.equal(health.status(), 200);
   assert.deepEqual(await health.json(), { status: 'ok', generation: 'unavailable' });
@@ -63,5 +128,6 @@ try {
   assert.deepEqual(errors, []);
   results.push('No browser pageerrors. Disposable browser contexts only; no personal data accessed.');
   await fs.writeFile(`${out}/results.json`, JSON.stringify({ results, errors }, null, 2));
-  console.log(JSON.stringify({ results, screenshots: [`${out}/desktop.png`, `${out}/mobile.png`] }, null, 2));
+  results.push('Interest setup and saved-interest shelf captured on both desktop and mobile.');
+  console.log(JSON.stringify({ results, interestScreenshots: [out + '/interests-desktop.png', out + '/interests-mobile.png'], screenshots: [`${out}/desktop.png`, `${out}/mobile.png`] }, null, 2));
 } finally { await browser.close(); }
