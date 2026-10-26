@@ -12,7 +12,7 @@ try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1040 } });
   const page = await context.newPage();
   page.on('pageerror', error => errors.push(error.message));
-  await page.goto(base);
+  await page.goto(base + '/setup');
   await page.getByRole('heading', { name: /心が動きますか/ }).waitFor();
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
   await page.screenshot({ path: out + '/interests-desktop.png', fullPage: true });
@@ -56,7 +56,7 @@ try {
   const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   const phone = await mobile.newPage();
   phone.on('pageerror', error => errors.push(error.message));
-  await phone.goto(base);
+  await phone.goto(base + '/setup');
   await phone.getByRole('heading', { name: /心が動きますか/ }).waitFor();
   await phone.screenshot({ path: out + '/interests-mobile.png', fullPage: true });
   assert.equal(await phone.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
@@ -83,7 +83,7 @@ try {
   const skipContext = await browser.newContext();
   const skipPage = await skipContext.newPage();
   skipPage.on('pageerror', error => errors.push(error.message));
-  await skipPage.goto(base);
+  await skipPage.goto(base + '/setup');
   await skipPage.getByRole('button', { name: 'あとで選ぶ' }).click();
   await skipPage.reload();
   await skipPage.getByRole('heading', { name: 'あなたの本棚' }).waitFor();
@@ -106,7 +106,7 @@ try {
   });
   const quotaPage = await quotaContext.newPage();
   quotaPage.on('pageerror', error => errors.push(error.message));
-  await quotaPage.goto(base);
+  await quotaPage.goto(base + '/setup');
   await quotaPage.getByRole('checkbox', { name: '旅行・お出かけ', exact: true }).check();
   await quotaPage.getByRole('button', { name: '関心を保存して進む' }).click();
   await quotaPage.getByRole('status').filter({ hasText: '関心領域を保存できませんでした' }).waitFor();

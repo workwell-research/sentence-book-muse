@@ -4,7 +4,13 @@ A new implementation for the 2026 Meta Global AI Developer Hackathon. Turn somet
 
 ## Current status
 
-This repository is a **scaffold**, not a working AI demo yet.
+This repository includes a **working handwriting and PDF prototype** at /. AI generation remains a scaffold.
+
+- Cream ruled notebook with SVG stroke animation, following pen, marker and annotation.
+- Pause/resume, fast-forward, completion and reduced motion.
+- Personal English line (session-only), vector A5/A4 PDF and binding margins.
+- [Handwriting architecture, research and font provenance](docs/handwriting-prototype.md).
+- Earlier interest/topic-note flow preserved at /setup.
 
 - Vite + React + TypeScript application with an empty shelf; themes have no fixed names or count.
 - First-run interest selection with multiple choices, custom additions, skip, edit and local persistence. Interest selection does not create binders.
@@ -17,7 +23,7 @@ The owner clarified that standalone `lesson-schema-v2` is unavailable. The new [
 
 ## Provenance
 
-The author has a separate personal prototype, built and published before the hackathon. This project starts new first-party application code. The concept and design lessons inform this implementation. The initial five-theme scaffold was removed after the owner chose an open-ended shelf. No old application source, lesson corpus, illustrations or saved audio are copied into this repository.
+The author has a separate personal prototype, built and published before the hackathon. This project starts new first-party application code. The concept and design lessons inform this implementation. The initial five-theme scaffold was removed after the owner chose an open-ended shelf. No old application source, lesson corpus, illustrations or saved audio are copied into this repository. The new handwriting runtime uses a third-party Cutlings-derived stroke font, explicitly licensed and credited under SIL OFL 1.1; see public/licenses/. Font data is not claimed as first-party hackathon work.
 
 The supplied rebuild design references a prior lesson schema whose source is unavailable. This project uses the design’s field requirements and a newly authored contract; no legacy schema compatibility is claimed. Commit timestamps are supporting records; they do not by themselves establish originality or rule eligibility. Dependencies and fonts remain third-party work under their own licenses. Do not describe this scaffold as the completed submission.
 
@@ -41,6 +47,10 @@ npm run pages:dev
 ```
 
 The last command serves `dist` and the Functions on `http://127.0.0.1:8797`. `npm run dev` serves the frontend only. The generate route still returns 503 with or without credentials.
+
+## Prototype verification
+
+Run npm test and npm run build. With npm run preview running, QA_BASE_URL=http://127.0.0.1:5308 node scripts/qa-handwriting.mjs exercises the notebook and downloads output/pdf/handwriting-note.pdf using disposable Chrome contexts. For the interest flow, use npm run pages:dev and node scripts/qa-scaffold.mjs. No real learning data is used.
 
 ## Next implementation steps
 

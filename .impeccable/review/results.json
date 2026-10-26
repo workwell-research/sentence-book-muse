@@ -1,0 +1,9 @@
+{
+  "results": [
+    "Desktop: moving pen, pause/resume, speed, completion/replay, typing, unsupported input, PDF before completion, storage preservation and no overflow passed.",
+    "Mobile Chrome simulation 390x844: controls in first viewport, complete page, personal input and no overflow passed.",
+    "Personal text: pasted input draws one stroke at a time, pen follows, pause/resume and finish work; complete captures include the full personal line.",
+    "Reduced motion shows completed text; keyboard skip link is reachable."
+  ],
+  "errors": []
+}

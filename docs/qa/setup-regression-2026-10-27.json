@@ -1,0 +1,13 @@
+{
+  "results": [
+    "First-run interests: keyboard multi-select, custom input, save/reload, cancel/edit and independent note preservation passed. No binders created.",
+    "Desktop 1440x1040: empty shelf without preset themes, no overflow, disabled generation, save/reload passed.",
+    "Mobile Chrome simulation 390x844: no overflow, jump link, input/save/reload passed.",
+    "Unreadable note preserved; save blocked and recovery message displayed.",
+    "Explicit skip persists; unreadable interest profile preserved while note access remains available.",
+    "Interest quota failure leaves selection intact and does not mark setup complete.",
+    "Local Functions: GET health 200; POST generate 503; GET generate 405 with Allow: POST; no-store.",
+    "No browser pageerrors. Disposable browser contexts only; no personal data accessed."
+  ],
+  "errors": []
+}

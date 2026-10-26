@@ -1,3 +1,4 @@
+import './styles.css';
 import { useId, useState } from 'react';
 import { InterestSetup } from './InterestSetup';
 import { readInterests } from './lib/interests';
