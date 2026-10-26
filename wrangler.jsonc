@@ -1,0 +1,10 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "sentence-book-muse",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2026-10-26",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "META_MODEL": ""
+  }
+}

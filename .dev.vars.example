@@ -1,0 +1,3 @@
+# Copy to .dev.vars for local Pages development. Never commit a real key.
+# The generation endpoint is disabled until the lesson-schema-v2 contract is available.
+META_MODEL_API_KEY=

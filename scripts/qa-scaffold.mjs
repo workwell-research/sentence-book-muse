@@ -1,0 +1,66 @@
+import { chromium } from '@playwright/test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+
+const base = process.env.QA_BASE_URL || 'http://127.0.0.1:8797';
+const out = process.env.QA_OUTPUT_DIR || '/private/tmp/sentence-book-muse-qa';
+await fs.mkdir(out, { recursive: true });
+const browser = await chromium.launch({ channel: 'chrome', headless: true });
+const errors = [];
+const results = [];
+try {
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1040 } });
+  const page = await context.newPage();
+  page.on('pageerror', error => errors.push(error.message));
+  await page.goto(base);
+  await page.getByRole('heading', { name: 'あなたの本棚' }).waitFor();
+  await page.screenshot({ path: `${out}/desktop.png`, fullPage: true });
+  assert.equal(await page.locator('.binder').count(), 5);
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+  assert.equal(await page.getByRole('button', { name: '教材を作る · 準備中' }).isDisabled(), true);
+  await page.getByLabel('話したいこと', { exact: true }).fill('Disposable QA note.');
+  await page.getByLabel('練習する英語').selectOption('B1');
+  await page.getByRole('button', { name: 'メモを保存', exact: true }).click();
+  await page.getByRole('status').filter({ hasText: '保存しました' }).waitFor();
+  await page.reload();
+  assert.equal(await page.getByLabel('話したいこと', { exact: true }).inputValue(), 'Disposable QA note.');
+  assert.equal(await page.getByLabel('練習する英語').inputValue(), 'B1');
+  results.push('Desktop 1440x1040: 5 empty binders, no overflow, disabled generation, save/reload passed.');
+
+  const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+  const phone = await mobile.newPage();
+  phone.on('pageerror', error => errors.push(error.message));
+  await phone.goto(base);
+  assert.equal(await phone.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+  await phone.screenshot({ path: `${out}/mobile.png`, fullPage: true });
+  await phone.locator('.header-link').click();
+  await phone.getByLabel('話したいこと', { exact: true }).fill('Mobile disposable note.');
+  await phone.getByRole('button', { name: 'メモを保存', exact: true }).click();
+  await phone.getByRole('status').filter({ hasText: '保存しました' }).waitFor();
+  await phone.reload();
+  assert.equal(await phone.getByLabel('話したいこと', { exact: true }).inputValue(), 'Mobile disposable note.');
+  results.push('Mobile Chrome simulation 390x844: no overflow, jump link, input/save/reload passed.');
+
+  await page.evaluate(() => localStorage.setItem('sentence-book-muse:composer:v1', '{invalid'));
+  await page.reload();
+  assert.equal(await page.getByRole('button', { name: 'メモを保存', exact: true }).isDisabled(), true);
+  await page.getByRole('alert').filter({ hasText: '読み込めませんでした' }).waitFor();
+  assert.equal(await page.evaluate(() => localStorage.getItem('sentence-book-muse:composer:v1')), '{invalid');
+  results.push('Unreadable note preserved; save blocked and recovery message displayed.');
+
+  const health = await page.request.get(`${base}/api/health`);
+  assert.equal(health.status(), 200);
+  assert.deepEqual(await health.json(), { status: 'ok', generation: 'unavailable' });
+  const generation = await page.request.post(`${base}/api/generate`, { data: { topic: 'QA fixture' } });
+  assert.equal(generation.status(), 503);
+  assert.equal((await generation.json()).error.code, 'generation_unavailable');
+  const getGeneration = await page.request.get(`${base}/api/generate`);
+  assert.equal(getGeneration.status(), 405);
+  assert.equal(getGeneration.headers().allow, 'POST');
+  assert.equal(generation.headers()['cache-control'], 'no-store');
+  results.push('Local Functions: GET health 200; POST generate 503; GET generate 405 with Allow: POST; no-store.');
+  assert.deepEqual(errors, []);
+  results.push('No browser pageerrors. Disposable browser contexts only; no personal data accessed.');
+  await fs.writeFile(`${out}/results.json`, JSON.stringify({ results, errors }, null, 2));
+  console.log(JSON.stringify({ results, screenshots: [`${out}/desktop.png`, `${out}/mobile.png`] }, null, 2));
+} finally { await browser.close(); }
