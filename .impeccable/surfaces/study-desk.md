@@ -22,3 +22,6 @@ See `.impeccable/review/desk/qa.json`, `pdf-checks.json`, captures and `finish-r
 
 ## 2026-10-27 owner refinements
 Learning index labels are English names only; active Copy uses sage and inactive tabs neutral paper. Removed number/status badges and all Copy Next buttons. Enter handles checks/save/advance; audio has an Option/Alt+R hint. Later tabs remain disabled. These instructions supersede the original handoff’s control/status styling.
+
+## 2026-10-27 writing visibility correction
+The model and active input must remain visible together. During editing, scroll the paper internally rather than following later lines by scrolling the model away. Size that viewport from the available screen height; keep native input and A5/PDF coordinates unchanged.

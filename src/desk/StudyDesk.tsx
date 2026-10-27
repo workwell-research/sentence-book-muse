@@ -1,9 +1,9 @@
-import {useEffect,useMemo,useRef,useState} from 'react';
+import {useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
 import type {CSSProperties,KeyboardEvent} from 'react';
 import {A5Notebook} from '../handwriting/A5Notebook';
 import {englishFonts,japaneseFonts} from '../handwriting/fonts';
 import {studySample} from '../handwriting/study-content';
-import {supported,layoutText} from '../handwriting/model';
+import {supported} from '../handwriting/model';
 import {displayKey,practiceKey,displaySchema,practiceSchema,defaultDisplay,emptyCopy,validCopy,readSaved,saveRecord,submitCopy,nextCopy,markerIds,themes,idleTimer,timerAt,toggleTimer} from './core';
 import type {CopyRecord,DeskDisplay,DeskTheme} from './core';
 import {deskLayout,confirmedLayout,inputPosition,practiceScene} from './note';
@@ -13,6 +13,7 @@ import './desk.css';
 import {LiveDraftInk} from './LiveDraftInk';
 import {audioShortcut,createLessonSpeaker} from './audio';
 import type {AudioState} from './audio';
+import {caretOffset,revealDelta,writingPaperHeight} from './viewport';
 
 const themeNames={'pure-white':'Pure White',natural:'Natural',walnut:'Walnut'};
 const markerNames={blue:'Blue',pink:'Pink',purple:'Purple',gray:'Gray',orange:'Orange',green:'Green'};
@@ -53,6 +54,9 @@ export function StudyDesk(){
  const [animateId,setAnimateId]=useState<string|null>(null),[time,setTime]=useState(1e9),[playing,setPlaying]=useState(false),[speed,setSpeed]=useState(2);
  const [reduced,setReduced]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches),[fontReady,setFontReady]=useState(false),[exporting,setExporting]=useState(false);
  const editor=useRef<HTMLTextAreaElement>(null),settings=useRef<HTMLDialogElement>(null),paper=useRef<HTMLDivElement>(null);
+ const lessonPanel=useRef<HTMLDivElement>(null),paperViewport=useRef<HTMLDivElement>(null),writingControls=useRef<HTMLDivElement>(null);
+ const [paperHeight,setPaperHeight]=useState(320);
+ const follow=useRef(()=>{});
  const composing=useRef(false),compositionEnded=useRef(0),[unit,setUnit]=useState(470/148);
  const current=studySample.sentences[record.index];
  const layout=useMemo(()=>deskLayout(record,display,personalMode),[record.personal,record.checks,display.english,display.japanese,display.binding,display.side,personalMode]);
@@ -76,18 +80,40 @@ export function StudyDesk(){
  function changeDisplay(patch:Partial<DeskDisplay>){const next={...display,...patch};setDisplay(next);try{saveRecord(displayKey,next,loadedDisplay.blocked);}catch(e){setNotice((e as Error).message);}if(patch.english||patch.japanese){setAnimateId(null);setTime(1e9);setPlaying(false);}}
  function persist(next:CopyRecord,required=false){try{saveRecord(practiceKey,next,loadedCopy.blocked);setRecord(next);return true;}catch(e){setError((e as Error).message);if(!required)setRecord(next);return false;}}
  function followCaret(){
-  const el=editor.current,scroll=el?.closest('.desk-paper-scroll');
-  if(!el||!scroll||composing.current||scroll.scrollWidth<=scroll.clientWidth)return;
-  const count=[...el.value.slice(0,el.selectionEnd)].length;
-  const glyphs=layoutText(el.value,0,0,position.width,4.1,5.2,englishFonts[display.english].data);
-  const next=glyphs.find(g=>g.index===count),previous=glyphs.filter(g=>g.index<count).at(-1);
-  const caret=(next?.x??(previous?previous.x+previous.advance:0))*unit;
-  const x=el.getBoundingClientRect().left+caret,box=scroll.getBoundingClientRect();
-  if(x>box.right-24)scroll.scrollLeft+=x-box.right+24;
-  else if(x<box.left+24)scroll.scrollLeft+=x-box.left-24;
+  const el=editor.current,scroll=paperViewport.current,model=lessonPanel.current;
+  if(!el||!scroll||!model||document.activeElement!==el||composing.current||settings.current?.open)return;
+  const viewport=window.visualViewport,top=viewport?.offsetTop??0,bottom=top+(viewport?.height??innerHeight);
+  // Keep the model above the paper; only the paper pans as the learner writes.
+  const modelBox=model.getBoundingClientRect(),paperBox=scroll.getBoundingClientRect();
+  if(modelBox.top<top+8||paperBox.bottom>bottom-8){
+   window.scrollBy({top:modelBox.top-top-16,behavior:'instant'});
+  }
+  const caret=caretOffset(el.value,el.selectionEnd,el.clientWidth/unit,englishFonts[display.english].data);
+  const box=scroll.getBoundingClientRect(),input=el.getBoundingClientRect();
+  const x=input.left+caret.x*unit-el.scrollLeft,y=input.top+caret.y*unit-el.scrollTop;
+  scroll.scrollBy({
+   left:revealDelta(x,x+2,box.left,box.left+scroll.clientWidth),
+   top:revealDelta(y,y+5.2*unit,box.top,box.top+scroll.clientHeight,40),
+   behavior:'instant',
+  });
  }
+ follow.current=followCaret;
+ useLayoutEffect(()=>{
+  if(!isEditing)return;
+  let frame=0;
+  const update=()=>{
+   const model=lessonPanel.current,scroll=paperViewport.current;if(!model||!scroll)return;
+   setPaperHeight(writingPaperHeight(window.visualViewport?.height??innerHeight,scroll.getBoundingClientRect().top-model.getBoundingClientRect().top));
+   cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>follow.current());
+  };
+  const observer=new ResizeObserver(update);
+  if(lessonPanel.current)observer.observe(lessonPanel.current);
+  if(writingControls.current)observer.observe(writingControls.current);
+  window.addEventListener('resize',update);window.visualViewport?.addEventListener('resize',update);update();
+  return()=>{cancelAnimationFrame(frame);observer.disconnect();window.removeEventListener('resize',update);window.visualViewport?.removeEventListener('resize',update);};
+ },[isEditing]);
  function changeDraft(value:string){requestAnimationFrame(followCaret);setError('');persist(personalMode?{...record,personalDraft:value}:{...record,draft:value});}
- function focusNextLine(){setInputScroll({x:0,y:0});requestAnimationFrame(()=>{const el=editor.current;if(!el)return;el.scrollTop=0;el.scrollLeft=0;el.focus({preventScroll:true});el.setSelectionRange(0,0);el.scrollIntoView({block:'nearest',inline:'nearest'});requestAnimationFrame(followCaret);});}
+ function focusNextLine(){setInputScroll({x:0,y:0});requestAnimationFrame(()=>{const el=editor.current;if(!el)return;el.scrollTop=0;el.scrollLeft=0;el.focus({preventScroll:true});el.setSelectionRange(0,0);requestAnimationFrame(()=>follow.current());});}
  function confirm(){
   if(composing.current||Date.now()-compositionEnded.current<100||settings.current?.open||!fontReady)return;
   try{
@@ -98,10 +124,10 @@ export function StudyDesk(){
  }
  function keyDown(e:KeyboardEvent<HTMLTextAreaElement>){if(e.key!=='Enter'||e.shiftKey||e.altKey||e.metaKey||e.ctrlKey)return;if(e.repeat){e.preventDefault();return;}if(e.nativeEvent.isComposing||composing.current||e.keyCode===229||e.repeat||Date.now()-compositionEnded.current<100){return;}e.preventDefault();confirm();}
  function playAudio(){speaker.play(current.text);}
- function startPersonal(){setPersonalMode(true);changeDisplay({content:'study-notes'});requestAnimationFrame(()=>editor.current?.focus());}
+ function startPersonal(){setPersonalMode(true);changeDisplay({content:'study-notes'});requestAnimationFrame(()=>{editor.current?.focus({preventScroll:true});follow.current();});}
  async function exportPdf(){setExporting(true);try{const {exportStudyNote}=await import('../handwriting/study-pdf');const bytes=await exportStudyNote(confirmedLayout(layout,record,display),view,{...display,notebook:'a5',palette:display.marker,markers:display.printMarkers??display.markers});const url=URL.createObjectURL(new Blob([new Uint8Array(bytes)],{type:'application/pdf'}));const a=document.createElement('a');a.href=url;a.download=display.sheet==='A4'?'sentence-book-a5-on-a4.pdf':'sentence-book-a5.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);setNotice('PDFを作成しました。100%（実際のサイズ）で印刷してください。');}catch(e){setNotice((e as Error).message);}finally{setExporting(false);}}
  const inputTop=(position.y-4.65)*unit;
- return <div className={'study-desk theme-'+display.theme} style={{'--paper':paperColor} as CSSProperties}>
+ return <div className={'study-desk theme-'+display.theme+(isEditing?' is-writing':'')} style={{'--paper':paperColor} as CSSProperties}>
   <a className="desk-skip" href="#notebook-input">ノートの入力へ</a>
   <header className="desk-header"><a href="/" className="desk-wordmark">The Sentence Book</a><span className="desk-tagline">Learn digitally. Keep it beautifully.</span><button className="settings-button" onClick={()=>settings.current?.showModal()}><Icon name="settings"/>表示・印刷</button></header>
   <main className="desk-grid">
@@ -112,7 +138,7 @@ export function StudyDesk(){
       <span className="pen-label">{markerNames[id]}</span><span className="pen-check" aria-hidden="true"><Icon name="check"/></span>
     </label>)}</fieldset>
    </section>
-   <div className="lesson-panel">
+   <div className="lesson-panel" ref={lessonPanel}>
     <ol className="lesson-steps" role="tablist" aria-label="学習の5ステップ">{lessonSteps.map((label,i)=><li key={label} role="presentation"><button type="button" role="tab" id={'learning-step-'+i} aria-selected={i===0} aria-controls={i===0?'lesson-copy':undefined} disabled={i!==0}>{label}</button></li>)}</ol>
    <section className="model-card" id="lesson-copy" role="tabpanel" aria-labelledby="learning-step-0"><div className="model-heading"><h1 id="copy-complete" tabIndex={-1}>{record.phase==='complete'?'Copy complete':'Copy'}</h1><span>{record.entries.length} / {studySample.sentences.length}</span></div>
      <p className="model-sentence">{current.text}</p><p className={'model-meaning '+(meaning||audio.message?'':'is-hidden')+(audio.message?' audio-error':'')} aria-hidden={!meaning&&!audio.message} role={audio.message?'alert':undefined}>{audio.message||translations[record.index]}</p>
@@ -129,13 +155,13 @@ export function StudyDesk(){
      {tab===4&&(record.phase==='complete'?<><p>{studySample.title}</p><p>8文を書き終えました。</p><button onClick={startPersonal}>自分のひとことを書く</button><button onClick={exportPdf} disabled={exporting}>PDFに保存</button></>:<p>8文を書き終えると、<br/>ここに一枚のノートが残ります。</p>)}
     </div>
    </section>
-   <section className="notebook-area" aria-label="A5学習ノート"><div className="writing-controls"><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><div className="notebook-tools"><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button>{record.phase==='complete'&&!personalMode&&<button onClick={startPersonal}>ひとことを書く</button>}</div></div><p id="writing-error" role="alert" className="writing-feedback">{error}</p></div>
-    <div className={'desk-paper-scroll '+(zoom==='read'?'reading':'')} tabIndex={0} aria-label="ノート。拡大表示は左右にスクロールできます">
+   <section className="notebook-area" aria-label="A5学習ノート"><div className="writing-controls" ref={writingControls}><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><div className="notebook-tools"><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button>{record.phase==='complete'&&!personalMode&&<button onClick={startPersonal}>ひとことを書く</button>}</div></div><p id="writing-error" role="alert" className="writing-feedback">{error}</p></div>
+    <div className={'desk-paper-scroll '+(zoom==='read'?'reading':'')} ref={paperViewport} style={isEditing?{height:paperHeight}:undefined} tabIndex={0} aria-label="ノート。入力行に合わせてスクロールします。拡大表示は左右にもスクロールできます">
      <div className="desk-pages">{layout.pages.map(p=><div className="desk-page-row" key={p.index}><div className="desk-paper" ref={p.index===0?paper:undefined}>
       <A5Notebook showPen={!annotationsOnly||!isEditing} layout={rendered} scene={scene} pageIndex={p.index} paperColor={paperColor} view={view} ink={palettes[display.marker]} time={reduced?scene.duration:time} reduced={reduced} personalInk={emptyInk}/>
       {p.index===position.page&&isEditing&&<textarea ref={editor} id="notebook-input" className={'notebook-input'+(liveInk?' live-ink-input':'')} aria-label={personalMode?'ノートに自分のひとことを書く':'ノートに英文を書き写す'} aria-describedby="writing-help writing-error" aria-invalid={!!error} enterKeyHint={personalMode||record.index===studySample.sentences.length-1?'done':'next'} spellCheck={false} autoCapitalize="off" autoCorrect="off" wrap="soft" disabled={!fontReady} value={draft} rows={1}
        style={{left:position.x*unit,top:inputTop,width:position.width*unit,height:inputHeight*unit,fontFamily:'"'+inputFamily+'", sans-serif',fontSize:4.1*unit,lineHeight:(5.2*unit)+'px'} as CSSProperties}
-       onScroll={e=>setInputScroll({x:e.currentTarget.scrollLeft/unit,y:e.currentTarget.scrollTop/unit})} onChange={e=>changeDraft(e.target.value)} onSelect={followCaret} onFocus={()=>requestAnimationFrame(followCaret)} onKeyDown={keyDown} onCompositionStart={()=>{composing.current=true;setComposingText(true);}} onCompositionEnd={()=>{composing.current=false;setComposingText(false);compositionEnded.current=Date.now();}}/>}
+       onScroll={e=>setInputScroll({x:e.currentTarget.scrollLeft/unit,y:e.currentTarget.scrollTop/unit})} onChange={e=>changeDraft(e.target.value)} onSelect={followCaret} onFocus={()=>requestAnimationFrame(followCaret)} onKeyDown={keyDown} onCompositionStart={()=>{composing.current=true;setComposingText(true);}} onCompositionEnd={()=>{composing.current=false;setComposingText(false);compositionEnded.current=Date.now();requestAnimationFrame(()=>follow.current());}}/>}
       {p.index===position.page&&isEditing&&<LiveDraftInk key={personalMode?'personal':current.id} text={draft.length<=500?draft:''} font={display.english} animate={liveInk&&!reduced} visible={liveInk} x={position.x} y={position.y} width={position.width} top={position.y-4.65} height={inputHeight} scrollX={inputScroll.x} scrollY={inputScroll.y}/>}
      </div></div>)}</div>
     </div>

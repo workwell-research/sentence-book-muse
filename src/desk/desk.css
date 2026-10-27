@@ -105,3 +105,6 @@
 .audio-button kbd{font:10px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;white-space:nowrap;border:1px solid #b9c1bc;border-radius:3px;padding:2px 4px;color:#52615a;background:#f1f4ef}
 .model-meaning.audio-error{color:#883e2d}
 @media(max-width:760px){.model-actions{flex-wrap:wrap}.model-actions .audio-button{gap:5px}.audio-button kbd{font-size:9px;padding:2px 3px}.notebook-toolbar>span{font-size:10px}}
+
+/* Keep the model in view while the fixed A5 paper scrolls to the active writing line. */
+.is-writing .desk-paper-scroll{overscroll-behavior:contain;scroll-behavior:auto;overflow-anchor:none}
