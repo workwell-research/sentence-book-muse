@@ -1,6 +1,6 @@
 # Sentence Book Muse — progress
 
-Last updated: 2026-10-27 JST. Owner: Codex — live handwriting during native input.
+Last updated: 2026-10-27 JST. Owner: Codex — pen-free live handwriting.
 
 Local checkout: `/Users/maki/sentence-book-muse`
 Public repository: https://github.com/workwell-research/sentence-book-muse
@@ -8,7 +8,7 @@ Public repository: https://github.com/workwell-research/sentence-book-muse
 ## Current scope
 The owner's latest [Work desktop handoff](docs/desktop-study-desk.md) is implemented locally at `/`: Pure White / Natural / Walnut desk materials, six horizontal pen radios, optional timer, open index book, read-only model card and one native editor on the current A5 line. The notebook keeps the adopted physical A5 composition and the Japanese phrase-gloss 1mm lift. The previous standalone typography demo remains at `/handwriting`; saved interest/topic setup remains at `/setup`.
 
-The synthetic eight-sentence Copy sample starts at zero. Draft handwriting now appears as letters are typed, at the native input coordinates. Matching input is explicitly checked and saved without replaying the body; associated annotations follow confirmation. Next is separate, and the final explicit action completes the sample. Actual local drafts, confirmations, review marks, personal writing and display settings persist under two new keys. This is one sample record, not a generated lesson or multi-lesson history. The old app and its real learning data remain unchanged; only its shared status records this work.
+The synthetic eight-sentence Copy sample starts at zero. Draft handwriting now appears as letters are typed, at the native input coordinates, without a following pen graphic. Matching input is explicitly checked and saved without replaying the body; associated annotations follow confirmation. Next is separate, and the final explicit action completes the sample. Actual local drafts, confirmations, review marks, personal writing and display settings persist under two new keys. This is one sample record, not a generated lesson or multi-lesson history. The old app and its real learning data remain unchanged; only its shared status records this work.
 
 A5 is the finished note (148 × 210mm); A5/A4 are printer-sheet choices. A4 repeats each A5 page twice at 100%. Readability Italic remains the English default, with EMS Tech / Print / Pen and Klee One / Zen Kurenaido available. PDF uses independently rendered vectors and canonical confirmed text, excluding the desk, editor and unconfirmed drafts. Physical printing remains unverified.
 
@@ -21,6 +21,10 @@ A5 is the finished note (148 × 210mm); A5/A4 are printer-sheet choices. A4 repe
 - Common A5 layout: default left18/right12mm, 31 body rules at 5.2mm, 1.6-row title band, measured main/footnote columns and continuation pages. Readability default; Tech title-only optical lift; Japanese phrase glosses raised 1mm. Memo/marker/zoom changes do not reflow. Font or explicit binding-margin changes can reflow.
 - Independent white-paper PDF with vectors and fully embedded Japanese. A5 TrimBox or A4 landscape two-up at x0/149mm, scale1; left/right binding and12/18/24mm choices. Marker override is independent. PrintScaling=None plus 100%/one-PDF-page-per-sheet instructions. English is vector paths, not searchable/tagged text.
 - Earlier `/setup`: empty shelf without fixed themes, saved interest choices and topic/language/level notes, validated interest-aware request/prompt builder. Shared `sentence_book_page_v1` contract is a new format, not recovered legacy v2. Generation route remains unavailable/503; no actual model request, account configuration or deployment in this increment.
+
+## Verification — 2026-10-27 remove live typing pen
+- Owner reported the following pen was distracting during realtime input. Removed only that graphic and its position calculation; draft stroke animation, native caret/editing, save/confirmation and replay behavior remain. No new setting or asset.
+- Both TypeScript projects and Vite build passed (`index-Bmigb3RF.js`). Disposable Chrome on5327 confirmed no draft pen, continuing path progression and one editor at1600/390px, with no page errors. Both captures were opened: `.impeccable/review/live-input-no-pen/`. No new unit tests or repeat of the full66-test suite for this render-only removal. PDF/device/realIME/deployment were not rechecked. Only our QA5327 stopped; existing5317 retained. Next: owner checks the quieter typing experience.
 
 ## Verification — 2026-10-27 live handwriting input
 - Owner correction: immediate handwriting during typing replaces post-confirmation body replay. Stable character identities preserve unchanged ink across edits; pending prior work completes before the next key. Single-character timing is at most160ms; small edits at most300ms; large paste/restore/font changes complete immediately. One native textarea retains caret, selection, Undo, IME and scroll. Unsupported/IME/over500-character drafts stay visible in native text. Reduced motion displays finished draft strokes. Explicit checking/saving/Next and confirmed-only PDF remain.
@@ -148,3 +152,5 @@ No Meta/API call, credential setup, Pages deployment, physical-device test or ph
 - 2026-10-27: Implemented owner-authorized Work desktop handoff as live three-theme desk, six pens/index/timer, read-only model card and one current-line native editor. Added explicit saved Copy progression and separate display/practice keys, matched native font derivatives and confirmed-only PDF. Preserved old setup/data, four English/two Japanese faces, fixed A5 and 1mm gloss lift.60 tests/final TS+Vite build, disposable browser/edge/motion checks and parsed/viewed vector PDFs passed. Reviewer scored all five findings resolved. Kept5317; stopped onlyQA5327. No actual Meta/API/auth/deployment/physical-device/print change or verification.
 
 - 2026-10-27: Owner rejected whole-sentence rewriting after confirmation. Added in-place live SVG draft strokes over one native textarea, stable edit IDs, bounded timing, native composition/unsupported fallback, and no body replay when confirming.66 tests/build and disposable real-key/browser/mobile checks passed; four captures viewed. Updated current docs/sidecar; historical desk review/PDF evidence kept separate. No new physical-device/realIME/PDF-render/deployment claim.
+
+- 2026-10-27: Removed the distracting pen graphic from live draft input at owner request; kept animated strokes and native caret. TS/Vite build and disposable desktop/mobile input checks passed; two captures viewed. No repeated full test/PDF/device suite.

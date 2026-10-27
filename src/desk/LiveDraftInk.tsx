@@ -1,8 +1,7 @@
 import {useEffect,useId,useMemo,useState} from 'react';
 import {englishFonts} from '../handwriting/fonts';
 import type {EnglishFontId} from '../handwriting/fonts';
-import {inkProgress,layoutText,strokePoint} from '../handwriting/model';
-import {Pen} from '../handwriting/A5Notebook';
+import {inkProgress,layoutText} from '../handwriting/model';
 import {initialWriting,editWriting} from './live-ink';
 
 interface Props {
@@ -34,13 +33,10 @@ export function LiveDraftInk({text,font,animate,visible,x,y,width,top,height,scr
   frame=requestAnimationFrame(tick);return()=>cancelAnimationFrame(frame);
  },[writing.end]);
  const active=animate?paths.find(p=>now<p.start+p.duration):undefined;
- const point=active?strokePoint(active,Math.max(0,(now-active.start)/active.duration)):null;
- const pen=point&&point.y-scrollY>=top&&point.y-scrollY<=top+height?point:null;
  return <svg className="live-draft-ink" viewBox="0 0 148 210" aria-hidden="true" data-testid="live-draft-ink" data-visible={visible} data-pending={!!active} style={{visibility:visible?'visible':'hidden'}}>
   <defs><clipPath id={clip}><rect x={x} y={top} width={width} height={height}/></clipPath></defs>
   <g clipPath={'url(#'+clip+')'}><g transform={'translate('+(-scrollX)+' '+(-scrollY)+')'}>
    {paths.map(p=>{const progress=animate?inkProgress((now-p.start)/p.duration):1;return <path key={p.key} data-ink-key={p.key} d={p.d} transform={'translate('+p.x+' '+p.y+') scale('+p.scale+')'} visibility={progress===0?'hidden':'visible'} fill="none" stroke={p.color} strokeWidth={p.width} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={p.length+' '+p.length} strokeDashoffset={p.length*(1-progress)}/>;})}
   </g></g>
-  {pen&&visible&&<g data-testid="live-draft-pen" transform={'translate('+(-scrollX)+' '+(-scrollY)+')'}><Pen {...pen}/></g>}
  </svg>;
 }
