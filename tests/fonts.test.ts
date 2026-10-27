@@ -42,7 +42,7 @@ describe('selectable notebook fonts',()=>{
    const face=japaneseFonts[japanese],bytes=fs.readFileSync('public/fonts/'+face.file+'.ttf');
    expect(createHash('sha256').update(bytes).digest('hex')).toBe(face.metrics.sha256);
    for(const c of '〜のために時間をつくる書き留める落ち着くがぱ')expect(staticAdvance(c,2.7,japanese)).toBeGreaterThan(0);
-   const layout=createA5Layout(studySample,undefined,{english:japanese==='zen'?'pen':'print',japanese});
+   const layout=createA5Layout(studySample,undefined,{english:japanese==='zen'?'tech':'readability',japanese});
    const doc=await PDFDocument.load(await exportStudyNote(layout,defaultView,defaultPrintOptions,bytes));
    expect(doc.getSubject()).toContain('fonts '+layout.fonts.english+'/'+japanese);
    const streams=doc.context.enumerateIndirectObjects().map(([,o])=>o).filter(o=>o instanceof PDFRawStream);

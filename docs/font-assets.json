@@ -31,6 +31,36 @@
       "path": "public/fonts/ZenKurenaido-Regular.woff2",
       "sha256": "6e6c202a1dd319a3b523f08c97edd5559729b42d1ebac26986c17094b7192ac1",
       "bytes": 1461800
+    },
+    {
+      "path": "assets/fonts/EMSReadabilityItalic.svg",
+      "sha256": "359ba4fbc35a6ea709b2e4b46f2060bd4a024227d9988dfc3dc180178d582028",
+      "bytes": 50185
+    },
+    {
+      "path": "assets/fonts/EMSTech.svg",
+      "sha256": "6da30b0e44022a07043204f6936ba929a3cf756609921a48ce1a7309a5270775",
+      "bytes": 48932
+    },
+    {
+      "path": "src/handwriting/font-readability.ts",
+      "sha256": "0b405c530f0ca29d0fc8aa95ecaf6f15b6fa3d83b1aa231201548872067b4cf8",
+      "bytes": 116944
+    },
+    {
+      "path": "src/handwriting/font-tech.ts",
+      "sha256": "dcd765719a9460e4b20695daf8627b4bf9e7466acf95b23e1faa53f220774360",
+      "bytes": 115352
+    },
+    {
+      "path": "public/licenses/SourceSans-OFL.txt",
+      "sha256": "56af9b9c6715597e458284a474dc118a50a4150e9d547c70f7b4a33c3e6a9328",
+      "bytes": 4486
+    },
+    {
+      "path": "public/licenses/ArchitectsDaughter-OFL.txt",
+      "sha256": "0e441ae9f18ad0c294cc5b6ae3974c2db1614cab220598578b1b58c4cc334485",
+      "bytes": 4362
     }
   ]
 }

@@ -1,0 +1,71 @@
+[
+  {
+    "file": "output/pdf/preferred-fonts-readability-a5.pdf",
+    "pages": [
+      {
+        "sizeMm": [
+          148.0,
+          210.0
+        ],
+        "images": 0
+      },
+      {
+        "sizeMm": [
+          148.0,
+          210.0
+        ],
+        "images": 0
+      }
+    ],
+    "printScaling": "/None",
+    "memosShown": true,
+    "vocabularyJapaneseRetained": true,
+    "renderWarnings": ""
+  },
+  {
+    "file": "output/pdf/preferred-fonts-tech-a5.pdf",
+    "pages": [
+      {
+        "sizeMm": [
+          148.0,
+          210.0
+        ],
+        "images": 0
+      },
+      {
+        "sizeMm": [
+          148.0,
+          210.0
+        ],
+        "images": 0
+      }
+    ],
+    "printScaling": "/None",
+    "memosShown": true,
+    "vocabularyJapaneseRetained": true,
+    "renderWarnings": ""
+  },
+  {
+    "file": ".impeccable/review/font-expansion/tech-a4-blank.pdf",
+    "pages": [
+      {
+        "sizeMm": [
+          297.0,
+          210.0
+        ],
+        "images": 0
+      },
+      {
+        "sizeMm": [
+          297.0,
+          210.0
+        ],
+        "images": 0
+      }
+    ],
+    "printScaling": "/None",
+    "memosShown": false,
+    "vocabularyJapaneseRetained": true,
+    "renderWarnings": ""
+  }
+]

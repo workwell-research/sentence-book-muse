@@ -1,13 +1,16 @@
 // Font derivative and build script: SIL OFL 1.1.
-// EMS Delight by Sheldon B. Michaels; SVG by Windell H. Oskay; Delius by Natalia Raices.
-// Renamed Sentence Notebook Print: 200-unit normalization, local smooth tangents, selected writing direction/order, quote/dash aliases.
+// EMS strokes by Sheldon B. Michaels; SVG by Windell H. Oskay.
+// Original designers, copyrights and derivative changes: public/fonts/README.md.
+// Renamed Sentence Notebook families; local tangents, normalized scale, spacing and aliases.
 import fs from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import svgpath from 'svgpath';
 import {svgPathProperties} from 'svg-path-properties';
 const packs=[
  {source:'EMSDelight',file:'font-data',name:'Sentence Notebook Print',license:'Delius',scale:.2},
- {source:'EMSNeato',file:'font-neat',name:'Sentence Notebook Pen',license:'BadScript',scale:.145},
+ {source:'EMSNeato',file:'font-neat',name:'Sentence Notebook Pen',license:'BadScript',scale:.145,overhang:true},
+ {source:'EMSReadabilityItalic',file:'font-readability',name:'Sentence Notebook Readability',license:'SourceSans',scale:.2,overhang:true},
+ {source:'EMSTech',file:'font-tech',name:'Sentence Notebook Tech',license:'ArchitectsDaughter',scale:.2,overhang:true},
 ];
 for(const pack of packs){
 const path='assets/fonts/'+pack.source+'.svg';
@@ -45,8 +48,8 @@ for(const g of glyphs){
  const strokes=parts.map(points=>svgpath(smooth(points)).scale(pack.scale,-pack.scale).round(3).toString()).map(d=>({d,length:new svgPathProperties(d).getTotalLength()})).filter(s=>s.length>.1);
  data[g.unicode]={advance:Number(g['horiz-adv-x']||378)*pack.scale,strokes};
 }
-// Give the slanted pen face space for its real overhangs; adjacent letters stay separate.
-if(pack.source==='EMSNeato')for(const glyph of Object.values(data)){
+// Reserve real overhangs; independent letters stay separate.
+if(pack.overhang)for(const glyph of Object.values(data)){
  const xs=glyph.strokes.flatMap(s=>{const p=new svgPathProperties(s.d);return Array.from({length:101},(_,i)=>p.getPointAtLength(s.length*i/100).x);});
  if(!xs.length)continue;
  const min=Math.min(...xs),max=Math.max(...xs),shift=Math.max(0,2-min);

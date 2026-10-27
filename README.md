@@ -8,6 +8,7 @@ This repository includes a **working handwriting and PDF prototype** at /. AI ge
 
 - Fixed physical A5 notebook: shared ruled geometry, measured sentence/gloss/footnote placement and continuation pages; independent SVG and PDF renderers.
 - Memo shown/blank controls preserve body wrapping, reserved rows, vocabulary meanings, review checks and personal writing. Sentence-only and marker choices are independent.
+- Four English handwriting choices (Readability Italic by default, EMS Tech, Print and Pen) and independent Klee One/Zen Kurenaido Japanese; the same selected fonts in PDF.
 - SVG stroke animation, following pen and markers; mobile fit or scrollable readable-size view without text reflow.
 - Pause/resume, fast-forward, completion and reduced motion.
 - Personal English line and review checks (session-only), six accent sets with graphite body ink, blue default and optional printed markers.
@@ -53,7 +54,7 @@ The last command serves `dist` and the Functions on `http://127.0.0.1:8797`. `np
 
 ## Prototype verification
 
-Run `npm test` and `npm run build`. With `npm run preview` running on its separate origin, `QA_BASE_URL=http://127.0.0.1:5308 npm run qa:a5` checks desktop/narrow layouts, memo-state preservation, six accents, content/marker settings, reduced motion and actual A5/A4 PDF downloads in disposable Chrome contexts. `qa:handwriting` and `qa:print` currently alias this same script; do not rerun all three. The older directly named QA scripts remain historical and target the previous page. Latest outputs are `output/pdf/shared-a5-memos-shown.pdf` and `output/pdf/shared-a5-on-a4-memos-blank.pdf`; evidence is in `.impeccable/review/shared-a5/`. For the interest flow, use `npm run pages:dev` and `node scripts/qa-scaffold.mjs`. No real learning data is used.
+Run `npm test` and `npm run build`. With `npm run preview` running on its separate origin, `QA_BASE_URL=http://127.0.0.1:5308 npm run qa:a5` checks all eight font combinations, the Readability default, desktop/narrow layouts, memo-state preservation, six accents, content/marker settings, reduced motion and actual A5/A4 PDF downloads in disposable Chrome contexts. `qa:handwriting` and `qa:print` currently alias this same script; do not rerun all three. The older directly named QA scripts remain historical and target the previous page. Latest comparison outputs are `output/pdf/preferred-fonts-readability-a5.pdf` and `output/pdf/preferred-fonts-tech-a5.pdf`, with identical content, Japanese font, color and memo/marker settings. Both have two A5 pages, with personal writing on page 2. A4/blank-memo evidence and captures are in `.impeccable/review/font-expansion/`. For the interest flow, use `npm run pages:dev` and `node scripts/qa-scaffold.mjs`. No real learning data is used.
 
 ## Next implementation steps
 

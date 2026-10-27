@@ -2,8 +2,8 @@ import { chromium } from '@playwright/test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 const base=process.env.QA_BASE_URL||'http://127.0.0.1:5327';
-const out=process.env.QA_OUTPUT_DIR||'.impeccable/review/shared-a5';
-const pdfPrefix=process.env.QA_PDF_PREFIX||'shared-a5';
+const out=process.env.QA_OUTPUT_DIR||'.impeccable/review/font-expansion';
+const pdfPrefix=process.env.QA_PDF_PREFIX||'preferred-fonts';
 await fs.mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const errors=[],results=[];
@@ -15,6 +15,10 @@ try {
  });
  const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
  await page.goto(base);await page.evaluate(()=>document.fonts.ready);
+ const englishOptions=await page.getByLabel('英語の書体',{exact:true}).locator('option').evaluateAll(os=>os.map(o=>o.value));
+ assert.deepEqual(englishOptions,['readability','tech','print','pen']);
+ assert.equal(await page.getByLabel('英語の書体',{exact:true}).inputValue(),'readability');
+ assert.equal(await page.getByLabel('日本語の書体',{exact:true}).inputValue(),'klee');
  await page.getByRole('button',{name:'一時停止',exact:true}).click();
  const strokeSnapshot=()=>page.locator('[data-layer="body"] path').evaluateAll(paths=>paths.map(p=>[p.getAttribute('transform'),p.getAttribute('stroke-dashoffset')]));
  const paused=await strokeSnapshot();
@@ -63,17 +67,21 @@ try {
   await page.getByRole('button',{name:'完成ページをPDFに',exact:true}).click();
   await (await waiting).saveAs(path);
  }
- await download('output/pdf/'+pdfPrefix+'-memos-shown.pdf');
+ await download('output/pdf/'+pdfPrefix+'-readability-a5.pdf');
+ await page.locator('.notebook').first().screenshot({path:out+'/a5-readability.png'});
+ await page.getByLabel('英語の書体',{exact:true}).selectOption('tech');
+ await download('output/pdf/'+pdfPrefix+'-tech-a5.pdf');
+ await page.locator('.notebook').first().screenshot({path:out+'/a5-tech.png'});
  await page.getByRole('radio',{name:'空欄にする',exact:true}).check();
  await page.getByLabel('印刷用紙',{exact:true}).selectOption('A4');
  await page.getByLabel('PDFにマーカーを入れる').uncheck();
- await page.getByLabel('英語の書体',{exact:true}).selectOption('pen');
+ await page.getByLabel('英語の書体',{exact:true}).selectOption('tech');
  await page.getByLabel('日本語の書体',{exact:true}).selectOption('zen');
  await page.evaluate(()=>document.fonts.load('16px "Notebook Zen"'));
- await download('output/pdf/'+pdfPrefix+'-on-a4-memos-blank.pdf');
- await page.locator('.notebook').first().screenshot({path:out+'/paper-pen-zen-blank.png'});
+ await download(out+'/tech-a4-blank.pdf');
+ await page.locator('.notebook').first().screenshot({path:out+'/paper-tech-zen-blank.png'});
  const faces={};
- for(const english of ['print','pen'])for(const japanese of ['klee','zen']) {
+ for(const english of englishOptions)for(const japanese of ['klee','zen']) {
   await page.getByLabel('英語の書体',{exact:true}).selectOption(english);
   await page.getByLabel('日本語の書体',{exact:true}).selectOption(japanese);
   const family=japanese==='klee'?'Notebook Klee':'Notebook Zen';
@@ -89,20 +97,26 @@ try {
   await page.getByRole('radio',{name:'空欄にする',exact:true}).check();
   faces[english]=await page.locator('[data-layer="body"] path').first().getAttribute('d');
  }
- assert.notEqual(faces.print,faces.pen);
- await page.getByLabel('英語の書体',{exact:true}).selectOption('print');
+ assert.equal(new Set(Object.values(faces)).size,englishOptions.length);
+ await page.getByLabel('英語の書体',{exact:true}).selectOption('readability');
  await page.getByLabel('日本語の書体',{exact:true}).selectOption('klee');
  await page.getByLabel('英語の書体',{exact:true}).focus();
  assert.equal(await page.evaluate(()=>document.activeElement?.id),'english-font');
  await page.keyboard.press('Tab');
  assert.equal(await page.evaluate(()=>document.activeElement?.id),'japanese-font');
- await page.getByLabel('英語の書体',{exact:true}).selectOption('pen');
- await page.getByRole('button',{name:'もう一度見る',exact:true}).click();
- await page.waitForFunction(()=>!!document.querySelector('[data-testid="pen"]'));
- await page.getByRole('button',{name:'一時停止',exact:true}).click();
- await page.screenshot({path:out+'/pen-motion.png',fullPage:true});
- await page.getByLabel('英語の書体',{exact:true}).selectOption('print');
- results.push('Four English/Japanese combinations: correct loaded family and different vector strokes, retained input/checks/memos, native selector keyboard focus and pen playback. A5 uses Print/Klee; A4 uses Pen/Zen.');
+ for(const face of ['readability','tech']) {
+  await page.getByLabel('英語の書体',{exact:true}).selectOption(face);
+  await page.getByRole('button',{name:'もう一度見る',exact:true}).click();
+  await page.waitForFunction(()=>!!document.querySelector('[data-testid="pen"]'));
+  await page.getByRole('button',{name:'一時停止',exact:true}).click();
+  const pausedFace=await strokeSnapshot();
+  await page.getByRole('radio',{name:'表示する',exact:true}).check();
+  assert.deepEqual(await strokeSnapshot(),pausedFace);
+  await page.screenshot({path:out+'/'+face+'-motion.png',fullPage:true});
+  await page.getByRole('button',{name:'完成を見る',exact:true}).click();
+ }
+ await page.getByLabel('英語の書体',{exact:true}).selectOption('readability');
+ results.push('Eight English/Japanese combinations: correct loaded family and different vector strokes, retained input/checks/memos, native selector keyboard focus and pen playback. Two comparison A5 downloads use Readability/Klee and Tech/Klee; A4 uses Tech/Zen. Readability is the default.');
  await page.getByLabel('印刷用紙',{exact:true}).selectOption('A5');
  await page.getByRole('radio',{name:'表示する',exact:true}).check();
  await page.getByText('単語の復習チェック',{exact:true}).click();
@@ -115,6 +129,7 @@ try {
  const mobileContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'});
  const mobile=await mobileContext.newPage();mobile.on('pageerror',e=>errors.push(e.message));
  await mobile.goto(base);await mobile.evaluate(()=>document.fonts.ready);
+ assert.equal(await mobile.getByLabel('英語の書体',{exact:true}).inputValue(),'readability');
  assert.equal(await mobile.getByLabel('ノートの表示倍率').inputValue(),'read');
  await mobile.waitForFunction(()=>document.querySelector('.notebook')?.getAttribute('data-complete')==='true');
  await mobile.evaluate(()=>scrollTo(0,0));

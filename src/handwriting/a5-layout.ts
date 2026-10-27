@@ -165,7 +165,7 @@ export function createA5Layout(source:StudyContent,paper:PaperSettings={binding:
       // Metadata is never silently truncated, nor allowed to move the body grid.
       if(lines.length>1)throw new Error('タイトルまたは分類名が欄に収まりません。表示名を短くしてください。元の内容は保持されています。');
       const g=lines[0]??[],w=g.reduce((n,l)=>n+l.advance,0),left=align==='right'?x-w:x;
-      p.runs.push({id,sourceId:source.id,text,x:left,y,size,face:'hand',layer:'base',accent:false,glyphs:g.map(l=>({...l,x:l.x+left,y}))});
+      p.runs.push({id,sourceId:source.id,text,x:left,y,size,face:'hand',layer:'base',accent:false,glyphs:g.map(l=>({...l,x:l.x+left,y:y-(id==='title'?englishFonts[fonts.english].titleLift*size/200:0)}))});
     };
     metadata('title',source.title,left,A5.titleBaseline,5.65,'left',edge-left);
     metadata('classification',source.classification?.label??'Unfiled',edge,11,3.2,'right',edge-left);
