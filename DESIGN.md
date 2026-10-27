@@ -140,7 +140,20 @@ components:
 
 # Design System: The Sentence Book
 
-## Owner reference correction — 2026-10-27
+## Adopted Work design — 2026-10-27
+
+The owner adopted the blue Studygram layout in the chat “ノートUIUXアセットを磨く” and explicitly asked this implementation chat to use its handoff. The [implementation specification](docs/studygram-notebook-implementation-spec-2026-10-27.md) is the new target design authority. Its linked JSON/SVG defines exact geometry; the two final generated images define visual hierarchy. This adoption supersedes the earlier open layout choice, not the pending production glyph work.
+
+- One shared A5 refill: 148 × 210 mm, left 18/right 12 mm, body rules every 5.2 mm from y39.2, and a separate 8.32 mm (1.6-row) title band. Paper dimensions, ruling and source-based dates/IDs stay stable across modes.
+- Short English sentences occupy every other line. Difficult phrases alone receive supplied inline meanings; a narrow right column contains supplied paraphrase/nuance footnotes. Vocabulary uses one fine rectangular frame with review checkboxes; supplied grammar and personal examples remain separate content.
+- Initial blue accents with dark graphite body ink (#383A3D), pale marker (#D5E7F2), blue headings (#47627A) and paper #FFFEFB. Preserve all six choices; accents do not recolor the whole story. Current green-first tinted-body implementation below is inventory, not the new target.
+- Content, study memos and markers are independent choices. Blank memos omit only inline meanings, right-footnote text and their correspondence marks after layout, preserving columns, reserved rows, later blocks and page count. Sentence-only mode retains the same English line plan and remembers memo preference for return.
+- Screen and PDF consume a shared physical layout plan. PDF rendering remains independent of screen capture, viewport and animation. A5/A4 imposition remains unscaled. Long content continues on identical pages; no squeezing. Japanese static text needs a licensed embedded font; unsupported stroke animation must not be claimed.
+- Red-sheet output targets explicit English answer spans/inflections while preserving meanings and suppressing markers beneath those targets. The supplied calibration PDF contains candidates, not verified physical hiding.
+
+Integration is pending. This handoff turn changes reference/design records only, not the running app, glyphs, palette defaults or PDF renderer. The frontmatter and existing component/token inventory below still describe the shipped prototype until implementation changes them. The new references were authored specifically for this rebuild; no old application source or private lessons were imported. See docs/assets/studygram-2026-10-27/handoff-import.json for source hashes and portable-path changes.
+
+## Earlier prototype feedback — 2026-10-27
 
 The owner supplied two Studygram reference images and described the current demo as looking like an elementary-school notebook. This feedback overrides the earlier positive finish review as evidence of visual acceptance. The working stroke/PDF mechanism is verified; its current visual identity has not been accepted.
 
@@ -158,7 +171,7 @@ This update records direction only. The token inventory and component descriptio
 
 The Sentence Book — Learn digitally. Keep it beautifully. Korean Studygram meets a restrained editorial notebook: warm cream paper, fine rules, real monoline handwriting, a pale marker and small handwritten annotations. The page is the keepsake; calm sage controls and compact Japanese labels support it. The typewriter motif and key/case animations are retired.
 
-This document captures the implemented identity at `/`, extracted on 2026-10-27 from `src/handwriting/handwriting.css`, `HandwritingDemo.tsx`, `model.ts`, `usePersonalInk.ts`, `personal.ts`, `palettes.ts`, `print-layout.ts` and `pdf.ts`. `/setup` retains the earlier interest and topic-note scaffold; its visual refresh is deferred. The current handwriting page is a labeled sample and session-only personal line, not a completed learning record. The source of truth for this surface’s composition and delivery limits is [the handwriting prototype note](docs/handwriting-prototype.md).
+This document captures the implemented identity at `/`, extracted on 2026-10-27 from `src/handwriting/handwriting.css`, `HandwritingDemo.tsx`, `model.ts`, `usePersonalInk.ts`, `personal.ts`, `palettes.ts`, `print-layout.ts` and `pdf.ts`. `/setup` retains the earlier interest and topic-note scaffold; its visual refresh is deferred. The current handwriting page is a labeled sample and session-only personal line, not a completed learning record. The [adopted Work specification](docs/studygram-notebook-implementation-spec-2026-10-27.md) defines the next composition. The [handwriting prototype note](docs/handwriting-prototype.md) records what currently runs and its limits.
 
 **Key Characteristics:**
 

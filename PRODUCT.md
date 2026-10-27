@@ -14,6 +14,11 @@ People who want to practise English about their own lives, ideas and work. A req
 ## Current prototype
 The root route demonstrates real handwriting, pen motion, marker/annotation, a personal English line and independent vector PDF export. Six notebook ink sets are selectable. The finished notebook format is A5 portrait; A5 single-page and A4 landscape two-up are printer-sheet choices, with optional printed markers. It uses labeled synthetic sample content. The earlier interest/topic workflow is preserved at /setup. No AI call or learning result is implied by completing the animation.
 
+## Adopted notebook design — integration pending
+The owner selected the blue Studygram notebook from Work on 2026-10-27 and handed it to this implementation chat. Use docs/studygram-notebook-implementation-spec-2026-10-27.md and its linked exact refill JSON/SVG as the target. Newly generated reference images express visual direction and are not application backgrounds or lesson data. The import manifest records provenance.
+
+Use a common A5 row plan for screen/PDF, dark graphite body with six accent choices (blue first-use default), every-other-row short sentences, difficult-phrase meanings, right-side footnotes and a boxed vocabulary list. Learners can choose sentence-only or supplied study content, shown or blank memos, and markers independently. Blank memos preserve all layout and source data. Preserve A5/A4 printing, add long-content continuation and explicit red-sheet answer ranges according to the handoff. These requirements are adopted; runtime integration, final glyph fitting and physical printing remain pending.
+
 ## Workflow
 First choose interests (multiple suggestions or custom text, editable and skippable). Then optionally write a daily note or a short post in the learner’s language, choose A2/B1/B2, generate with Muse, review content and filing destination, explicitly approve, and practise Copy. Interest onboarding and local note saving work; generation, filing and practice remain planned.
 
@@ -24,7 +29,7 @@ New first-party implementation. The prior app remains independent. No copied sou
 The Sentence Book — Learn digitally. Keep it beautifully. The target identity is a carefully organized Studygram notebook: white/subtle ivory paper, small consistent handwriting, fine rules, pale accent colors and compact annotations. Useful learning information has clear visual hierarchy and sufficient density. The owner explicitly retired the typewriter motif and its key/case animations. Korean Studygram × restrained editorial design; the note itself is the artifact. Learning should progressively produce a beautiful page worth printing. No rankings, confetti or chat interface.
 
 ## Evidence and open inputs
-On 2026-10-27 the owner supplied pastel and near-monochrome Studygram references and rejected the current demo’s oversized, irregular handwriting as too elementary-school-like. Current Cutlings-derived lettering is a temporary technical prototype, not an approved final asset. The owner plans to remake materials later. Reference images establish direction and are not bundled application assets. See the owner-reference correction at the top of DESIGN.md.
+On 2026-10-27 the owner supplied pastel and near-monochrome Studygram references and rejected the current demo’s oversized, irregular handwriting as too elementary-school-like. Current Cutlings-derived lettering is a temporary technical prototype, not an approved final asset. The owner plans to remake materials later. Reference images establish direction and are not bundled application assets. That criticism applies to the current technical prototype. The subsequently adopted Work layout now resolves the design direction; see the adoption section at the top of DESIGN.md.
 
 A user-supplied rebuild design exists. The owner clarified that standalone lesson-schema-v2 is unavailable and five themes are unnecessary. The new contract is documented in docs/generation-contract.md; actual Meta model access is outstanding. Abu Dhabi presentation preparation is a proposed demo topic; no personal speech, claims or specialist content has been supplied.
 

@@ -1,0 +1,344 @@
+{
+  "date": "2026-10-27",
+  "status": "Owner-adopted design and display requirements; implementation handoff complete, app integration pending.",
+  "selectedLayout": {
+    "path": "22-blue-even-rows-footnotes-study.png",
+    "ownerFeedback": "この中ではブルーのレイアウトが好み",
+    "scope": "Owner-adopted notebook composition and visual direction; exact geometry uses refill JSON/SVG. Final production handwriting remains to be fitted.",
+    "initialReference": "../02-graphite-dense.png"
+  },
+  "header": {
+    "alwaysVisible": true,
+    "fields": [
+      "confirmedThemeTitle",
+      "dateAndPage",
+      "pageTitle"
+    ],
+    "syntheticExample": {
+      "confirmedThemeTitle": "Daily Life / Small Habits",
+      "pageTitle": "Making time for small things",
+      "date": "27 OCT 2026",
+      "pageNumber": "01"
+    },
+    "themeSource": "Use the learner-confirmed binder/theme, never a new fixed theme list or an unapproved classification.",
+    "longTheme": "Preserve the fixed metadata zone and full stored source label. Measure a readable two-line English display label; if it cannot fit, use an explicit short display label with full-label access. Never push the story or change refill geometry by preset.",
+    "noTheme": "Show Unfiled while the page remains unfiled; do not imply confirmation.",
+    "displayLanguage": "English, as requested by owner. Use a learner-confirmed English label; do not silently change stored binder identity or categorize again.",
+    "paperHeaderSpace": {
+      "proposalHeightMm": 34,
+      "themeBaselineMm": 11,
+      "dateBaselineMm": 17,
+      "titleBaselineMm": 31,
+      "topTitleRuleMm": 24.64,
+      "bottomTitleRuleMm": 32.96,
+      "treatment": "Dedicated title band, independent of body grid: 1.6 × 5.2mm = 8.32mm, centered at28.8mm. No ordinary thin rule inside. Pale0.35mm borders from left edge. Keep metadata, title baseline, body grid and footer positions.",
+      "appliesTo": "All display and print content variants",
+      "status": "Shared vector geometry exists; note renderer integration pending.",
+      "dedicatedTitleFieldHeightMm": 8.32,
+      "titleFieldBodyRowRatio": 1.6,
+      "internalBodyRules": 0
+    },
+    "metadataPlacement": "Right-aligned vertical stack: English theme above date/page. Both share right edge x=136 mm. Title is left-aligned between two stronger horizontal rules."
+  },
+  "content": {
+    "label": "ノートに載せる内容",
+    "presets": [
+      {
+        "id": "sentences-only",
+        "label": "センテンスのみ",
+        "sentences": true,
+        "vocabulary": false,
+        "idioms": false,
+        "grammar": false,
+        "personalExample": false,
+        "fullSentenceTranslations": false,
+        "inlineMeanings": false,
+        "footnotes": false
+      },
+      {
+        "id": "study-notes",
+        "label": "単語・イディオムも載せる",
+        "sentences": true,
+        "vocabulary": true,
+        "idioms": true,
+        "grammar": true,
+        "personalExample": true,
+        "fullSentenceTranslations": false,
+        "inlineMeanings": true,
+        "footnotes": true
+      }
+    ],
+    "presetNote": "Presets describe available content layers. The independent memo mode shown/blank gates inlineMeanings and footnotes after shared layout. Grammar/personal sections render only actual supplied data; no automatic content creation.",
+    "behavior": "Rendering preferences only: preserve source content, stable IDs and learning records. Keep the same story baselines across presets. Omitted later sections leave normal writing space; do not enlarge letters.",
+    "absentData": "Skip unavailable word/idiom/grammar blocks; do not generate or imply new content just to fill the template.",
+    "print": "PDF uses the selected content. Its content preview must match the exported preset.",
+    "vocabularyBox": {
+      "shape": "one thin rectangular frame around the whole words/idioms section",
+      "corners": "square",
+      "fill": "none",
+      "lineMm": 0.25,
+      "rows": "one entry and Japanese meaning per row",
+      "checkbox": {
+        "style": "empty 2.5mm graphite square",
+        "meaning": "optional personal review mark; never automated correctness or stage completion",
+        "print": "keep squares visible in normal and red-sheet modes; blank by default unless actual saved review marks are explicitly included",
+        "source": "per-entry stable ID; hiding content does not erase marks"
+      }
+    },
+    "storyToVocabularySpacing": {
+      "additionalEmptyRuledRowsComparedTo08": 1,
+      "proposalGridPitchMm": 5.2,
+      "behavior": "After the full story plus any longer footnote blocks, leave one full empty ruled row before the vocabulary top border. The right divider ends before the gap. Omit this section gap when vocabulary is absent."
+    },
+    "personalExamplePair": {
+      "english": "Instead of rushing, I took a short walk.",
+      "japanese": "急ぐ代わりに、少し散歩をした。",
+      "provenance": "Newly authored synthetic bilingual example; not real user writing.",
+      "translationScaleComparedToEnglish": 0.68,
+      "translationBaselineGapGridPitches": 0.6,
+      "blankRowsBetween": 0,
+      "alignment": "Left-align directly under English as a compact bilingual pair; Japanese has a separate optical baseline within the row pitch.",
+      "questionInReference": "The prior synthetic question 明日は何のために時間をつくる？ is replaced in this visual example by its direct Japanese meaning. Do not delete real learning questions or stored source content.",
+      "unavailableTranslation": "Only show actual supplied/confirmed translation data; do not manufacture a user-authored statement or silently replace source material."
+    },
+    "copywritingRhythm": {
+      "shortSentence": "One English sentence on every other ruled row; baseline advance is exactly 2 × 5.2mm = 10.4mm. No alternating one-row/one-and-a-half-row leading.",
+      "wrappedSentence": "Measure using the actual glyph advances. Wrap onto the next rule; reserve one empty ruled row after the final English line. If a difficult expression requires a gloss below an interior wrapped line, reserve that annotation row before resuming English rather than overlapping ink. This long-line exception still uses whole grid pitches.",
+      "presets": "Build one story row plan for all presets. Hiding glosses, footnotes or markers does not reflow or stretch the story.",
+      "overflow": "Retain font size, margins, rule pitch and header/footer. Move a whole sentence and its annotations or the next section to the next identical refill when needed.",
+      "fixture": "body-rhythm-v1.json",
+      "scope": "Adopted layout requirement with a synthetic row fixture; renderer integration and font fitting pending."
+    },
+    "inlineMeaningNotes": {
+      "placement": "Small Japanese meaning immediately below the selected difficult expression, left-aligned to its phrase anchor, in the reserved ruled row.",
+      "selection": "Only explicitly supplied/confirmed difficult expressions. Do not gloss every marker or translate every sentence; missing data remains absent.",
+      "syntheticExamples": [
+        {
+          "sentenceId": "example-story-02",
+          "phrase": "made time for",
+          "meaning": "〜のために時間をつくった"
+        },
+        {
+          "sentenceId": "example-story-04",
+          "phrase": "settle in",
+          "meaning": "落ち着く"
+        }
+      ],
+      "markersOff": "Keep meaning notes and their phrase anchors when only marker fills are hidden.",
+      "collisions": "Measure actual phrase span and Japanese glyphs. Reserve row space; never place two glosses on top of one another or shrink the body to fit. Long-note/long-line fitting remains an implementation check."
+    },
+    "rightFootnotes": {
+      "role": "Sparse paraphrases and usage/meaning nuances, rather than full Japanese sentence translations.",
+      "status": "Owner-adopted right-column purpose; actual note content remains supplied/confirmed, not generated to fill space.",
+      "anchors": "Use stable sentence/span IDs and a shared first-line baseline. An English paraphrase may refer to a phrase rather than the whole sentence.",
+      "types": [
+        "paraphrase",
+        "nuance"
+      ],
+      "source": "Only supplied/confirmed note content. Never silently invent notes for actual learning records.",
+      "layout": "Smaller readable fine handwriting, wrapped within the right rail. Measure each note block, push later notes down if needed, keep a visible anchor/connector, and paginate overflow on the same refill. End divider before the story-to-vocabulary gap.",
+      "redSheet": "Include any explicitly mapped answer spans that recur in footnotes in the red-sheet recoloring pass; leave Japanese meanings visible.",
+      "examples": "body-rhythm-v1.json"
+    }
+  },
+  "markers": {
+    "label": "マーカー",
+    "values": [
+      "表示する",
+      "表示しない"
+    ],
+    "behavior": "Independent of content preset. Off removes marker fills from title, phrases and section headings; text, grammar brackets, annotations and header remain.",
+    "print": "Retain an explicit PDF marker override. Without an override, follow screen markers. Omission affects only marker fills and never memo visibility or learning content."
+  },
+  "print": {
+    "modeLabel": "印刷の色",
+    "modes": [
+      "通常のノート",
+      "赤シート用"
+    ],
+    "redSheet": {
+      "ownerConfirmedTarget": "英単語・イディオム（和訳は残す）",
+      "target": "English word/idiom answer spans and their appearances; Japanese meanings, prompts, non-target text and classification/date remain dark.",
+      "duplicates": "Mask explicitly mapped target appearances in body, glossary, grammar examples, personal examples, footnotes and title if present. Include annotated inflections; never infer that an English paraphrase is a target solely because it is in the right rail.",
+      "sourceMapping": "Use stable sentence/entry IDs with explicit spans. Avoid unanchored substring replacement or recoloring punctuation and unrelated text.",
+      "screen": "Normal screen reading retains dark accessible ink. These lighter answer colors belong to the print mode only.",
+      "markers": "In red-sheet mode suppress marker fills underneath answer targets, even if other page markers remain enabled. Do not add black outlines, shadows or duplicate graphite strokes to targets.",
+      "colorStatus": "Unverified orange/red/pink candidates, not a certified printer profile. No CMYK/RGB code guarantees physical hiding.",
+      "calibrationPdf": "../../../../output/pdf/studygram-red-sheet-calibration-20261027.pdf",
+      "actionLabel": "まず1枚、色を試す",
+      "helper": "お手持ちの赤シートで隠れ方を確認してください。",
+      "noSimulation": "Do not claim a screen overlay simulates actual light transmission or printed ink.",
+      "noColorPrinter": "Explain that grayscale output cannot provide the color-dependent effect; keep normal print available."
+    },
+    "inheritedContract": "Fixed A5 finished note. A5 sheet contains one note; A4 landscape contains two original-size copies at x0/149mm and a1mm center cutting strip. Same layout and memo setting feed preview and vector PDF.",
+    "memoMode": "Use the selected memos.shown/blank visibility after the common layout; preserve page count and all remaining ink positions.",
+    "precedence": [
+      "select content layers",
+      "measure and paginate shared layout including supplied memo bounds",
+      "apply memo visibility",
+      "apply marker preference or print override",
+      "apply red-sheet target color and suppress target markers"
+    ]
+  },
+  "writingRegistration": {
+    "ownerRequest": "ノートの欄線に下付でちゃんと乗るようにしたい",
+    "rule": "The writing baseline coincides with the horizontal paper rule. Non-descending lowercase bodies sit on the line; g/j/p/q/y descenders extend below.",
+    "grid": "One layout supplies ruleY and baselineY; baselineY equals ruleY. Row advances are integer multiples of grid pitch. Do not use independent background rule positioning and text bounding-box centering.",
+    "glyphMetrics": "Store baseline, xHeight, ascender, descender and advanceWidth per font/glyph. Never align each glyph or word by its bounding-box bottom. Preserve consistent scale and baseline when a word includes descenders.",
+    "screenAndPrint": "Share semantic baseline and mm layout intent; each renderer maps this to its own coordinates. Do not tune an arbitrary CSS translateY for the current screenshot only.",
+    "annotations": "Japanese glosses use the reserved row below their anchor; align optical script baselines to its rule. Right footnotes anchor to their source sentence and may wrap with independently measured smaller leading. Keep the final compact bilingual pair exception.",
+    "markers": "Markers remain behind text at an offset from the baseline. Their geometry must not move the writing.",
+    "checkboxes": "Align checkbox rows to the same paper baseline; boxes occupy the area above the rule and retain readable spacing from text.",
+    "evidence": "Revised PNGs are visual reference. Per-glyph registration and actual SVG/PDF font metrics still require implementation verification.",
+    "compactTranslationException": "The final small Japanese translation sits immediately below its English, within about 0.6 grid pitch. This explicitly overrides a full empty ruled-row gap for that pair; the English still sits on its rule."
+  },
+  "latestRevision": {
+    "date": "2026-10-27",
+    "scope": "Owner adopted the current blue design. Added shown/blank memo contract, first-use settings and implementation handoff; no new artwork or app code.",
+    "primaryArtwork": "22-blue-even-rows-footnotes-study.png",
+    "minimalArtwork": "23-blue-even-rows-matched-sentences.png",
+    "canonicalRefill": "refill-a5-v1.svg",
+    "geometry": "refill-a5-v1.json",
+    "rhythmFixture": "body-rhythm-v1.json",
+    "implementationSpec": "../../../studygram-notebook-implementation-spec-2026-10-27.md"
+  },
+  "fit": "Preserve letter size and the added paragraph gap. Reclaim unused bottom reply area first; long material continues to another page instead of shrinking text.",
+  "sharedRefill": {
+    "id": "sentence-book-a5-refill-v1",
+    "svg": "refill-a5-v1.svg",
+    "geometry": "refill-a5-v1.json",
+    "pdf": "../../../../output/pdf/studygram-shared-a5-refill-v1.pdf",
+    "layering": "The same unmodified refill is below all content. Hide/show or recolor ink/marker overlays; do not generate a different paper per preset.",
+    "presets": [
+      "sentences-only",
+      "study-notes",
+      "markers-on",
+      "markers-off",
+      "six-ink-palettes",
+      "normal-print",
+      "red-sheet-print",
+      "memos-shown",
+      "memos-blank"
+    ],
+    "locked": [
+      "finished A5 size",
+      "binding/outer margins",
+      "header/footer geometry and rule widths",
+      "body grid origin/pitch/count",
+      "scale/crop",
+      "writing baseline metrics"
+    ],
+    "bodyPlacement": "Use the same first baseline and row registration for identical story content across presets. Extra content can occupy later grid rows; absence never stretches the sheet.",
+    "printerSheet": "On an A4 carrier, place the same unscaled A5 refill. A4 is a printer-sheet choice, not a second refill geometry.",
+    "evidence": "Canonical SVG/PDF and source geometry were verified in prior asset turns. All display settings are implementation requirements; integrated modes and physical print remain unverified.",
+    "previewWorkflow": "When geometry changes, first lock one rich comp, then derive minimal/other views from it by removing content only. Do not independently redesign the paper in each generated comp. Exact source remains shared SVG/JSON/PDF."
+  },
+  "footer": {
+    "text": "The Sentence Book / visual study",
+    "exampleOnly": true,
+    "align": "right",
+    "xMm": 136,
+    "baselineMm": 206,
+    "separatorYmm": 201,
+    "separatorWidthMm": 0.35,
+    "separatorColor": "#D7E0E7",
+    "instruction": "Preserve the small text, position and0.35mm divider width. Extend divider to paper left edge and match body-rule color.",
+    "separatorStartXmm": 0,
+    "separatorEndXmm": 136
+  },
+  "typographyStrokeProposal": {
+    "mainPageTitle": "unchanged prior weight",
+    "nonTitleTextWidthRatio": 0.8,
+    "purpose": "Clearer title/body hierarchy without fading the text color or shrinking letters.",
+    "appliesTo": [
+      "theme/date",
+      "body English",
+      "Japanese translations",
+      "vocabulary",
+      "section headings",
+      "grammar labels",
+      "footer"
+    ],
+    "structuralLines": "Unchanged0.35mm title/footer,0.10mm body ruling; checkbox/frame/bracket strokes do not inherit text thinning.",
+    "implementationEvidence": "New generated mockups are appearance references. Final centerline glyph/PDF weights and print readability remain to be checked."
+  },
+  "implementationSpec": "../../../studygram-notebook-implementation-spec-2026-10-27.md",
+  "ownerApproval": {
+    "date": "2026-10-27",
+    "decision": "このデザインで進めましょう。メモを表示するか空欄にするかも選べるようにして、実装側のCodexに渡せる仕様にまとめてください",
+    "adopted": [
+      "blue Studygram layout and hierarchy",
+      "shared refill and dedicated 1.6-row title band",
+      "every-other-row short sentences",
+      "difficult-expression meanings and right-column paraphrase/nuance notes",
+      "choice of shown or blank study memos"
+    ],
+    "scope": "Design direction and requested behavior. Not a claim of final glyph production, app integration, measured font fitting or physical print validation."
+  },
+  "memos": {
+    "label": "学習メモ",
+    "values": [
+      {
+        "id": "shown",
+        "label": "表示する"
+      },
+      {
+        "id": "blank",
+        "label": "空欄にする"
+      }
+    ],
+    "default": "shown",
+    "scope": [
+      "inline difficult-expression meanings",
+      "right-column paraphrase and nuance footnotes"
+    ],
+    "blank": "Omit only memo ink and footnote correspondence arrows/numbers. Retain reserved gloss rows, the right divider/rail dimensions, story and later-section baselines, wrapping, pagination, header/footer and all data.",
+    "retainedContent": [
+      "vocabulary English and Japanese meanings",
+      "vocabulary frame and review checkboxes",
+      "supplied grammar example and labels",
+      "actual personal English and its compact translation",
+      "stored learner additions and practice state"
+    ],
+    "layout": "Measure and paginate against the same supplied memo content first; apply visibility after layout. Do not recompute the plan when switching shown/blank.",
+    "missingData": "The rich preset retains its writing rail even if no supplied memos exist. Leave the reserved space blank; do not manufacture notes.",
+    "sentencesOnly": "No memo or right divider is rendered. Disable this control with a short explanation, remembering its prior value for return to study-notes.",
+    "markers": "Independent. Hiding marker fills does not hide memos, and blank memos do not turn off markers.",
+    "print": "Same memo mode as preview. Do not output omitted memo ink or printed placeholders. Print-only marker selection remains independent.",
+    "accessibility": "Describe the actually visible note; do not leave hidden memo answers in its SVG accessible description.",
+    "userWriting": "Blank paper supports the user writing notes themselves. Pen-input/editor/persistence features are not implied by this switch; do not overwrite or erase existing user additions."
+  },
+  "initialSettings": {
+    "content": "study-notes",
+    "memoMode": "shown",
+    "screenMarkers": true,
+    "palette": "blue",
+    "printColor": "normal",
+    "printSheet": "A5",
+    "printMarkers": "follow-view",
+    "bindingSide": "left",
+    "bindingMarginMm": 18,
+    "existingPreferences": "Preserve stored explicit choices. These are first-use defaults for the adopted sample."
+  },
+  "layoutInitialValues": {
+    "status": "Implementation starting values, to be fitted with actual production glyphs while preserving canonical paper geometry.",
+    "mainColumnXmm": [
+      18,
+      104
+    ],
+    "dividerXmm": 106,
+    "footnoteXmm": [
+      108,
+      136
+    ],
+    "titlePt": 16,
+    "bodyEnglishPt": 10.5,
+    "footnotePt": 8.5,
+    "paper": "#FFFEFB",
+    "bodyInk": "#383A3D",
+    "blueHeadingAndStructure": "#47627A",
+    "blueMarker": "#D5E7F2",
+    "bodyRuleAndTitleFooterRule": "#D7E0E7",
+    "allPalettes": "Keep dark graphite body; tint markers and small headings, not the whole story."
+  }
+}

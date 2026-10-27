@@ -1,0 +1,105 @@
+{
+  "id": "sentence-book-a5-refill-v1",
+  "date": "2026-10-27",
+  "status": "Owner-adopted shared refill for implementation; app integration and physical printing pending.",
+  "page": {
+    "widthMm": 148,
+    "heightMm": 210,
+    "paper": "#FFFEFB",
+    "printPaper": "unprinted white"
+  },
+  "geometry": {
+    "bindingSide": "left",
+    "bindingMarginMm": 18,
+    "outerMarginMm": 12,
+    "ruleStartXmm": 18,
+    "ruleEndXmm": 136,
+    "bodyFirstRuleMm": 39.2,
+    "bodyLastRuleMm": 195.2,
+    "rulePitchMm": 5.2,
+    "bodyRuleWidthMm": 0.1,
+    "bodyRuleColor": "#D7E0E7",
+    "headerTopRuleMm": 24.64,
+    "headerBottomRuleMm": 32.96,
+    "frameRuleWidthMm": 0.35,
+    "frameRuleColor": "#D7E0E7",
+    "footerRuleMm": 201,
+    "frameRuleStartXmm": 0,
+    "frameRuleEndXmm": 136,
+    "dedicatedTitleHeightMm": 8.32,
+    "dedicatedTitleBodyRowRatio": 1.6,
+    "titleFieldIndependentOfBodyGrid": true
+  },
+  "slots": {
+    "theme": {
+      "xMm": 136,
+      "baselineMm": 11,
+      "align": "right",
+      "language": "English"
+    },
+    "dateAndPage": {
+      "xMm": 136,
+      "baselineMm": 17,
+      "align": "right"
+    },
+    "title": {
+      "xMm": 18,
+      "baselineMm": 31,
+      "align": "left",
+      "betweenHeaderRules": true
+    },
+    "footer": {
+      "xMm": 136,
+      "baselineMm": 206,
+      "align": "right",
+      "syntheticExample": "The Sentence Book / visual study"
+    }
+  },
+  "rule": "All notebook display presets share this exact paper geometry. Content is a separate overlay.",
+  "appliesTo": [
+    "sentences-only",
+    "study-notes",
+    "markers-on",
+    "markers-off",
+    "normal-color-print",
+    "red-sheet-print",
+    "memos-shown",
+    "memos-blank"
+  ],
+  "invariants": [
+    "A5 size and aspect ratio",
+    "binding/outer margins",
+    "header/footer positions and rule weights",
+    "body-rule origin/pitch/count",
+    "text role sizes and baseline registration",
+    "same page-width scale and crop"
+  ],
+  "allowedDifferences": [
+    "content overlays and optional sections",
+    "marker overlays",
+    "print answer colors",
+    "responsive viewport zoom or outer scroll without changing the refill's internal coordinate system"
+  ],
+  "footer": "Keep footer text and position; divider retains0.35mm width, extends left to paper edge x=0, and uses the same pale color as body ruling.",
+  "references": "The user supplied cropped notebook photos to specify metadata hierarchy and line treatment; handwriting content, blur, paper color and printed labels from the photos are not reproduced.",
+  "longContent": "Continue on another identical refill; do not stretch the sheet or thin/crowd its rules for a specific mode.",
+  "headerOverflow": "For longer confirmed themes, use a readable wrapping/two-line layout within the shared metadata zone or continue the full label in metadata; do not switch the whole refill geometry by display preset. Exact long-theme text fitting remains an implementation check.",
+  "latestOwnerFeedback": "Owner adopted the current design and requested shown/blank memo choice. Both modes retain this same paper and row plan.",
+  "typographyStrokeProposal": {
+    "status": "visual asset proposal, not final glyph/PDF implementation",
+    "mainPageTitle": "retain previous weight",
+    "allOtherTextWidthRatio": 0.8,
+    "illustrativePenWidthMm": [
+      0.25,
+      0.28
+    ],
+    "keep": [
+      "dark readable graphite ink",
+      "letter sizes and shapes",
+      "baseline registration",
+      "word/line spacing",
+      "paper/frame/checkbox/bracket widths"
+    ],
+    "scope": "Body English/Japanese, section headings, vocabulary, grammar labels, theme/date and footer use finer strokes; main page title alone keeps the prior weight."
+  }
+}

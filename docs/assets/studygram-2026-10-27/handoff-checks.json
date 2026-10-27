@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-27",
+  "importedFiles": 11,
+  "hashes": "all match source/import manifest",
+  "specLinks": 9,
+  "portableJsonLinks": 5,
+  "bodyRules": 31,
+  "allHorizontalRules": 34,
+  "pageMm": [
+    148,
+    210
+  ],
+  "pitchMm": 5.2,
+  "titleBandMm": 8.32,
+  "glossAnchorsVerified": 2,
+  "appCodeChanged": false,
+  "runtimeTests": "not rerun; documentation/reference import only",
+  "physicalPrint": "not performed"
+}

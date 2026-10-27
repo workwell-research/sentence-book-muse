@@ -1,0 +1,137 @@
+{
+  "id": "sentence-book-body-rhythm-v1",
+  "date": "2026-10-27",
+  "status": "Owner-adopted every-other-row rhythm; synthetic row allocation fixture. Actual glyph metrics, long-content fitting and renderer integration remain to be verified.",
+  "refill": "refill-a5-v1.json",
+  "provenance": "All text newly authored synthetic; never migrate these example IDs into real books.",
+  "grid": {
+    "firstBaselineMm": 39.2,
+    "pitchMm": 5.2,
+    "shortSentenceAdvanceRows": 2,
+    "shortSentenceAdvanceMm": 10.4
+  },
+  "singleLineStoryFixture": [
+    {
+      "sentenceId": "example-story-01",
+      "english": "Today, I decided to slow down.",
+      "row": 0,
+      "baselineMm": 39.2,
+      "interveningRow": 1
+    },
+    {
+      "sentenceId": "example-story-02",
+      "english": "I made time for a quiet morning.",
+      "row": 2,
+      "baselineMm": 49.6,
+      "interveningRow": 3,
+      "meaning": {
+        "phrase": "made time for",
+        "spanStart": 2,
+        "spanEndExclusive": 15,
+        "japanese": "〜のために時間をつくった",
+        "row": 3,
+        "baselineMm": 54.8
+      }
+    },
+    {
+      "sentenceId": "example-story-03",
+      "english": "Instead of checking my phone, I opened my notebook.",
+      "row": 4,
+      "baselineMm": 60.0,
+      "interveningRow": 5
+    },
+    {
+      "sentenceId": "example-story-04",
+      "english": "A warm cup of tea helped me settle in.",
+      "row": 6,
+      "baselineMm": 70.4,
+      "interveningRow": 7,
+      "meaning": {
+        "phrase": "settle in",
+        "spanStart": 28,
+        "spanEndExclusive": 37,
+        "japanese": "落ち着く",
+        "row": 7,
+        "baselineMm": 75.6
+      }
+    },
+    {
+      "sentenceId": "example-story-05",
+      "english": "I wrote down one thing I wanted to remember.",
+      "row": 8,
+      "baselineMm": 80.8,
+      "interveningRow": 9
+    },
+    {
+      "sentenceId": "example-story-06",
+      "english": "It did not have to be anything special.",
+      "row": 10,
+      "baselineMm": 91.2,
+      "interveningRow": 11
+    },
+    {
+      "sentenceId": "example-story-07",
+      "english": "Small moments can make an ordinary day feel different.",
+      "row": 12,
+      "baselineMm": 101.6,
+      "interveningRow": 13
+    },
+    {
+      "sentenceId": "example-story-08",
+      "english": "Tomorrow, I want to make time for them again.",
+      "row": 14,
+      "baselineMm": 112.0,
+      "interveningRow": 15
+    }
+  ],
+  "footnotes": [
+    {
+      "sentenceId": "example-story-01",
+      "phrase": "slow down",
+      "kind": "paraphrase",
+      "text": "take things slowly"
+    },
+    {
+      "sentenceId": "example-story-03",
+      "phrase": "Instead of checking my phone",
+      "kind": "paraphrase",
+      "text": "rather than checking my phone"
+    },
+    {
+      "sentenceId": "example-story-06",
+      "phrase": "It did not have to be anything special.",
+      "kind": "nuance",
+      "text": "It could be something simple.",
+      "note": "An explanatory implication, not a word-for-word or logical-equivalence translation."
+    }
+  ],
+  "laterSectionRowProposal": {
+    "storyLastEnglishRow": 14,
+    "reservedEmptyRowAfterStory": 15,
+    "vocabularyFrameTopRowCoordinate": 16.5,
+    "vocabularyHeadingRow": 17,
+    "vocabularyEntryRows": [
+      18,
+      19,
+      20,
+      21
+    ],
+    "vocabularyFrameBottomRowCoordinate": 21.45,
+    "patternHeadingRow": 23,
+    "patternExampleRow": 24,
+    "patternLabelRow": 25,
+    "personalExampleHeadingRow": 27,
+    "personalExampleEnglishRow": 28,
+    "personalExampleJapaneseRowCoordinate": 28.6
+  },
+  "fitCondition": "These later-section rows apply only if the sample story sentences fit on one main-column line each and the notes fit beside them. Recompute whole-row allocations from measured ink bounds for wraps/long notes; paginate before the fixed footer instead of squeezing.",
+  "invariants": [
+    "same refill in all modes",
+    "same story row plan across content and marker presets",
+    "normal descenders below the rule",
+    "one full empty ruled row before vocabulary",
+    "final small Japanese translation directly below its English without an empty row",
+    "shown/blank memos share row allocations, section positions and page count"
+  ],
+  "longLineRule": "Wrap using real glyph metrics. Ordinary wrapped lines advance one rule; reserve a whole annotation row under any line with a direct difficult-expression gloss. After the final English line reserve one row (a final-line gloss may occupy it). No fractional English leading. Check rail/section bounds jointly before pagination."
+}

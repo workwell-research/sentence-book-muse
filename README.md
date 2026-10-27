@@ -4,7 +4,7 @@ A new implementation for the 2026 Meta Global AI Developer Hackathon. Turn somet
 
 ## Current status
 
-This repository includes a **working handwriting and PDF prototype** at /. AI generation remains a scaffold.
+This repository includes a **working handwriting and PDF prototype** at /. AI generation remains a scaffold. The owner-adopted [Work design handoff](docs/studygram-notebook-implementation-spec-2026-10-27.md) is the baseline for the next UI/PDF implementation; its reference assets are imported, but its runtime integration is still pending.
 
 - Cream ruled notebook with SVG stroke animation, following pen, marker and annotation.
 - Pause/resume, fast-forward, completion and reduced motion.

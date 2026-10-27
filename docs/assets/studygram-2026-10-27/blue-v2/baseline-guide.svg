@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="310" viewBox="0 0 1000 310" role="img" aria-labelledby="title desc">
+<title id="title">Writing baseline aligned to the notebook rule</title>
+<desc id="desc">文字の足元を罫線に揃え、gやyの下に伸びる部分は罫線の下へ出す。実装用の位置関係を示す図で、最終手書き書体の見本ではない。</desc>
+<rect width="1000" height="310" fill="#FFFEFB"/>
+<g font-family="'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif" fill="#383A3D">
+<text x="40" y="42" font-size="20">文字の基準位置を、罫線に揃える</text>
+<path d="M 40 140 H 960" stroke="#9AABB8" stroke-width="1"/>
+<text x="40" y="140" font-family="Georgia,serif" font-size="64" dominant-baseline="alphabetic">making time for</text>
+<text x="620" y="129" font-size="16" fill="#47627A">baselineY = ruleY</text>
+<path d="M 40 214 H 960" stroke="#E6E7E8"/>
+<text x="40" y="250" font-size="17">a・e・n の足元は罫線へ。g・j・p・q・y の下へ伸びる部分は、その下へ。</text>
+<text x="40" y="282" font-size="13" fill="#62666A">位置関係を示す図。文字の外接枠の下端や、行ボックスの中央には合わせない。最終筆跡書体は別途制作。</text>
+</g></svg>

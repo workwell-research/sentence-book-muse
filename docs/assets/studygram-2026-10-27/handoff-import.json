@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-27",
+  "sourceChat": "ノートUIUXアセットを磨く",
+  "sourceThreadId": "01a17aa3-3d6d-7cf2-9c09-e3c937dafd6e",
+  "scope": "Owner-adopted newly created design references for this rebuild. No earlier app code, private learning data or old curriculum imported. App integration remains pending.",
+  "resources": [
+    {
+      "path": "docs/studygram-notebook-implementation-spec-2026-10-27.md",
+      "sourceSha256": "62d97c3cf409f2475e0a8a5d38e73c903212699da01218edd6776e5b61ab6d0d",
+      "importSha256": "62d97c3cf409f2475e0a8a5d38e73c903212699da01218edd6776e5b61ab6d0d",
+      "changes": []
+    },
+    {
+      "path": "docs/assets/studygram-2026-10-27/blue-v2/22-blue-even-rows-footnotes-study.png",
+      "sourceSha256": "0dca004d44180a09c9526c39b057460c7f09166ead68b16e1fc1a1b5fe20734b",
+      "importSha256": "0dca004d44180a09c9526c39b057460c7f09166ead68b16e1fc1a1b5fe20734b",
+      "changes": []
+    },
+    {
+      "path": "docs/assets/studygram-2026-10-27/blue-v2/23-blue-even-rows-matched-sentences.png",
+      "sourceSha256": "96de99080d05d6cb50380a8a2da622a12219ebe3d7b3315e621151852bfe65c7",
+      "importSha256": "96de99080d05d6cb50380a8a2da622a12219ebe3d7b3315e621151852bfe65c7",
+      "changes": []
+    },
+    {
+      "path": "docs/assets/studygram-2026-10-27/blue-v2/refill-a5-v1.json",
+      "sourceSha256": "5ae9de138ed564695849147d467515e6560f76a5596fbfafe27ed72272343e1f",
+      "importSha256": "5ae9de138ed564695849147d467515e6560f76a5596fbfafe27ed72272343e1f",
+      "changes": []
+    },
+    {
+      "path": "docs/assets/studygram-2026-10-27/blue-v2/refill-a5-v1.svg",
+      "sourceSha256": "6c17e0880534cf2ee4232f75b9d3996477199dab3353aeccbe249020ac57907e",
+      "importSha256": "6c17e0880534cf2ee4232f75b9d3996477199dab3353aeccbe249020ac57907e",
+      "changes": []
+    },
+    {
+      "path": "output/pdf/studygram-shared-a5-refill-v1.pdf",
+      "sourceSha256": "d6a967413d3a26439e1f8111bbedecad734ceb1fb0ac1faabe1c9b0cd8011872",
+      "importSha256": "d6a967413d3a26439e1f8111bbedecad734ceb1fb0ac1faabe1c9b0cd8011872",
+      "changes": []
+    },
+    {
+      "path": "docs/assets/studygram-2026-10-27/blue-v2/display-and-print-options.json",
+      "sourceSha256": "49898072d7fa0df8889e9cd6ca74276b700216ceb452edca7f89d46e97a45c83",
+      "importSha256": "b460bd3c9cf29bce6a79c593240b9d500a7fa0e5036a975f0e8e9cedad786b91",
+      "changes": [
+        "Rebased two machine-local PDF references to portable relative links; requirements unchanged."
+      ]
+    },
+    {
+      "path": "docs/assets/studygram-2026-10-27/blue-v2/body-rhythm-v1.json",
+      "sourceSha256": "956483495bf6e119b34c7f56deef9bfc404e5d9e7f72636d6fb12e97f8eec566",
+      "importSha256": "956483495bf6e119b34c7f56deef9bfc404e5d9e7f72636d6fb12e97f8eec566",
+      "changes": []
+    },
+    {
+      "path": "docs/assets/studygram-2026-10-27/blue-v2/baseline-guide.svg",
+      "sourceSha256": "1530d52c60cc9cf5e57883f89df9fdf0fb67e7cb8c077e0b7a3093f6e157c08f",
+      "importSha256": "1530d52c60cc9cf5e57883f89df9fdf0fb67e7cb8c077e0b7a3093f6e157c08f",
+      "changes": []
+    },
+    {
+      "path": "output/pdf/studygram-red-sheet-calibration-20261027.pdf",
+      "sourceSha256": "b17105a2fe900fe9580e65432af6923fa8a482025a3d22b73c0626865646f595",
+      "importSha256": "b17105a2fe900fe9580e65432af6923fa8a482025a3d22b73c0626865646f595",
+      "changes": []
+    },
+    {
+      "path": "docs/assets/studygram-2026-10-27/02-graphite-dense.png",
+      "sourceSha256": "6246949547f3b1499f172c7863660a473af011f1d17978fcd6e7aa2681b9147c",
+      "importSha256": "6246949547f3b1499f172c7863660a473af011f1d17978fcd6e7aa2681b9147c",
+      "changes": []
+    }
+  ]
+}

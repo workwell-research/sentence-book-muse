@@ -15,3 +15,9 @@ The owner requested a new implementation rather than extending the prior prototy
 The supplied draft's suggestion that commit dates alone prove new work is not adopted. Record the origin of design/schema inputs, actual authorship and changes. No claim of eligibility or completion is made by this scaffold.
 
 Cloudflare compatibility date is 2026-10-26, the current UTC runtime date. Local work is recorded as 2026-10-27 JST. The runtime rejects a future compatibility date.
+
+## Adopted notebook handoff — 2026-10-27
+
+The owner adopted Work’s blue Studygram layout and directed this implementation chat to base further work on its handoff. docs/studygram-notebook-implementation-spec-2026-10-27.md takes precedence over previous temporary notebook composition. Exact geometry comes from refill-a5-v1.json/SVG; generated images are appearance references only. Shared physical layout does not mean screenshot-based PDF: the screen and vector PDF use independent renderers of one measured plan.
+
+Recorded requirements: fixed A5 ruling/title band, short sentences every other row, supplied difficult-phrase glosses and right-footnotes, shown/blank memos without layout change, independent content/marker choices, graphite body and six accents with blue default, continuation pages, and explicit red-sheet answer spans. Preserve source IDs, user writing, checks and progress. Approval covers the layout and behavior; app integration and final glyph/physical tests remain pending. Only newly authored handoff materials were imported, with hashes; old application code/curriculum is excluded.

@@ -1,7 +1,9 @@
 # Handwriting prototype — 2026-10-27
 
 ## User direction and surface
-Latest owner feedback (2026-10-27): the current large irregular lettering and sparse page look too elementary-school-like. Two supplied Studygram images now establish the visual target: smaller, consistent lettering, denser organized study content and restrained color hierarchy. Cutlings-derived glyphs are temporary, not approved final assets; the owner will remake materials later. See DESIGN.md for the direction correction. This feedback does not invalidate the mechanical tests, but it supersedes any implication that the visual design has been accepted.
+Latest adoption (2026-10-27): Work produced the blue Studygram layout and the owner chose it as the new implementation baseline. See [the adopted handoff](studygram-notebook-implementation-spec-2026-10-27.md). The application code described below has not yet integrated its shared refill, memo/blank selection or richer page model. Layout approval is confirmed; final glyph production, implementation fidelity and physical printing still require verification.
+
+Earlier owner feedback (2026-10-27): the current large irregular lettering and sparse page look too elementary-school-like. Two supplied Studygram images now establish the visual target: smaller, consistent lettering, denser organized study content and restrained color hierarchy. Cutlings-derived glyphs are temporary, not approved final assets; the owner will remake materials later. See DESIGN.md for the direction correction. This feedback does not invalidate the mechanical tests. The current prototype remains visually provisional; the later Work handoff resolves the target layout.
 
 The owner explicitly replaced the typewriter concept with the pleasure of handwriting a beautiful study notebook. The first requested artifact is a Web prototype, not a Flutter migration or the complete learning product.
 

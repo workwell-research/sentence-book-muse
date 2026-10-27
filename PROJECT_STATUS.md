@@ -1,14 +1,16 @@
 # Sentence Book Muse — progress
 
-Last updated: 2026-10-27 JST. Owner: Codex — six ink palettes and A5 notebook / A4 print-sheet separation.
+Last updated: 2026-10-27 JST. Owner: Codex — adopted Work Studygram handoff.
 
 Local checkout: `/Users/maki/sentence-book-muse`
 Public repository: https://github.com/workwell-research/sentence-book-muse
 
 ## Current scope
-Latest owner decision: the finished notebook is generic A5 portrait (148 × 210 mm), superseding the earlier Rollbahn L direction. Implemented separate A5 printer-sheet or A4 landscape two-up output, unscaled at 100%, adjustable binding margins and optional printed markers. Six selectable notebook inks share colors between the screen and PDF. The screen’s temporary typography remains unchanged; the PDF now has its own millimetre-based composition. Future B5/Rollbahn presets are structural extension points, not active/verified formats.
+The owner has adopted the Work-side notebook design in [the implementation handoff](docs/studygram-notebook-implementation-spec-2026-10-27.md). Its final blue references and exact A5 geometry are now the implementation baseline. The accepted direction uses fine graphite writing, blue accents, every-other-line short sentences, difficult-expression meanings below their anchors and right-column footnotes. Screen and PDF will share the same physical page and line plan through separate renderers. Memo blanking must preserve reserved space, body wrapping, later blocks and page count. Six accent palettes and generic A5 / original-size A4 two-up remain requirements. The current runtime has not yet been integrated with this handoff; final glyphs are still provisional.
 
-Owner feedback, 2026-10-27: the two supplied Studygram images establish a more refined, dense and orderly notebook world. The current lettering/page were described as elementary-school-like. Final visual acceptance is therefore outstanding despite prior technical verification/reviewer disposition. Current font is temporary; the owner plans to remake materials. The preceding feedback-only turn recorded that correction without changing code. This implementation preserves it; the six colors and new print layout are not a claim that the deferred font/whole-page design has been accepted.
+Previous implemented print scope: the finished notebook is generic A5 portrait (148 × 210 mm), superseding the earlier Rollbahn L direction. Implemented separate A5 printer-sheet or A4 landscape two-up output, unscaled at 100%, adjustable binding margins and optional printed markers. Six selectable notebook inks share colors between the screen and PDF. The screen’s temporary typography remains unchanged; the PDF now has its own millimetre-based composition. Future B5/Rollbahn presets are structural extension points, not active/verified formats.
+
+Earlier owner feedback, 2026-10-27: the original prototype lettering/page were described as elementary-school-like. The subsequent Work layout and display requirements are now adopted, superseding the earlier unresolved whole-page design direction. This acceptance does not approve the current temporary font or imply that the reference design is already implemented. The owner plans to remake materials.
 
 The owner explicitly replaced the typewriter identity and requested a working Web handwriting prototype. The root route now renders a cream ruled notebook with real sequential strokes, a following pen, marker, annotation and personal writing. PDF export is independent of the animation. This is the React/Web implementation; the earlier Flutter proposal was exploratory.
 
@@ -27,6 +29,12 @@ The separate prior app remains untouched. Existing interest selection and topic-
 - New sentence_book_page_v1 contract, shared Zod validation and JSON Schema export in shared/lesson-schema.ts; see docs/generation-contract.md. This is not a recovered legacy v2 schema.
 - Separate localStorage keys for interests and the existing topic note, with explicit save, restore and non-destructive error handling. Profile changes preserve note data.
 - Vite/React/TypeScript configuration; Pages Functions health route and unavailable generation route.
+
+## Verification — 2026-10-27 Work handoff adoption
+- Documentation/reference import only: copied 11 newly created handoff/reference resources, including the two adopted blue images, geometry/options JSON, SVG guides and reference PDFs. Source/import hashes are recorded in docs/assets/studygram-2026-10-27/handoff-import.json. Only two absolute PDF links in the options JSON were made repository-relative; no old application code, private learning data or lesson corpus was copied.
+- Checked all 9 handoff links and 5 explicit JSON resource links, JSON parsing, source/import hashes, A5 SVG geometry (148 x 210 mm; 31 body rules / 34 horizontal rules; 5.2 mm pitch; 8.32 mm title band), and both supplied gloss occurrence spans. Visually inspected the two adopted blue reference images. Results: docs/assets/studygram-2026-10-27/handoff-checks.json. Generated images remain appearance references; geometry JSON/SVG governs precise positions.
+- Updated PRODUCT.md, DESIGN.md/sidecar, README and feature/decision notes to distinguish the adopted target from the current runtime. Existing implementation inventories and earlier verification records remain historical evidence.
+- No application source, configuration, browser storage, running server or deployment changed. No new PDF was generated. Application tests/build, browser/device checks and physical printing/red-sheet calibration were not rerun for this documentation-only adoption. First-party text diff checks passed excluding reference PDFs; the byte-identical refill PDF retains required fixed-width xref spaces.
 
 ## Verification — 2026-10-27 color / print update
 - Implementation: npm test passed all 40 tests; both TypeScript projects and Vite production build passed; npm run pages:build compiled the existing Worker. No runtime/secrets/hosting configuration changed. New tests check readable palette contrasts using the actual marker opacity, marker-only removal, binding/long content, overflow, exact paper sizes, unscaled A5 form placement and the actual PDF color operators.
@@ -48,7 +56,7 @@ The separate prior app remains untouched. Existing interest selection and topic-
 No Meta/API call, credential setup, Pages deployment, physical-device test or physical printing occurred. The handwriting body of the PDF is vector paths, not selectable/searchable/tagged text.
 
 ## Outstanding
-- Apply the owner's received visual feedback: replace oversized irregular lettering and sparse composition with consistent smaller writing, organized study density and clear information hierarchy; assess the whole-page composition against the supplied references. New materials remain planned by the owner; the font is separated monoline print, without cursive joins or pressure simulation. Japanese handwriting, arbitrary-length pagination, exact Rollbahn dimensions/hole fit and physical print contrast remain unimplemented/unverified.
+- Implement the adopted handoff: begin with the common A5 refill and shared physical line planning, then independent content/memo/marker settings with blank memos preserving layout. Integrate fine graphite body writing and six accent palettes (blue first-use default while retaining explicit saved choices), long-content pagination, Japanese text embedding and validated red-sheet answer spans. Verify the handoff acceptance matrix against actual screen/PDF outputs. Final glyphs remain provisional; physical print/red-sheet calibration and future B5/Rollbahn presets remain unverified.
 - Connect a validated generated lesson and actual practice results to the new notebook; completion animation alone is not a recorded learning result. Persist completed notes only when that model is agreed.
 - No longer waiting for standalone lesson-schema-v2: the owner indicated it is unavailable. The new contract is defined; its Meta JSON Schema compatibility and server/client integration still need verification.
 - Meta account/model access and server secret configuration.
@@ -58,7 +66,7 @@ No Meta/API call, credential setup, Pages deployment, physical-device test or ph
 ## Work in progress
 | Owner | Files | Work |
 | --- | --- | --- |
-| — | — | No active edits; color / A5 print extension verified, scoped review and documentation complete. |
+| Codex | Adopted Work handoff/reference files; PRODUCT.md, DESIGN.md/sidecar, docs and statuses | Handoff adoption complete; no active edits. Runtime integration of the shared A5 layout and memo settings is next. |
 
 ## History
 - 2026-10-27: Started new code from the supplied design. No old source, lesson corpus, illustrations or saved audio copied. Prior concepts/theme names and intended schema provenance recorded.
@@ -80,3 +88,5 @@ No Meta/API call, credential setup, Pages deployment, physical-device test or ph
 - 2026-10-27: Owner supplied two Studygram references and rejected the demo’s large irregular handwriting/sparse page as elementary-school-like. Recorded smaller consistent lettering, structured study density, subtle colors and temporary font status. Documentation-only update; reference images/private paths not copied, no application or PDF changes and no repeated runtime checks. Previous reviewer ship verdict is not owner visual approval.
 
 - 2026-10-27: Implemented six ink sets and replaced ambiguous A5/A4 finished-size selection with a fixed A5 notebook plus separate A5/A4 printer sheet. Added independent mm print composition, original-size two-up, optional markers, cut guides and print instructions. 40 tests/build/Worker, disposable desktop/narrow browser and actual PDF dimension/vector/render checks passed. Preserved prior owner reference correction; current font remains provisional. Fresh reviewer’s sole documentation finding resolved, disposition ship; deferred typography acceptance preserved. No physical print, actual AI call or deployment.
+
+- 2026-10-27: Adopted the owner-approved Work notebook handoff as the implementation baseline. Imported 11 new design/reference resources with provenance hashes and portable PDF links; checked reference links, JSON/SVG geometry and gloss anchors, and viewed both final blue samples. Reconciled current-vs-target documentation in both workspaces. Documentation-only: no runtime/configuration/data/server/deployment changes, new PDF generation or repeated application/browser/physical-print tests. Shared A5 layout and memo blanking integration are next.
