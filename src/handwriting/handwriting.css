@@ -98,7 +98,7 @@ button:disabled,select:disabled{cursor:default}
 @media(max-width:1100px){.palette-options{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
 /* Physical A5 coordinates stay fixed. Only the outer viewport zooms. */
-@font-face{font-family:'Notebook Japanese';src:url('/fonts/MPLUS1p-Regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Notebook Klee';src:url('/fonts/KleeOne-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
 .paper-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;font-size:11px;color:var(--muted)}
 .paper-toolbar label{display:flex;align-items:center;gap:8px;white-space:nowrap}
 .paper-toolbar select{font-size:11px}
@@ -125,3 +125,8 @@ button:disabled,select:disabled{cursor:default}
 }
 .zoom-help{font-size:11px;line-height:1.7;color:var(--muted);margin:-6px 0 10px;text-align:right}
 @media(max-width:760px){.ink-workspace{gap:20px}.paper-toolbar{margin-bottom:8px}}
+
+@font-face{font-family:'Notebook Zen';src:url('/fonts/ZenKurenaido-Regular.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+.font-fields{display:grid;gap:12px;margin-bottom:24px}
+.font-fields select{display:block;width:100%;max-width:100%}
+.font-fields .field-help{margin:0}

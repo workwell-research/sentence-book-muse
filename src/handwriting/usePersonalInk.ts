@@ -1,23 +1,27 @@
 import { useEffect,useMemo,useState } from 'react';
-import { fontData } from './font-data';
+import { englishFonts, defaultFonts } from './fonts';
+import type { EnglishFontId } from './fonts';
 import { emptyPersonal,reconcilePersonal } from './personal';
 import { strokePoint } from './model';
 import type { Glyph,Stroke } from './model';
 
-export function usePersonalInk(text:string,glyphs:Glyph[],reduced:boolean,color:string='#4f6052',widthMm?:number) {
+export function usePersonalInk(text:string,glyphs:Glyph[],reduced:boolean,color:string='#4f6052',widthMm?:number,font:EnglishFontId=defaultFonts.english) {
  const [model,setModel]=useState(emptyPersonal);
  const [progress,setProgress]=useState<Record<string,number>>({});
+ const [previousFont,setPreviousFont]=useState(font);
  const [paused,setPaused]=useState(false);
  if(model.text!==text) setModel(reconcilePersonal(model,text));
  const strokes=useMemo(()=>model.text!==text?[]:model.letters.flatMap((letter,index)=>{
    const glyph=glyphs[index];
    if(!glyph)return [];
-   return (fontData[letter.char]?.strokes??[]).map((part,i)=>({
+   return (englishFonts[font].data[letter.char]?.strokes??[]).map((part,i)=>({
      ...part,x:glyph.x,y:glyph.y,scale:glyph.scale,start:0,
      duration:Math.max(32,Math.min(105,part.length*glyph.scale*2.1)),
-     phase:'writing' as const,width:widthMm?widthMm/glyph.scale:5.2,color,key:letter.id+':'+i,
+     phase:'writing' as const,width:widthMm?widthMm/glyph.scale:5.2,color,key:font+':'+letter.id+':'+i,
    }));
- }),[model,text,glyphs,color,widthMm]);
+ }),[model,text,glyphs,color,widthMm,font]);
+ // A font switch previews finished ink; it must never reuse another face's stroke indices.
+ if(previousFont!==font){setPreviousFont(font);setProgress(Object.fromEntries(strokes.map(s=>[s.key,1])));}
  const pending=strokes.some(s=>(progress[s.key]??0)<1);
  useEffect(()=>{
    setPaused(false);

@@ -1,40 +1,59 @@
-// Font derivative/build script: SIL OFL 1.1, public/licenses/Stroke-Font-OFL.txt.
-import { execFileSync } from 'node:child_process';
-import { writeFileSync } from 'node:fs';
+// Font derivative and build script: SIL OFL 1.1.
+// EMS Delight by Sheldon B. Michaels; SVG by Windell H. Oskay; Delius by Natalia Raices.
+// Renamed Sentence Notebook Print: 200-unit normalization, local smooth tangents, selected writing direction/order, quote/dash aliases.
+import fs from 'node:fs';
+import {execFileSync} from 'node:child_process';
 import svgpath from 'svgpath';
-import { svgPathProperties } from 'svg-path-properties';
-const source = "import json,xml.etree.ElementTree as E\nr=E.parse('assets/fonts/CutlingsSingularis.svg').getroot()\nprint(json.dumps([dict(g.attrib) for g in r.iter() if g.tag.endswith('glyph') and g.get('unicode')]))";
-const glyphs = JSON.parse(execFileSync('python3', ['-c', source], {encoding:'utf8'}));
-const orders = { A:[2,1,0], H:[2,1,0], E:[3,4,0,2,1], F:[4,2,1,0,3], t:[1,0], f:[1,0], g:[1,0], i:[2,1,0], j:[1,0], '!':[1,0], '?':[1,0] };
-const data = {};
-for (const g of glyphs) {
- const path = svgpath(g.d || '').scale(1,-1).abs().unshort().unarc().round(3).toString();
- const parts = path.match(/M[^M]+/g) || [];
- const ordered = (orders[g.unicode] || parts.map((_,i)=>i)).map(i=>parts[i]).filter(Boolean);
- const strokes = ordered.map(d=>({d,length:new svgPathProperties(d).getTotalLength()})).filter(s=>s.length>0.1);
- data[g.unicode] = {advance:Number(g['horiz-adv-x'] || 70),strokes};
+import {svgPathProperties} from 'svg-path-properties';
+const packs=[
+ {source:'EMSDelight',file:'font-data',name:'Sentence Notebook Print',license:'Delius',scale:.2},
+ {source:'EMSNeato',file:'font-neat',name:'Sentence Notebook Pen',license:'BadScript',scale:.145},
+];
+for(const pack of packs){
+const path='assets/fonts/'+pack.source+'.svg';
+const xml="import json,xml.etree.ElementTree as E,sys\nr=E.parse(sys.argv[1]).getroot()\nprint(json.dumps([dict(g.attrib) for g in r.iter() if g.tag.endswith('glyph') and g.get('unicode')]))";
+const glyphs=JSON.parse(execFileSync('python3',['-c',xml,path],{encoding:'utf8'}));
+function smooth(points){
+ if(points.length<3)return points.map((p,i)=>(i?'L':'M')+p.join(' ')).join(' ');
+ const tangent=i=>{
+  if(i===0||i===points.length-1)return [0,0];
+  const a=points[i-1],b=points[i],c=points[i+1],u=[b[0]-a[0],b[1]-a[1]],v=[c[0]-b[0],c[1]-b[1]];
+  const lu=Math.hypot(...u),lv=Math.hypot(...v);
+  if(!lu||!lv||(u[0]*v[0]+u[1]*v[1])/(lu*lv)<.64)return [0,0];
+  const d=[c[0]-a[0],c[1]-a[1]],n=Math.hypot(...d),length=Math.min(lu,lv)/3;
+  return d.map(x=>x/n*length);
+ };
+ let d='M '+points[0].join(' ');
+ for(let i=1;i<points.length;i++){
+  const a=points[i-1],b=points[i],t=tangent(i-1),u=tangent(i);
+  d+=' C '+[a[0]+t[0],a[1]+t[1],b[0]-u[0],b[1]-u[1],...b].map(x=>Number(x.toFixed(3))).join(' ');
+ }
+ return d;
 }
-data[' '] = {advance:65,strokes:[]};
-
-// Newly authored geometric punctuation completes printable ASCII; same OFL license.
-const additions={
- "'":[40,["M 21 -118 Q 25 -103 12 -91"]],
- '*':[80,["M 40 -110 L 40 -55","M 17 -96 L 64 -69","M 18 -68 L 63 -96"]],
- '<':[90,["M 72 -99 L 18 -54 L 73 -10"]],
- '>':[90,["M 18 -99 L 72 -54 L 17 -10"]],
- '[':[65,["M 49 -140 L 18 -140 L 18 15 L 49 15"]],
- ']':[65,["M 14 -140 L 45 -140 L 45 15 L 14 15"]],
- '^':[90,["M 15 -82 L 44 -126 L 73 -82"]],
- '_':[100,["M 8 12 Q 49 10 92 12"]],
- '|':[45,["M 23 -151 Q 20 -70 23 28"]],
- '{':[75,["M 58 -145 C 15 -149 40 -90 12 -69 C 42 -47 15 22 58 19"]],
- '}':[75,["M 16 -145 C 59 -149 34 -90 62 -69 C 32 -47 59 22 16 19"]],
- '$':[105,["M 84 -121 C 19 -160 0 -76 49 -75 C 111 -73 94 9 19 -12","M 56 -163 L 44 22"]],
- '%':[125,["M 24 -19 L 106 -138","M 35 -142 C 9 -145 7 -96 32 -95 C 60 -96 59 -141 35 -142 Z","M 91 -62 C 65 -65 63 -16 88 -15 C 116 -16 115 -61 91 -62 Z"]],
-};
-additions[String.fromCharCode(96)]=[50,["M 14 -124 L 33 -101"]];
-for (const [char,[advance,paths]] of Object.entries(additions)) data[char]={advance,strokes:paths.map(d=>({d,length:new svgPathProperties(d).getTotalLength()}))};
-
-for (const [to,from] of Object.entries({'’':"'",'‘':"'",'“':'"','”':'"','–':'-','—':'-'})) data[to]=data[from];
-writeFileSync('src/handwriting/font-data.ts', '// Sentence Study Strokes — derived from Cutlings Singularis by Ellen Wasbø.\n// Font data licensed under SIL OFL 1.1; see public/licenses/Stroke-Font-OFL.txt.\nexport const fontData: Record<string, { advance: number; strokes: { d: string; length: number }[] }> = '+JSON.stringify(data)+';\n');
-console.log('Generated '+Object.keys(data).length+' glyphs.');
+const data={};
+for(const g of glyphs){
+ const segments=svgpath(g.d||'').abs().unshort().unarc().segments;
+ if(segments.some(s=>!['M','L'].includes(s[0]))){
+  const d=svgpath(g.d).abs().unshort().unarc().scale(pack.scale,-pack.scale).round(3).toString();
+  data[g.unicode]={advance:Number(g['horiz-adv-x']||378)*pack.scale,strokes:(d.match(/M[^M]+/g)||[]).map(d=>({d,length:new svgPathProperties(d).getTotalLength()}))};
+  continue;
+ }
+ const parts=[];
+ for(const s of segments){if(s[0]==='M')parts.push([]);if(s[0]==='M'||s[0]==='L')parts.at(-1).push(s.slice(1));else throw new Error('Unexpected command '+s[0]);}
+ if(pack.source==='EMSDelight'&&g.unicode==='B')parts.reverse();
+ if(pack.source==='EMSDelight'&&['C','f'].includes(g.unicode)&&parts[0])parts[0].reverse();
+ const strokes=parts.map(points=>svgpath(smooth(points)).scale(pack.scale,-pack.scale).round(3).toString()).map(d=>({d,length:new svgPathProperties(d).getTotalLength()})).filter(s=>s.length>.1);
+ data[g.unicode]={advance:Number(g['horiz-adv-x']||378)*pack.scale,strokes};
+}
+// Give the slanted pen face space for its real overhangs; adjacent letters stay separate.
+if(pack.source==='EMSNeato')for(const glyph of Object.values(data)){
+ const xs=glyph.strokes.flatMap(s=>{const p=new svgPathProperties(s.d);return Array.from({length:101},(_,i)=>p.getPointAtLength(s.length*i/100).x);});
+ if(!xs.length)continue;
+ const min=Math.min(...xs),max=Math.max(...xs),shift=Math.max(0,2-min);
+ glyph.strokes=glyph.strokes.map(s=>({...s,d:svgpath(s.d).translate(shift,0).round(3).toString()}));
+ glyph.advance=Number(Math.max(glyph.advance+shift,max+shift+4).toFixed(3));
+}
+for(const [to,from] of Object.entries({'’':"'",'‘':"'",'“':'"','”':'"','–':'-','—':'-'}))data[to]=data[from];
+fs.writeFileSync('src/handwriting/'+pack.file+'.ts', '// '+pack.name+' — derived from '+pack.source+'.\n// SIL OFL 1.1; see public/licenses/EMS-OFL.txt and '+pack.license+'-OFL.txt.\nexport const fontData: Record<string, { advance: number; strokes: { d: string; length: number }[] }> = '+JSON.stringify(data)+';\n');
+console.log(pack.name,'glyphs',Object.keys(data).length);
+}

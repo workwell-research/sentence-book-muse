@@ -2,7 +2,8 @@ import { chromium } from '@playwright/test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 const base=process.env.QA_BASE_URL||'http://127.0.0.1:5327';
-const out='.impeccable/review/shared-a5';
+const out=process.env.QA_OUTPUT_DIR||'.impeccable/review/shared-a5';
+const pdfPrefix=process.env.QA_PDF_PREFIX||'shared-a5';
 await fs.mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const errors=[],results=[];
@@ -40,7 +41,7 @@ try {
  assert.equal(await page.locator('[data-testid="personal-strokes"]').innerHTML(),personal);
  assert.equal(await page.getByRole('checkbox',{name:'make time for + noun',exact:true}).isChecked(),true);
  assert.equal(await page.locator('.notebook desc').evaluateAll(ds=>ds.some(d=>d.textContent.includes('〜のために時間をつくった'))),false);
- assert.ok((await page.locator('.notebook').innerHTML()).includes('〜のために時間をつくる'));
+ assert.ok((await page.locator('.notebook').evaluateAll(ps=>ps.map(p=>p.innerHTML).join(''))).includes('〜のために時間をつくる'));
  await page.evaluate(()=>{document.activeElement?.blur();scrollTo(0,0);});
  await page.screenshot({path:out+'/desktop-blank.png',fullPage:true});
  await page.locator('.notebook').first().screenshot({path:out+'/paper-blank.png'});
@@ -62,11 +63,46 @@ try {
   await page.getByRole('button',{name:'完成ページをPDFに',exact:true}).click();
   await (await waiting).saveAs(path);
  }
- await download('output/pdf/shared-a5-memos-shown.pdf');
+ await download('output/pdf/'+pdfPrefix+'-memos-shown.pdf');
  await page.getByRole('radio',{name:'空欄にする',exact:true}).check();
  await page.getByLabel('印刷用紙',{exact:true}).selectOption('A4');
  await page.getByLabel('PDFにマーカーを入れる').uncheck();
- await download('output/pdf/shared-a5-on-a4-memos-blank.pdf');
+ await page.getByLabel('英語の書体',{exact:true}).selectOption('pen');
+ await page.getByLabel('日本語の書体',{exact:true}).selectOption('zen');
+ await page.evaluate(()=>document.fonts.load('16px "Notebook Zen"'));
+ await download('output/pdf/'+pdfPrefix+'-on-a4-memos-blank.pdf');
+ await page.locator('.notebook').first().screenshot({path:out+'/paper-pen-zen-blank.png'});
+ const faces={};
+ for(const english of ['print','pen'])for(const japanese of ['klee','zen']) {
+  await page.getByLabel('英語の書体',{exact:true}).selectOption(english);
+  await page.getByLabel('日本語の書体',{exact:true}).selectOption(japanese);
+  const family=japanese==='klee'?'Notebook Klee':'Notebook Zen';
+  assert.ok(await page.evaluate(family=>document.fonts.load('16px "'+family+'"').then(fs=>fs.length>0),family));
+  assert.equal(await page.locator('.notebook text').first().getAttribute('font-family'),family);
+  assert.equal(await page.getByLabel('今日、大切にしたいことは？').inputValue(),'I make time for a quiet morning.');
+  assert.equal(await page.getByRole('checkbox',{name:'make time for + noun',exact:true}).isChecked(),true);
+  assert.equal(await page.getByRole('radio',{name:'空欄にする',exact:true}).isChecked(),true);
+  const before=await geometry();
+  await page.getByRole('radio',{name:'表示する',exact:true}).check();
+  assert.deepEqual(await geometry(),before);
+  await page.locator('.notebook').first().screenshot({path:out+'/paper-'+english+'-'+japanese+'.png'});
+  await page.getByRole('radio',{name:'空欄にする',exact:true}).check();
+  faces[english]=await page.locator('[data-layer="body"] path').first().getAttribute('d');
+ }
+ assert.notEqual(faces.print,faces.pen);
+ await page.getByLabel('英語の書体',{exact:true}).selectOption('print');
+ await page.getByLabel('日本語の書体',{exact:true}).selectOption('klee');
+ await page.getByLabel('英語の書体',{exact:true}).focus();
+ assert.equal(await page.evaluate(()=>document.activeElement?.id),'english-font');
+ await page.keyboard.press('Tab');
+ assert.equal(await page.evaluate(()=>document.activeElement?.id),'japanese-font');
+ await page.getByLabel('英語の書体',{exact:true}).selectOption('pen');
+ await page.getByRole('button',{name:'もう一度見る',exact:true}).click();
+ await page.waitForFunction(()=>!!document.querySelector('[data-testid="pen"]'));
+ await page.getByRole('button',{name:'一時停止',exact:true}).click();
+ await page.screenshot({path:out+'/pen-motion.png',fullPage:true});
+ await page.getByLabel('英語の書体',{exact:true}).selectOption('print');
+ results.push('Four English/Japanese combinations: correct loaded family and different vector strokes, retained input/checks/memos, native selector keyboard focus and pen playback. A5 uses Print/Klee; A4 uses Pen/Zen.');
  await page.getByLabel('印刷用紙',{exact:true}).selectOption('A5');
  await page.getByRole('radio',{name:'表示する',exact:true}).check();
  await page.getByText('単語の復習チェック',{exact:true}).click();
@@ -93,6 +129,9 @@ try {
  for(const width of [390,320]) {
   await mobile.setViewportSize({width,height:844});
   assert.equal(await mobile.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+  for(const label of ['英語の書体','日本語の書体']) {
+   const field=mobile.getByLabel(label,{exact:true});const box=await field.boundingBox();assert.ok(box.height>=44);
+  }
   for(const label of ['表示する','空欄にする']) {
    const box=await mobile.getByRole('radio',{name:label,exact:true}).locator('..').boundingBox();assert.ok(box.height>=44);
   }

@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { defaultFonts, englishFonts, japaneseFonts } from './fonts';
+import type { FontSettings } from './fonts';
 import { currentPhase, supported, unsupported } from './model';
 import { createA5Layout, createA5Scene, defaultView, visiblePages, A5 } from './a5-layout';
 import type { ViewSettings } from './a5-layout';
@@ -13,6 +15,7 @@ import { usePersonalInk } from './usePersonalInk';
 
 const phaseLabels={writing:'英文を書いています',marking:'大切な表現に、マーカーを',annotating:'余白に、ひとこと',complete:'一枚のノートができました'};
 export function HandwritingDemo() {
+ const [fonts,setFonts]=useState<FontSettings>(defaultFonts);
  const [view,setView]=useState<ViewSettings>(defaultView);
  const [zoom,setZoom]=useState(()=>window.matchMedia('(max-width: 760px)').matches?'read':'fit');
  const [printMarkers,setPrintMarkers]=useState<boolean|null>(null);
@@ -25,15 +28,15 @@ export function HandwritingDemo() {
  const [print,setPrint]=useState<PrintOptions>(defaultPrintOptions);
  const [exporting,setExporting]=useState(false);
  const [feedback,setFeedback]=useState('');
- const missing=unsupported(personal);
+ const missing=unsupported(personal,englishFonts[fonts.english].data);
  const content=useMemo(()=>({...studySample,
-   personal:[...personal].map(char=>supported(char)?char:' ').join(''),
+   personal:[...personal].map(char=>supported(char,englishFonts[fonts.english].data)?char:' ').join(''),
    vocabulary:studySample.vocabulary.map(v=>({...v,checked:checks[v.id]??v.checked})),
- }),[personal,checks]);
+ }),[personal,checks,fonts.english]);
  const ink=palettes[print.palette];
- const layout=useMemo(()=>createA5Layout(content,print),[content,print.binding,print.side]);
+ const layout=useMemo(()=>createA5Layout(content,print,fonts),[content,print.binding,print.side,fonts]);
  const note=useMemo(()=>createA5Scene(layout),[layout]);
- const personalInk=usePersonalInk(content.personal,layout.personal,reduced,A5.ink,.20);
+ const personalInk=usePersonalInk(content.personal,layout.personal,reduced,A5.ink,.20,fonts.english);
  const elapsed=useRef(0), duration=useRef(note.duration);
  duration.current=note.duration;
 
@@ -58,6 +61,11 @@ export function HandwritingDemo() {
  },[running,speed,reduced]);
  const complete=time>=note.duration;
  function finish(){elapsed.current=note.duration;setTime(note.duration);setRunning(false);}
+ function changeFont(next:FontSettings){
+   setFonts(next);setFeedback('');
+   const nextDuration=createA5Scene(createA5Layout(content,print,next)).duration;
+   elapsed.current=nextDuration;setTime(nextDuration);setRunning(false);
+ }
  function replay(){elapsed.current=0;setTime(0);setRunning(true);}
  async function savePDF(){
    setExporting(true);setFeedback('');
@@ -102,6 +110,19 @@ export function HandwritingDemo() {
       <h1>学びが、一枚の<br/>ノートになる。</h1>
       <p className="intro">一画ずつ、言葉が紙に残っていく。<br/>大切な表現も、あなたの一言も。</p>
       <section className="view-section" aria-label="ノートの表示設定">
+        <div className="font-fields">
+          <div><label className="sheet-label" htmlFor="english-font">英語の書体</label>
+            <select id="english-font" value={fonts.english} onChange={e=>changeFont({...fonts,english:e.target.value as FontSettings['english']})}>
+              {Object.entries(englishFonts).map(([id,font])=><option key={id} value={id}>{font.label}</option>)}
+            </select>
+          </div>
+          <div><label className="sheet-label" htmlFor="japanese-font">日本語の書体</label>
+            <select id="japanese-font" value={fonts.japanese} onChange={e=>changeFont({...fonts,japanese:e.target.value as FontSettings['japanese']})}>
+              {Object.entries(japaneseFonts).map(([id,font])=><option key={id} value={id}>{font.label}</option>)}
+            </select>
+          </div>
+          <p className="field-help">選んだ書体はPDFにも使います。切り替えると、改行やページ数が変わることがあります。</p>
+        </div>
         <label className="sheet-label" htmlFor="note-content">ノートに載せる内容</label>
         <select id="note-content" value={view.content} onChange={e=>{setView({...view,content:e.target.value as ViewSettings['content']});setFeedback('');}}>
           <option value="study-notes">単語・イディオムも載せる</option><option value="sentences-only">センテンスのみ</option>
@@ -175,6 +196,6 @@ export function HandwritingDemo() {
       <p className="prototype-note">筆跡と印刷のプロトタイプです。<br/>AI生成・学習記録との連携は、これから。</p>
     </aside>
    </main>
-   <footer className="ink-footer"><span>A little practice. A page to keep.</span><a href="/licenses/Stroke-Font-OFL.txt">筆跡ライセンス</a></footer>
+   <footer className="ink-footer"><span>A little practice. A page to keep.</span><a href="/fonts/README.md">書体とライセンス</a></footer>
  </div>;
 }

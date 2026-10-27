@@ -1,0 +1,32 @@
+[
+  {
+    "file": "output/pdf/handwriting-fonts-on-a4-memos-blank.pdf",
+    "subject": "A5 notebook; A4 sheet; actual size 100%; memos blank; fonts pen/zen",
+    "pages": [
+      {
+        "mm": [
+          297.0,
+          210.0
+        ],
+        "images": 0,
+        "text": "〜のために時間をつくる〜する代わりに落ち着く書き留める〜のために時間をつくる〜する代わりに落ち着く書き留める"
+      }
+    ],
+    "renderWarnings": ""
+  },
+  {
+    "file": "output/pdf/handwriting-fonts-memos-shown.pdf",
+    "subject": "A5 notebook; A5 sheet; actual size 100%; memos shown; fonts print/klee",
+    "pages": [
+      {
+        "mm": [
+          148.0,
+          210.0
+        ],
+        "images": 0,
+        "text": "〜のために時間をつくった落ち着く〜のために時間をつくる〜する代わりに落ち着く書き留める"
+      }
+    ],
+    "renderWarnings": ""
+  }
+]

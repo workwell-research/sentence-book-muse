@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-27T04:19:49Z",
+  "generatedAt": "2026-10-27T05:24:00.549529Z",
   "title": "Design System: The Sentence Book",
   "extensions": {
     "colorMeta": {
@@ -466,11 +466,11 @@
       },
       "notebook-gloss": {
         "displayName": "Anchored Japanese meaning",
-        "purpose": "Static M PLUS 1p text below a difficult expression, measured in the shared A5 plan."
+        "purpose": "Static selected Klee One / Zen Kurenaido text below a difficult expression, measured in the shared A5 plan."
       },
       "notebook-meaning": {
         "displayName": "Vocabulary Japanese meaning",
-        "purpose": "Static M PLUS 1p text retained in the vocabulary frame when memos are blank."
+        "purpose": "Static selected Klee One / Zen Kurenaido text retained in the vocabulary frame when memos are blank."
       }
     },
     "shadows": [
@@ -607,11 +607,19 @@
       "description": "Shared-plan A5 note on A5 paper or two original-size copies on landscape A4 at x0/149mm. Left/18mm is default. PDF markers initially follow the screen then can be overridden; content/memos match the view. This native control snippet has no export runtime.",
       "html": "<div class=\"ds-print\"><p class=\"ds-note-format\">完成ノート <strong>A5</strong><span>148 × 210 mm・縦向き</span></p><label class=\"ds-sheet-label\" for=\"ds-print-sheet\">印刷用紙</label><select id=\"ds-print-sheet\"><option>A5 · 1ページ</option><option>A4横 · 2面付け</option></select><div class=\"ds-print-fields\"><label>綴じる側<select><option>左</option><option>右</option></select></label><label>穴あけ・綴じ代<select><option>12 mm</option><option selected>18 mm</option><option>24 mm</option></select></label></div><label class=\"ds-marker-choice\"><input type=\"checkbox\" checked/>PDFにマーカーを入れる</label><p class=\"ds-print-help\">メモは画面と同じ設定です。マーカーは印刷後に自分で引くこともできます。</p><p class=\"ds-print-instructions\">印刷倍率は<strong>100%（実際のサイズ）</strong>。用紙に合わせる拡大・縮小はオフにしてください。</p></div>",
       "css": ".ds-print{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;color:var(--ink,#3d443d)}.ds-note-format{margin:12px 0 20px;font-size:12px;line-height:1.8}.ds-note-format strong{font:24px \"Lora\",Georgia,serif;margin-left:12px}.ds-note-format span{display:block;color:var(--muted,#62695c);font-size:11px;margin-top:4px;font-variant-numeric:tabular-nums}.ds-sheet-label{display:block;font-size:11px;color:var(--muted,#62695c)}.ds-print select{font-family:inherit;border:0;border-bottom:1px solid #a9af9e;background:transparent;color:#46533e;padding:10px 20px 10px 4px;min-height:44px;font-size:12px;border-radius:0;cursor:pointer}.ds-print select:focus-visible,.ds-print input:focus-visible{outline:2px solid #667752;outline-offset:4px}#ds-print-sheet{width:100%}.ds-print-fields{display:flex;gap:13px;margin:14px 0 18px}.ds-print-fields label{font-size:10px;color:var(--muted,#62695c);flex:1}.ds-print-fields select{display:block;width:100%;padding-right:15px}.ds-marker-choice{min-height:44px;display:flex;align-items:center;gap:9px;font-size:12px;cursor:pointer}.ds-marker-choice input{width:17px;height:17px;margin:0;accent-color:var(--sage,#52634e)}.ds-print-help{font-size:11px;line-height:1.8;color:var(--muted,#62695c);margin:0 0 18px}.ds-print-instructions{font-size:11px;line-height:1.9;color:var(--muted,#62695c);margin:0 0 16px}.ds-print-instructions strong{font-weight:600;color:var(--ink,#3d443d)}"
+    },
+    {
+      "name": "Notebook font choices",
+      "kind": "input",
+      "refersTo": "select",
+      "description": "Independent English and Japanese choices; chosen metrics and fonts apply to screen/PDF. Switching previews completed sample ink, preserves input/checks and may reflow. Session-only. Native static snippet; no React runtime.",
+      "html": "<div class=\"ds-fonts\"><label for=\"ds-en-font\">英語の書体</label><select id=\"ds-en-font\"><option>整った丸文字</option><option>軽やかなペン文字</option></select><label for=\"ds-ja-font\">日本語の書体</label><select id=\"ds-ja-font\"><option>繊細な手書き · Klee One</option><option>やわらかな手書き · Zen Kurenaido</option></select><p>選んだ書体はPDFにも使います。切り替えると、改行やページ数が変わることがあります。</p></div>",
+      "css": ".ds-fonts{font-family:system-ui,sans-serif;color:#62695c;font-size:11px;display:grid;gap:12px;margin-bottom:24px}.ds-fonts select{font:12px system-ui,sans-serif;min-height:44px;width:100%;border:0;border-bottom:1px solid #a9af9e;background:transparent;color:#46533e;padding:10px 20px 10px 4px;border-radius:0}.ds-fonts p{margin:0;line-height:1.8}.ds-fonts select:focus-visible{outline:2px solid #667752;outline-offset:4px}"
     }
   ],
   "narrative": {
     "northStar": "The Handwritten Study Notebook",
-    "overview": "The Sentence Book — Learn digitally. Keep it beautifully. Korean Studygram meets a restrained editorial notebook: near-white paper, fine blue-gray rules, dark graphite handwriting, pale markers and compact study notes. The page is the keepsake; calm sage controls and Japanese labels support it. The typewriter motif and key/case animations are retired.\n\nThe owner adopted the Work blue notebook on 2026-10-27. The [implementation specification](docs/studygram-notebook-implementation-spec-2026-10-27.md), exact refill JSON/SVG and final blue references 22/23 govern this surface. The shared physical A5 layout and shown/blank memo controls now run at `/`. Source authority is `a5-layout.ts`, `study-content.ts`, `A5Notebook.tsx`, `study-pdf.ts`, `HandwritingDemo.tsx`, `handwriting.css` and `palettes.ts`. Earlier viewport-driven geometry and the older print-only composition are not the active root renderer.\n\nThe owner rejected the earlier oversized, irregular lettering as elementary-school-like. The accepted layout does not approve the current Cutlings-derived glyphs: final consistent handwriting is still to be made and approved. A later Work hand-template proposal is unadopted. The sample, personal input and checks are session-only demonstration content; `/setup` retains its earlier interest/topic-note scaffold. The [finish review](.impeccable/review/shared-a5/finish-review.md) accepts this implementation increment, not final typography, production lesson fitting or physical printing.",
+    "overview": "The Sentence Book — Learn digitally. Keep it beautifully. Korean Studygram meets a restrained editorial notebook: near-white paper, fine blue-gray rules, dark graphite handwriting, pale markers and compact study notes. The page is the keepsake; calm sage controls and Japanese labels support it. The typewriter motif and key/case animations are retired.\n\nThe owner adopted the Work blue notebook on 2026-10-27. The [implementation specification](docs/studygram-notebook-implementation-spec-2026-10-27.md), exact refill JSON/SVG and final blue references 22/23 govern this surface. The shared physical A5 layout and shown/blank memo controls now run at `/`. Source authority is `a5-layout.ts`, `study-content.ts`, `A5Notebook.tsx`, `study-pdf.ts`, `HandwritingDemo.tsx`, `handwriting.css` and `palettes.ts`. Earlier viewport-driven geometry and the older print-only composition are not the active root renderer.\n\nThe owner rejected the earlier oversized, irregular lettering as elementary-school-like. The owner requested selectable handwriting; Print/Pen English and Klee One/Zen Kurenaido Japanese now offer four combinations. Defaults are not exclusive owner-approved fonts. A later Work hand-template proposal is unadopted. The sample, personal input and checks are session-only demonstration content; `/setup` retains its earlier interest/topic-note scaffold. The [finish review](.impeccable/review/shared-a5/finish-review.md) accepts this implementation increment, not final typography, production lesson fitting or physical printing.",
     "keyCharacteristics": [
       "One measured A5 refill shared by screen and independently rendered PDF.",
       "Dark graphite body writing with six accent palettes; blue is the initial choice.",

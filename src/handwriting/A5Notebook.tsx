@@ -1,3 +1,4 @@
+import { japaneseFonts } from './fonts';
 import { A5, visibleLayer, visiblePages } from './a5-layout';
 import type { A5Layout, ViewSettings, createA5Scene } from './a5-layout';
 import { inkProgress, penPosition } from './model';
@@ -44,7 +45,7 @@ export function A5Notebook({layout,scene,view,ink,time,reduced,personalInk}:{
         </g>)}
         {visible.filter(s=>s.page===p.index&&s.phase==='marking').map(s=><StrokePath key={s.id} stroke={{...s,color:ink.marker}} time={time}/>)}
         {runs.map(r=><g key={r.id} data-run={r.id} data-layer={r.layer} data-baseline={r.y}>
-          {r.face==='static'?(r.layer!=='memo'||time>=scene.memoStart)&&<text fontFamily="Notebook Japanese" fontSize={r.size} fill={r.accent?ink.title:A5.ink}>
+          {r.face==='static'?(r.layer!=='memo'||time>=scene.memoStart)&&<text fontFamily={japaneseFonts[layout.fonts.japanese].family} fontSize={r.size} fill={r.accent?ink.title:A5.ink}>
             {r.glyphs.map(g=><tspan key={g.index} x={g.x} y={g.y}>{g.char}</tspan>)}
           </text>:visible.filter(s=>s.page===p.index&&s.phase!=='marking'&&s.id.startsWith(r.id+':')).map(s=><StrokePath key={s.id} stroke={{...s,color:s.accent?ink.title:A5.ink}} time={time}/>)}
         </g>)}

@@ -2,27 +2,28 @@ import { PDFDocument, rgb, LineCapStyle, PrintScaling } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
 import { A5, visibleLayer, visiblePages } from './a5-layout';
 import type { A5Layout, ViewSettings } from './a5-layout';
-import { fontData } from './font-data';
+import { englishFonts, japaneseFonts } from './fonts';
+import type { JapaneseFontId } from './fonts';
 import { sheetPlacements } from './print-layout';
 import type { PrintOptions } from './print-layout';
 import { palettes } from './palettes';
 const mm=72/25.4;
 const color=(hex:string)=>rgb(parseInt(hex.slice(1,3),16)/255,parseInt(hex.slice(3,5),16)/255,parseInt(hex.slice(5,7),16)/255);
-let fontRequest:Promise<ArrayBuffer>|undefined;
-async function notebookFont() {
-  fontRequest??=fetch('/fonts/MPLUS1p-Regular.ttf').then(r=>{
+const fontRequests=new Map<JapaneseFontId,Promise<ArrayBuffer>>();
+async function notebookFont(id:JapaneseFontId) {
+  if(!fontRequests.has(id))fontRequests.set(id,fetch('/fonts/'+japaneseFonts[id].file+'.ttf').then(r=>{
     if(!r.ok)throw new Error('日本語フォントを読み込めませんでした。通信を確認して再度お試しください。');
     return r.arrayBuffer();
-  }).catch(e=>{fontRequest=undefined;throw e;});
-  return fontRequest;
+  }).catch(e=>{fontRequests.delete(id);throw e;}));
+  return fontRequests.get(id)!;
 }
 export async function exportStudyNote(layout:A5Layout,view:ViewSettings,options:PrintOptions,fontBytes?:Uint8Array) {
   const doc=await PDFDocument.create();doc.registerFontkit(fontkit);
   doc.setTitle('The Sentence Book - '+layout.source.title);
   doc.setAuthor('The Sentence Book');
-  doc.setSubject('A5 notebook; '+options.sheet+' sheet; actual size 100%; memos '+view.memos);
+  doc.setSubject('A5 notebook; '+options.sheet+' sheet; actual size 100%; memos '+view.memos+'; fonts '+layout.fonts.english+'/'+layout.fonts.japanese);
   doc.catalog.getOrCreateViewerPreferences().setPrintScaling(PrintScaling.None);
-  const font=await doc.embedFont(fontBytes??await notebookFont(),{subset:false});
+  const font=await doc.embedFont(fontBytes??await notebookFont(layout.fonts.japanese),{subset:false});
   const ink=palettes[options.palette],sheet=sheetPlacements(options);
   const notes=[];
   for(const p of visiblePages(layout,view)) {
@@ -40,7 +41,7 @@ export async function exportStudyNote(layout:A5Layout,view:ViewSettings,options:
     });
     for(const r of p.runs.filter(r=>visibleLayer(r.layer,view)))for(const g of r.glyphs) {
       if(r.face==='static')page.drawText(g.char,{x:g.x*mm,y:(210-g.y)*mm,size:r.size*mm,font,color:color(r.accent?ink.title:A5.ink)});
-      else for(const part of fontData[g.char]?.strokes??[])page.drawSvgPath(part.d,{
+      else for(const part of englishFonts[layout.fonts.english].data[g.char]?.strokes??[])page.drawSvgPath(part.d,{
         x:g.x*mm,y:(210-g.y)*mm,scale:g.scale*mm,borderColor:color(r.accent?ink.title:A5.ink),
         borderWidth:(r.id==='title'?.28:.20)/g.scale,borderLineCap:LineCapStyle.Round,
       });

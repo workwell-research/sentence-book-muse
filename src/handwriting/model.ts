@@ -1,6 +1,7 @@
 import { palettes } from './palettes';
 import type { InkPalette } from './palettes';
 import { fontData } from './font-data';
+import type { StrokeFont } from './fonts';
 import { svgPathProperties } from 'svg-path-properties';
 
 export type Phase = 'writing' | 'marking' | 'annotating';
@@ -21,22 +22,22 @@ export const sampleNote: Omit<NoteContent, 'personal' | 'date'> = {
   phrase: 'making time for',
   annotation: 'make time for = find a moment for',
 };
-export const supported = (text: string) => [...text].every(c => !!fontData[c] || c === '\n');
-export const unsupported = (text: string) => [...new Set([...text].filter(c => !fontData[c] && c !== '\n'))].join(' ');
-const advance = (char: string, scale: number) => (fontData[char]?.advance ?? 100) * scale;
+export const supported = (text: string, font:StrokeFont=fontData) => [...text].every(c => !!font[c] || c === '\n');
+export const unsupported = (text: string, font:StrokeFont=fontData) => [...new Set([...text].filter(c => !font[c] && c !== '\n'))].join(' ');
+const advance = (char: string, scale: number, font:StrokeFont) => (font[char]?.advance ?? 100) * scale;
 
-export function layoutText(text: string, x: number, y: number, width: number, size: number, lineHeight: number): Glyph[] {
+export function layoutText(text: string, x: number, y: number, width: number, size: number, lineHeight: number, font:StrokeFont=fontData): Glyph[] {
   const scale = size / 200;
   const glyphs: Glyph[] = [];
   let cursor = x, baseline = y, index = 0;
   for (const word of text.split(/(\s+)/)) {
-    const wordWidth = [...word].reduce((n,c) => n + advance(c,scale),0);
+    const wordWidth = [...word].reduce((n,c) => n + advance(c,scale,font),0);
     if (!/^\s*$/.test(word) && cursor > x && cursor + wordWidth > x + width) {
       cursor = x; baseline += lineHeight;
     }
     for (const char of word) {
       if (char === '\n') { cursor = x; baseline += lineHeight; index++; continue; }
-      const a = advance(char,scale);
+      const a = advance(char,scale,font);
       if (cursor + a > x + width && char !== ' ') { cursor = x; baseline += lineHeight; }
       glyphs.push({char,index,x:cursor,y:baseline,scale,advance:a});
       cursor += a; index++;

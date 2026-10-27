@@ -1,8 +1,24 @@
-# Notebook text font
+# Notebook fonts
 
-M PLUS 1p Regular, unmodified static TrueType from Google Fonts / The M+ Project Authors.
-Downloaded 2026-10-27 from https://raw.githubusercontent.com/google/fonts/main/ofl/mplus1p/MPLUS1p-Regular.ttf
-License: SIL OFL 1.1, reproduced in ../licenses/MPLUS1p-OFL.txt.
-Official license: https://github.com/google/fonts/blob/main/ofl/mplus1p/OFL.txt
+The notebook offers English and Japanese choices independently. The selected fonts govern both the screen and PDF, including wrapping. UI labels retain the existing system sans; these fonts are for the paper.
 
-Static Japanese text only; no Japanese handwriting animation is implied. The same font serves SVG text and is fully embedded in PDF (partial font subsetting dropped some kana outlines during Poppler verification). scripts/build-note-text-metrics.mjs records its SHA-256 and advance metrics for viewport-independent wrapping. English handwriting continues to use the separately licensed provisional Sentence Study Strokes paths. PDF embedding uses pdf-lib with @pdf-lib/fontkit (https://pdf-lib.js.org/).
+| UI choice | Font / source | License |
+| --- | --- | --- |
+| 整った丸文字 (default) | **Sentence Notebook Print**, derived from EMS Delight, itself derived from Delius by Natalia Raices | SIL OFL 1.1: [EMS](../licenses/EMS-OFL.txt), [Delius copyright/license](../licenses/Delius-OFL.txt) |
+| 軽やかなペン文字 | **Sentence Notebook Pen**, derived from EMS Neato, itself derived from Bad Script by Roman Shchyukin / Gaslight | SIL OFL 1.1: [EMS](../licenses/EMS-OFL.txt), [Bad Script copyright/license](../licenses/BadScript-OFL.txt) |
+| 繊細な手書き (default) | **Klee One Regular**, Fontworks / The Klee Project Authors | [SIL OFL 1.1](../licenses/Klee-OFL.txt) |
+| やわらかな手書き | **Zen Kurenaido Regular**, Yoshimichi Ohira / The Zen Kurenaido Project Authors | [SIL OFL 1.1](../licenses/ZenKurenaido-OFL.txt) |
+
+## Sources and modifications — 2026-10-27
+
+- [EMS SVG fonts](https://gitlab.com/oskay/svg-fonts): `fonts/EMS/EMSDelight.svg` and `fonts/EMS/EMSNeato.svg`. Stroke fonts by Sheldon B. Michaels; SVG conversion by Windell H. Oskay. Original SVG metadata is retained in `assets/fonts/`. The EMS directory's OFL is a generic template, so the original metadata and each upstream base font's copyright/license are also retained. No GPL Hershey Text extension code is incorporated.
+- [Delius license](https://github.com/google/fonts/blob/main/ofl/delius/OFL.txt); [Bad Script license](https://github.com/google/fonts/blob/main/ofl/badscript/OFL.txt).
+- [Klee source](https://github.com/fontworks-fonts/Klee/blob/master/fonts/ttf/KleeOne-Regular.ttf); [Zen Kurenaido source](https://github.com/googlefonts/zen-kurenaido/blob/main/fonts/ttf/ZenKurenaido-Regular.ttf). TTF files are unmodified. WOFF2 files are losslessly repackaged full fonts, with no outline/glyph/name changes. Only the selected WOFF2 loads for screen text; the selected original TTF is fetched on PDF export.
+
+English derivatives retain real centerlines, normalized to the app's 200-unit coordinate model. Print uses source scale 0.2; Pen uses 0.145 to fit tall ascenders/descenders into the same rules. Polyline points receive local cubic tangents, preserving endpoints and sharp corners. Print reorders B and reverses C/f for writing direction. Pen reserves real overhangs in each advance so independent letters stay separated. Curved source paths remain curves; quote/dash aliases are added. Derivatives, generated data and their build script remain OFL; they are not claimed as first-party hackathon font artwork or endorsed by the original authors.
+
+Rebuild centerlines with `npm run font:build` (Node dependencies + Python 3 XML parser). Rebuild Japanese advances with `node scripts/build-note-text-metrics.mjs`. Repackage WOFF2 with fontTools 4.60.2 + brotli in an isolated environment: `TTFont(path).flavor = 'woff2'`, then save. Exact original TTF hashes are recorded with coverage/advances in `text-metrics*.json`; source/output hashes are in `docs/font-assets.json`.
+
+Japanese is static handwritten-style text, without pen animation. Both English choices animate actual vector strokes. PDF embeds the complete selected Japanese TTF: prior partial subsets lost kana outlines. English PDF paths are not searchable/selectable text. Full embedding increases download size.
+
+Previous Cutlings source/readme/OFL and M PLUS 1p TTF/OFL remain as historical provenance; they are not selected by the active notebook. Lora remains the interface wordmark under its separate OFL.

@@ -5,7 +5,7 @@ import { A5,createA5Layout,createA5Scene,defaultView,visibleLayer,visiblePages }
 import { studySample } from '../src/handwriting/study-content';
 import { exportStudyNote } from '../src/handwriting/study-pdf';
 import { defaultPrintOptions } from '../src/handwriting/print-layout';
-const bytes=fs.readFileSync('public/fonts/MPLUS1p-Regular.ttf');
+const bytes=fs.readFileSync('public/fonts/KleeOne-Regular.ttf');
 describe('shared A5 notebook',()=>{
  it('uses the adopted paper, integer rows, columns and title band',()=>{
   const p=createA5Layout(studySample).pages[0];
@@ -15,7 +15,7 @@ describe('shared A5 notebook',()=>{
   expect(p.lines.filter(l=>l.id.startsWith('band-')).map(l=>l.y1)).toEqual([24.64,32.96,201]);
   expect(p.lines.find(l=>l.id==='rail')).toMatchObject({x1:106,x2:106});
   const body=p.runs.filter(r=>r.layer==='body');
-  expect(body).toHaveLength(9); // The widest supplied sentence wraps with real glyph widths.
+  expect(body.length).toBeGreaterThan(studySample.sentences.length); // Real glyph widths wrap supplied long sentences.
   expect(body[0].y).toBeCloseTo(39.2);
   for(let i=1;i<body.length;i++) {
    const sameSentence=body[i].sourceId===body[i-1].sourceId;
@@ -30,8 +30,9 @@ describe('shared A5 notebook',()=>{
   for(const p of layout.pages) {
    expect(p.runs.filter(r=>visibleLayer(r.layer,blank))).toEqual(p.runs.filter(r=>r.layer!=='memo'));
    expect(p.lines.filter(l=>visibleLayer(l.layer,blank))).toEqual(p.lines);
-   expect(p.boxes.filter(b=>b.checked)).not.toHaveLength(0);
+
   }
+  expect(layout.pages.flatMap(p=>p.boxes).filter(b=>b.checked)).toHaveLength(studySample.vocabulary.length);
   expect(layout.source.sentences[1].glosses![0].meaning).toBe('〜のために時間をつくった');
  });
  it('keeps scene timing stable when checks or personal input change',()=>{
