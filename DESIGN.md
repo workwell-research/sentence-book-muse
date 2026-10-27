@@ -2,24 +2,24 @@
 name: "The Sentence Book"
 description: "Learn digitally. Keep it beautifully."
 colors:
-  desk-white: "#f5f6f6"
+  desk-white: "#f6f6f6"
   desk-oak-base: "#dfc49b"
   desk-walnut-base: "#4f3424"
-  ink-white: "#474d50"
+  ink-white: "#484848"
   ink-natural: "#514638"
   ink-walnut: "#f2e7d5"
-  quiet-white: "#636b70"
+  quiet-white: "#656565"
   quiet-natural: "#655a4b"
   quiet-walnut: "#e5d4ba"
-  control-white: "#f9f8f4"
-  control-natural: "#f7f0e3"
+  control-white: "#f7f7f7"
+  control-natural: "#faf8f5"
   control-walnut: "#312c25"
-  paper-white: "#FFFEFB"
-  paper-natural: "#F9F3E7"
-  paper-walnut: "#F6EEDC"
-  card-natural: "#faf5e9"
-  card-walnut: "#f4ecd9"
-  card-ink: "#444b50"
+  paper-white: "#FFFFFF"
+  paper-natural: "#FAF8F5"
+  paper-walnut: "#FAF8F5"
+  card-natural: "#faf8f5"
+  card-walnut: "#faf8f5"
+  card-ink: "#484848"
   rule: "#D7E0E7"
   graphite: "#383A3D"
   blue-accent: "#47627A"
@@ -34,13 +34,13 @@ colors:
   orange-marker: "#F5D9B8"
   green-accent: "#485747"
   green-marker: "#DCE7D5"
-  focus-white: "#446f91"
+  focus-white: "#555555"
   focus-natural: "#745128"
   focus-walnut: "#f4d5a1"
   index-ink: "#514d47"
   index-selected: "#38576b"
-  settings-paper: "#fbf9f3"
-  export-tint: "#dfe8e5"
+  settings-paper: "#fafafa"
+  export-tint: "#e7e7e7"
   error: "#994b38"
   error-walnut: "#ffbba2"
 typography:
@@ -111,7 +111,7 @@ spacing:
   tools-gap: "20px"
   page-gap: "24px"
   settings-gap: "38px"
-  desk-gap: "48px"
+  desk-gap: "36px"
 components:
   button-quiet:
     backgroundColor: "transparent"
@@ -163,7 +163,7 @@ components:
 
 **Creative North Star: "The Personal Study Desk"**
 
-The Sentence Book — Learn digitally. Keep it beautifully. A measured Studygram notebook sits among a few useful study objects. The chosen world is an overhead desk with Pure White, Natural and Walnut material families: white stationery and a digital timer; light oak with pastel pens; deep walnut with black-and-brass pens and a watch. Live text, native controls and a growing handwritten page carry the work. Quiet paper shadows and thin rules give the objects enough depth without competing with the writing.
+The Sentence Book — Learn digitally. Keep it beautifully. A measured Studygram notebook sits among a few useful study objects. The chosen world is an overhead desk with Pure White, Natural and Walnut material families: white stationery and a digital timer; light oak with pastel pens; deep walnut with black-and-brass pens and a watch. Live text, native controls and a growing handwritten page carry the work. Neutral Pure White surfaces and a shared warm-white paper on Natural/Walnut replace the earlier green/yellow tints. Close contact shadows under pens, timer, index book, card and notebook give the objects depth without competing with the writing.
 
 The owner-approved desktop handoff replaces the former sage control-rail composition at `/`, while retaining the adopted physical A5 notebook. The three themes change material, paper tint, index-heading character and the model-card rule; they do not change source content or the chosen notebook face. The retired typewriter/key/case motif stays retired. Product scope is in [PRODUCT.md](PRODUCT.md), composition and interaction authority in [the surface brief](.impeccable/surfaces/study-desk.md), implementation/provenance in [the desk note](docs/desktop-study-desk.md). `/handwriting` preserves the older typography demo and `/setup` its earlier scaffold; neither defines the current desk shell.
 
@@ -210,13 +210,13 @@ The native editor uses the selected renamed `Sentence Notebook … Input` WOFF2 
 
 ## Layout
 
-The desk has a 1552px maximum content width and 24px horizontal outer padding. Its desktop grid uses 1.25fr/1fr columns, a 48px gap and a 334px first row. Timer/pens occupy upper left, the open index sits below, the five paper index tabs and model card are upper right and notebook is below it. At 761–1200px, outer padding becomes 16px, columns 1.1fr/1fr and gap 24px. The timer retains its allocated space when hidden. Six complete horizontal pens occupy six labeled rows (54px high desktop, 44px mobile), with native radio hit areas and a selected check.
+The desk has a 1552px maximum content width and 24px horizontal outer padding. Its desktop grid uses 0.9fr/1.2fr columns (about 43:57), a 36px gap and a 334px first row. Timer/pens occupy upper left, the open index sits below, the five paper index tabs and model card are upper right and notebook is below it. At 761–1200px, outer padding becomes 16px, columns remain 0.9fr/1.2fr and gap 24px. The timer retains its allocated space when hidden. Six complete horizontal pens occupy six labeled rows (54px high desktop, 44px mobile), with native radio hit areas and a selected check.
 
-At 760px and below, 14px gutters and an 18px vertical gap stack tools, model, notebook and index. The tagline disappears, settings become one column and the model card is 246px high. Mobile starts with enlarged paper; enlarged rows are 740px of paper with no action gutter on desktop or mobile. Fit paper caps at 472px. These are viewing scales only. The A5/zoom toolbar stays in a sticky region (top 8px) outside horizontal scrolling; Copy proceeds with Enter only. The separate “現在の行へ” control and its band are removed; native caret/selection movement pans the enlarged paper in both directions. While editing, paper height equals the visual viewport height minus the measured model-to-paper offset and32px clearance (minimum96px). Focus aligns the model16px below the viewport top when needed; caret following keeps40px vertical and24px horizontal breathing room inside the paper. Paper scrolling is immediate and contained, with scroll anchoring disabled. Resize and model/control size observers update the allowance. Completed notes have no fixed viewport height. There is no desktop line-action or mobile Next button. Validation stays immediately below the toolbar above the paper. A 13px correction message uses the theme control surface and dark rust (light rust on Walnut); invalid inputs have a rust underline. The message is absent when there is no error. It names the first differing word, distinguishes whitespace/incomplete text, and never corrects saved text automatically.
+At 760px and below, 14px gutters and an 18px vertical gap stack tools, model, notebook and index. The tagline disappears, settings become one column and the model card is 246px high. Mobile starts with enlarged paper; enlarged rows are 740px of paper with no action gutter on desktop or mobile. Fit paper caps at 640px. These are viewing scales only. The A5/zoom toolbar stays in a sticky region (top 8px) outside horizontal scrolling; Copy proceeds with Enter only. The separate “現在の行へ” control and its band are removed; native caret/selection movement pans the enlarged paper in both directions. While editing, paper height equals the visual viewport height minus the measured model-to-paper offset and32px clearance (minimum96px). Focus aligns the model16px below the viewport top when needed; caret following keeps40px vertical and24px horizontal breathing room inside the paper. Paper scrolling is immediate and contained, with scroll anchoring disabled. Resize and model/control size observers update the allowance. Completed notes have no fixed viewport height. There is no desktop line-action or mobile Next button. Validation stays immediately below the toolbar above the paper. A 13px correction message uses the theme control surface and dark rust (light rust on Walnut); invalid inputs have a rust underline. The message is absent when there is no error. It names the first differing word, distinguishes whitespace/incomplete text, and never corrects saved text automatically.
 
 ### Learning index tabs
 
-Five paper tabs touch the model card’s top edge, following the owner’s physical-divider reference. Labels are only Copy / Shadowing / Dictation / Reconstruction / Speaking in 11px italic Lora. Only selected Copy uses sage `#dbe7db` with `#34483b` text; all other tabs use neutral `#f0f0eb` paper with `#62675f` text. No sequence numbers or 学習中/完了/準備中 badges. Copy sits 6px higher, joining a 3px sage card edge. Tabs have 9px rounded top corners, square bases, 5px gaps (4px mobile), 40px minimum height and one-line labels. The strip scrolls horizontally when needed rather than breaking English words. Native selected/disabled states remain: four later stages are unavailable. Completion appears in the model heading and confirmed count.
+Five paper tabs touch the model card’s top edge, following the owner’s physical-divider reference. Labels are only Copy / Shadowing / Dictation / Reconstruction / Speaking in 11px italic Lora. Only selected Copy uses a darker light gray `#d9d9d9` with `#363636` text; all other tabs use neutral `#efefef` paper with `#626262` text. No sequence numbers or 学習中/完了/準備中 badges. Copy sits 6px higher, joining a 3px gray card edge. Tabs have 9px rounded top corners, square bases, 5px gaps (4px mobile), 40px minimum height and one-line labels. All five columns have equal width, with a 104px minimum each; the strip scrolls horizontally when needed rather than breaking English words. Native selected/disabled states remain: four later stages are unavailable. Completion appears in the model heading and confirmed count.
 
 ### Common A5 refill
 
@@ -261,7 +261,7 @@ The native notebook input is transparent, borderless, square and positioned on t
 
 ### Buttons
 
-Quiet native buttons use transparent backgrounds, theme ink, 3px corners, 8×12px padding and a 44px minimum height. Hover uses a translucent gray wash; disabled buttons are half-opacity. Copy has no separate check/Next button; Enter checks, saves and advances. Audio keeps a button and an Option/Alt+R hint. The full-width PDF action uses a pale green-gray tint. Toolbar and compact mobile timer/index controls are smaller documented exceptions; do not claim universal 44px targets.
+Quiet native buttons use transparent backgrounds, theme ink, 3px corners, 8×12px padding and a 44px minimum height. Hover uses a translucent gray wash; disabled buttons are half-opacity. Copy has no separate check/Next button; Enter checks, saves and advances. Audio keeps a button and an Option/Alt+R hint. The full-width PDF action uses a neutral light-gray tint. Toolbar and compact mobile timer/index controls are smaller documented exceptions; do not claim universal 44px targets.
 
 ### Inputs / Fields
 
@@ -269,7 +269,7 @@ Only one textarea appears at a time, in Copy or personal-writing mode. Enter con
 
 ### Cards / Containers
 
-The model card combines a heading/progress row, Lora sentence, a reserved meaning area, theme rule and audio/meaning actions. Toggling meaning keeps its area rather than shifting the card. Option+R / Alt+R plays the current model from the editor; the physical R key supports the Mac Option character. IME/AltGraph/settings are excluded and repeats do not restart playback. The audio button reports loading/speaking; failures appear in the reserved meaning area. Sentence changes cancel playback and stale callbacks are ignored. The note is a measured SVG with a live textarea overlay and textual title/description; visible memo accessibility text follows visible ink. The settings dialog groups desk/type and content/print controls, with two desktop columns and one mobile column.
+The model card combines a heading/progress row, Lora sentence, a reserved meaning area, theme rule and audio/meaning actions. Toggling meaning keeps its area rather than shifting the card. Option+R / Alt+R plays the current model from the editor; the physical R key supports the Mac Option character. IME/AltGraph/settings are excluded and repeats do not restart playback. The audio button reports loading/speaking; failures appear in the reserved meaning area. Sentence or voice/rate changes cancel playback and stale callbacks are ignored. Available English voices are loaded on mount and voiceschanged. The app explicitly assigns the selected voice/locale, pitch1 and default rate1; auto prefers enhanced/natural voices, then conventional Samantha/Alex-style choices, excluding known novelty/effect voices including their observed Japanese labels. Settings allow voice choice, 0.85/1/1.1 speed and audition. Older saved display records receive defaults without resetting other choices; missing saved voices fall back to an available English voice. If none exists, playback offers recovery instead of using another language. The note is a measured SVG with a live textarea overlay and textual title/description; visible memo accessibility text follows visible ink. The settings dialog groups desk/type and content/print controls, with two desktop columns and one mobile column.
 
 ### Navigation
 
@@ -311,3 +311,6 @@ The 2026-10-27 build/test/browser/PDF records are summarized in [PROJECT_STATUS.
 - Don't paint desk textures, controls, theme paper tint or screen shadows into the PDF.
 - Don't revive the typewriter motif or add rankings, confetti or a chat interface.
 - Don't claim native-device/IME/audio, physical-print, production-generation or deployment verification from synthetic browser evidence.
+
+### 2026-10-27 material/voice refinement
+Paper and model cards share one theme token: Pure White #FFFFFF on #f6f6f6; both wood themes #FAF8F5. The index plate uses grayscale (wood themes add sepia0.08), retaining its physical shading; this harmonizes the family without claiming pixel-identical paper. Material PNG bytes/provenance are unchanged. Object shadows have a short contact offset plus a soft displaced blur; Walnut uses darker alpha. The timer digits scale from the object width. Native selection and navigation-key following run after the browser selection action so End does not scroll the model away. Screen viewing width changes neither physical A5 layout nor PDF. Current evidence/limits are in PROJECT_STATUS.md; heard voice naturalness remains unevaluated.

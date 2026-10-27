@@ -8,12 +8,13 @@ export const displayKey='sentence-book-muse:desk-display:v1';
 export const practiceKey='sentence-book-muse:sample-copy:v1';
 export const displaySchema=z.object({
  version:z.literal(1),theme:z.enum(themes),marker:z.enum(markerIds),timerVisible:z.boolean(),timerMinutes:z.number().int().min(1).max(120),
+ voice:z.string().min(1).default('auto'),speechRate:z.union([z.literal(.85),z.literal(1),z.literal(1.1)]).default(1),
  english:z.enum(['readability','tech','print','pen']),japanese:z.enum(['klee','zen']),
  memos:z.enum(['shown','blank']),markers:z.boolean(),vocabulary:z.boolean(),grammar:z.boolean(),
  content:z.enum(['study-notes','sentences-only']),sheet:z.enum(['A5','A4']),side:z.enum(['left','right']),binding:z.union([z.literal(12),z.literal(18),z.literal(24)]),printMarkers:z.boolean().nullable(),
 });
 export type DeskDisplay=z.infer<typeof displaySchema>;
-export const defaultDisplay:DeskDisplay={version:1,theme:'pure-white',marker:'blue',timerVisible:true,timerMinutes:25,english:'readability',japanese:'klee',memos:'shown',markers:true,vocabulary:true,grammar:true,content:'study-notes',sheet:'A5',side:'left',binding:18,printMarkers:null};
+export const defaultDisplay:DeskDisplay={version:1,theme:'pure-white',marker:'blue',timerVisible:true,timerMinutes:25,voice:'auto',speechRate:1,english:'readability',japanese:'klee',memos:'shown',markers:true,vocabulary:true,grammar:true,content:'study-notes',sheet:'A5',side:'left',binding:18,printMarkers:null};
 export const practiceSchema=z.object({version:z.literal(1),lessonId:z.string(),source:z.string(),index:z.number().int().nonnegative(),phase:z.enum(['editing','confirmed','complete']),draft:z.string(),entries:z.array(z.object({sentenceId:z.string(),text:z.string(),confirmedAt:z.string()})),checks:z.record(z.string(),z.boolean()),personal:z.string(),personalDraft:z.string()});
 export type CopyRecord=z.infer<typeof practiceSchema>;
 const fingerprint=(lesson:StudyContent)=>JSON.stringify(lesson.sentences.map(s=>[s.id,s.text]));

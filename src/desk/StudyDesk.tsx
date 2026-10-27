@@ -11,7 +11,7 @@ import {palettes} from '../handwriting/palettes';
 import '../handwriting/handwriting.css';
 import './desk.css';
 import {LiveDraftInk} from './LiveDraftInk';
-import {audioShortcut,createLessonSpeaker} from './audio';
+import {audioShortcut,createLessonSpeaker,englishVoices,chooseEnglishVoice} from './audio';
 import type {AudioState} from './audio';
 import {caretOffset,revealDelta,writingPaperHeight} from './viewport';
 
@@ -45,6 +45,8 @@ export function StudyDesk(){
  const [loadedDisplay]=useState(()=>readSaved(displayKey,displaySchema,defaultDisplay));
  const [loadedCopy]=useState(()=>readSaved(practiceKey,practiceSchema,emptyCopy(studySample),r=>validCopy(r,studySample)));
  const [display,setDisplay]=useState(loadedDisplay.value),[record,setRecord]=useState(()=>nextCopy(loadedCopy.value,studySample));
+ const [voices,setVoices]=useState<SpeechSynthesisVoice[]>([]);
+ const selectedVoice=chooseEnglishVoice(voices,display.voice);
  const [audio,setAudio]=useState<AudioState>({phase:'idle',message:''});
  const [speaker]=useState(()=>createLessonSpeaker(typeof window.SpeechSynthesisUtterance==='function'?window.speechSynthesis:undefined,text=>new SpeechSynthesisUtterance(text),setAudio));
  const [notice,setNotice]=useState(loadedCopy.message||loadedDisplay.message),[error,setError]=useState('');
@@ -69,14 +71,19 @@ export function StudyDesk(){
  const inputHeight=Math.min(position.rows,Math.max(2,Math.ceil(draft.length/32)+draft.split('\n').length))*5.2;
  const inputFamily='Sentence Notebook '+({readability:'Readability',tech:'Tech',print:'Print',pen:'Pen'}[display.english])+' Input';
  const view={content:display.content,memos:display.memos,markers:display.markers};
- const paperColor=display.theme==='natural'?'#F9F3E7':display.theme==='walnut'?'#F6EEDC':'#FFFEFB';
+ const paperColor=display.theme==='pure-white'?'#FFFFFF':'#FAF8F5';
+ useEffect(()=>{
+  const engine=window.speechSynthesis;if(!engine)return;
+  const refresh=()=>setVoices(englishVoices(engine.getVoices()));
+  refresh();engine.addEventListener('voiceschanged',refresh);return()=>engine.removeEventListener('voiceschanged',refresh);
+ },[]);
  useEffect(()=>{const mq=matchMedia('(prefers-reduced-motion: reduce)');const fn=()=>setReduced(mq.matches);mq.addEventListener('change',fn);return()=>mq.removeEventListener('change',fn);},[]);
  useEffect(()=>{let alive=true;setFontReady(false);document.fonts.load('16px "'+inputFamily+'"').then(()=>{if(alive)setFontReady(true);}).catch(()=>{if(alive)setError('入力用の書体を読み込めませんでした。再読み込みしてください。');});return()=>{alive=false;};},[inputFamily]);
  useEffect(()=>{const el=paper.current;if(!el)return;const observer=new ResizeObserver(()=>setUnit(el.clientWidth/148));observer.observe(el);return()=>observer.disconnect();},[zoom]);
  useEffect(()=>{if(!playing||reduced)return;let frame=0,previous=0;const tick=(now:number)=>{if(previous)setTime(t=>Math.min(scene.duration,t+Math.min(50,now-previous)*speed));previous=now;frame=requestAnimationFrame(tick);};frame=requestAnimationFrame(tick);return()=>cancelAnimationFrame(frame);},[playing,reduced,speed,scene.duration]);
  useEffect(()=>{if(time>=scene.duration||reduced)setPlaying(false);},[time,scene.duration,reduced]);
- useEffect(()=>{setMeaning(false);speaker.stop();return()=>speaker.stop(true);},[record.index,speaker]);
- useEffect(()=>{const onKey=(event:globalThis.KeyboardEvent)=>{if(event.defaultPrevented)return;const intent=audioShortcut(event,composing.current||Date.now()-compositionEnded.current<100||!!settings.current?.open);if(!intent)return;event.preventDefault();if(intent==='play')speaker.play(current.text);};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey);},[current.text,speaker]);
+ useEffect(()=>{setMeaning(false);speaker.stop();return()=>speaker.stop(true);},[record.index,speaker,display.voice,display.speechRate]);
+ useEffect(()=>{const onKey=(event:globalThis.KeyboardEvent)=>{if(event.defaultPrevented)return;const intent=audioShortcut(event,composing.current||Date.now()-compositionEnded.current<100||!!settings.current?.open);if(!intent)return;event.preventDefault();if(intent==='play')speaker.play(current.text,{voice:display.voice,rate:display.speechRate});};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey);},[current.text,speaker,display.voice,display.speechRate]);
  function changeDisplay(patch:Partial<DeskDisplay>){const next={...display,...patch};setDisplay(next);try{saveRecord(displayKey,next,loadedDisplay.blocked);}catch(e){setNotice((e as Error).message);}if(patch.english||patch.japanese){setAnimateId(null);setTime(1e9);setPlaying(false);}}
  function persist(next:CopyRecord,required=false){try{saveRecord(practiceKey,next,loadedCopy.blocked);setRecord(next);return true;}catch(e){setError((e as Error).message);if(!required)setRecord(next);return false;}}
  function followCaret(){
@@ -123,7 +130,7 @@ export function StudyDesk(){
   }catch(e){setError((e as Error).message);editor.current?.focus();}
  }
  function keyDown(e:KeyboardEvent<HTMLTextAreaElement>){if(e.key!=='Enter'||e.shiftKey||e.altKey||e.metaKey||e.ctrlKey)return;if(e.repeat){e.preventDefault();return;}if(e.nativeEvent.isComposing||composing.current||e.keyCode===229||e.repeat||Date.now()-compositionEnded.current<100){return;}e.preventDefault();confirm();}
- function playAudio(){speaker.play(current.text);}
+ function playAudio(){speaker.play(current.text,{voice:display.voice,rate:display.speechRate});}
  function startPersonal(){setPersonalMode(true);changeDisplay({content:'study-notes'});requestAnimationFrame(()=>{editor.current?.focus({preventScroll:true});follow.current();});}
  async function exportPdf(){setExporting(true);try{const {exportStudyNote}=await import('../handwriting/study-pdf');const bytes=await exportStudyNote(confirmedLayout(layout,record,display),view,{...display,notebook:'a5',palette:display.marker,markers:display.printMarkers??display.markers});const url=URL.createObjectURL(new Blob([new Uint8Array(bytes)],{type:'application/pdf'}));const a=document.createElement('a');a.href=url;a.download=display.sheet==='A4'?'sentence-book-a5-on-a4.pdf':'sentence-book-a5.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);setNotice('PDFを作成しました。100%（実際のサイズ）で印刷してください。');}catch(e){setNotice((e as Error).message);}finally{setExporting(false);}}
  const inputTop=(position.y-4.65)*unit;
@@ -161,7 +168,7 @@ export function StudyDesk(){
       <A5Notebook showPen={!annotationsOnly||!isEditing} layout={rendered} scene={scene} pageIndex={p.index} paperColor={paperColor} view={view} ink={palettes[display.marker]} time={reduced?scene.duration:time} reduced={reduced} personalInk={emptyInk}/>
       {p.index===position.page&&isEditing&&<textarea ref={editor} id="notebook-input" className={'notebook-input'+(liveInk?' live-ink-input':'')} aria-label={personalMode?'ノートに自分のひとことを書く':'ノートに英文を書き写す'} aria-describedby="writing-help writing-error" aria-invalid={!!error} enterKeyHint={personalMode||record.index===studySample.sentences.length-1?'done':'next'} spellCheck={false} autoCapitalize="off" autoCorrect="off" wrap="soft" disabled={!fontReady} value={draft} rows={1}
        style={{left:position.x*unit,top:inputTop,width:position.width*unit,height:inputHeight*unit,fontFamily:'"'+inputFamily+'", sans-serif',fontSize:4.1*unit,lineHeight:(5.2*unit)+'px'} as CSSProperties}
-       onScroll={e=>setInputScroll({x:e.currentTarget.scrollLeft/unit,y:e.currentTarget.scrollTop/unit})} onChange={e=>changeDraft(e.target.value)} onSelect={followCaret} onFocus={()=>requestAnimationFrame(followCaret)} onKeyDown={keyDown} onCompositionStart={()=>{composing.current=true;setComposingText(true);}} onCompositionEnd={()=>{composing.current=false;setComposingText(false);compositionEnded.current=Date.now();requestAnimationFrame(()=>follow.current());}}/>}
+       onScroll={e=>setInputScroll({x:e.currentTarget.scrollLeft/unit,y:e.currentTarget.scrollTop/unit})} onChange={e=>changeDraft(e.target.value)} onSelect={()=>requestAnimationFrame(followCaret)} onKeyUp={e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(e.key))requestAnimationFrame(followCaret);}} onFocus={()=>requestAnimationFrame(followCaret)} onKeyDown={keyDown} onCompositionStart={()=>{composing.current=true;setComposingText(true);}} onCompositionEnd={()=>{composing.current=false;setComposingText(false);compositionEnded.current=Date.now();requestAnimationFrame(()=>follow.current());}}/>}
       {p.index===position.page&&isEditing&&<LiveDraftInk key={personalMode?'personal':current.id} text={draft.length<=500?draft:''} font={display.english} animate={liveInk&&!reduced} visible={liveInk} x={position.x} y={position.y} width={position.width} top={position.y-4.65} height={inputHeight} scrollX={inputScroll.x} scrollY={inputScroll.y}/>}
      </div></div>)}</div>
     </div>
@@ -178,6 +185,14 @@ export function StudyDesk(){
     <label><input type="checkbox" checked={display.timerVisible} onChange={e=>changeDisplay({timerVisible:e.target.checked})}/>タイマーを表示する</label>
     <label>リセット後の時間<select aria-label="リセット後の時間" value={display.timerMinutes} onChange={e=>changeDisplay({timerMinutes:Number(e.target.value)})}>{[5,15,25,45,60].map(n=><option key={n} value={n}>{n} 分</option>)}</select></label>
     <label>筆記の速さ<select aria-label="筆記の速さ" value={speed} onChange={e=>setSpeed(Number(e.target.value))}>{[1,2,4].map(n=><option value={n} key={n}>{n}×</option>)}</select></label>
+    <h3>読み上げ</h3>
+    <label>英語の声<select aria-label="英語の声" value={voices.some(v=>v.voiceURI===display.voice)?display.voice:'auto'} onChange={e=>changeDisplay({voice:e.target.value})}>
+     <option value="auto">自動{selectedVoice?' · '+chooseEnglishVoice(voices)?.name:''}</option>
+     {voices.map(v=><option key={v.voiceURI} value={v.voiceURI}>{v.name} · {v.lang}</option>)}
+    </select></label>
+    <label>読み上げの速さ<select aria-label="読み上げの速さ" value={display.speechRate} onChange={e=>changeDisplay({speechRate:Number(e.target.value) as DeskDisplay['speechRate']})}><option value="0.85">ゆっくり · 0.85×</option><option value="1">標準 · 1×</option><option value="1.1">少し速く · 1.1×</option></select></label>
+    <button className="voice-preview" onClick={playAudio}><Icon name="sound"/>声を試す</button>
+    <p role="status">{audio.phase==='speaking'?'読み上げ中…':audio.phase==='loading'?'音声を準備中…':audio.message||(!selectedVoice?'英語の音声を読み込み中です。端末で利用できる声を表示します。':'使用する声：'+selectedVoice.name+'（'+selectedVoice.lang+'）')}</p>
    </section><section><h3>ノートに残す内容</h3><label>内容<select aria-label="内容" value={display.content} onChange={e=>changeDisplay({content:e.target.value as DeskDisplay['content']})}><option value="study-notes">単語・イディオムも載せる</option><option value="sentences-only">センテンスのみ</option></select></label>
     <fieldset disabled={display.content==='sentences-only'}><legend>学習メモ</legend>{(['shown','blank'] as const).map(v=><label key={v}><input type="radio" name="desk-memos" checked={display.memos===v} value={v} onChange={()=>changeDisplay({memos:v})}/>{v==='shown'?'表示する':'空欄にする'}</label>)}</fieldset><p>空欄でも、本文や単語欄は動きません。</p>
     <label><input type="checkbox" checked={display.markers} onChange={e=>changeDisplay({markers:e.target.checked})}/>画面にマーカーを表示</label>

@@ -21,7 +21,10 @@ Adopted reference images `docs/assets/desktop-ui-2026-10-27/17-natural-model-car
 See `.impeccable/review/desk/qa.json`, `pdf-checks.json`, captures and `finish-review.md`. The reviewer scored all five original findings resolved (ship); this is a fix-list/regression verdict, not a new whole-product review. Parent completed two batched visual rounds and one reviewer-directed correction batch; all13 final captures were opened and validated. Impeccable context/detector execution was unavailable earlier in this session; no new successful detector/comp-diff is claimed. PNG prompt embedding succeeded in the asset producer. Physical devices, native OS IME/audio and physical printing are not verified by synthetic browser tests.
 
 ## 2026-10-27 owner refinements
-Learning index labels are English names only; active Copy uses sage and inactive tabs neutral paper. Removed number/status badges and all Copy Next buttons. Enter handles checks/save/advance; audio has an Option/Alt+R hint. Later tabs remain disabled. These instructions supersede the original handoff’s control/status styling.
+Learning index labels are English names only; active Copy uses darker light gray and inactive tabs pale gray, all five equal-width. Removed number/status badges and all Copy Next buttons. Enter handles checks/save/advance; audio has an Option/Alt+R hint. Later tabs remain disabled. These instructions supersede the original handoff’s control/status styling.
 
 ## 2026-10-27 writing visibility correction
 The model and active input must remain visible together. During editing, scroll the paper internally rather than following later lines by scrolling the model away. Size that viewport from the available screen height; keep native input and A5/PDF coordinates unchanged.
+
+## 2026-10-27 neutral paper and writing priority
+Owner reports green casts, floating materials, uneven tab widths, mismatched Walnut papers and an unnatural voice. Use neutral white Pure White, shared warm-white wood-theme papers, quiet contact shadows, equal gray tabs and a43:57 desktop split favoring the notebook. Explicit English voice selection/default normal speed and a settings audition replace unspecified browser-voice choice. No new assets or physical A5/PDF changes.

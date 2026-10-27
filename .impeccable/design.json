@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-27T11:34:13.881124+00:00",
+  "generatedAt": "2026-10-27T13:34:22.571967+00:00",
   "title": "Design System: The Sentence Book",
   "extensions": {
     "colorMeta": {
@@ -8,14 +8,14 @@
         "role": "neutral",
         "displayName": "Desk White",
         "tonalRamp": [
-          "oklch(15% 0.00107 197.14)",
-          "oklch(27% 0.00107 197.14)",
-          "oklch(38% 0.00107 197.14)",
-          "oklch(50% 0.00107 197.14)",
-          "oklch(61% 0.00107 197.14)",
-          "oklch(73% 0.00107 197.14)",
-          "oklch(84% 0.00107 197.14)",
-          "oklch(95% 0.00107 197.14)"
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
         ]
       },
       "desk-oak-base": {
@@ -50,14 +50,14 @@
         "role": "neutral",
         "displayName": "Ink White",
         "tonalRamp": [
-          "oklch(15% 0.00927 229.06)",
-          "oklch(27% 0.00927 229.06)",
-          "oklch(38% 0.00927 229.06)",
-          "oklch(50% 0.00927 229.06)",
-          "oklch(61% 0.00927 229.06)",
-          "oklch(73% 0.00927 229.06)",
-          "oklch(84% 0.00927 229.06)",
-          "oklch(95% 0.00927 229.06)"
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
         ]
       },
       "ink-natural": {
@@ -92,14 +92,14 @@
         "role": "neutral",
         "displayName": "Quiet White",
         "tonalRamp": [
-          "oklch(15% 0.01259 235.01)",
-          "oklch(27% 0.01259 235.01)",
-          "oklch(38% 0.01259 235.01)",
-          "oklch(50% 0.01259 235.01)",
-          "oklch(61% 0.01259 235.01)",
-          "oklch(73% 0.01259 235.01)",
-          "oklch(84% 0.01259 235.01)",
-          "oklch(95% 0.01259 235.01)"
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
         ]
       },
       "quiet-natural": {
@@ -134,28 +134,28 @@
         "role": "neutral",
         "displayName": "Control White",
         "tonalRamp": [
-          "oklch(15% 0.00540 95.10)",
-          "oklch(27% 0.00540 95.10)",
-          "oklch(38% 0.00540 95.10)",
-          "oklch(50% 0.00540 95.10)",
-          "oklch(61% 0.00540 95.10)",
-          "oklch(73% 0.00540 95.10)",
-          "oklch(84% 0.00540 95.10)",
-          "oklch(95% 0.00540 95.10)"
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
         ]
       },
       "control-natural": {
         "role": "neutral",
         "displayName": "Control Natural",
         "tonalRamp": [
-          "oklch(15% 0.01881 83.06)",
-          "oklch(27% 0.01881 83.06)",
-          "oklch(38% 0.01881 83.06)",
-          "oklch(50% 0.01881 83.06)",
-          "oklch(61% 0.01881 83.06)",
-          "oklch(73% 0.01881 83.06)",
-          "oklch(84% 0.01881 83.06)",
-          "oklch(95% 0.01881 83.06)"
+          "oklch(15% 0.0045 78.5)",
+          "oklch(27% 0.0045 78.5)",
+          "oklch(38% 0.0045 78.5)",
+          "oklch(50% 0.0045 78.5)",
+          "oklch(61% 0.0045 78.5)",
+          "oklch(73% 0.0045 78.5)",
+          "oklch(84% 0.0045 78.5)",
+          "oklch(95% 0.0045 78.5)"
         ]
       },
       "control-walnut": {
@@ -176,84 +176,84 @@
         "role": "neutral",
         "displayName": "Paper White",
         "tonalRamp": [
-          "oklch(15% 0.00409 91.45)",
-          "oklch(27% 0.00409 91.45)",
-          "oklch(38% 0.00409 91.45)",
-          "oklch(50% 0.00409 91.45)",
-          "oklch(61% 0.00409 91.45)",
-          "oklch(73% 0.00409 91.45)",
-          "oklch(84% 0.00409 91.45)",
-          "oklch(95% 0.00409 91.45)"
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
         ]
       },
       "paper-natural": {
         "role": "neutral",
         "displayName": "Paper Natural",
         "tonalRamp": [
-          "oklch(15% 0.01713 84.59)",
-          "oklch(27% 0.01713 84.59)",
-          "oklch(38% 0.01713 84.59)",
-          "oklch(50% 0.01713 84.59)",
-          "oklch(61% 0.01713 84.59)",
-          "oklch(73% 0.01713 84.59)",
-          "oklch(84% 0.01713 84.59)",
-          "oklch(95% 0.01713 84.59)"
+          "oklch(15% 0.0045 78.5)",
+          "oklch(27% 0.0045 78.5)",
+          "oklch(38% 0.0045 78.5)",
+          "oklch(50% 0.0045 78.5)",
+          "oklch(61% 0.0045 78.5)",
+          "oklch(73% 0.0045 78.5)",
+          "oklch(84% 0.0045 78.5)",
+          "oklch(95% 0.0045 78.5)"
         ]
       },
       "paper-walnut": {
         "role": "neutral",
         "displayName": "Paper Walnut",
         "tonalRamp": [
-          "oklch(15% 0.02531 86.87)",
-          "oklch(27% 0.02531 86.87)",
-          "oklch(38% 0.02531 86.87)",
-          "oklch(50% 0.02531 86.87)",
-          "oklch(61% 0.02531 86.87)",
-          "oklch(73% 0.02531 86.87)",
-          "oklch(84% 0.02531 86.87)",
-          "oklch(95% 0.02531 86.87)"
+          "oklch(15% 0.0045 78.5)",
+          "oklch(27% 0.0045 78.5)",
+          "oklch(38% 0.0045 78.5)",
+          "oklch(50% 0.0045 78.5)",
+          "oklch(61% 0.0045 78.5)",
+          "oklch(73% 0.0045 78.5)",
+          "oklch(84% 0.0045 78.5)",
+          "oklch(95% 0.0045 78.5)"
         ]
       },
       "card-natural": {
         "role": "neutral",
         "displayName": "Card Natural",
         "tonalRamp": [
-          "oklch(15% 0.01673 88.00)",
-          "oklch(27% 0.01673 88.00)",
-          "oklch(38% 0.01673 88.00)",
-          "oklch(50% 0.01673 88.00)",
-          "oklch(61% 0.01673 88.00)",
-          "oklch(73% 0.01673 88.00)",
-          "oklch(84% 0.01673 88.00)",
-          "oklch(95% 0.01673 88.00)"
+          "oklch(15% 0.0045 78.5)",
+          "oklch(27% 0.0045 78.5)",
+          "oklch(38% 0.0045 78.5)",
+          "oklch(50% 0.0045 78.5)",
+          "oklch(61% 0.0045 78.5)",
+          "oklch(73% 0.0045 78.5)",
+          "oklch(84% 0.0045 78.5)",
+          "oklch(95% 0.0045 78.5)"
         ]
       },
       "card-walnut": {
         "role": "neutral",
         "displayName": "Card Walnut",
         "tonalRamp": [
-          "oklch(15% 0.02658 87.85)",
-          "oklch(27% 0.02658 87.85)",
-          "oklch(38% 0.02658 87.85)",
-          "oklch(50% 0.02658 87.85)",
-          "oklch(61% 0.02658 87.85)",
-          "oklch(73% 0.02658 87.85)",
-          "oklch(84% 0.02658 87.85)",
-          "oklch(95% 0.02658 87.85)"
+          "oklch(15% 0.0045 78.5)",
+          "oklch(27% 0.0045 78.5)",
+          "oklch(38% 0.0045 78.5)",
+          "oklch(50% 0.0045 78.5)",
+          "oklch(61% 0.0045 78.5)",
+          "oklch(73% 0.0045 78.5)",
+          "oklch(84% 0.0045 78.5)",
+          "oklch(95% 0.0045 78.5)"
         ]
       },
       "card-ink": {
         "role": "neutral",
         "displayName": "Card Ink",
         "tonalRamp": [
-          "oklch(15% 0.01239 238.80)",
-          "oklch(27% 0.01239 238.80)",
-          "oklch(38% 0.01239 238.80)",
-          "oklch(50% 0.01239 238.80)",
-          "oklch(61% 0.01239 238.80)",
-          "oklch(73% 0.01239 238.80)",
-          "oklch(84% 0.01239 238.80)",
-          "oklch(95% 0.01239 238.80)"
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
         ]
       },
       "rule": {
@@ -456,14 +456,14 @@
         "role": "neutral",
         "displayName": "Focus White",
         "tonalRamp": [
-          "oklch(15% 0.07212 243.62)",
-          "oklch(27% 0.07212 243.62)",
-          "oklch(38% 0.07212 243.62)",
-          "oklch(50% 0.07212 243.62)",
-          "oklch(61% 0.07212 243.62)",
-          "oklch(73% 0.07212 243.62)",
-          "oklch(84% 0.07212 243.62)",
-          "oklch(95% 0.07212 243.62)"
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
         ]
       },
       "focus-natural": {
@@ -526,28 +526,28 @@
         "role": "neutral",
         "displayName": "Settings Paper",
         "tonalRamp": [
-          "oklch(15% 0.00821 91.48)",
-          "oklch(27% 0.00821 91.48)",
-          "oklch(38% 0.00821 91.48)",
-          "oklch(50% 0.00821 91.48)",
-          "oklch(61% 0.00821 91.48)",
-          "oklch(73% 0.00821 91.48)",
-          "oklch(84% 0.00821 91.48)",
-          "oklch(95% 0.00821 91.48)"
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
         ]
       },
       "export-tint": {
         "role": "neutral",
         "displayName": "Export Tint",
         "tonalRamp": [
-          "oklch(15% 0.01042 174.26)",
-          "oklch(27% 0.01042 174.26)",
-          "oklch(38% 0.01042 174.26)",
-          "oklch(50% 0.01042 174.26)",
-          "oklch(61% 0.01042 174.26)",
-          "oklch(73% 0.01042 174.26)",
-          "oklch(84% 0.01042 174.26)",
-          "oklch(95% 0.01042 174.26)"
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(38% 0 0)",
+          "oklch(50% 0 0)",
+          "oklch(61% 0 0)",
+          "oklch(73% 0 0)",
+          "oklch(84% 0 0)",
+          "oklch(95% 0 0)"
         ]
       },
       "error": {
@@ -628,12 +628,12 @@
     "shadows": [
       {
         "name": "model",
-        "value": "0 6px 16px #26343e12",
+        "value": "0 2px 3px rgba(24,20,18,.20), 0 7px 14px rgba(24,20,18,.12)",
         "purpose": "Read-only model card."
       },
       {
         "name": "paper",
-        "value": "0 6px 18px #1f25221c",
+        "value": "0 2px 3px rgba(24,20,18,.20), 0 7px 14px rgba(24,20,18,.12)",
         "purpose": "A5 screen paper."
       },
       {
@@ -643,7 +643,7 @@
       },
       {
         "name": "dialog",
-        "value": "0 16px 60px #14252b33",
+        "value": "0 16px 60px #18181833",
         "purpose": "Settings modal; backdrop #222a304d."
       }
     ],
@@ -686,7 +686,7 @@
       "refersTo": "button-quiet",
       "description": "Native desk action; theme color and visible focus remain live.",
       "html": "<button class=\"ds-quiet\">意味を見る</button>",
-      "css": ".ds-quiet{border:0;border-radius:3px;padding:8px 12px;min-height:44px;background:transparent;color:var(--desk-ink,#474d50);font-size:13px;line-height:1.6;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;cursor:pointer;}.ds-quiet:hover{background:#737b8614}.ds-quiet:focus-visible{outline:2px solid var(--focus,#446f91);outline-offset:3px;}.ds-quiet:disabled{opacity:.5;cursor:default}"
+      "css": ".ds-quiet{border:0;border-radius:3px;padding:8px 12px;min-height:44px;background:transparent;color:var(--desk-ink,#484848);font-size:13px;line-height:1.6;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;cursor:pointer;}.ds-quiet:hover{background:#737b8614}.ds-quiet:focus-visible{outline:2px solid var(--focus,#555555);outline-offset:3px;}.ds-quiet:disabled{opacity:.5;cursor:default}"
     },
     {
       "name": "PDF action",
@@ -694,7 +694,7 @@
       "refersTo": "button-export",
       "description": "Full-width settings action exports confirmed ink only.",
       "html": "<button class=\"ds-export\">確定したノートをPDFに</button>",
-      "css": ".ds-export{border:0;border-radius:3px;padding:8px 12px;min-height:44px;background:transparent;color:var(--desk-ink,#474d50);font-size:13px;line-height:1.6;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;cursor:pointer;width:100%;background:#dfe8e5;color:#444c4c}.ds-export:hover{background:#dfe8e5}.ds-export:focus-visible{outline:2px solid var(--focus,#446f91);outline-offset:3px;}.ds-export:disabled{opacity:.5;cursor:default}"
+      "css": ".ds-export{border:0;border-radius:3px;padding:8px 12px;min-height:44px;background:transparent;color:var(--desk-ink,#484848);font-size:13px;line-height:1.6;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;cursor:pointer;width:100%;background:#e7e7e7;color:#444c4c}.ds-export:hover{background:#e7e7e7}.ds-export:focus-visible{outline:2px solid var(--focus,#555555);outline-offset:3px;}.ds-export:disabled{opacity:.5;cursor:default}"
     },
     {
       "name": "Native notebook line",
@@ -702,7 +702,7 @@
       "refersTo": "input-notebook",
       "description": "Source textarea at a representative 470px paper scale; the app computes geometry and loads the selected matching input face.",
       "html": "<label class=\"ds-editor-label\" for=\"ds-note-input\">ノートに英文を書き写す</label><textarea id=\"ds-note-input\" class=\"ds-note-input\" rows=\"2\" spellcheck=\"false\" autocapitalize=\"off\" autocorrect=\"off\" wrap=\"soft\">Today, I decided to slow down.</textarea>",
-      "css": ".ds-editor-label{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;display:block;color:#636b70;font-size:11px;line-height:1.8;margin-bottom:8px}.ds-note-input{display:block;width:270px;height:33.027px;resize:none;border:0;border-radius:0;padding:0;margin:0;outline:none;background:transparent;color:#383A3D;caret-color:#2b647f;font-family:\"Sentence Notebook Readability Input\",sans-serif;font-size:13.0203px;font-weight:400;font-style:normal;line-height:16.5135px;font-kerning:none;font-variant-ligatures:none;letter-spacing:0;white-space:pre-wrap;overflow-wrap:break-word;word-break:normal;overflow:auto;scrollbar-width:thin;scrollbar-color:#9cabb0 transparent}.ds-note-input:focus{outline:none;background:#dce8f115;box-shadow:0 1px 0 #729bb177}.ds-note-input:disabled{opacity:0}"
+      "css": ".ds-editor-label{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;display:block;color:#656565;font-size:11px;line-height:1.8;margin-bottom:8px}.ds-note-input{display:block;width:270px;height:33.027px;resize:none;border:0;border-radius:0;padding:0;margin:0;outline:none;background:transparent;color:#383A3D;caret-color:#2b647f;font-family:\"Sentence Notebook Readability Input\",sans-serif;font-size:13.0203px;font-weight:400;font-style:normal;line-height:16.5135px;font-kerning:none;font-variant-ligatures:none;letter-spacing:0;white-space:pre-wrap;overflow-wrap:break-word;word-break:normal;overflow:auto;scrollbar-width:thin;scrollbar-color:#9cabb0 transparent}.ds-note-input:focus{outline:none;background:#dce8f115;box-shadow:0 1px 0 #729bb177}.ds-note-input:disabled{opacity:0}"
     },
     {
       "name": "Settings select",
@@ -710,7 +710,7 @@
       "refersTo": "select-setting",
       "description": "Native single-choice setting with a quiet bottom border.",
       "html": "<label class=\"ds-setting\">英語の書体<select aria-label=\"英語の書体\" class=\"ds-select\"><option>Readability Italic</option><option>EMS Tech</option><option>整った丸文字</option><option>軽やかなペン文字</option></select></label>",
-      "css": ".ds-setting{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;display:flex;align-items:center;gap:8px;min-height:44px;flex-wrap:wrap;color:#444c4c;font-size:13px;line-height:1.6}.ds-select{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;display:block;width:100%;min-height:44px;border:0;border-bottom:1px solid #aeb8b3;background:transparent;color:inherit;margin:0 0 8px;font-size:13px;line-height:1.6;cursor:pointer}.ds-select:focus-visible{outline:2px solid var(--focus,#446f91);outline-offset:3px;}"
+      "css": ".ds-setting{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;display:flex;align-items:center;gap:8px;min-height:44px;flex-wrap:wrap;color:#444c4c;font-size:13px;line-height:1.6}.ds-select{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;display:block;width:100%;min-height:44px;border:0;border-bottom:1px solid #aeb8b3;background:transparent;color:inherit;margin:0 0 8px;font-size:13px;line-height:1.6;cursor:pointer}.ds-select:focus-visible{outline:2px solid var(--focus,#555555);outline-offset:3px;}"
     },
     {
       "name": "Index navigation",
@@ -718,7 +718,7 @@
       "refersTo": "index-navigation",
       "description": "The live vertical tab treatment shown without the separate book material plate.",
       "html": "<div class=\"ds-tabs\" role=\"tablist\" aria-label=\"ノートの目次\" aria-orientation=\"vertical\"><button role=\"tab\" aria-selected=\"true\" tabindex=\"0\">My Lessons <span aria-hidden=\"true\">—</span></button><button role=\"tab\" aria-selected=\"false\" tabindex=\"-1\">Topic Index</button><button role=\"tab\" aria-selected=\"false\" tabindex=\"-1\">My Vocabulary</button><button role=\"tab\" aria-selected=\"false\" tabindex=\"-1\">Review</button><button role=\"tab\" aria-selected=\"false\" tabindex=\"-1\">Completed Notes</button></div>",
-      "css": ".ds-tabs{display:flex;flex-direction:column;color:#514d47}.ds-tabs button{display:flex;justify-content:space-between;text-align:left;min-height:44px;border:0;border-bottom:1px solid #c7c1b455;border-radius:0;background:transparent;padding:8px 0;color:inherit;font:15px/1.4 \"Lora\",serif;cursor:pointer}.ds-tabs button[aria-selected=true]{color:#38576b;font-weight:600}.ds-tabs button:hover{background:#737b8614}.ds-tabs button:focus-visible{outline:2px solid var(--focus,#446f91);outline-offset:3px;}"
+      "css": ".ds-tabs{display:flex;flex-direction:column;color:#514d47}.ds-tabs button{display:flex;justify-content:space-between;text-align:left;min-height:44px;border:0;border-bottom:1px solid #c7c1b455;border-radius:0;background:transparent;padding:8px 0;color:inherit;font:15px/1.4 \"Lora\",serif;cursor:pointer}.ds-tabs button[aria-selected=true]{color:#38576b;font-weight:600}.ds-tabs button:hover{background:#737b8614}.ds-tabs button:focus-visible{outline:2px solid var(--focus,#555555);outline-offset:3px;}"
     },
     {
       "name": "Read-only model card",
@@ -726,7 +726,7 @@
       "refersTo": "model-card",
       "description": "White-theme model/progress/meaning actions; the only writing field belongs on the notebook. Audio also supports Option/Alt+R without changing editor text/focus.",
       "html": "<section class=\"ds-model\" aria-label=\"英文のお手本\"><div class=\"ds-model-heading\"><h1>Copy</h1><span>0 / 8</span></div><p class=\"ds-model-sentence\">Today, I decided to slow down.</p><p class=\"ds-model-meaning\" aria-hidden=\"true\">今日は、少しペースを落とすことにした。</p><div class=\"ds-model-actions\"><button><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" aria-hidden=\"true\"><path d=\"M4 9H8L13 5V19L8 15H4ZM17 8Q22 12 17 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>音声を聞く <kbd>⌥ / Alt R</kbd></button><button aria-expanded=\"false\">意味を見る</button></div></section>",
-      "css": ".ds-model{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;position:relative;background:#fffefb;color:#444b50;min-width:0;height:234px;padding:24px 30px 16px;box-shadow:0 6px 16px #26343e12;display:flex;flex-direction:column;font-size:13px;line-height:1.6}.ds-model::after{content:\"\";position:absolute;left:30px;right:30px;bottom:62px;border-top:1px solid #dce5e9;pointer-events:none}.ds-model-heading{display:flex;align-items:baseline;justify-content:space-between;font-size:12px}.ds-model-heading h1{font:400 18px \"Lora\",serif;margin:0}.ds-model-sentence{font:400 clamp(19px,1.8vw,28px)/1.45 \"Lora\",Georgia,serif;margin:17px 0 8px;max-width:100%}.ds-model-meaning{font-size:12px;margin:0;min-height:36px;visibility:hidden}.ds-model-actions{display:flex;align-items:center;gap:4px;margin-top:auto}.ds-model-actions button{border:0;border-radius:3px;padding:8px 12px;min-height:44px;background:transparent;color:var(--desk-ink,#474d50);font-size:13px;line-height:1.6;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;font-size:12px;white-space:nowrap;color:inherit}.ds-model-actions button:hover{background:#737b8614}.ds-model-actions button:focus-visible{outline:2px solid var(--focus,#446f91);outline-offset:3px;}"
+      "css": ".ds-model{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;position:relative;background:#fffefb;color:#484848;min-width:0;height:234px;padding:24px 30px 16px;box-shadow:0 6px 16px #26343e12;display:flex;flex-direction:column;font-size:13px;line-height:1.6}.ds-model::after{content:\"\";position:absolute;left:30px;right:30px;bottom:62px;border-top:1px solid #dce5e9;pointer-events:none}.ds-model-heading{display:flex;align-items:baseline;justify-content:space-between;font-size:12px}.ds-model-heading h1{font:400 18px \"Lora\",serif;margin:0}.ds-model-sentence{font:400 clamp(19px,1.8vw,28px)/1.45 \"Lora\",Georgia,serif;margin:17px 0 8px;max-width:100%}.ds-model-meaning{font-size:12px;margin:0;min-height:36px;visibility:hidden}.ds-model-actions{display:flex;align-items:center;gap:4px;margin-top:auto}.ds-model-actions button{border:0;border-radius:3px;padding:8px 12px;min-height:44px;background:transparent;color:var(--desk-ink,#484848);font-size:13px;line-height:1.6;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;font-size:12px;white-space:nowrap;color:inherit}.ds-model-actions button:hover{background:#737b8614}.ds-model-actions button:focus-visible{outline:2px solid var(--focus,#555555);outline-offset:3px;}"
     },
     {
       "name": "Settings dialog surface",
@@ -734,21 +734,21 @@
       "refersTo": "settings-dialog",
       "description": "Modal paper surface and heading; real app uses a native dialog and backdrop.",
       "html": "<section class=\"ds-dialog\"><div class=\"ds-dialog-heading\"><h2>ノートを整える</h2><button>閉じる</button></div><p>完成ノートは A5（148 × 210 mm）です。</p></section>",
-      "css": ".ds-dialog{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;max-width:820px;border:0;border-radius:4px;padding:24px 30px;background:#fbf9f3;color:#444c4c;box-shadow:0 16px 60px #14252b33;font-size:13px;line-height:1.6}.ds-dialog-heading{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ccd2cc;padding-bottom:12px}.ds-dialog-heading h2{font:22px \"Lora\",serif;margin:0}.ds-dialog-heading button{border:0;border-radius:3px;padding:8px 12px;min-height:44px;background:transparent;color:var(--desk-ink,#474d50);font-size:13px;line-height:1.6;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;cursor:pointer;color:inherit}.ds-dialog-heading button:hover{background:#737b8614}.ds-dialog-heading button:focus-visible{outline:2px solid var(--focus,#446f91);outline-offset:3px;}.ds-dialog p{font-size:11px;line-height:1.8;color:#68706d}"
+      "css": ".ds-dialog{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;max-width:820px;border:0;border-radius:4px;padding:24px 30px;background:#fafafa;color:#444c4c;box-shadow:0 16px 60px #14252b33;font-size:13px;line-height:1.6}.ds-dialog-heading{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ccd2cc;padding-bottom:12px}.ds-dialog-heading h2{font:22px \"Lora\",serif;margin:0}.ds-dialog-heading button{border:0;border-radius:3px;padding:8px 12px;min-height:44px;background:transparent;color:var(--desk-ink,#484848);font-size:13px;line-height:1.6;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;cursor:pointer;color:inherit}.ds-dialog-heading button:hover{background:#737b8614}.ds-dialog-heading button:focus-visible{outline:2px solid var(--focus,#555555);outline-offset:3px;}.ds-dialog p{font-size:11px;line-height:1.8;color:#68706d}"
     },
     {
       "name": "Review mark",
       "kind": "custom",
       "description": "Native saved learner check from either vocabulary/review tab.",
       "html": "<label class=\"ds-word\"><input type=\"checkbox\"/><span>slow down<small>ペースを落とす</small></span></label>",
-      "css": ".ds-word{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;display:flex;align-items:flex-start;gap:7px;min-height:52px;font-size:12px;line-height:1.6;padding:6px 0;color:#514d47}.ds-word input{margin:5px 0 0;accent-color:#567c93}.ds-word input:focus-visible{outline:2px solid var(--focus,#446f91);outline-offset:3px;}.ds-word small{display:block;font-size:10px;line-height:1.6;margin:0;color:#6d6a63}"
+      "css": ".ds-word{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;display:flex;align-items:flex-start;gap:7px;min-height:52px;font-size:12px;line-height:1.6;padding:6px 0;color:#514d47}.ds-word input{margin:5px 0 0;accent-color:#567c93}.ds-word input:focus-visible{outline:2px solid var(--focus,#555555);outline-offset:3px;}.ds-word small{display:block;font-size:10px;line-height:1.6;margin:0;color:#6d6a63}"
     },
     {
       "name": "Learning paper index",
       "kind": "navigation",
-      "description": "English-only paper index; just the selected tab is sage. Four later stages stay disabled without status badges.",
+      "description": "Equal-width English paper index in light-gray shades; only the selected tab is darker. Four later stages stay disabled without status badges.",
       "html": "<div class=\"ds-learning-index\" role=\"tablist\" aria-label=\"学習の5ステップ\"><button role=\"tab\" aria-selected=\"true\">Copy</button><button role=\"tab\" aria-selected=\"false\" disabled>Shadowing</button><button role=\"tab\" aria-selected=\"false\" disabled>Dictation</button><button role=\"tab\" aria-selected=\"false\" disabled>Reconstruction</button><button role=\"tab\" aria-selected=\"false\" disabled>Speaking</button></div>",
-      "css": ".ds-learning-index{display:flex;gap:5px;align-items:end;overflow-x:auto;border-bottom:3px solid #dbe7db}.ds-learning-index button{flex:1 0 auto;border:0;min-height:40px;padding:10px 9px 9px;border-radius:9px 9px 0 0;text-align:center;background:#f0f0eb;color:#62675f;font:italic 11px/1.4 Lora,serif;white-space:nowrap;opacity:1}.ds-learning-index button[aria-selected=true]{min-height:46px;background:#dbe7db;color:#34483b}.ds-learning-index button:focus-visible{outline:2px solid #446f91;outline-offset:3px}"
+      "css": ".ds-learning-index{display:grid;grid-template-columns:repeat(5,minmax(104px,1fr));gap:5px;align-items:end;overflow-x:auto;border-bottom:3px solid #d9d9d9}.ds-learning-index button{border:0;min-height:40px;padding:10px 9px 9px;border-radius:9px 9px 0 0;text-align:center;background:#efefef;color:#626262;font:italic 11px/1.4 Lora,serif;white-space:nowrap;opacity:1}.ds-learning-index button[aria-selected=true]{min-height:46px;background:#d9d9d9;color:#363636}.ds-learning-index button:focus-visible{outline:2px solid #555555;outline-offset:3px}"
     }
   ],
   "narrative": {
@@ -760,7 +760,8 @@
       "A read-only model card and one native editor on the current notebook line.",
       "Small graphite handwriting, pale markers and a fixed measured A5 grid.",
       "Draft letters draw as they are typed; Enter checks/saves the answer and focuses the next line in one action.",
-      "Mobile actions remain reachable beside enlarged, horizontally scrollable paper."
+      "Mobile actions remain reachable beside enlarged, horizontally scrollable paper.",
+      "Neutral paper, close contact shadows, equal light-gray learning tabs, and a43:57 split favoring the writing side."
     ],
     "rules": [
       {
