@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-27T06:00:05.467176+00:00",
+  "generatedAt": "2026-10-27T07:25:22.728055+00:00",
   "title": "Design System: The Sentence Book",
   "extensions": {
     "colorMeta": {
@@ -623,7 +623,7 @@
     "keyCharacteristics": [
       "One measured A5 refill shared by screen and independently rendered PDF.",
       "Dark graphite body writing with six accent palettes; blue is the initial choice.",
-      "Whole-row sentence wrapping, anchored meanings, right footnotes and a framed vocabulary block.",
+      "Whole-row sentence wrapping, anchored Japanese meanings raised 1mm toward their highlighted English, right footnotes and a framed vocabulary block.",
       "Memo blanking preserves allocated space and the learner's current writing/checks.",
       "Actual English stroke motion, static licensed Japanese text and reduced-motion completion.",
       "Fixed paper on narrow screens, with fit or enlarged horizontal scrolling."

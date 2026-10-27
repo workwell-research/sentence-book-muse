@@ -1,6 +1,6 @@
 # Sentence Book Muse — progress
 
-Last updated: 2026-10-27 JST. Owner: Codex — Readability Italic default and EMS Tech A5 comparison.
+Last updated: 2026-10-27 JST. Owner: Codex — Japanese phrase-gloss alignment.
 
 Local checkout: `/Users/maki/sentence-book-muse`
 Public repository: https://github.com/workwell-research/sentence-book-muse
@@ -27,6 +27,12 @@ The actual sample is synthetic, not Meta-generated content or a completed lesson
 - New sentence_book_page_v1 contract, shared Zod validation and JSON Schema export in shared/lesson-schema.ts; see docs/generation-contract.md. This is not a recovered legacy v2 schema.
 - Separate localStorage keys for interests and the existing topic note, with explicit save, restore and non-destructive error handling. Profile changes preserve note data.
 - Vite/React/TypeScript configuration; Pages Functions health route and unavailable generation route.
+
+## Verification — 2026-10-27 Japanese gloss alignment
+- Implementation: Japanese phrase glosses alone are raised 1mm inside their reserved rows, through the shared run/glyph coordinates used by screen and PDF. Body/footnote/vocabulary baselines, horizontal positions, fonts, row allocation and page counts remain fixed. Existing 14 tests in the two layout/font files passed, as did both TypeScript projects and Vite build. No new unit tests for this small optical adjustment; the full 54-test suite, Functions and `/setup` browser regression were not rerun.
+- Browser/layout: a disposable Chrome context on 5327 compared pre/post plans for all eight font pairs. Exactly 16 Japanese gloss runs shifted by 1mm; every other plan value was identical after accounting for that shift. Memo shown/blank non-memo identity and no viewport overflow at 320px passed with no page errors. Parent visually inspected Readability/Tech × Klee/Zen captures and the 320px screen. No real browser storage was accessed. Independent read-only typography assessment supported a 1mm maximum lift given Tech's descenders; no fresh finish-review/detector result is claimed.
+- PDF: actual download `output/pdf/a5-gloss-upper-aligned.pdf` is one 148×210mm page, zero image objects, PrintScaling=None and both Japanese glosses retained. Poppler emitted no warnings; parent inspected the full page. This fixture omits personal writing; prior two-page comparison files remain historical. Evidence: `.impeccable/review/gloss-alignment/`. No physical printer/device check.
+- Delivery: 5317 HTML references current `index-BtL3f9Kn.js`. Only our QA 5327 process stopped. Updated design/feature notes and both shared status files; concurrent Work additions preserved. No secrets/API/storage schema/deployment change. Next: owner's visual evaluation, then continue learning-flow integration.
 
 ## Verification — 2026-10-27 preferred English faces
 - Implementation: 54 tests across 7 files passed; both TypeScript projects and Vite build passed. Tests cover all four centerline alphabets, real trajectories/ink containment, eight English/Japanese combinations and the selected Japanese font/PDF contracts. An initial Tech title-bound failure was corrected by lifting only its title 25 model units (0.70625mm), preserving body baselines, font size and ruling. Original Print/Pen generated datasets are unchanged. No API/runtime/storage schema or hosting configuration changed; Functions and the full `/setup` browser suite were not rerun.
@@ -86,6 +92,7 @@ No Meta/API call, credential setup, Pages deployment, physical-device test or ph
 ## Work in progress
 | Owner | Files | Work |
 | --- | --- | --- |
+| Codex | a5-layout.ts; scoped gloss screen/PDF QA and docs | Completed 2026-10-27: 1mm gloss lift; 14 existing tests/build, eight-pair before/after comparison, scoped browser and A5 PDF verification. |
 | Codex | Font packs/registry, font and A5 tests, browser/PDF QA and font docs | Completed 2026-10-27: two added faces, owner-selected Readability default, 54 tests/build, eight-combination browser QA and same-content A5 PDFs. |
 | Typography assessor | Read-only new-face measurements | Completed: read-only normalization/overhang/title-bound assessment; parent implemented and verified. |
 | Codex | Font research/specimen assets and typography integration; related QA/docs | Completed 2026-10-27: two English/two Japanese selectable fonts, same PDF faces; 52 tests/build and disposable browser/PDF checks. |
@@ -119,6 +126,8 @@ No Meta/API call, credential setup, Pages deployment, physical-device test or ph
 
 - 2026-10-27: Implemented the owner-requested common A5 plan and reversible memo controls on screen and in independent PDF. Added measured wrapping/pagination, anchored glosses/footnotes, graphite body/six accents, stable checks/personal writing and fixed-layout mobile viewing. Added OFL Japanese font/metrics and full-font PDF embedding after raster inspection exposed missing kana. 48 tests/build, disposable PC/390/320 browser checks and actual vector PDF parsing/rendering passed. Fresh reviewer: ship for this increment. No real data/configuration/deployment/API/physical-device/print changes; only the dedicated QA server stopped. Final glyphs, red-sheet and learning/persistence integration remain pending.
 
-- 2026-10-27: Owner requested font choices instead of one pairing. Implemented Print/Pen English centerlines plus Klee One/Zen Kurenaido Japanese, same selected face/metrics in screen and PDF, preserved input/checks/settings and explicit replay. Retained all font notices and documented derivatives. 52 tests, both TS/build, four-combination disposable browser and two actual parsed/raster-reviewed PDFs passed. Only QA5327 stopped; built preview5317 remains. No API, configuration, deployment, real data or physical-device/print changes.
+- 2026-10-27: Owner requested font choices instead of one pairing. Implemented Print/Pen English centerlines plus Klee One/Zen Kurenaido Japanese, same selected face/metrics in screen and PDF, preserved input/checks/settings and explicit replay. Retained all font notices and documented derivatives. 52 tests, both TS/build, four-combination disposable browser and two actual parsed/raster-reviewed PDFs passed. Only QA 5327 stopped; built preview5317 remains. No API, configuration, deployment, real data or physical-device/print changes.
 
-- 2026-10-27: Added owner-preferred Readability Italic and EMS Tech alongside Print/Pen, made Readability the explicit default, and retained independent Japanese choices. Corrected only Tech title placement for long descenders. 54 tests/build, eight-combination disposable browser checks and all six pages of the A5 comparison/A4 QA PDFs passed parsing and visual inspection. Licenses/hashes/design docs updated; two new English datasets add about 68.32kB gzip. Stopped only QA5327; preview5317 references latest build. Physical print/devices, actual Meta generation and persistence remain pending.
+- 2026-10-27: Added owner-preferred Readability Italic and EMS Tech alongside Print/Pen, made Readability the explicit default, and retained independent Japanese choices. Corrected only Tech title placement for long descenders. 54 tests/build, eight-combination disposable browser checks and all six pages of the A5 comparison/A4 QA PDFs passed parsing and visual inspection. Licenses/hashes/design docs updated; two new English datasets add about 68.32kB gzip. Stopped only QA 5327; preview5317 references latest build. Physical print/devices, actual Meta generation and persistence remain pending.
+
+- 2026-10-27: Owner requested Japanese meanings closer to highlighted English. Raised phrase glosses 1mm only, keeping reserved rows and all other geometry. 14 existing layout/font tests/build passed; eight-pair plan comparison, four preferred-face views/320px and memo blanking verified. Parsed and visually inspected the one-page A5 download with no render warnings. Only QA 5327 stopped; latest 5317 build retained. Physical printing and full regression were not rerun.

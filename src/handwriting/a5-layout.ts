@@ -46,6 +46,8 @@ export function wrapInk(text:string,width:number,size:number,face:'hand'|'static
   }
   return rows;
 }
+// Raise phrase meanings within their reserved row, keeping room for English descenders.
+const glossBaselineLiftMm=1;
 const baseline=(row:number)=>A5.first+(row%A5.rows)*A5.pitch;
 const pageAt=(row:number)=>Math.floor(row/A5.rows);
 const lineText=(glyphs:Glyph[])=>glyphs.map(g=>g.char).join('').trimEnd();
@@ -66,8 +68,8 @@ export function createA5Layout(source:StudyContent,paper:PaperSettings={binding:
     }
     return pages[index];
   };
-  function run(id:string,sourceId:string,glyphs:Glyph[],x:number,row:number,size:number,layer:Layer,face:'hand'|'static'='hand',accent=false) {
-    const y=baseline(row),placed=glyphs.map(g=>({...g,x:g.x+x,y}));
+  function run(id:string,sourceId:string,glyphs:Glyph[],x:number,row:number,size:number,layer:Layer,face:'hand'|'static'='hand',accent=false,baselineOffsetMm=0) {
+    const y=baseline(row)+baselineOffsetMm,placed=glyphs.map(g=>({...g,x:g.x+x,y}));
     page(pageAt(row)).runs.push({id,sourceId,text:lineText(glyphs),x,y,size,layer,face,accent,glyphs:placed});
     return placed;
   }
@@ -98,7 +100,7 @@ export function createA5Layout(source:StudyContent,paper:PaperSettings={binding:
         if(selected.length)page(pageAt(row)).markers.push({id:g.id+':'+lineIndex,x1:selected[0].x-.25,x2:selected.at(-1)!.x+selected.at(-1)!.advance,y:baseline(row)-.45,layer:'body'});
       }
       row++;
-      for(const g of glossLines) for(const [i,letters] of g.lines.entries())run(g.gloss.id+':'+i,g.gloss.id,letters,g.x,row++,2.6,'memo','static');
+      for(const g of glossLines) for(const [i,letters] of g.lines.entries())run(g.gloss.id+':'+i,g.gloss.id,letters,g.x,row++,2.6,'memo','static',false,-glossBaselineLiftMm);
     }
     // A last-line gloss occupies the intervening row; otherwise reserve a whole blank row.
     const last=wrapped.at(-1)??[];
