@@ -1,6 +1,6 @@
 # Sentence Book Muse — progress
 
-Last updated: 2026-10-27 JST. Owner: Codex — visible Copy correction feedback.
+Last updated: 2026-10-27 JST. Owner: Codex — paper index tabs and compact notebook toolbar.
 
 Local checkout: `/Users/maki/sentence-book-muse`
 Public repository: https://github.com/workwell-research/sentence-book-muse
@@ -8,7 +8,7 @@ Public repository: https://github.com/workwell-research/sentence-book-muse
 ## Current scope
 The owner's latest [Work desktop handoff](docs/desktop-study-desk.md) is implemented locally at `/`: Pure White / Natural / Walnut desk materials, six horizontal pen radios, optional timer, open index book, read-only model card and one native editor on the current A5 line. The notebook keeps the adopted physical A5 composition and the Japanese phrase-gloss 1mm lift. The previous standalone typography demo remains at `/handwriting`; saved interest/topic setup remains at `/setup`.
 
-The synthetic eight-sentence Copy sample starts at zero. Draft handwriting now appears as letters are typed, at the native input coordinates, without a following pen graphic. Matching input is checked and saved on Enter without replaying the body, then the next line receives focus immediately. Associated annotations continue without an automatic pen while editing. The eighth correct Enter completes Copy. A five-step strip highlights Copy; stages2–5 are visibly pending. Actual local drafts, confirmations, review marks, personal writing and display settings persist under two new keys. This is one sample record, not a generated lesson or multi-lesson history. The old app and its real learning data remain unchanged; only its shared status records this work.
+The synthetic eight-sentence Copy sample starts at zero. Draft handwriting now appears as letters are typed, at the native input coordinates, without a following pen graphic. Matching input is checked and saved on Enter without replaying the body, then the next line receives focus immediately. Associated annotations continue without an automatic pen while editing. The eighth correct Enter completes Copy. Five pastel paper index tabs touch the model card; Copy is selected and stages2–5 are disabled with preparation labels. The current-line jump and separate mobile band are removed; Next shares the A5/zoom toolbar. Actual local drafts, confirmations, review marks, personal writing and display settings persist under two new keys. This is one sample record, not a generated lesson or multi-lesson history. The old app and its real learning data remain unchanged; only its shared status records this work.
 
 A5 is the finished note (148 × 210mm); A5/A4 are printer-sheet choices. A4 repeats each A5 page twice at 100%. Readability Italic remains the English default, with EMS Tech / Print / Pen and Klee One / Zen Kurenaido available. PDF uses independently rendered vectors and canonical confirmed text, excluding the desk, editor and unconfirmed drafts. Physical printing remains unverified.
 
@@ -21,6 +21,11 @@ A5 is the finished note (148 × 210mm); A5/A4 are printer-sheet choices. A4 repe
 - Common A5 layout: default left18/right12mm, 31 body rules at 5.2mm, 1.6-row title band, measured main/footnote columns and continuation pages. Readability default; Tech title-only optical lift; Japanese phrase glosses raised 1mm. Memo/marker/zoom changes do not reflow. Font or explicit binding-margin changes can reflow.
 - Independent white-paper PDF with vectors and fully embedded Japanese. A5 TrimBox or A4 landscape two-up at x0/149mm, scale1; left/right binding and12/18/24mm choices. Marker override is independent. PrintScaling=None plus 100%/one-PDF-page-per-sheet instructions. English is vector paths, not searchable/tagged text.
 - Earlier `/setup`: empty shelf without fixed themes, saved interest choices and topic/language/level notes, validated interest-aware request/prompt builder. Shared `sentence_book_page_v1` contract is a new format, not recovered legacy v2. Generation route remains unavailable/503; no actual model request, account configuration or deployment in this increment.
+
+## Verification — 2026-10-27 paper index tabs
+- Owner supplied a physical divider reference and requested five index tabs plus removal of “現在の行へ”. Implemented connected sage/yellow/peach/rose/lavender tabs, selected Copy8px raised, other stages disabled and visibly pending. Removed the current-line button and its separate mobile band; Next shares the A5/zoom toolbar. Sticky correction feedback remains.
+- Both TypeScript projects/Vite build passed (`index-k5SEfmdc.js`). CUA/IAB1280px dedicated origin5327 and actual746px preview:5 tabs/4 disabled, no current-line control or horizontal overflow. Two captures viewed. Dedicated Enter advanced with focus; error guidance stayed visible at y86–132 within720px. User reload retained5/8, empty current draft and Orange preference. No user practice writes.
+- No new unit/full71 rerun for this visual/control-removal change; saved QA scripts adapted but not rerun. No fresh320/390, real OS IME/device, PDF/printing, API/configuration or deployment checks. Dedicated5327 server/tab closed; existing5317 retained with final build. Synthetic evidence `.impeccable/review/paper-index/`. Next: owner evaluates the physical-tab treatment; later learning stages remain pending.
 
 ## Verification — 2026-10-27 visible Copy correction feedback
 - User reported the flow still would not move after reload. Actual IAB5317 showed2/8 with a missing letter in the current Copy draft. The mismatch message existed below the entire A5 sheet. This was not a failed Enter event; the validation result was out of sight. Inspected only the relevant UI/logs, without reading arbitrary storage or copying private material.
@@ -172,3 +177,5 @@ No Meta/API call, credential setup, Pages deployment, physical-device test or ph
 - 2026-10-27: Replaced two-part confirmation/Next with one Enter check/save/advance and immediate next-line focus. Preserved old confirmed records; added a five-stage status strip with later stages pending, and kept automatic pens out of active typing.66 tests/build and scoped disposable browser checks passed; no new PDF/device/deployment claim.
 
 - 2026-10-27: Diagnosed the actual reported stop as exact-text mismatch plus offscreen feedback. Added specific word/whitespace guidance and sticky error visibility.71 tests/build and dedicated IAB correction/recovery passed; actual user draft preserved while verifying visible feedback. No PDF/device/deployment claim.
+
+- 2026-10-27: Changed the five-step strip to connected pastel paper index tabs from the supplied reference; removed current-line navigation and compacted mobile Next into the paper toolbar. Build and scoped IAB checks passed, user5/8 preserved. No full unit/PDF/device/deployment rerun.

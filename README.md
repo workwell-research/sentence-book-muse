@@ -7,7 +7,7 @@ A new implementation for the 2026 Meta Global AI Developer Hackathon. Turn somet
 This repository includes a **working local study desk and A5 notebook** at `/`, based on the owner's [Work desktop handoff](docs/desktop-study-desk.md). AI generation remains a scaffold. The previous standalone typography prototype is retained at `/handwriting`.
 
 - Pure White, Natural and Walnut desks; six selectable horizontal pens, a live index book and optional timer. Material PNGs are separate from live text and native controls.
-- A read-only source card and one native editor on the current A5 line. Letters draw as they are typed. Enter checks/saves the sentence and focuses the next line immediately, without rewriting it. The eighth correct entry completes Copy. The five-step strip highlights Copy and labels stages2–5 as preparation. Animation does not complete learning.
+- A read-only source card and one native editor on the current A5 line. Letters draw as they are typed. Enter checks/saves the sentence and focuses the next line immediately, without rewriting it. The eighth correct entry completes Copy. Five pastel paper index tabs highlight Copy; stages2–5 stay disabled with preparation labels. Animation does not complete learning.
 - One synthetic eight-sentence Copy lesson, with locally saved drafts, confirmed progress, personal English writing, review marks and display choices. This is not multi-lesson history or AI-generated material.
 - Fixed physical A5 composition with measured wrapping, continuation pages and independent SVG/vector PDF renderers. Memo shown/blank retains reserved rows; Japanese phrase glosses are lifted 1mm.
 - Readability Italic default, EMS Tech, Print and Pen; independent Klee One/Zen Kurenaido Japanese. Native input fonts derive from the same English centerlines with matching advances.
@@ -60,7 +60,7 @@ Run `npm test` and `npm run build`. With a dedicated Vite development origin, `Q
 
 `npm run qa:a5` targets the retained `/handwriting` prototype; `qa:handwriting` and `qa:print` alias it and need not all be repeated. For the interest flow, use a separate `npm run pages:dev` origin and `node scripts/qa-scaffold.mjs`. Synthetic IME events are not real OS/mobile-keyboard verification. Physical devices, audio and printed output require separate checks.
 
-Current Enter-flow QA: `node scripts/qa-enter-flow.mjs` checks atomic advancement, focus, legacy confirmed records, failure guards and the five-stage strip. Run against the dedicated development origin5327; evidence is in `.impeccable/review/enter-flow/`. The earlier desk/PDF captures remain dated evidence.
+Current Enter-flow QA: `node scripts/qa-enter-flow.mjs` checks atomic advancement, focus, legacy confirmed records, failure guards and the five learning index tabs. Run against the dedicated development origin5327; evidence is in `.impeccable/review/enter-flow/`. The earlier desk/PDF captures remain dated evidence.
 
 ## Next implementation steps
 

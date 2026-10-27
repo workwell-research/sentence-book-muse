@@ -8,7 +8,7 @@ try{
  for(const width of [320,390]){
   const p=await b.newPage({viewport:{width,height:844},reducedMotion:'reduce'});await p.goto(origin);
   const e=p.locator('textarea');await e.fill('Today, I decided to slow down.');
-  await p.getByRole('button',{name:/現在の行へ/}).click();await e.evaluate(e=>{e.setSelectionRange(26,26);e.dispatchEvent(new Event('select',{bubbles:true}));});await e.press('ArrowRight');
+  await e.focus();await e.evaluate(e=>{e.setSelectionRange(26,26);e.dispatchEvent(new Event('select',{bubbles:true}));});await e.press('ArrowRight');
   const action=p.locator('.mobile-writing-actions');const box=await action.boundingBox();assert.ok(box.x>=0&&box.x+box.width<=width&&box.y>=0&&box.y+box.height<=844);
   assert.equal(await p.locator('textarea').count(),1);assert.ok(await p.locator('.desk-paper-scroll').evaluate(e=>e.scrollLeft>0));
   await p.screenshot({path:out+'/mobile-action-'+width+'.png'});

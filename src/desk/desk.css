@@ -84,17 +84,26 @@
 .notebook-input.live-ink-input{color:transparent;-webkit-text-fill-color:transparent}
 .notebook-input.live-ink-input::selection{color:transparent;-webkit-text-fill-color:transparent;background:#b7d4e866}
 
-.lesson-panel{grid-column:2;grid-row:1;min-width:0;width:100%}
-.lesson-steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;list-style:none;margin:0;padding:0;color:var(--quiet)}
-.lesson-steps li{display:flex;align-items:center;gap:6px;min-height:32px;border-bottom:1px solid #89939355;padding-bottom:5px;font-size:12px;line-height:1.5}
-.lesson-steps li[aria-current=step]{color:var(--desk-ink);border-color:currentColor;font-weight:600}
-.step-number{font-family:'Lora',serif;font-size:15px;font-variant-numeric:tabular-nums;flex-shrink:0;display:flex;align-items:center}
+.lesson-panel{grid-column:2;grid-row:1;min-width:0;width:100%;--index-current:#dbe7db}
+.lesson-steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;list-style:none;margin:0;padding:0 5px 0 0;align-items:stretch}
+.lesson-steps li{min-width:0;padding-top:8px;--index-paper:#f3e2b0}
+.lesson-steps li:first-child{padding-top:0;--index-paper:var(--index-current)}
+.lesson-steps li:nth-child(3){--index-paper:#efc7b4}
+.lesson-steps li:nth-child(4){--index-paper:#eccbd4}
+.lesson-steps li:nth-child(5){--index-paper:#ddd7e8}
+.lesson-steps button{width:100%;height:100%;min-height:70px;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:9px 12px 8px;border-radius:12px 12px 0 0;background:var(--index-paper);color:#514c43;text-align:left;font-size:12px;line-height:1.4;box-shadow:0 -1px 3px #3345380a}
+.lesson-steps button[aria-selected=true]{position:relative;z-index:1;color:#34483b}
+.lesson-steps button:hover{background:var(--index-paper)}
+.lesson-steps button:disabled{opacity:1;cursor:default}
+.lesson-steps .step-number{font:14px/1.2 'Lora',serif;display:flex;align-items:center}
 .step-number svg{width:16px;height:16px}
-.lesson-availability{font-size:11px;line-height:1.7;color:var(--quiet);margin:7px 0 16px}
-@media(max-width:1000px){.lesson-steps li{flex-direction:column;align-items:flex-start;gap:0}.lesson-availability{margin-bottom:10px}}
-@media(max-width:760px){.lesson-panel{order:1}.lesson-steps{gap:5px}.lesson-steps li{font-size:11px}.lesson-availability{font-size:11px;margin-bottom:12px}}
-
 .step-label{word-break:keep-all}
+.lesson-steps button[aria-selected=true] .step-label{font-weight:600}
+.step-state{font-size:10px;margin-top:auto}
+.lesson-panel .model-card{border-top:5px solid var(--index-current)}
+.notebook-tools{display:flex;align-items:center;gap:4px;min-width:0}
+@media(max-width:1000px){.lesson-steps button{padding-inline:7px;font-size:11px}}
+@media(max-width:760px){.lesson-panel{order:1}.lesson-steps{gap:4px;padding-right:0}.lesson-steps button{padding:8px 5px 7px;min-height:76px;border-radius:10px 10px 0 0}.notebook-toolbar{height:44px;gap:6px;margin-top:0;background:var(--control-bg)}.notebook-toolbar>span{white-space:nowrap;font-size:9px}.mobile-writing-actions{display:flex;position:static;justify-content:flex-end;background:transparent;box-shadow:none;margin:0;padding:0}.mobile-writing-actions button{min-height:44px;font-size:11px;padding:4px 6px;gap:4px;white-space:nowrap}.mobile-writing-actions svg{width:16px;height:16px}}
 
 /* Validation stays visible beside the learning controls, outside the tall, scrolling A5 sheet. */
 .writing-controls{position:sticky;top:8px;z-index:4}
@@ -102,4 +111,4 @@
 .writing-feedback:empty{display:none}
 .theme-walnut .writing-feedback{color:#ffbba2}
 .notebook-input[aria-invalid=true]{box-shadow:0 2px 0 #994b38;background:#994b3810}
-@media(max-width:760px){.mobile-writing-actions{position:static;z-index:auto}.writing-controls:has(.writing-feedback:not(:empty)) .mobile-writing-actions{margin-bottom:0;box-shadow:none}.writing-feedback{margin-bottom:10px;padding-top:4px}}
+@media(max-width:760px){.writing-feedback{margin-bottom:10px;padding-top:4px}}

@@ -755,6 +755,13 @@
       "description": "Native saved learner check from either vocabulary/review tab.",
       "html": "<label class=\"ds-word\"><input type=\"checkbox\"/><span>slow down<small>ペースを落とす</small></span></label>",
       "css": ".ds-word{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;display:flex;align-items:flex-start;gap:7px;min-height:52px;font-size:12px;line-height:1.6;padding:6px 0;color:#514d47}.ds-word input{margin:5px 0 0;accent-color:#567c93}.ds-word input:focus-visible{outline:2px solid var(--focus,#446f91);outline-offset:3px;}.ds-word small{display:block;font-size:10px;line-height:1.6;margin:0;color:#6d6a63}"
+    },
+    {
+      "name": "Learning paper index",
+      "kind": "navigation",
+      "description": "Five physical-divider-inspired tabs; Copy selected, later stages disabled pending implementation.",
+      "html": "<div class=\"ds-learning-index\" role=\"tablist\" aria-label=\"学習の5ステップ\"><button role=\"tab\" aria-selected=\"true\">1<br>読む・写す<br><small>学習中</small></button><button role=\"tab\" aria-selected=\"false\" disabled>2<br>聞いて話す<br><small>準備中</small></button><button role=\"tab\" aria-selected=\"false\" disabled>3<br>聞き取る<br><small>準備中</small></button><button role=\"tab\" aria-selected=\"false\" disabled>4<br>組み立てる<br><small>準備中</small></button><button role=\"tab\" aria-selected=\"false\" disabled>5<br>自分で話す<br><small>準備中</small></button></div>",
+      "css": ".ds-learning-index{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;align-items:end;border-bottom:5px solid #dbe7db}.ds-learning-index button{border:0;min-height:70px;padding:9px 8px;border-radius:12px 12px 0 0;text-align:left;background:#f3e2b0;color:#514c43;font:12px/1.4 sans-serif;opacity:1}.ds-learning-index button:first-child{min-height:78px;background:#dbe7db;color:#34483b}.ds-learning-index button:nth-child(3){background:#efc7b4}.ds-learning-index button:nth-child(4){background:#eccbd4}.ds-learning-index button:nth-child(5){background:#ddd7e8}.ds-learning-index small{font-size:10px}.ds-learning-index button:focus-visible{outline:2px solid #446f91;outline-offset:3px}"
     }
   ],
   "narrative": {
