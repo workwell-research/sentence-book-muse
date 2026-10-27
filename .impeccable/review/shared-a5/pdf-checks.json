@@ -1,0 +1,34 @@
+{
+  "checks": [
+    {
+      "file": "shared-a5-memos-shown.pdf",
+      "pages": 1,
+      "sizeMm": [
+        [
+          148.0,
+          210.0
+        ]
+      ],
+      "rasterImages": 0,
+      "printScaling": "None",
+      "memoTextMatchesSetting": true,
+      "vocabularyJapanesePreserved": true
+    },
+    {
+      "file": "shared-a5-on-a4-memos-blank.pdf",
+      "pages": 1,
+      "sizeMm": [
+        [
+          297.0,
+          210.0
+        ]
+      ],
+      "rasterImages": 0,
+      "printScaling": "None",
+      "memoTextMatchesSetting": true,
+      "vocabularyJapanesePreserved": true
+    }
+  ],
+  "render": "Poppler zero warnings; both full-page renders inspected with complete kana and kanji.",
+  "physicalPrinting": "not performed"
+}

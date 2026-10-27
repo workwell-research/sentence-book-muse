@@ -1,0 +1,8 @@
+{
+  "results": [
+    "Desktop: exact shown/blank non-memo SVG identity; body timeline, personal writing, check state and local fixtures preserved. Content/marker combinations, six graphite/accent palettes and real A5/A4 downloads passed.",
+    "390 / 320 px: page width and baselines invariant through zoom/memos, no viewport overflow, 44px memo targets, complete reduced-motion page."
+  ],
+  "errors": [],
+  "scope": "Synthetic disposable origin only; no physical printing."
+}

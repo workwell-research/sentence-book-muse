@@ -4,11 +4,13 @@ A new implementation for the 2026 Meta Global AI Developer Hackathon. Turn somet
 
 ## Current status
 
-This repository includes a **working handwriting and PDF prototype** at /. AI generation remains a scaffold. The owner-adopted [Work design handoff](docs/studygram-notebook-implementation-spec-2026-10-27.md) is the baseline for the next UI/PDF implementation; its reference assets are imported, but its runtime integration is still pending.
+This repository includes a **working handwriting and PDF prototype** at /. AI generation remains a scaffold. The shared A5 composition and memo visibility from the owner-adopted [Work design handoff](docs/studygram-notebook-implementation-spec-2026-10-27.md) are implemented on screen and in PDF. Final handwriting assets and the generated-lesson/practice connection remain pending.
 
-- Cream ruled notebook with SVG stroke animation, following pen, marker and annotation.
+- Fixed physical A5 notebook: shared ruled geometry, measured sentence/gloss/footnote placement and continuation pages; independent SVG and PDF renderers.
+- Memo shown/blank controls preserve body wrapping, reserved rows, vocabulary meanings, review checks and personal writing. Sentence-only and marker choices are independent.
+- SVG stroke animation, following pen and markers; mobile fit or scrollable readable-size view without text reflow.
 - Pause/resume, fast-forward, completion and reduced motion.
-- Personal English line (session-only), six notebook ink sets and optional printed markers.
+- Personal English line and review checks (session-only), six accent sets with graphite body ink, blue default and optional printed markers.
 - A5 portrait finished notes with binding margins; choose an A5 printer sheet or unscaled two-up on landscape A4.
 - [Handwriting architecture, research and font provenance](docs/handwriting-prototype.md).
 - Earlier interest/topic-note flow preserved at /setup.
@@ -51,7 +53,7 @@ The last command serves `dist` and the Functions on `http://127.0.0.1:8797`. `np
 
 ## Prototype verification
 
-Run npm test and npm run build. With npm run preview running, QA_BASE_URL=http://127.0.0.1:5308 node scripts/qa-handwriting.mjs exercises the notebook and downloads output/pdf/handwriting-note.pdf using disposable Chrome contexts. QA_BASE_URL=http://127.0.0.1:5308 npm run qa:print checks the six palettes and downloads A5 marked / A4 two-up unmarked samples. For the interest flow, use npm run pages:dev and node scripts/qa-scaffold.mjs. No real learning data is used.
+Run `npm test` and `npm run build`. With `npm run preview` running on its separate origin, `QA_BASE_URL=http://127.0.0.1:5308 npm run qa:a5` checks desktop/narrow layouts, memo-state preservation, six accents, content/marker settings, reduced motion and actual A5/A4 PDF downloads in disposable Chrome contexts. `qa:handwriting` and `qa:print` currently alias this same script; do not rerun all three. The older directly named QA scripts remain historical and target the previous page. Latest outputs are `output/pdf/shared-a5-memos-shown.pdf` and `output/pdf/shared-a5-on-a4-memos-blank.pdf`; evidence is in `.impeccable/review/shared-a5/`. For the interest flow, use `npm run pages:dev` and `node scripts/qa-scaffold.mjs`. No real learning data is used.
 
 ## Next implementation steps
 

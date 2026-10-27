@@ -4,7 +4,7 @@ import { emptyPersonal,reconcilePersonal } from './personal';
 import { strokePoint } from './model';
 import type { Glyph,Stroke } from './model';
 
-export function usePersonalInk(text:string,glyphs:Glyph[],reduced:boolean,color:string='#4f6052') {
+export function usePersonalInk(text:string,glyphs:Glyph[],reduced:boolean,color:string='#4f6052',widthMm?:number) {
  const [model,setModel]=useState(emptyPersonal);
  const [progress,setProgress]=useState<Record<string,number>>({});
  const [paused,setPaused]=useState(false);
@@ -15,9 +15,9 @@ export function usePersonalInk(text:string,glyphs:Glyph[],reduced:boolean,color:
    return (fontData[letter.char]?.strokes??[]).map((part,i)=>({
      ...part,x:glyph.x,y:glyph.y,scale:glyph.scale,start:0,
      duration:Math.max(32,Math.min(105,part.length*glyph.scale*2.1)),
-     phase:'writing' as const,width:5.2,color,key:letter.id+':'+i,
+     phase:'writing' as const,width:widthMm?widthMm/glyph.scale:5.2,color,key:letter.id+':'+i,
    }));
- }),[model,text,glyphs,color]);
+ }),[model,text,glyphs,color,widthMm]);
  const pending=strokes.some(s=>(progress[s.key]??0)<1);
  useEffect(()=>{
    setPaused(false);

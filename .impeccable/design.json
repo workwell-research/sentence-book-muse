@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-26T22:48:41.531854Z",
+  "generatedAt": "2026-10-27T04:19:49Z",
   "title": "Design System: The Sentence Book",
   "extensions": {
     "colorMeta": {
@@ -20,7 +20,7 @@
       },
       "sage-deep": {
         "role": "primary",
-        "displayName": "Sage Deep",
+        "displayName": "Sage deep",
         "tonalRamp": [
           "oklch(15% 0.03901 140.87)",
           "oklch(27% 0.03901 140.87)",
@@ -62,7 +62,7 @@
       },
       "desk": {
         "role": "neutral",
-        "displayName": "Warm gray desk",
+        "displayName": "Desk",
         "tonalRamp": [
           "oklch(15% 0.01276 86.83)",
           "oklch(27% 0.01276 86.83)",
@@ -76,7 +76,21 @@
       },
       "paper": {
         "role": "neutral",
-        "displayName": "Cream paper",
+        "displayName": "Paper",
+        "tonalRamp": [
+          "oklch(15% 0.00409 91.45)",
+          "oklch(27% 0.00409 91.45)",
+          "oklch(38% 0.00409 91.45)",
+          "oklch(50% 0.00409 91.45)",
+          "oklch(61% 0.00409 91.45)",
+          "oklch(73% 0.00409 91.45)",
+          "oklch(84% 0.00409 91.45)",
+          "oklch(95% 0.00409 91.45)"
+        ]
+      },
+      "control-paper": {
+        "role": "neutral",
+        "displayName": "Control paper",
         "tonalRamp": [
           "oklch(15% 0.01073 95.16)",
           "oklch(27% 0.01073 95.16)",
@@ -104,16 +118,16 @@
       },
       "rule": {
         "role": "neutral",
-        "displayName": "Notebook rule",
+        "displayName": "Rule",
         "tonalRamp": [
-          "oklch(15% 0.01702 125.31)",
-          "oklch(27% 0.01702 125.31)",
-          "oklch(38% 0.01702 125.31)",
-          "oklch(50% 0.01702 125.31)",
-          "oklch(61% 0.01702 125.31)",
-          "oklch(73% 0.01702 125.31)",
-          "oklch(84% 0.01702 125.31)",
-          "oklch(95% 0.01702 125.31)"
+          "oklch(15% 0.01366 240.97)",
+          "oklch(27% 0.01366 240.97)",
+          "oklch(38% 0.01366 240.97)",
+          "oklch(50% 0.01366 240.97)",
+          "oklch(61% 0.01366 240.97)",
+          "oklch(73% 0.01366 240.97)",
+          "oklch(84% 0.01366 240.97)",
+          "oklch(95% 0.01366 240.97)"
         ]
       },
       "divider": {
@@ -130,9 +144,23 @@
           "oklch(95% 0.02058 113.00)"
         ]
       },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "tonalRamp": [
+          "oklch(15% 0.00588 258.35)",
+          "oklch(27% 0.00588 258.35)",
+          "oklch(38% 0.00588 258.35)",
+          "oklch(50% 0.00588 258.35)",
+          "oklch(61% 0.00588 258.35)",
+          "oklch(73% 0.00588 258.35)",
+          "oklch(84% 0.00588 258.35)",
+          "oklch(95% 0.00588 258.35)"
+        ]
+      },
       "control-ink": {
-        "role": "primary",
-        "displayName": "Control Ink",
+        "role": "neutral",
+        "displayName": "Control ink",
         "tonalRamp": [
           "oklch(15% 0.04067 137.25)",
           "oklch(27% 0.04067 137.25)",
@@ -145,8 +173,8 @@
         ]
       },
       "control-border": {
-        "role": "primary",
-        "displayName": "Control Border",
+        "role": "neutral",
+        "displayName": "Control border",
         "tonalRamp": [
           "oklch(15% 0.03266 128.12)",
           "oklch(27% 0.03266 128.12)",
@@ -159,8 +187,8 @@
         ]
       },
       "control-hover": {
-        "role": "primary",
-        "displayName": "Control Hover",
+        "role": "neutral",
+        "displayName": "Control hover",
         "tonalRamp": [
           "oklch(15% 0.01884 113.37)",
           "oklch(27% 0.01884 113.37)",
@@ -174,7 +202,7 @@
       },
       "field-border": {
         "role": "neutral",
-        "displayName": "Field Border",
+        "displayName": "Field border",
         "tonalRamp": [
           "oklch(15% 0.02763 123.56)",
           "oklch(27% 0.02763 123.56)",
@@ -187,8 +215,8 @@
         ]
       },
       "export-tint": {
-        "role": "primary",
-        "displayName": "Export Tint",
+        "role": "neutral",
+        "displayName": "Export tint",
         "tonalRamp": [
           "oklch(15% 0.02024 115.98)",
           "oklch(27% 0.02024 115.98)",
@@ -201,8 +229,8 @@
         ]
       },
       "export-border": {
-        "role": "primary",
-        "displayName": "Export Border",
+        "role": "neutral",
+        "displayName": "Export border",
         "tonalRamp": [
           "oklch(15% 0.04154 128.47)",
           "oklch(27% 0.04154 128.47)",
@@ -214,93 +242,9 @@
           "oklch(95% 0.04154 128.47)"
         ]
       },
-      "title-ink": {
+      "pink-accent": {
         "role": "secondary",
-        "displayName": "Title Ink",
-        "tonalRamp": [
-          "oklch(15% 0.03192 143.36)",
-          "oklch(27% 0.03192 143.36)",
-          "oklch(38% 0.03192 143.36)",
-          "oklch(50% 0.03192 143.36)",
-          "oklch(61% 0.03192 143.36)",
-          "oklch(73% 0.03192 143.36)",
-          "oklch(84% 0.03192 143.36)",
-          "oklch(95% 0.03192 143.36)"
-        ]
-      },
-      "annotation-ink": {
-        "role": "secondary",
-        "displayName": "Annotation Ink",
-        "tonalRamp": [
-          "oklch(15% 0.04141 150.96)",
-          "oklch(27% 0.04141 150.96)",
-          "oklch(38% 0.04141 150.96)",
-          "oklch(50% 0.04141 150.96)",
-          "oklch(61% 0.04141 150.96)",
-          "oklch(73% 0.04141 150.96)",
-          "oklch(84% 0.04141 150.96)",
-          "oklch(95% 0.04141 150.96)"
-        ]
-      },
-      "personal-ink": {
-        "role": "secondary",
-        "displayName": "Personal Ink",
-        "tonalRamp": [
-          "oklch(15% 0.03055 150.21)",
-          "oklch(27% 0.03055 150.21)",
-          "oklch(38% 0.03055 150.21)",
-          "oklch(50% 0.03055 150.21)",
-          "oklch(61% 0.03055 150.21)",
-          "oklch(73% 0.03055 150.21)",
-          "oklch(84% 0.03055 150.21)",
-          "oklch(95% 0.03055 150.21)"
-        ]
-      },
-      "marker": {
-        "role": "secondary",
-        "displayName": "Pale green marker",
-        "tonalRamp": [
-          "oklch(15% 0.04921 128.00)",
-          "oklch(27% 0.04921 128.00)",
-          "oklch(38% 0.04921 128.00)",
-          "oklch(50% 0.04921 128.00)",
-          "oklch(61% 0.04921 128.00)",
-          "oklch(73% 0.04921 128.00)",
-          "oklch(84% 0.04921 128.00)",
-          "oklch(95% 0.04921 128.00)"
-        ]
-      },
-      "focus": {
-        "role": "primary",
-        "displayName": "Focus",
-        "tonalRamp": [
-          "oklch(15% 0.05865 128.26)",
-          "oklch(27% 0.05865 128.26)",
-          "oklch(38% 0.05865 128.26)",
-          "oklch(50% 0.05865 128.26)",
-          "oklch(61% 0.05865 128.26)",
-          "oklch(73% 0.05865 128.26)",
-          "oklch(84% 0.05865 128.26)",
-          "oklch(95% 0.05865 128.26)"
-        ]
-      },
-      "error": {
-        "role": "secondary",
-        "displayName": "Warm error ink",
-        "tonalRamp": [
-          "oklch(15% 0.09959 27.92)",
-          "oklch(27% 0.09959 27.92)",
-          "oklch(38% 0.09959 27.92)",
-          "oklch(50% 0.09959 27.92)",
-          "oklch(61% 0.09959 27.92)",
-          "oklch(73% 0.09959 27.92)",
-          "oklch(84% 0.09959 27.92)",
-          "oklch(95% 0.09959 27.92)"
-        ]
-      },
-      "pink-title": {
-        "role": "secondary",
-        "displayName": "Pink title",
+        "displayName": "Pink accent",
         "tonalRamp": [
           "oklch(15% 0.07911 354.70)",
           "oklch(27% 0.07911 354.70)",
@@ -310,48 +254,6 @@
           "oklch(73% 0.07911 354.70)",
           "oklch(84% 0.07911 354.70)",
           "oklch(95% 0.07911 354.70)"
-        ]
-      },
-      "pink-body": {
-        "role": "secondary",
-        "displayName": "Pink body",
-        "tonalRamp": [
-          "oklch(15% 0.02806 354.32)",
-          "oklch(27% 0.02806 354.32)",
-          "oklch(38% 0.02806 354.32)",
-          "oklch(50% 0.02806 354.32)",
-          "oklch(61% 0.02806 354.32)",
-          "oklch(73% 0.02806 354.32)",
-          "oklch(84% 0.02806 354.32)",
-          "oklch(95% 0.02806 354.32)"
-        ]
-      },
-      "pink-annotation": {
-        "role": "secondary",
-        "displayName": "Pink annotation",
-        "tonalRamp": [
-          "oklch(15% 0.05850 343.05)",
-          "oklch(27% 0.05850 343.05)",
-          "oklch(38% 0.05850 343.05)",
-          "oklch(50% 0.05850 343.05)",
-          "oklch(61% 0.05850 343.05)",
-          "oklch(73% 0.05850 343.05)",
-          "oklch(84% 0.05850 343.05)",
-          "oklch(95% 0.05850 343.05)"
-        ]
-      },
-      "pink-personal": {
-        "role": "secondary",
-        "displayName": "Pink personal ink",
-        "tonalRamp": [
-          "oklch(15% 0.04349 352.51)",
-          "oklch(27% 0.04349 352.51)",
-          "oklch(38% 0.04349 352.51)",
-          "oklch(50% 0.04349 352.51)",
-          "oklch(61% 0.04349 352.51)",
-          "oklch(73% 0.04349 352.51)",
-          "oklch(84% 0.04349 352.51)",
-          "oklch(95% 0.04349 352.51)"
         ]
       },
       "pink-marker": {
@@ -368,9 +270,9 @@
           "oklch(95% 0.05591 1.33)"
         ]
       },
-      "lavender-title": {
+      "lavender-accent": {
         "role": "secondary",
-        "displayName": "Lavender title",
+        "displayName": "Lavender accent",
         "tonalRamp": [
           "oklch(15% 0.06927 303.56)",
           "oklch(27% 0.06927 303.56)",
@@ -380,48 +282,6 @@
           "oklch(73% 0.06927 303.56)",
           "oklch(84% 0.06927 303.56)",
           "oklch(95% 0.06927 303.56)"
-        ]
-      },
-      "lavender-body": {
-        "role": "secondary",
-        "displayName": "Lavender body",
-        "tonalRamp": [
-          "oklch(15% 0.03189 297.04)",
-          "oklch(27% 0.03189 297.04)",
-          "oklch(38% 0.03189 297.04)",
-          "oklch(50% 0.03189 297.04)",
-          "oklch(61% 0.03189 297.04)",
-          "oklch(73% 0.03189 297.04)",
-          "oklch(84% 0.03189 297.04)",
-          "oklch(95% 0.03189 297.04)"
-        ]
-      },
-      "lavender-annotation": {
-        "role": "secondary",
-        "displayName": "Lavender annotation",
-        "tonalRamp": [
-          "oklch(15% 0.05844 302.16)",
-          "oklch(27% 0.05844 302.16)",
-          "oklch(38% 0.05844 302.16)",
-          "oklch(50% 0.05844 302.16)",
-          "oklch(61% 0.05844 302.16)",
-          "oklch(73% 0.05844 302.16)",
-          "oklch(84% 0.05844 302.16)",
-          "oklch(95% 0.05844 302.16)"
-        ]
-      },
-      "lavender-personal": {
-        "role": "secondary",
-        "displayName": "Lavender personal ink",
-        "tonalRamp": [
-          "oklch(15% 0.05478 300.91)",
-          "oklch(27% 0.05478 300.91)",
-          "oklch(38% 0.05478 300.91)",
-          "oklch(50% 0.05478 300.91)",
-          "oklch(61% 0.05478 300.91)",
-          "oklch(73% 0.05478 300.91)",
-          "oklch(84% 0.05478 300.91)",
-          "oklch(95% 0.05478 300.91)"
         ]
       },
       "lavender-marker": {
@@ -438,79 +298,65 @@
           "oklch(95% 0.05864 300.71)"
         ]
       },
-      "blue-title": {
+      "blue-accent": {
         "role": "secondary",
-        "displayName": "Blue title",
+        "displayName": "Blue accent",
         "tonalRamp": [
-          "oklch(15% 0.06170 250.02)",
-          "oklch(27% 0.06170 250.02)",
-          "oklch(38% 0.06170 250.02)",
-          "oklch(50% 0.06170 250.02)",
-          "oklch(61% 0.06170 250.02)",
-          "oklch(73% 0.06170 250.02)",
-          "oklch(84% 0.06170 250.02)",
-          "oklch(95% 0.06170 250.02)"
-        ]
-      },
-      "blue-body": {
-        "role": "secondary",
-        "displayName": "Blue body",
-        "tonalRamp": [
-          "oklch(15% 0.03356 253.49)",
-          "oklch(27% 0.03356 253.49)",
-          "oklch(38% 0.03356 253.49)",
-          "oklch(50% 0.03356 253.49)",
-          "oklch(61% 0.03356 253.49)",
-          "oklch(73% 0.03356 253.49)",
-          "oklch(84% 0.03356 253.49)",
-          "oklch(95% 0.03356 253.49)"
-        ]
-      },
-      "blue-annotation": {
-        "role": "secondary",
-        "displayName": "Blue annotation",
-        "tonalRamp": [
-          "oklch(15% 0.04942 243.75)",
-          "oklch(27% 0.04942 243.75)",
-          "oklch(38% 0.04942 243.75)",
-          "oklch(50% 0.04942 243.75)",
-          "oklch(61% 0.04942 243.75)",
-          "oklch(73% 0.04942 243.75)",
-          "oklch(84% 0.04942 243.75)",
-          "oklch(95% 0.04942 243.75)"
-        ]
-      },
-      "blue-personal": {
-        "role": "secondary",
-        "displayName": "Blue personal ink",
-        "tonalRamp": [
-          "oklch(15% 0.05114 242.06)",
-          "oklch(27% 0.05114 242.06)",
-          "oklch(38% 0.05114 242.06)",
-          "oklch(50% 0.05114 242.06)",
-          "oklch(61% 0.05114 242.06)",
-          "oklch(73% 0.05114 242.06)",
-          "oklch(84% 0.05114 242.06)",
-          "oklch(95% 0.05114 242.06)"
+          "oklch(15% 0.05039 245.91)",
+          "oklch(27% 0.05039 245.91)",
+          "oklch(38% 0.05039 245.91)",
+          "oklch(50% 0.05039 245.91)",
+          "oklch(61% 0.05039 245.91)",
+          "oklch(73% 0.05039 245.91)",
+          "oklch(84% 0.05039 245.91)",
+          "oklch(95% 0.05039 245.91)"
         ]
       },
       "blue-marker": {
         "role": "secondary",
         "displayName": "Blue marker",
         "tonalRamp": [
-          "oklch(15% 0.04095 239.08)",
-          "oklch(27% 0.04095 239.08)",
-          "oklch(38% 0.04095 239.08)",
-          "oklch(50% 0.04095 239.08)",
-          "oklch(61% 0.04095 239.08)",
-          "oklch(73% 0.04095 239.08)",
-          "oklch(84% 0.04095 239.08)",
-          "oklch(95% 0.04095 239.08)"
+          "oklch(15% 0.02438 234.44)",
+          "oklch(27% 0.02438 234.44)",
+          "oklch(38% 0.02438 234.44)",
+          "oklch(50% 0.02438 234.44)",
+          "oklch(61% 0.02438 234.44)",
+          "oklch(73% 0.02438 234.44)",
+          "oklch(84% 0.02438 234.44)",
+          "oklch(95% 0.02438 234.44)"
         ]
       },
-      "yellow-title": {
+      "green-accent": {
         "role": "secondary",
-        "displayName": "Yellow title",
+        "displayName": "Green accent",
+        "tonalRamp": [
+          "oklch(15% 0.03192 143.36)",
+          "oklch(27% 0.03192 143.36)",
+          "oklch(38% 0.03192 143.36)",
+          "oklch(50% 0.03192 143.36)",
+          "oklch(61% 0.03192 143.36)",
+          "oklch(73% 0.03192 143.36)",
+          "oklch(84% 0.03192 143.36)",
+          "oklch(95% 0.03192 143.36)"
+        ]
+      },
+      "green-marker": {
+        "role": "secondary",
+        "displayName": "Green marker",
+        "tonalRamp": [
+          "oklch(15% 0.04921 128.00)",
+          "oklch(27% 0.04921 128.00)",
+          "oklch(38% 0.04921 128.00)",
+          "oklch(50% 0.04921 128.00)",
+          "oklch(61% 0.04921 128.00)",
+          "oklch(73% 0.04921 128.00)",
+          "oklch(84% 0.04921 128.00)",
+          "oklch(95% 0.04921 128.00)"
+        ]
+      },
+      "yellow-accent": {
+        "role": "secondary",
+        "displayName": "Yellow accent",
         "tonalRamp": [
           "oklch(15% 0.07266 85.43)",
           "oklch(27% 0.07266 85.43)",
@@ -520,48 +366,6 @@
           "oklch(73% 0.07266 85.43)",
           "oklch(84% 0.07266 85.43)",
           "oklch(95% 0.07266 85.43)"
-        ]
-      },
-      "yellow-body": {
-        "role": "secondary",
-        "displayName": "Yellow body",
-        "tonalRamp": [
-          "oklch(15% 0.03571 90.41)",
-          "oklch(27% 0.03571 90.41)",
-          "oklch(38% 0.03571 90.41)",
-          "oklch(50% 0.03571 90.41)",
-          "oklch(61% 0.03571 90.41)",
-          "oklch(73% 0.03571 90.41)",
-          "oklch(84% 0.03571 90.41)",
-          "oklch(95% 0.03571 90.41)"
-        ]
-      },
-      "yellow-annotation": {
-        "role": "secondary",
-        "displayName": "Yellow annotation",
-        "tonalRamp": [
-          "oklch(15% 0.06554 85.17)",
-          "oklch(27% 0.06554 85.17)",
-          "oklch(38% 0.06554 85.17)",
-          "oklch(50% 0.06554 85.17)",
-          "oklch(61% 0.06554 85.17)",
-          "oklch(73% 0.06554 85.17)",
-          "oklch(84% 0.06554 85.17)",
-          "oklch(95% 0.06554 85.17)"
-        ]
-      },
-      "yellow-personal": {
-        "role": "secondary",
-        "displayName": "Yellow personal ink",
-        "tonalRamp": [
-          "oklch(15% 0.05540 88.98)",
-          "oklch(27% 0.05540 88.98)",
-          "oklch(38% 0.05540 88.98)",
-          "oklch(50% 0.05540 88.98)",
-          "oklch(61% 0.05540 88.98)",
-          "oklch(73% 0.05540 88.98)",
-          "oklch(84% 0.05540 88.98)",
-          "oklch(95% 0.05540 88.98)"
         ]
       },
       "yellow-marker": {
@@ -578,9 +382,9 @@
           "oklch(95% 0.10122 96.89)"
         ]
       },
-      "gray-title": {
+      "gray-accent": {
         "role": "secondary",
-        "displayName": "Gray title",
+        "displayName": "Gray accent",
         "tonalRamp": [
           "oklch(15% 0.01158 252.91)",
           "oklch(27% 0.01158 252.91)",
@@ -590,48 +394,6 @@
           "oklch(73% 0.01158 252.91)",
           "oklch(84% 0.01158 252.91)",
           "oklch(95% 0.01158 252.91)"
-        ]
-      },
-      "gray-body": {
-        "role": "secondary",
-        "displayName": "Gray body",
-        "tonalRamp": [
-          "oklch(15% 0.00847 248.03)",
-          "oklch(27% 0.00847 248.03)",
-          "oklch(38% 0.00847 248.03)",
-          "oklch(50% 0.00847 248.03)",
-          "oklch(61% 0.00847 248.03)",
-          "oklch(73% 0.00847 248.03)",
-          "oklch(84% 0.00847 248.03)",
-          "oklch(95% 0.00847 248.03)"
-        ]
-      },
-      "gray-annotation": {
-        "role": "secondary",
-        "displayName": "Gray annotation",
-        "tonalRamp": [
-          "oklch(15% 0.01137 252.89)",
-          "oklch(27% 0.01137 252.89)",
-          "oklch(38% 0.01137 252.89)",
-          "oklch(50% 0.01137 252.89)",
-          "oklch(61% 0.01137 252.89)",
-          "oklch(73% 0.01137 252.89)",
-          "oklch(84% 0.01137 252.89)",
-          "oklch(95% 0.01137 252.89)"
-        ]
-      },
-      "gray-personal": {
-        "role": "secondary",
-        "displayName": "Gray personal ink",
-        "tonalRamp": [
-          "oklch(15% 0.01438 248.14)",
-          "oklch(27% 0.01438 248.14)",
-          "oklch(38% 0.01438 248.14)",
-          "oklch(50% 0.01438 248.14)",
-          "oklch(61% 0.01438 248.14)",
-          "oklch(73% 0.01438 248.14)",
-          "oklch(84% 0.01438 248.14)",
-          "oklch(95% 0.01438 248.14)"
         ]
       },
       "gray-marker": {
@@ -646,6 +408,34 @@
           "oklch(73% 0.00707 247.91)",
           "oklch(84% 0.00707 247.91)",
           "oklch(95% 0.00707 247.91)"
+        ]
+      },
+      "focus": {
+        "role": "neutral",
+        "displayName": "Focus",
+        "tonalRamp": [
+          "oklch(15% 0.05865 128.26)",
+          "oklch(27% 0.05865 128.26)",
+          "oklch(38% 0.05865 128.26)",
+          "oklch(50% 0.05865 128.26)",
+          "oklch(61% 0.05865 128.26)",
+          "oklch(73% 0.05865 128.26)",
+          "oklch(84% 0.05865 128.26)",
+          "oklch(95% 0.05865 128.26)"
+        ]
+      },
+      "error": {
+        "role": "neutral",
+        "displayName": "Error",
+        "tonalRamp": [
+          "oklch(15% 0.09959 27.92)",
+          "oklch(27% 0.09959 27.92)",
+          "oklch(38% 0.09959 27.92)",
+          "oklch(50% 0.09959 27.92)",
+          "oklch(61% 0.09959 27.92)",
+          "oklch(73% 0.09959 27.92)",
+          "oklch(84% 0.09959 27.92)",
+          "oklch(95% 0.09959 27.92)"
         ]
       }
     },
@@ -673,45 +463,53 @@
       "input": {
         "displayName": "Input",
         "purpose": "Personal textarea value; 16px on mobile."
+      },
+      "notebook-gloss": {
+        "displayName": "Anchored Japanese meaning",
+        "purpose": "Static M PLUS 1p text below a difficult expression, measured in the shared A5 plan."
+      },
+      "notebook-meaning": {
+        "displayName": "Vocabulary Japanese meaning",
+        "purpose": "Static M PLUS 1p text retained in the vocabulary frame when memos are blank."
       }
     },
     "shadows": [
       {
         "name": "paper-ambient",
-        "value": "0 12px 34px #4d4c3820, 0 2px 5px #4d4c3812",
-        "purpose": "The square notebook sheet only."
+        "value": "0 6px 20px #3b46551a",
+        "purpose": "Active A5 screen sheet only; never printed."
       }
     ],
     "motion": [
       {
         "name": "button-background",
         "value": "background .15s ease",
-        "purpose": "Button hover; removed under prefers-reduced-motion: reduce."
+        "purpose": "Hover transition; removed under reduced motion."
       },
       {
         "name": "ink-progress",
         "value": "t - 0.105 * sin(2 * PI * t)",
-        "purpose": "Monotonic progress used by sample and personal strokes, and by their pen coordinates."
+        "purpose": "Monotonic progress shared by English sample and personal strokes."
       },
       {
         "name": "sample-stroke-duration",
-        "value": "max(45, pathLength * glyphScale * 3.1) ms",
-        "purpose": "Distance-based duration of a sample glyph stroke, before playback speed scaling."
+        "value": "max(16, pathLength * glyphScale * 11) ms",
+        "purpose": "Current A5 scene stroke duration, before playback speed; 5ms between strokes, 12ms after spaces and 60ms after non-base runs."
       },
       {
         "name": "personal-stroke-duration",
         "value": "max(32, min(105, pathLength * glyphScale * 2.1)) ms",
-        "purpose": "Bounded sequential personal stroke queue; unchanged character IDs keep their progress through edits."
+        "purpose": "Sequential personal queue preserves unchanged glyph identities through edits."
       },
       {
         "name": "marker-duration",
-        "value": "600ms",
-        "purpose": "Each expression-row marker is scheduled after the main writing."
+        "value": "350ms",
+        "purpose": "Each marker starts after the main writing; consecutive markers are scheduled 430ms apart."
       },
       {
-        "name": "pen-lift",
-        "value": "t*t*(3-2*t), y offset -8*sin(PI*t)",
-        "purpose": "The sample pen moves between stroke endpoints, fades to opacity .55 and lifts along a shallow arc."
+        "name": "sample-pen-lift",
+        "value": "t*t*(3-2*t), y offset -0.8*sin(PI*t)",
+        "purpose": "Current A5 sample pen interpolation; no legacy opacity fade."
       }
     ],
     "breakpoints": [
@@ -758,17 +556,9 @@
       "name": "Personal line",
       "kind": "input",
       "refersTo": "input-personal",
-      "description": "Session-only personal English input; the preview shows the same label, help and input styling.",
-      "html": "<div class=\"ds-personal\"><label for=\"ds-personal-input\">今日、大切にしたいことは？</label><p class=\"ds-field-help\" id=\"ds-personal-help\">英語でひとこと。ノートの余白に加わります。</p><textarea id=\"ds-personal-input\" rows=\"2\" maxlength=\"80\" placeholder=\"I make time for...\" aria-describedby=\"ds-personal-help\"></textarea><div class=\"ds-input-meta\"><span>このデモの入力は保存されません</span><span>0/80</span></div></div>",
+      "description": "Session-only personal English input, included in study-content mode. Unsupported input stays in the field; the application blocks export and supplies the stroke queue.",
+      "html": "<div class=\"ds-personal\"><label for=\"ds-personal-input\">今日、大切にしたいことは？</label><p class=\"ds-field-help\" id=\"ds-personal-help\">英語でひとこと。単語・イディオム付きのノートに加わります。</p><textarea id=\"ds-personal-input\" rows=\"2\" maxlength=\"80\" placeholder=\"I make time for...\" aria-describedby=\"ds-personal-help\"></textarea><div class=\"ds-input-meta\"><span>このデモの入力は保存されません</span><span>0/80</span></div></div>",
       "css": ".ds-personal{font-family:-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif;color:var(--ink,#3d443d)}.ds-personal>label{font-size:13px}.ds-field-help{font-size:11px;line-height:1.8;color:var(--muted,#62695c);margin:7px 0 10px}.ds-personal textarea{width:100%;resize:vertical;min-height:81px;max-height:180px;background:#faf8f0;border:1px solid #aeb5a2;border-radius:3px;line-height:1.65;font-size:15px;font-family:-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif;padding:12px;color:var(--ink,#3d443d);caret-color:var(--sage,#52634e)}.ds-personal textarea::placeholder{font:italic 15px/1.65 \"Lora\",Georgia,serif;color:#737969}.ds-personal textarea:focus-visible{outline:2px solid #667752;outline-offset:4px}.ds-input-meta{display:flex;justify-content:space-between;gap:8px;font-size:9px;line-height:1.7;color:#68705f;margin-top:5px;font-variant-numeric:tabular-nums}@media(max-width:760px){.ds-personal textarea{font-size:16px}.ds-input-meta{font-size:10px}}"
-    },
-    {
-      "name": "Native tempo select",
-      "kind": "input",
-      "refersTo": "select",
-      "description": "The understated native selector used for tempo and adapted to print fields.",
-      "html": "<div class=\"ds-tempo\"><label for=\"ds-tempo-select\">筆記の速さ</label><select id=\"ds-tempo-select\"><option>ゆっくり · 1×</option><option>軽やか · 2×</option><option>すばやく · 4×</option></select></div>",
-      "css": ".ds-tempo{display:flex;align-items:center;justify-content:space-between;gap:8px;font-family:-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif;font-size:11px;color:var(--ink,#3d443d)}.ds-tempo select{font-family:-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif;border:0;border-bottom:1px solid #a9af9e;background:transparent;color:#46533e;padding:10px 20px 10px 4px;min-height:44px;font-size:12px;border-radius:0;cursor:pointer}.ds-tempo select:focus-visible{outline:2px solid #667752;outline-offset:4px}.ds-tempo select:disabled{cursor:default}"
     },
     {
       "name": "Editorial wordmark navigation",
@@ -782,78 +572,88 @@
       "name": "Notebook paper",
       "kind": "card",
       "refersTo": "paper-sheet",
-      "description": "The actual square sheet material, shown as a blank ruled fragment. Preview dimensions are a crop, not the responsive page layout.",
-      "html": "<div class=\"ds-sheet\"><svg class=\"ds-paper\" viewBox=\"0 0 360 180\" role=\"img\" aria-label=\"Cream ruled notebook paper\"><rect width=\"360\" height=\"180\" fill=\"#fffdf5\"/><path d=\"M25 57H339M25 106H339M25 155H339\" fill=\"none\" stroke=\"#d8ddd1\" stroke-width=\".8\"/></svg></div>",
-      "css": ".ds-sheet{background:#fffdf5;box-shadow:0 12px 34px #4d4c3820,0 2px 5px #4d4c3812;border-radius:0}.ds-paper{display:block;width:100%;height:auto}"
+      "description": "The complete common A5 refill at its fixed 148 × 210 viewBox, default margins and exact grid. This blank-paper preview is scaled to the panel; it does not reflow or represent a physical print measurement.",
+      "html": "<svg class=\"ds-a5-paper\" viewBox=\"0 0 148 210\" role=\"img\" aria-label=\"Common A5 refill, 31 ruled rows\"><rect width=\"148\" height=\"210\" fill=\"#FFFEFB\"/><g fill=\"none\" stroke=\"#D7E0E7\" stroke-width=\".10\"><path d=\"M18 39.2H136\"/><path d=\"M18 44.4H136\"/><path d=\"M18 49.6H136\"/><path d=\"M18 54.8H136\"/><path d=\"M18 60.0H136\"/><path d=\"M18 65.2H136\"/><path d=\"M18 70.4H136\"/><path d=\"M18 75.6H136\"/><path d=\"M18 80.8H136\"/><path d=\"M18 86.0H136\"/><path d=\"M18 91.2H136\"/><path d=\"M18 96.4H136\"/><path d=\"M18 101.6H136\"/><path d=\"M18 106.8H136\"/><path d=\"M18 112.0H136\"/><path d=\"M18 117.2H136\"/><path d=\"M18 122.4H136\"/><path d=\"M18 127.6H136\"/><path d=\"M18 132.8H136\"/><path d=\"M18 138.0H136\"/><path d=\"M18 143.2H136\"/><path d=\"M18 148.4H136\"/><path d=\"M18 153.6H136\"/><path d=\"M18 158.8H136\"/><path d=\"M18 164.0H136\"/><path d=\"M18 169.2H136\"/><path d=\"M18 174.4H136\"/><path d=\"M18 179.6H136\"/><path d=\"M18 184.8H136\"/><path d=\"M18 190.0H136\"/><path d=\"M18 195.2H136\"/></g><path d=\"M0 24.64H136 M0 32.96H136 M0 201H136\" fill=\"none\" stroke=\"#D7E0E7\" stroke-width=\".35\"/></svg>",
+      "css": ".ds-a5-paper{display:block;width:100%;max-width:370px;height:auto;aspect-ratio:148/210;background:#FFFEFB;box-shadow:0 6px 20px #3b46551a;border-radius:0}"
     },
     {
       "name": "Completed handwriting",
       "kind": "custom",
       "refersTo": "handwriting",
-      "description": "A completed static fragment using actual Sentence Study Strokes paths (SIL OFL 1.1). The app supplies sequential drawing and pen motion; this snippet makes no runtime animation claim.",
-      "html": "<svg class=\"ds-ink\" viewBox=\"0 0 180 90\" role=\"img\" aria-label=\"The word time, in Sentence Study Strokes with a pale marker\"><title>Sentence Study Strokes — Cutlings Singularis derivative, SIL OFL 1.1</title><rect width=\"180\" height=\"90\" fill=\"#fffdf5\"/><path d=\"M11 70H169\" stroke=\"#d8ddd1\" stroke-width=\".8\"/><path d=\"M14 56L104.026 55\" stroke=\"#c3d3b1\" stroke-width=\"17\" opacity=\".48\" stroke-linecap=\"round\"/><g fill=\"none\" stroke=\"#3d443d\" stroke-width=\"5.3\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M25.9-118.6C31.9-113.95 16.8-36.2 27.7-2.31 33.5 15.59 68.1-5.25 64.9-12.25\" transform=\"translate(16.000 62) scale(0.235)\"/><path d=\"M9.6-73.12C23.7-72.35 31.3-66.56 54-72.42\" transform=\"translate(16.000 62) scale(0.235)\"/><path d=\"M19.7-70.15C24-36.16 22.9-18.47 21.8-0.88\" transform=\"translate(34.586 62) scale(0.235)\"/><path d=\"M12-0.19C22.7-1.72 32.1-3.89 46.2-3.68\" transform=\"translate(34.586 62) scale(0.235)\"/><path d=\"M24.1-119.13C24.1-119.13 11.1-115.81 12-110.24 13.4-101.29 25.2-104.63 31.9-110.73 37.2-115.65 24.4-121.6 24.4-121.6\" transform=\"translate(34.586 62) scale(0.235)\"/><path d=\"M65.99-60.35C75.39-75.88 85.39-85.79 99.99-80.56 123.39-67.37 111.19-29.79 116.59-1.37\" transform=\"translate(50.068 62) scale(0.235)\"/><path d=\"M14.99-46.16C18.75-64.21 42.3-84.26 52.19-78.54 73.94-65.98 62.29-30.48 66.39-2.83\" transform=\"translate(50.068 62) scale(0.235)\"/><path d=\"M10.19-74.74C14.89-58.12 15.09-29.7 15.99-2.97\" transform=\"translate(50.068 62) scale(0.235)\"/><path d=\"M72.3-20.28C72.3-14.65 36.6 5.47 23-14.93 12.2-31.11 5.2-60.9 27-75.5 43.3-86.41 77.4-69.54 73.7-65.8 59.6-58.18 34.98-40.33 16.78-28.57\" transform=\"translate(82.930 62) scale(0.235)\"/></g></svg>",
+      "description": "Actual provisional Sentence Study Strokes source paths at the current 3.7mm body model size and 0.20mm stroke, on the common baseline. Static preview only; the app provides stroke/pen motion. Cutlings-derived OFL lettering is not final approved typography.",
+      "html": "<svg class=\"ds-ink\" viewBox=\"14 32 60 15\" role=\"img\" aria-label=\"make time, provisional English handwriting\"><path d=\"M14 39.2H74\" stroke=\"#D7E0E7\" stroke-width=\".1\"/><path d=\"M17.75 38.75H33.63176\" stroke=\"#D5E7F2\" stroke-width=\"2.25\" stroke-linecap=\"round\"/><g fill=\"none\" stroke=\"#383A3D\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M65.99-60.35C75.39-75.88 85.39-85.79 99.99-80.56 123.39-67.37 111.19-29.79 116.59-1.37\" transform=\"translate(18.00000 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M14.99-46.16C18.75-64.21 42.3-84.26 52.19-78.54 73.94-65.98 62.29-30.48 66.39-2.83\" transform=\"translate(18.00000 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M10.19-74.74C14.89-58.12 15.09-29.7 15.99-2.97\" transform=\"translate(18.00000 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M60.07-40.79C37.77-49 11.17-34.81 11.37-20.73 11.87 8.89 40.17-4.58 61.77-13.71\" transform=\"translate(20.58704 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M13.07-56.84C13.07-56.84 19.97-86.39 42.37-81.49 61.57-77.29 62.67-47.19 62.77-34.44 62.87-8.81 63.77 4.83 73.07 3.46\" transform=\"translate(20.58704 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M19.1-46.27C17.2-52.09 51.4-109.13 63.9-71.26 73.1-43.78 19.7-31.75 20.4-37 37.5-31.68 52.7-30.8 64.5 5.15 69.6 20.78 80.7 35.01 98 26.14\" transform=\"translate(22.22559 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M12.7-182.26C21.97-108.45 19.9-60.38 19.8 2.91\" transform=\"translate(22.22559 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M72.3-20.28C72.3-14.65 36.6 5.47 23-14.93 12.2-31.11 5.2-60.9 27-75.5 43.3-86.41 77.4-69.54 73.7-65.8 59.6-58.18 34.98-40.33 16.78-28.57\" transform=\"translate(23.83879 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M25.9-118.6C31.9-113.95 16.8-36.2 27.7-2.31 33.5 15.59 68.1-5.25 64.9-12.25\" transform=\"translate(26.70203 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M9.6-73.12C23.7-72.35 31.3-66.56 54-72.42\" transform=\"translate(26.70203 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M19.7-70.15C24-36.16 22.9-18.47 21.8-0.88\" transform=\"translate(28.16520 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M12-0.19C22.7-1.72 32.1-3.89 46.2-3.68\" transform=\"translate(28.16520 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M24.1-119.13C24.1-119.13 11.1-115.81 12-110.24 13.4-101.29 25.2-104.63 31.9-110.73 37.2-115.65 24.4-121.6 24.4-121.6\" transform=\"translate(28.16520 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M65.99-60.35C75.39-75.88 85.39-85.79 99.99-80.56 123.39-67.37 111.19-29.79 116.59-1.37\" transform=\"translate(29.38397 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M14.99-46.16C18.75-64.21 42.3-84.26 52.19-78.54 73.94-65.98 62.29-30.48 66.39-2.83\" transform=\"translate(29.38397 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M10.19-74.74C14.89-58.12 15.09-29.7 15.99-2.97\" transform=\"translate(29.38397 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/><path d=\"M72.3-20.28C72.3-14.65 36.6 5.47 23-14.93 12.2-31.11 5.2-60.9 27-75.5 43.3-86.41 77.4-69.54 73.7-65.8 59.6-58.18 34.98-40.33 16.78-28.57\" transform=\"translate(31.97102 39.2) scale(0.018500000000000003)\" stroke-width=\"10.81081\"/></g></svg>",
       "css": ".ds-ink{display:block;width:100%;height:auto;max-width:360px}"
     },
     {
       "name": "Notebook ink selection",
       "kind": "input",
       "refersTo": "palette-choice",
-      "description": "Six native radio choices with role-specific ink and marker swatches; green is the default. The application recolors screen and PDF together without restarting writing. This standalone snippet demonstrates selection styling only.",
-      "html": "<fieldset class=\"ds-palettes\"><legend>文字のカラーセット</legend><div class=\"ds-palette-options\"><label class=\"ds-palette-option\" style=\"--palette-ink:#7c465c;--palette-marker:#edbeca\"><input type=\"radio\" name=\"ds-palette\" value=\"pink\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>ピンク</label><label class=\"ds-palette-option\" style=\"--palette-ink:#66547e;--palette-marker:#cbbde6\"><input type=\"radio\" name=\"ds-palette\" value=\"lavender\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>ラベンダー</label><label class=\"ds-palette-option\" style=\"--palette-ink:#415f7e;--palette-marker:#b8d4e8\"><input type=\"radio\" name=\"ds-palette\" value=\"blue\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>ブルー</label><label class=\"ds-palette-option\" style=\"--palette-ink:#485747;--palette-marker:#c3d3b1\"><input type=\"radio\" name=\"ds-palette\" value=\"green\" checked/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>グリーン</label><label class=\"ds-palette-option\" style=\"--palette-ink:#76602f;--palette-marker:#e5d384\"><input type=\"radio\" name=\"ds-palette\" value=\"yellow\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>イエロー</label><label class=\"ds-palette-option\" style=\"--palette-ink:#565b61;--palette-marker:#ccd0d4\"><input type=\"radio\" name=\"ds-palette\" value=\"gray\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>グレー</label></div></fieldset>",
+      "description": "Six native accent/marker choices; blue is initial. Graphite body/personal ink is shared. The application preserves stroke progress; this snippet demonstrates native selection styling only.",
+      "html": "<fieldset class=\"ds-palettes\"><legend>文字のカラーセット</legend><div class=\"ds-palette-options\"><label class=\"ds-palette-option\" style=\"--palette-ink:#7c465c;--palette-marker:#edbeca\"><input type=\"radio\" name=\"ds-palette\" value=\"pink\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>ピンク</label><label class=\"ds-palette-option\" style=\"--palette-ink:#66547e;--palette-marker:#cbbde6\"><input type=\"radio\" name=\"ds-palette\" value=\"lavender\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>ラベンダー</label><label class=\"ds-palette-option\" style=\"--palette-ink:#47627A;--palette-marker:#D5E7F2\"><input type=\"radio\" name=\"ds-palette\" value=\"blue\" checked/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>ブルー</label><label class=\"ds-palette-option\" style=\"--palette-ink:#485747;--palette-marker:#c3d3b1\"><input type=\"radio\" name=\"ds-palette\" value=\"green\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>グリーン</label><label class=\"ds-palette-option\" style=\"--palette-ink:#76602f;--palette-marker:#e5d384\"><input type=\"radio\" name=\"ds-palette\" value=\"yellow\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>イエロー</label><label class=\"ds-palette-option\" style=\"--palette-ink:#565b61;--palette-marker:#ccd0d4\"><input type=\"radio\" name=\"ds-palette\" value=\"gray\"/><span class=\"ds-palette-swatch\" aria-hidden=\"true\"></span>グレー</label></div></fieldset>",
       "css": ".ds-palettes{border:0;padding:0;margin:0 0 20px;min-width:0;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif}.ds-palettes legend{font-size:11px;color:var(--muted,#62695c);padding:0;margin-bottom:6px}.ds-palette-options{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}.ds-palette-option{min-height:44px;display:flex;align-items:center;justify-content:center;gap:5px;font-size:11px;color:var(--palette-ink);cursor:pointer;border-bottom:2px solid transparent}.ds-palette-option:has(input:checked){border-bottom-color:var(--palette-ink);background:#fffdf566}.ds-palette-option:hover{background:#fffdf5}.ds-palette-option input{margin:0;width:13px;height:13px;accent-color:var(--palette-ink)}.ds-palette-option input:focus-visible{outline:2px solid #667752;outline-offset:4px}.ds-palette-swatch{width:12px;height:18px;background:var(--palette-marker);border-top:2px solid var(--palette-ink);flex:none}@media(max-width:1100px){.ds-palette-options{grid-template-columns:repeat(3,minmax(0,1fr))}}"
+    },
+    {
+      "name": "Notebook view settings",
+      "kind": "input",
+      "refersTo": "memo-choice",
+      "description": "Native content selector, shown/blank memo radios and independent screen-marker control. Application wiring preserves layout and remembers memo selection when sentence-only disables it. This snippet shows the initial resting state; it has no React runtime.",
+      "html": "<div class=\"ds-view\"><label class=\"ds-view-label\" for=\"ds-note-content\">ノートに載せる内容</label><select id=\"ds-note-content\"><option value=\"study-notes\">単語・イディオムも載せる</option><option value=\"sentences-only\">センテンスのみ</option></select><fieldset class=\"ds-memos\" aria-describedby=\"ds-memo-help\"><legend>学習メモ</legend><div><label><input type=\"radio\" name=\"ds-memo\" value=\"shown\" checked/>表示する</label><label><input type=\"radio\" name=\"ds-memo\" value=\"blank\"/>空欄にする</label></div></fieldset><p id=\"ds-memo-help\" class=\"ds-view-help\">空欄でも本文や単語欄は動きません。印刷後、自分の言葉で書き込めます。</p><label class=\"ds-view-marker\"><input type=\"checkbox\" checked/>画面にマーカーを表示する</label></div>",
+      "css": ".ds-view{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;color:var(--ink,#3d443d)}.ds-view-label{display:block;font-size:11px;color:var(--muted,#62695c)}.ds-view select{width:100%;font-family:inherit;border:0;border-bottom:1px solid #a9af9e;background:transparent;color:#46533e;padding:10px 20px 10px 4px;min-height:44px;font-size:12px;border-radius:0;cursor:pointer}.ds-memos{border:0;padding:0;margin:18px 0 0;min-width:0}.ds-memos legend{font-size:12px;margin:0 0 5px;padding:0}.ds-memos>div{display:flex;gap:16px}.ds-memos label{display:flex;align-items:center;gap:7px;min-height:44px;font-size:12px;cursor:pointer}.ds-memos input{width:16px;height:16px;accent-color:#47627a;margin:0}.ds-memos:disabled label{color:var(--muted,#62695c);cursor:default}.ds-view-help{font-size:11px;line-height:1.8;color:var(--muted,#62695c);margin:7px 0 10px}.ds-view-marker{min-height:44px;display:flex;align-items:center;gap:9px;font-size:12px;cursor:pointer}.ds-view-marker input{width:17px;height:17px;margin:0;accent-color:var(--sage,#52634e)}.ds-view input:focus-visible,.ds-view select:focus-visible{outline:2px solid #667752;outline-offset:4px}"
     },
     {
       "name": "A5 print settings",
       "kind": "custom",
       "refersTo": "select",
-      "description": "Fixed 148 × 210mm A5 finished note, with A5 single-page or 297 × 210mm landscape A4 carrier. A4 places two copies at x=0/149mm with cut guides at 148/149mm. Defaults: A5 sheet, left binding, 18mm, printed markers on. The print-only model uses 7/5/4.3/5mm title/body/annotation/personal sizes and 8mm body/personal/review lines. This snippet shows native settings at rest; application wiring supplies the placement diagram, feedback and PDF. Future measured formats remain unavailable.",
-      "html": "<div class=\"ds-print\"><p class=\"ds-note-format\">完成ノート <strong>A5</strong><span>148 × 210 mm・縦向き</span></p><label class=\"ds-sheet-label\" for=\"ds-print-sheet\">印刷用紙</label><select id=\"ds-print-sheet\"><option>A5 · 1ページ</option><option>A4横 · 2面付け</option></select><div class=\"ds-print-fields\"><label>綴じる側<select><option>左</option><option>右</option></select></label><label>穴あけ・綴じ代<select><option>12 mm</option><option selected>18 mm</option><option>24 mm</option></select></label></div><label class=\"ds-marker-choice\"><input type=\"checkbox\" checked/>PDFにマーカーを入れる</label><p class=\"ds-print-help\">外すと、印刷したあとに自分で引けます。</p><p class=\"ds-print-instructions\">印刷倍率は<strong>100%（実際のサイズ）</strong>。用紙に合わせる拡大・縮小はオフにしてください。</p></div>",
+      "description": "Shared-plan A5 note on A5 paper or two original-size copies on landscape A4 at x0/149mm. Left/18mm is default. PDF markers initially follow the screen then can be overridden; content/memos match the view. This native control snippet has no export runtime.",
+      "html": "<div class=\"ds-print\"><p class=\"ds-note-format\">完成ノート <strong>A5</strong><span>148 × 210 mm・縦向き</span></p><label class=\"ds-sheet-label\" for=\"ds-print-sheet\">印刷用紙</label><select id=\"ds-print-sheet\"><option>A5 · 1ページ</option><option>A4横 · 2面付け</option></select><div class=\"ds-print-fields\"><label>綴じる側<select><option>左</option><option>右</option></select></label><label>穴あけ・綴じ代<select><option>12 mm</option><option selected>18 mm</option><option>24 mm</option></select></label></div><label class=\"ds-marker-choice\"><input type=\"checkbox\" checked/>PDFにマーカーを入れる</label><p class=\"ds-print-help\">メモは画面と同じ設定です。マーカーは印刷後に自分で引くこともできます。</p><p class=\"ds-print-instructions\">印刷倍率は<strong>100%（実際のサイズ）</strong>。用紙に合わせる拡大・縮小はオフにしてください。</p></div>",
       "css": ".ds-print{font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;color:var(--ink,#3d443d)}.ds-note-format{margin:12px 0 20px;font-size:12px;line-height:1.8}.ds-note-format strong{font:24px \"Lora\",Georgia,serif;margin-left:12px}.ds-note-format span{display:block;color:var(--muted,#62695c);font-size:11px;margin-top:4px;font-variant-numeric:tabular-nums}.ds-sheet-label{display:block;font-size:11px;color:var(--muted,#62695c)}.ds-print select{font-family:inherit;border:0;border-bottom:1px solid #a9af9e;background:transparent;color:#46533e;padding:10px 20px 10px 4px;min-height:44px;font-size:12px;border-radius:0;cursor:pointer}.ds-print select:focus-visible,.ds-print input:focus-visible{outline:2px solid #667752;outline-offset:4px}#ds-print-sheet{width:100%}.ds-print-fields{display:flex;gap:13px;margin:14px 0 18px}.ds-print-fields label{font-size:10px;color:var(--muted,#62695c);flex:1}.ds-print-fields select{display:block;width:100%;padding-right:15px}.ds-marker-choice{min-height:44px;display:flex;align-items:center;gap:9px;font-size:12px;cursor:pointer}.ds-marker-choice input{width:17px;height:17px;margin:0;accent-color:var(--sage,#52634e)}.ds-print-help{font-size:11px;line-height:1.8;color:var(--muted,#62695c);margin:0 0 18px}.ds-print-instructions{font-size:11px;line-height:1.9;color:var(--muted,#62695c);margin:0 0 16px}.ds-print-instructions strong{font-weight:600;color:var(--ink,#3d443d)}"
     }
   ],
   "narrative": {
     "northStar": "The Handwritten Study Notebook",
-    "overview": "Owner adopted Work blue Studygram layout on 2026-10-27. Target authority: docs/studygram-notebook-implementation-spec-2026-10-27.md and exact refill JSON/SVG. Shared A5 layout, graphite body/blue-first accents, every-other-row sentences and shown/blank memos are accepted requirements. Runtime integration, final glyphs and physical print verification are pending. Tokens/components below inventory the existing prototype, not the adopted future implementation. Owner correction, 2026-10-27: the current lettering and page density were rejected as too elementary-school-like. Target: small consistent handwriting, organized study density, clear hierarchy, white/subtle ivory paper and restrained accent colors. Current font is temporary; materials will be remade later. No visual implementation change in this documentation update. The following tokens/components describe the current prototype, not accepted final art direction. The Sentence Book — Learn digitally. Keep it beautifully. Korean Studygram meets a restrained editorial notebook: warm cream paper, fine rules, real monoline handwriting, a pale marker and small handwritten annotations. The page is the keepsake; calm sage controls and compact Japanese labels support it. The typewriter motif and key/case animations are retired.\n\nThis document captures the implemented identity at `/`, extracted on 2026-10-27 from `src/handwriting/handwriting.css`, `HandwritingDemo.tsx`, `model.ts`, `usePersonalInk.ts`, `personal.ts`, `palettes.ts`, `print-layout.ts` and `pdf.ts`. `/setup` retains the earlier interest and topic-note scaffold; its visual refresh is deferred. The current handwriting page is a labeled sample and session-only personal line, not a completed learning record. The source of truth for this surface’s composition and delivery limits is [the handwriting prototype note](docs/handwriting-prototype.md).",
+    "overview": "The Sentence Book — Learn digitally. Keep it beautifully. Korean Studygram meets a restrained editorial notebook: near-white paper, fine blue-gray rules, dark graphite handwriting, pale markers and compact study notes. The page is the keepsake; calm sage controls and Japanese labels support it. The typewriter motif and key/case animations are retired.\n\nThe owner adopted the Work blue notebook on 2026-10-27. The [implementation specification](docs/studygram-notebook-implementation-spec-2026-10-27.md), exact refill JSON/SVG and final blue references 22/23 govern this surface. The shared physical A5 layout and shown/blank memo controls now run at `/`. Source authority is `a5-layout.ts`, `study-content.ts`, `A5Notebook.tsx`, `study-pdf.ts`, `HandwritingDemo.tsx`, `handwriting.css` and `palettes.ts`. Earlier viewport-driven geometry and the older print-only composition are not the active root renderer.\n\nThe owner rejected the earlier oversized, irregular lettering as elementary-school-like. The accepted layout does not approve the current Cutlings-derived glyphs: final consistent handwriting is still to be made and approved. A later Work hand-template proposal is unadopted. The sample, personal input and checks are session-only demonstration content; `/setup` retains its earlier interest/topic-note scaffold. The [finish review](.impeccable/review/shared-a5/finish-review.md) accepts this implementation increment, not final typography, production lesson fitting or physical printing.",
     "keyCharacteristics": [
-      "Cream ruled paper with one ambient page shadow.",
-      "Actual vector handwriting with a following pen, then marker and annotation.",
-      "Lora for the wordmark, Japanese Mincho for headings, system sans for controls.",
-      "Readable completion, visible keyboard focus and reduced-motion behavior.",
-      "Six coordinated ink sets for the notebook; sage controls retain their existing colors.",
-      "A separate vector print composition for a fixed A5 note, on A5 or landscape A4 paper."
+      "One measured A5 refill shared by screen and independently rendered PDF.",
+      "Dark graphite body writing with six accent palettes; blue is the initial choice.",
+      "Whole-row sentence wrapping, anchored meanings, right footnotes and a framed vocabulary block.",
+      "Memo blanking preserves allocated space and the learner's current writing/checks.",
+      "Actual English stroke motion, static licensed Japanese text and reduced-motion completion.",
+      "Fixed paper on narrow screens, with fit or enlarged horizontal scrolling."
     ],
     "rules": [
       {
         "name": "The Marker Rule",
-        "body": "Keep the marker beneath the written letters. It appears after the main writing phase and before the annotation; it never replaces readable ink. Printed markers are optional: omitting them leaves the screen marker, written content and annotations intact.",
+        "body": "Draw each pale marker once beneath the letters. Screen and PDF marker choices change only that ink; they never change text, memo allocation or the page plan.",
         "section": "colors"
       },
       {
         "name": "The Stroke Rule",
-        "body": "Handwriting is centerline vector geometry with round caps and joins. A CSS handwriting font, text mask or typewriter character reveal does not implement this identity.",
+        "body": "English handwriting uses centerline vector paths with round caps and joins. Static Japanese text is an explicit supported fallback, not a claim of Japanese stroke animation.",
         "section": "typography"
       },
       {
         "name": "The Paper Rule",
-        "body": "Reserve the ambient shadow for the notebook sheet. The control rail stays flat, divided by fine rules.",
+        "body": "Reserve the ambient shadow for the screen notebook. Controls stay flat and the PDF leaves the physical paper unprinted.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "Do use the cream page, fine rules and subdued sage controls as the current identity.",
-      "Do keep the same stroke geometry for the sample, the personal line and the completed PDF.",
-      "Do preserve visible focus, native control behavior, pause/finish actions and direct completion for reduced motion.",
-      "Do retain unsupported input, identify it beside the field and block export until it is supported.",
-      "Do keep print layout independent of viewport width and the animation clock, and distinguish the finished A5 note from its printer sheet.",
-      "Do label the sample and the session-only input honestly; animation completion is not evidence of learning completion."
+      "Do derive screen and PDF from the same A5 layout and measured glyph advances.",
+      "Do allocate memo space before filtering visible ink; keep body positions, page count and study/check content unchanged between shown and blank.",
+      "Do keep graphite body ink across all six palettes and pale markers beneath it.",
+      "Do preserve visible focus, native controls, explicit pause/finish actions and direct completion for reduced motion.",
+      "Do retain unsupported input, explain it beside the field and block export until it is supported.",
+      "Do label the sample, session-only input and review checks honestly; animation completion is not learning completion.",
+      "Do distinguish the finished A5 note from its printer sheet and require actual-size printing."
     ],
     "donts": [
-      "Don't restore the retired typewriter, key or case motif.",
-      "Don't substitute a font-outline wipe or character reveal for the centerline handwriting.",
-      "Don't place solid highlight color over the letters or reveal annotation before the main writing and marker phases.",
-      "Don't spread paper shadows to every control or turn the control rail into decorative cards.",
+      "Don't reflow notebook text to the viewport, stretch the sheet, compress the grid or shrink letters to fit more content.",
+      "Don't remove reserved space, vocabulary Japanese, checks, grammar or personal writing when blanking memos.",
+      "Don't treat the provisional glyphs or a technical ship verdict as owner approval of the final handwriting.",
+      "Don't restore the retired typewriter, key or case motif, or substitute a character reveal for English centerline strokes.",
+      "Don't spread paper shadows to controls, cover letters with markers, or paint the screen's paper tint into the PDF.",
       "Don't add rankings, confetti or a chat interface to this notebook world.",
-      "Don't describe `/setup` as redesigned, or claim Japanese stroke support, saved completed notes, live generation or verified physical printing."
+      "Don't claim saved completed notes, live generation, red-sheet output, Japanese stroke animation, a redesigned /setup or verified physical printing."
     ]
   }
 }

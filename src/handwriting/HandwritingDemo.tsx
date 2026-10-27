@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { createNote, currentPhase, inkProgress, penPosition, sampleNote, unsupported } from './model';
-import type { NoteLayout, Stroke } from './model';
+import { currentPhase, supported, unsupported } from './model';
+import { createA5Layout, createA5Scene, defaultView, visiblePages, A5 } from './a5-layout';
+import type { ViewSettings } from './a5-layout';
+import { studySample } from './study-content';
+import { A5Notebook } from './A5Notebook';
 import type { CSSProperties } from 'react';
 import { defaultPrintOptions } from './print-layout';
 import type { PrintOptions } from './print-layout';
@@ -9,51 +12,11 @@ import './handwriting.css';
 import { usePersonalInk } from './usePersonalInk';
 
 const phaseLabels={writing:'英文を書いています',marking:'大切な表現に、マーカーを',annotating:'余白に、ひとこと',complete:'一枚のノートができました'};
-function StrokePath({stroke,time}:{stroke:Stroke;time:number}) {
- const progress=inkProgress((time-stroke.start)/stroke.duration);
- return <path d={stroke.d} transform={'translate('+stroke.x+' '+stroke.y+') scale('+stroke.scale+')'}
-   visibility={progress===0?'hidden':'visible'} fill="none" stroke={stroke.color} strokeWidth={stroke.width} strokeLinecap="round" strokeLinejoin="round"
-   opacity={stroke.phase==='marking'?.48:1} strokeDasharray={stroke.length+' '+stroke.length}
-   strokeDashoffset={stroke.length*(1-progress)} data-phase={stroke.phase}/>;
-}
-function Notebook({note,time,reduceMotion,personalInk}:{note:NoteLayout;time:number;reduceMotion:boolean;personalInk:ReturnType<typeof usePersonalInk>}) {
- const pen=personalInk.pending?null:penPosition(note.strokes,time);
- const rules=[];
- for(let y=note.ruleStart;y<note.height-36;y+=note.lineHeight) rules.push(y);
- return <svg className="notebook" viewBox={'0 0 '+note.width+' '+note.height} role="img" aria-labelledby="note-title note-description" data-complete={time>=note.duration}>
-   <title id="note-title">{note.content.title}</title>
-   <desc id="note-description">{note.content.body} Expression: {note.content.phrase}. {note.content.annotation}. My own words: {note.content.personal || 'Blank.'}</desc>
-   <g aria-hidden="true">
-    <rect width={note.width} height={note.height} fill="#fffdf5"/>
-    {rules.map(y=><line key={y} x1={note.left-5} x2={note.width-note.right+5} y1={y} y2={y} stroke="#d8ddd1" strokeWidth=".8"/>)}
-    <text x={note.left} y={47} className="page-date">{note.content.date}</text>
-    <text x={note.width-note.right} y={47} textAnchor="end" className="page-date">a moment, kept.</text>
-    {note.strokes.filter(s=>s.phase==='marking').map((s,i)=><StrokePath key={'m'+i} stroke={s} time={time}/>)}
-    {note.strokes.filter(s=>s.phase!=='marking').map((s,i)=><StrokePath key={i} stroke={s} time={time}/>)}
-    <text x={note.left} y={note.personalTop-42} className="page-label">MY OWN WORDS</text>
-    <g data-testid="personal-strokes">
-     {personalInk.paths.map(p=><StrokePath key={p.key} stroke={p.stroke} time={p.time}/>)}
-    </g>
-    {personalInk.pen&&<g data-testid="personal-pen" transform={'translate('+personalInk.pen.x+' '+personalInk.pen.y+') rotate(32)'}>
-      <path d="M 0 0 L -4 -13 L 4 -13 Z" fill="#b6a884" stroke="#685f49" strokeWidth=".8"/>
-      <path d="M -3.5 -13 L -3.5 -40 Q 0 -43 3.5 -40 L 3.5 -13 Z" fill="#55664e"/>
-      <path d="M 0 0 L 0 -8" stroke="#3d443d" strokeWidth="1"/>
-    </g>}
-    {!note.content.personal && <text x={note.left} y={note.personalTop-1} className="page-placeholder">あなたの一言を、この余白に。</text>}
-    <text x={note.left} y={note.height-30} className="page-footer">The Sentence Book</text>
-    <text x={note.width-note.right} y={note.height-30} textAnchor="end" className="page-footer">1</text>
-    {pen && !reduceMotion && <g data-testid="pen" transform={'translate('+pen.x+' '+pen.y+')'} opacity={pen.down?1:.55}>
-      {pen.marker?<path d="M -1 0 L 7 -15 L 16 -11 L 8 4 Z" fill="#b3a05a" stroke="#716336" strokeWidth=".8"/>:
-      <g transform="rotate(32)"><path d="M 0 0 L -4 -13 L 4 -13 Z" fill="#b6a884" stroke="#685f49" strokeWidth=".8"/>
-      <path d="M -3.5 -13 L -3.5 -47 Q 0 -50 3.5 -47 L 3.5 -13 Z" fill="#55664e"/>
-      <path d="M 0 0 L 0 -8" stroke="#3d443d" strokeWidth="1"/></g>}
-    </g>}
-   </g>
- </svg>;
-}
 export function HandwritingDemo() {
- const paper=useRef<HTMLDivElement>(null);
- const [width,setWidth]=useState(670);
+ const [view,setView]=useState<ViewSettings>(defaultView);
+ const [zoom,setZoom]=useState(()=>window.matchMedia('(max-width: 760px)').matches?'read':'fit');
+ const [printMarkers,setPrintMarkers]=useState<boolean|null>(null);
+ const [checks,setChecks]=useState<Record<string,boolean>>({});
  const [personal,setPersonal]=useState('');
  const [speed,setSpeed]=useState(1);
  const [running,setRunning]=useState(true);
@@ -62,20 +25,18 @@ export function HandwritingDemo() {
  const [print,setPrint]=useState<PrintOptions>(defaultPrintOptions);
  const [exporting,setExporting]=useState(false);
  const [feedback,setFeedback]=useState('');
- const date=useMemo(()=>new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'short',year:'numeric'}).format(new Date()),[]);
- const content=useMemo(()=>({...sampleNote,date,personal}),[date,personal]);
+ const missing=unsupported(personal);
+ const content=useMemo(()=>({...studySample,
+   personal:[...personal].map(char=>supported(char)?char:' ').join(''),
+   vocabulary:studySample.vocabulary.map(v=>({...v,checked:checks[v.id]??v.checked})),
+ }),[personal,checks]);
  const ink=palettes[print.palette];
- const note=useMemo(()=>createNote(content,width,{palette:ink}),[content,width,ink]);
- const personalInk=usePersonalInk(personal,note.personal,reduced,ink.personal);
+ const layout=useMemo(()=>createA5Layout(content,print),[content,print.binding,print.side]);
+ const note=useMemo(()=>createA5Scene(layout),[layout]);
+ const personalInk=usePersonalInk(content.personal,layout.personal,reduced,A5.ink,.20);
  const elapsed=useRef(0), duration=useRef(note.duration);
  duration.current=note.duration;
- const missing=unsupported(personal);
- useEffect(()=>{
-   const element=paper.current;
-   if(!element)return;
-   const observer=new ResizeObserver(entries=>setWidth(Math.max(280,Math.round(entries[0].contentRect.width))));
-   observer.observe(element);return ()=>observer.disconnect();
- },[]);
+
  useEffect(()=>{
    const mq=window.matchMedia('(prefers-reduced-motion: reduce)');
    const change=()=>setReduced(mq.matches);
@@ -101,8 +62,8 @@ export function HandwritingDemo() {
  async function savePDF(){
    setExporting(true);setFeedback('');
    try{
-     const {exportNote}=await import('./pdf');
-     const bytes=await exportNote(content,print);
+     const {exportStudyNote}=await import('./study-pdf');
+     const bytes=await exportStudyNote(layout,view,{...print,markers:printMarkers??view.markers});
      const blob=new Blob([new Uint8Array(bytes)],{type:'application/pdf'});
      const url=URL.createObjectURL(blob),link=document.createElement('a');
      link.href=url;link.download=print.sheet==='A4'?'sentence-book-a5-on-a4.pdf':'sentence-book-a5.pdf';link.click();
@@ -127,12 +88,34 @@ export function HandwritingDemo() {
           <span className="palette-swatch" aria-hidden="true"/>{palettes[id].label}
         </label>)}</div>
       </fieldset>
-      <div ref={paper} className="paper-sheet"><Notebook note={note} time={time} reduceMotion={reduced} personalInk={personalInk}/></div>
+      <div className="paper-toolbar">
+        <span>A5 · 148 × 210 mm · {visiblePages(layout,view).length}ページ</span>
+        <label>表示倍率<select aria-label="ノートの表示倍率" value={zoom} onChange={e=>setZoom(e.target.value)}><option value="fit">紙全体</option><option value="read">拡大して読む</option></select></label>
+      </div>
+      <p className="zoom-help">{zoom==='read'?'左右にスクロールして読めます。':'印刷ではA5の実寸になります。'}</p>
+      <div className={'paper-scroll '+(zoom==='read'?'is-reading':'')} tabIndex={0} role="region" aria-label="A5ノート。拡大表示では左右にスクロールできます">
+        <div className="paper-pages"><A5Notebook layout={layout} scene={note} view={view} ink={ink} time={time} reduced={reduced} personalInk={personalInk}/></div>
+      </div>
       <p className="below-paper">読む。書く。残しておきたくなる。</p>
     </div>
     <aside className="ink-controls" id="demo-controls" aria-label="筆記デモの操作">
       <h1>学びが、一枚の<br/>ノートになる。</h1>
       <p className="intro">一画ずつ、言葉が紙に残っていく。<br/>大切な表現も、あなたの一言も。</p>
+      <section className="view-section" aria-label="ノートの表示設定">
+        <label className="sheet-label" htmlFor="note-content">ノートに載せる内容</label>
+        <select id="note-content" value={view.content} onChange={e=>{setView({...view,content:e.target.value as ViewSettings['content']});setFeedback('');}}>
+          <option value="study-notes">単語・イディオムも載せる</option><option value="sentences-only">センテンスのみ</option>
+        </select>
+        <fieldset className="memo-options" disabled={view.content==='sentences-only'} aria-describedby="memo-help">
+          <legend>学習メモ</legend>
+          <div>{(['shown','blank'] as const).map(value=><label key={value}>
+            <input type="radio" name="memos" value={value} checked={view.memos===value} onChange={()=>{setView({...view,memos:value});setFeedback('');}}/>
+            {value==='shown'?'表示する':'空欄にする'}
+          </label>)}</div>
+        </fieldset>
+        <p id="memo-help" className="field-help">{view.content==='sentences-only'?'学習メモは単語・イディオム付きで使えます。':'空欄でも本文や単語欄は動きません。印刷後、自分の言葉で書き込めます。'}</p>
+        <label className="marker-choice"><input type="checkbox" checked={view.markers} onChange={e=>{setView({...view,markers:e.target.checked});setFeedback('');}}/>画面にマーカーを表示する</label>
+      </section>
       <section className="playback-section" aria-label="再生">
         <p className="ink-status" role="status">{phaseLabels[currentPhase(note,time)]}</p>
         <div className="playback-row">
@@ -148,7 +131,7 @@ export function HandwritingDemo() {
       </section>
       <section className="personal-section">
         <label htmlFor="personal">今日、大切にしたいことは？</label>
-        <p className="field-help" id="personal-help">英語でひとこと。ノートの余白に加わります。</p>
+        <p className="field-help" id="personal-help">英語でひとこと。単語・イディオム付きのノートに加わります。</p>
         <textarea id="personal" rows={2} maxLength={80} placeholder="I make time for..." value={personal}
           aria-describedby={'personal-help'+(missing?' personal-error':'')} aria-invalid={!!missing}
           onChange={e=>{setRunning(false);setPersonal(e.target.value.replace(/\r?\n/g,' '));setFeedback('');}}/>
@@ -159,6 +142,13 @@ export function HandwritingDemo() {
         </div>}
         {missing&&<p className="ink-error" id="personal-error">「{missing}」は筆跡未対応です。入力は残っています。英数字と基本の記号でお試しください。</p>}
       </section>
+      <details className="review-section">
+        <summary>単語の復習チェック</summary>
+        <p className="field-help">自分で復習した印です。このデモのチェックは保存されません。</p>
+        {content.vocabulary.map(v=><label className="marker-choice" key={v.id}>
+          <input type="checkbox" checked={v.checked} onChange={e=>{setChecks({...checks,[v.id]:e.target.checked});setFeedback('');}}/>{v.english}
+        </label>)}
+      </details>
       <section className="print-section" aria-label="PDF出力">
         <h2>この一枚を、手元に。</h2>
         <p className="note-format">完成ノート <strong>A5</strong><span>148 × 210 mm・縦向き</span></p>
@@ -176,8 +166,8 @@ export function HandwritingDemo() {
           <label>綴じる側<select value={print.side} onChange={e=>setPrint({...print,side:e.target.value as PrintOptions['side']})}><option value="left">左</option><option value="right">右</option></select></label>
           <label>穴あけ・綴じ代<select value={print.binding} onChange={e=>setPrint({...print,binding:Number(e.target.value)})}><option value={12}>12 mm</option><option value={18}>18 mm</option><option value={24}>24 mm</option></select></label>
         </div>
-        <label className="marker-choice"><input type="checkbox" checked={print.markers} onChange={e=>{setPrint({...print,markers:e.target.checked});setFeedback('');}}/>PDFにマーカーを入れる</label>
-        <p className="field-help">外すと、印刷したあとに自分で引けます。</p>
+        <label className="marker-choice"><input type="checkbox" checked={printMarkers??view.markers} onChange={e=>{setPrintMarkers(e.target.checked);setFeedback('');}}/>PDFにマーカーを入れる</label>
+        <p className="field-help">メモは画面と同じ設定です。マーカーは印刷後に自分で引くこともできます。</p>
         <p className="print-instructions">印刷倍率は<strong>100%（実際のサイズ）</strong>。{print.sheet==='A4'?'このPDFは面付け済みです。印刷画面の「1枚あたりのページ数」は1にしてください。':'用紙に合わせる拡大・縮小はオフにしてください。'}</p>
         <button className="ink-button export-button" disabled={exporting||!!missing} onClick={savePDF}>{exporting?'PDFを作っています…':'完成ページをPDFに'}</button>
         <p className="export-feedback" role="status">{feedback}</p>

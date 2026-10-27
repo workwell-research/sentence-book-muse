@@ -96,3 +96,32 @@ button:disabled,select:disabled{cursor:default}
 .print-instructions{font-size:11px;line-height:1.9;color:var(--muted);margin:0 0 16px}
 .print-instructions strong{font-weight:600;color:var(--ink)}
 @media(max-width:1100px){.palette-options{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* Physical A5 coordinates stay fixed. Only the outer viewport zooms. */
+@font-face{font-family:'Notebook Japanese';src:url('/fonts/MPLUS1p-Regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+.paper-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;font-size:11px;color:var(--muted)}
+.paper-toolbar label{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.paper-toolbar select{font-size:11px}
+.paper-scroll{width:100%;overflow:auto;padding:2px 2px 20px;scrollbar-color:#93a5b3 #e3e5e3;scrollbar-width:thin}
+.paper-pages{width:100%;display:grid;gap:24px}
+.paper-scroll.is-reading .paper-pages{width:max(100%,740px)}
+.paper-pages .notebook{aspect-ratio:148/210;background:#fffefb;box-shadow:0 6px 20px #3b46551a}
+.view-section>select{width:100%}
+.memo-options{border:0;padding:0;margin:18px 0 0;min-width:0}
+.memo-options legend{font-size:12px;margin:0 0 5px;padding:0}
+.memo-options>div{display:flex;gap:16px}
+.memo-options label{display:flex;align-items:center;gap:7px;min-height:44px;font-size:12px;cursor:pointer}
+.memo-options input{width:16px;height:16px;accent-color:#47627a;margin:0}
+.memo-options:disabled label{color:var(--muted);cursor:default}
+.review-section{border-top:1px solid #c9cbbc;margin:28px 0 0;padding:14px 0 0}
+.review-section summary{font-size:12px;min-height:44px;cursor:pointer;line-height:44px}
+.review-section+.print-section{margin-top:28px;padding-top:26px;border-top:1px solid #c9cbbc}
+@media(max-width:760px){
+ .view-section{order:1;margin:0!important;padding:0!important;border:0!important}
+ .playback-section{order:2;margin:0!important;padding:0!important;border:0!important}
+ .paper-column{order:3}.personal-section{order:4}.review-section{order:5}.print-section{order:6}.prototype-note{order:7}
+ .paper-toolbar{align-items:flex-start;flex-direction:column;gap:0}.paper-toolbar label{align-self:flex-end}
+ .paper-pages{gap:18px}
+}
+.zoom-help{font-size:11px;line-height:1.7;color:var(--muted);margin:-6px 0 10px;text-align:right}
+@media(max-width:760px){.ink-workspace{gap:20px}.paper-toolbar{margin-bottom:8px}}

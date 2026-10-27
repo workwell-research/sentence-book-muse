@@ -19,7 +19,7 @@ export interface PrintOptions {
   binding:number; side:'left'|'right'; markers:boolean; palette:PaletteId;
 }
 export const defaultPrintOptions:PrintOptions = {
-  notebook:'a5', sheet:'A5', binding:18, side:'left', markers:true, palette:'green',
+  notebook:'a5', sheet:'A5', binding:18, side:'left', markers:true, palette:'blue',
 };
 // All measurements below are print-only millimetres. They never use screen breakpoints.
 export const printTypography = { title:7, body:5, annotation:4.3, personal:5, line:8 } as const;

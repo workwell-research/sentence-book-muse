@@ -115,7 +115,7 @@ export function strokePoint(stroke:Stroke,progress:number) {
   const p=geometry(stroke.d).getPointAtLength(stroke.length*inkProgress(progress));
   return {x:stroke.x+p.x*stroke.scale,y:stroke.y+p.y*stroke.scale};
 }
-export function penPosition(strokes:Stroke[],elapsed:number) {
+export function penPosition(strokes:Stroke[],elapsed:number,lift=8) {
   const nextIndex=strokes.findIndex(s=>elapsed<s.start+s.duration);
   if (nextIndex<0) return null;
   const next=strokes[nextIndex];
@@ -125,9 +125,9 @@ export function penPosition(strokes:Stroke[],elapsed:number) {
   const from=strokePoint(prev,1),to=strokePoint(next,0);
   const t=Math.min(1,Math.max(0,(elapsed-prev.start-prev.duration)/(next.start-prev.start-prev.duration)));
   const eased=t*t*(3-2*t);
-  return {x:from.x+(to.x-from.x)*eased,y:from.y+(to.y-from.y)*eased-8*Math.sin(Math.PI*t),down:false,marker:next.phase==='marking'};
+  return {x:from.x+(to.x-from.x)*eased,y:from.y+(to.y-from.y)*eased-lift*Math.sin(Math.PI*t),down:false,marker:next.phase==='marking'};
 }
-export function currentPhase(note:NoteLayout,time:number): Phase|'complete' {
+export function currentPhase(note:Pick<NoteLayout,'strokes'|'duration'>,time:number): Phase|'complete' {
   if(time>=note.duration) return 'complete';
   return note.strokes.find(s=>time<s.start+s.duration)?.phase ?? 'annotating';
 }

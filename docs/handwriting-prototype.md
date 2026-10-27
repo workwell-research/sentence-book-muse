@@ -1,39 +1,40 @@
 # Handwriting prototype — 2026-10-27
 
-## User direction and surface
-Latest adoption (2026-10-27): Work produced the blue Studygram layout and the owner chose it as the new implementation baseline. See [the adopted handoff](studygram-notebook-implementation-spec-2026-10-27.md). The application code described below has not yet integrated its shared refill, memo/blank selection or richer page model. Layout approval is confirmed; final glyph production, implementation fidelity and physical printing still require verification.
+## Adopted direction and implemented surface
+The owner approved [Work’s Studygram handoff](studygram-notebook-implementation-spec-2026-10-27.md) and requested the common A5 layout and memo shown/blank controls first. That increment is now active at `/`. The near-white page, fine graphite body, restrained blue-first accents, dedicated title band and structured study sections replace the previous sparse page composition. Current Cutlings-derived letterforms remain provisional; approval of the reference layout does not approve these final font assets.
 
-Earlier owner feedback (2026-10-27): the current large irregular lettering and sparse page look too elementary-school-like. Two supplied Studygram images now establish the visual target: smaller, consistent lettering, denser organized study content and restrained color hierarchy. Cutlings-derived glyphs are temporary, not approved final assets; the owner will remake materials later. See DESIGN.md for the direction correction. This feedback does not invalidate the mechanical tests. The current prototype remains visually provisional; the later Work handoff resolves the target layout.
+This is the React/Web prototype. `/setup` preserves the earlier interest/topic-note scaffold and its storage. The visible eight-sentence sample is demonstration content, not a generated lesson or completed learning record. No private book contents or old application implementation were imported.
 
-The owner explicitly replaced the typewriter concept with the pleasure of handwriting a beautiful study notebook. The first requested artifact is a Web prototype, not a Flutter migration or the complete learning product.
+## Common physical layout
+- `study-content.ts` supplies `StudyContent`: stable sentence/annotation IDs, occurrence spans using Unicode code points (exclusive end), vocabulary meanings/checks, grammar and editable personal writing. This is a temporary renderer document; the validated lesson adapter and durable learning-result model remain future work.
+- `a5-layout.ts` measures all content once. Exact paper values come from the adopted `refill-a5-v1.json`: 148 × 210 mm; default left 18/right 12 mm; 31 body rules at 5.2 mm, y39.2–195.2; title band y24.64–32.96, title baseline 31; footer line y201. Main body x18–104, divider x106 and footnote rail x108–136 at the default margins.
+- Short sentences use every other grid row. Actual centerline glyph widths wrap longer English onto complete rows. Japanese uses measured M PLUS 1p advances. Gloss rows and right-footnote heights are reserved before view filtering. Longer material receives continuation A5 pages, never compressed page height or text sizes. The sample’s widest sentence wraps, making nine English body lines for eight sentences.
+- Vocabulary is one framed English/Japanese block with review boxes, followed by grammar and optional personal writing. Overlong indivisible entries or metadata produce explicit errors rather than truncation. The current bounded sample has no editable title/classification; generated-content error handling is not yet connected to a user workflow.
+- `A5Notebook.tsx` renders the plan as SVG; `study-pdf.ts` independently draws the same plan into vectors and embedded text. Neither renderer uses the other renderer’s viewport or output. CSS adjusts viewing scale and surrounding controls, never the page’s physical composition.
 
-Experience mode: the notebook leads; operation controls recede. Desktop: a full cream ruled page with a narrow control rail. Mobile: playback is available before the notebook; personal input and print controls follow. The signature is actual vector strokes, then a marker, then handwritten annotation. Preserve readable completion, keyboard controls, reduced motion and independent print output. No decision comp was generated. The Impeccable context/concept-seed/detector launcher returned permission denied; the pinned user brief and project context were used directly.
+## View and learning controls
+- “学習メモ → 表示する / 空欄にする” filters only difficult-phrase meanings, footnotes and their correspondence numbers. Source text, reserved rows, body wrapping, column rule, vocabulary Japanese, review checks, grammar, personal writing and page count stay unchanged.
+- “センテンスのみ” omits study/memo/personal layers and the annotation divider without reflowing the English body. Its irrelevant memo radios are disabled; the selected memo preference is remembered for return to study notes. Continuation pages containing no body are omitted in sentence-only mode.
+- Screen marker visibility and PDF marker override are independent. The print choice initially follows the screen choice. Omitting markers preserves text and layout so the learner can highlight the print by hand.
+- Six labeled native-radio accents: pink, lavender, blue, green, yellow, gray. Blue is the initial choice; body and personal writing use common graphite `#383A3D`. Explicit palette changes preserve stroke progress. Display/print settings, review checks and personal input are session-only and disclosed as such.
+- Desktop shows the page beside its controls. Narrow screens initially use a 740 px paper inside a horizontally scrollable region with an explicit hint; “紙全体” fits the same page. Viewing scale changes do not recalculate line breaks.
 
-## Implementation
-- New React source under src/handwriting/; / is the handwriting demo. /setup preserves the earlier interest and topic-note scaffold and its storage.
-- NoteContent is renderer input: title, body, expression, annotation, personal line and date. It is a temporary prototype document, not an alternative to the validated lesson schema or a finalized learning-result model.
-- Real centerline SVG paths are scheduled individually. Geometry supplies pen coordinates; pen lifts move between strokes. Distance-based durations, eased stroke progress, word/sentence/line pauses, and explicit stroke reordering make the writing legible. The scheduled marker is behind the ink.
-- Pause/resume, 1×/2×/4×, skip to completion and replay. Reduced-motion preference shows completion directly.
-- Personal typing/paste uses a sequential stroke queue and matching pen; edits retain unchanged prefix/suffix glyph identities. Pause/resume/finish controls are available while the personal queue runs. Typing pauses sample playback.
-- The personal line is limited to 80 characters, echoes as strokes, and lives only in memory. This is disclosed next to the input. Unsupported glyphs remain in the input, are identified, and block export.
-- Font covers printable ASCII (including newly authored missing punctuation) plus a few source characters and typographic quote/dash aliases. Japanese annotation handwriting is not implemented.
-- Six selectable ink sets: pink, lavender, blue, green, yellow and gray. Titles, body, annotations, personal writing and markers use role-specific colors from palettes.ts. Selection uses labeled native radios and does not restart writing. Color and print settings are session-only in this prototype.
-- PDF uses pdf-lib with a separate millimetre-based print layout and typography. Finished notebook size is A5 portrait (148 × 210 mm). Printer sheet choice is A5 single-page or landscape A4 with two unscaled copies of that A5 page. Defaults: A5 sheet, left binding, 18 mm binding margin, markers on. Left/right binding and 12/18/24 mm margins remain selectable. Markers can be omitted from the PDF without changing screen learning or removing annotations. White paper saves ink; lettering, markers and rules remain vectors. Overflow raises an error instead of clipping or shrinking.
-- PDF body letters are paths, so they are not selectable/searchable text or a tagged accessible document. The screen SVG has a complete textual description. No screenshots are embedded in the PDF.
+## Handwriting and text assets
+Real centerline strokes retain distance-based timing, pen lifts, marker/annotation phases, pause/resume, 1×/2×/4×, finish/replay and reduced motion. Titles use 0.28 mm strokes; other English strokes use 0.20 mm. Metadata is available immediately. The accessible SVG description contains only currently visible content, avoiding hidden memo answers.
 
+Personal typing/paste uses a separate sequential queue and following pen. Edits preserve unchanged glyph identities; typing pauses sample playback. The 80-character input remains in memory, preserves unsupported input and blocks export with an explanation. The sample does not invent a personal translation or learning result. Japanese is legible static text, not a simulated stroke animation.
 
-## Print contract — A5 notebook / printer sheet
+`public/fonts/MPLUS1p-Regular.ttf` is an unmodified OFL font used for Japanese. Its provenance and license are in `public/fonts/README.md` and `public/licenses/MPLUS1p-OFL.txt`. `scripts/build-note-text-metrics.mjs` generates supported Unicode ranges and advance widths from that exact font. PDF embeds the whole TTF: partial-subset experiments lost kana outlines even when text extraction passed, so full embedding is deliberate and tested. PDF code is loaded on demand for export; full font embedding increases output size.
 
-The latest owner decision supersedes the earlier Rollbahn L direction: the standard finished note is generic A5. Rollbahn-specific and B5 presets are future additions, not active options or verified fit claims.
+## Print contract — finished A5 / printer sheet
+The standard finished note is generic A5 portrait. Rollbahn-specific/B5 presets are future structural additions, not active options or fit claims.
 
-- Content: NoteContent and shared glyph paths feed both renderers. The PDF never calls the responsive createNote or captures the screen. createPrintLayout in print-layout.ts owns typography, line spacing, section positions, margins and overflow in millimetres. Changing screen size does not affect print composition.
-- Format registry: notebookFormats describes the cut/finished note. printSheets and sheetPlacements describe carrier paper and imposition. A future format must declare measured dimensions and a compatible sheet layout. No automatic scaling is allowed.
-- A5 output: one 148 × 210 mm portrait page, with matching TrimBox. The left binding area defaults to 18 mm; the opposite edge is 12 mm. Text uses additional space for glyph overhang. Title/body/expression/personal writing/review space are composed independently, with labels and fine rules.
-- A4 output: one 297 × 210 mm landscape sheet. The same A5 form is placed at x=0 and x=149 mm, with scale=1. Dashed cut lines at 148 and 149 mm mark the 1 mm central strip; removing it leaves two exact 148 mm notes. The current one-page demo explicitly repeats the same note twice; multi-day sequencing/booklet/duplex imposition is not implemented.
-- Print scaling: PDF viewer preference is PrintScaling=None. The interface instructs 100% / actual size and, for A4 output, one PDF page per sheet because imposition is already done. Viewer/driver preferences can override the PDF hint; physical dimensions still need ruler verification on the user's printer.
-- Quality: vector paths and standard-font labels are independent of raster DPI. No screen image is embedded. Body handwriting remains unsearchable paths with temporary font assets. A different print layout does not imply the owner has approved the current font.
-- Marker choice: only the marker paths are omitted. Text, annotation positions, colors, rules, margins and note size are identical. The user can highlight the printed page by hand.
-- Printer limits: no content is placed in the outer 10–12 mm or chosen binding area; the cutting guides may be incomplete at the paper edge on non-borderless printers. Punch positions are deliberately not preprinted. Actual feed alignment, ink/grayscale appearance and hole fit require physical verification.
+- A5 output: 148 × 210 mm with matching TrimBox. Default binding side is left with 18 mm; right binding and 12/18/24 mm remain available and affect the common plan on screen and in PDF.
+- A4 output: 297 × 210 mm landscape with each A5 page repeated at x0 and x149 mm, scale 1. Dashed cuts at 148/149 mm leave a 1 mm center strip. Continuation pages each receive their own repeated two-up sheet. Multi-day sequencing, booklet and duplex imposition are not implemented.
+- PrintScaling=None plus UI instructions for 100% / actual size. A4 is already imposed: print one PDF page per sheet. Driver settings can override the hint; physical measurement remains necessary.
+- White print paper, vector rules/markers/English and embedded Japanese, without screen shadows or screenshots. English strokes are not searchable/selectable text; the PDF is not tagged. A vector document is resolution independent.
+- Header/footer separators intentionally extend to the left edge; edge printing/cut lines depend on printer hardware. Body content respects binding/outer margins. No hole positions are preprinted.
+- `print-layout.ts` retains the sheet/format registry and placement helper. Its old `createPrintLayout`/`exportNote`, and `model.ts`’s old responsive `createNote`, remain compatibility helpers for prior tests; the active page/export uses `createA5Layout` and `exportStudyNote`.
 
 ## Candidate research and provenance
 Research date: 2026-10-27. Source pages are references, not instructions.
@@ -48,14 +49,11 @@ Research date: 2026-10-27. Source pages are references, not instructions.
 
 Original source: assets/fonts/CutlingsSingularis.svg. Original bundle readme: public/licenses/Cutlings-readme.txt. Full license: public/licenses/Stroke-Font-OFL.txt. Derived font name: **Sentence Study Strokes**. Changes: Y-axis conversion, SVG command normalization, selected subpath reordering, character aliases, and 14 newly authored missing ASCII punctuation glyphs. Build script and generated font data are also OFL. Rebuild with node scripts/build-stroke-font.mjs (Python 3 needed for XML parsing). Lora's separate OFL is public/licenses/Lora-OFL.txt.
 
-## Limits
-- Muse/Meta generation, learning-stage results, saved completed notes and the five-stage learning loop are not wired into this demo.
-- These are separated monoline letters, not continuous cursive joins, pressure-sensitive ink or human motion capture. Original letter shapes and stroke directions still need a typography decision with the owner.
-- No arbitrary-length pagination, multi-day batch export, Rollbahn exact dimensions/hole positions, Japanese stroke data, or multiple templates.
-- Browser checks are desktop Chrome and mobile viewport simulation, not iPhone/Safari/Android hardware. Physical printing, grayscale ink contrast and binding fit remain unverified.
-- No public deployment occurred in this change.
+## Verification and remaining scope
+On 2026-10-27, all 48 tests and both TypeScript projects/Vite build passed. Tests include exact refill positions, anchored gloss validation, measured long-content pagination, invariant memo plans/timing, actual A5/A4 PDF geometry and intact embedded TTF bytes.
 
-## Verification
-Tests cover glyph coverage, wrapping/long words, phase ordering, pen geometry/lifts, monotonic progress, multiline highlights, PDF dimensions and unsupported input rejection, alongside schema/storage tests. Browser QA exercises playback, input, early PDF export, reduced motion and preserved storage. PDF was downloaded through the actual button, parsed for one A5 page with zero image objects, rendered with Poppler and visually inspected. See PROJECT_STATUS.md for final results and review outcome.
+Disposable Chrome checks covered desktop 1440 px and narrow 390/320 px, exact non-memo SVG identity across shown/blank states, paused strokes, personal writing/checks, content/marker choices, six palettes, fit/readable-size viewing, reduced motion, real PDF downloads and untouched synthetic storage. Final PDF files were parsed for actual dimensions, image-object absence, PrintScaling and shown/blank Japanese; Poppler renders had no warnings and were visually inspected. Fresh finish review: `ship` for this scoped integration. Evidence: `.impeccable/review/shared-a5/` and PROJECT_STATUS.md.
 
-Original SVG SHA-256: d055f2834ef5c7d86edc6a2294ad2c7d0db5ebb0db8d34574436c22773d39e23.
+No Meta call, account/hosting configuration, deployment, physical-device test or physical printing occurred. Long-content continuation has unit coverage; captured visual evidence is the current one-page sample. Final handwriting assets, Japanese stroke data, detailed grammar brackets/personal translation, red-sheet answer coloring/calibration, generated-lesson/practice integration and completed-note persistence remain pending. The accepted implementation does not certify arbitrary generated lesson fitting or printer/hole alignment. Impeccable launcher/detector were unavailable (permission denied); direct context/source/captures and the fresh reviewer were used.
+
+Original stroke SVG SHA-256: d055f2834ef5c7d86edc6a2294ad2c7d0db5ebb0db8d34574436c22773d39e23.
