@@ -11,7 +11,7 @@ try{
  const p=await browser.newPage({viewport:{width:1600,height:1000},reducedMotion:'no-preference'});p.on('pageerror',e=>errors.push(e.message));await ready(p);
  const sentences=await p.evaluate(async()=> (await import('/src/handwriting/study-content.ts')).studySample.sentences.map(s=>s.text)),e=p.locator('textarea');
  assert.equal(await p.locator('.lesson-steps li').count(),5);assert.equal(await p.locator('.lesson-steps [aria-current=step]').count(),1);assert.equal(await p.locator('.lesson-steps button').count(),0);assert.match(await p.locator('.lesson-availability').innerText(),/2〜5は準備中/);
- await e.fill('Wrong answer.');await e.press('Enter');assert.equal((await state(p)).entries.length,0);assert.equal(await e.inputValue(),'Wrong answer.');await focus(p);assert.match(await p.locator('#writing-error').innerText(),/異なる/);
+ await e.fill('Wrong answer.');await e.press('Enter');assert.equal((await state(p)).entries.length,0);assert.equal(await e.inputValue(),'Wrong answer.');await focus(p);assert.match(await p.locator('#writing-error').innerText(),/直してください/);
  await e.fill(sentences[0]);await e.dispatchEvent('keydown',{key:'Enter',repeat:true});assert.equal((await state(p)).entries.length,0);
  await e.dispatchEvent('compositionstart');await e.dispatchEvent('keydown',{key:'Enter',keyCode:229,isComposing:true});assert.equal((await state(p)).entries.length,0);await e.dispatchEvent('compositionend');await e.dispatchEvent('keydown',{key:'Enter'});assert.equal((await state(p)).entries.length,0);await p.waitForTimeout(120);
  // One save operation must contain both checked text and the new editing position.

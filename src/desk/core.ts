@@ -22,10 +22,22 @@ export function validCopy(record:CopyRecord,lesson:StudyContent){
  const expected=record.phase==='editing'?record.index:record.phase==='confirmed'?record.index+1:lesson.sentences.length;
  return record.personal.length<=80&&!record.personal.includes("\n")&&/^[ -~]*$/.test(record.personal)&&record.lessonId===lesson.id&&record.source===fingerprint(lesson)&&record.entries.length===expected&&record.index<lesson.sentences.length&&record.entries.every((v,i)=>v.sentenceId===lesson.sentences[i].id&&v.text===lesson.sentences[i].text)&&(!(record.phase==='confirmed')||record.draft===lesson.sentences[record.index].text)&&(!(record.phase==='complete')||record.index===lesson.sentences.length-1);
 }
+export function copyMismatchMessage(draft:string,expected:string):string|null {
+ if(draft===expected)return null;
+ if(!draft.trim())return 'お手本の英文をノートに書いてからEnterを押してください。';
+ if(/[\r\n]/.test(draft))return '入力に改行が含まれています。改行を取り除いて、Enterで次の文へ進めます。';
+ if(draft.trim()===expected)return '文の先頭か末尾に余分な空白があります。空白を消してEnterを押してください。';
+ if(expected.startsWith(draft))return '文の続きがあります。お手本を最後まで書いてからEnterを押してください。';
+ if(draft.startsWith(expected))return '文末に余分な文字があります。お手本の終わりまでに直してEnterを押してください。';
+ let index=0;while(draft[index]===expected[index])index++;
+ if(/\s/.test(draft[index]??'')||/\s/.test(expected[index]??''))return `${index+1}文字目付近の空白がお手本と異なります。単語の間を確認してEnterを押してください。`;
+ const word=(text:string)=>{let start=index,end=index;while(start>0&&!/\s/.test(text[start-1]))start--;while(end<text.length&&!/\s/.test(text[end]))end++;const value=text.slice(start,end);return value.length>24?value.slice(0,24)+'…':value;};
+ return `「${word(draft)}」→「${word(expected)}」に直してください。直したらEnterで次の文へ。`;
+}
 export function confirmCopy(record:CopyRecord,lesson:StudyContent,now:string):CopyRecord {
  if(record.phase!=='editing'||!validCopy(record,lesson))throw new Error('学習状態を確認してください。入力は残っています。');
  const current=lesson.sentences[record.index];
- if(record.draft!==current.text)throw new Error('お手本と異なる箇所があります。大文字・句読点・空白も確認してください。');
+ const mismatch=copyMismatchMessage(record.draft,current.text);if(mismatch)throw new Error(mismatch);
  return {...record,phase:'confirmed',entries:[...record.entries,{sentenceId:current.id,text:record.draft,confirmedAt:now}]};
 }
 export function nextCopy(record:CopyRecord,lesson:StudyContent):CopyRecord {

@@ -14,7 +14,7 @@ await go();await page.evaluate(()=>localStorage.setItem('qa-preserved','fixture-
 assert.equal(await page.locator('.model-card textarea,.model-card input,[contenteditable=true]').count(),0);
 assert.equal(await page.locator('textarea').count(),1);
 const e=page.locator('#notebook-input');
-await e.fill('A draft with a mistake.');await e.press('Enter');assert.match(await page.locator('#writing-error').innerText(),/異なる/);assert.equal((await saved()).entries.length,0);
+await e.fill('A draft with a mistake.');await e.press('Enter');assert.match(await page.locator('#writing-error').innerText(),/直してください/);assert.equal((await saved()).entries.length,0);
 await e.fill('Today, I decided to slow down.');
 await e.dispatchEvent('compositionstart');await e.dispatchEvent('keydown',{key:'Enter',code:'Enter',keyCode:229,isComposing:true});assert.equal((await saved()).entries.length,0);await e.dispatchEvent('compositionend');await page.waitForTimeout(120);
 await e.dispatchEvent('keydown',{key:'Enter',code:'Enter',repeat:true});assert.equal((await saved()).entries.length,0);

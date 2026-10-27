@@ -95,3 +95,11 @@
 @media(max-width:760px){.lesson-panel{order:1}.lesson-steps{gap:5px}.lesson-steps li{font-size:11px}.lesson-availability{font-size:11px;margin-bottom:12px}}
 
 .step-label{word-break:keep-all}
+
+/* Validation stays visible beside the learning controls, outside the tall, scrolling A5 sheet. */
+.writing-controls{position:sticky;top:8px;z-index:4}
+.writing-feedback{color:#883e2d;background:var(--control-bg);font-size:13px;line-height:1.7;margin:0 0 10px;padding:12px 14px;overflow-wrap:anywhere;box-shadow:0 3px 12px #2430381a}
+.writing-feedback:empty{display:none}
+.theme-walnut .writing-feedback{color:#ffbba2}
+.notebook-input[aria-invalid=true]{box-shadow:0 2px 0 #994b38;background:#994b3810}
+@media(max-width:760px){.mobile-writing-actions{position:static;z-index:auto}.writing-controls:has(.writing-feedback:not(:empty)) .mobile-writing-actions{margin-bottom:0;box-shadow:none}.writing-feedback{margin-bottom:10px;padding-top:4px}}

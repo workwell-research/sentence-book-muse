@@ -128,7 +128,7 @@ export function StudyDesk(){
      {tab===4&&(record.phase==='complete'?<><p>{studySample.title}</p><p>8文を書き終えました。</p><button onClick={()=>{setPersonalMode(true);changeDisplay({content:'study-notes'});requestAnimationFrame(()=>editor.current?.focus());}}>自分のひとことを書く</button><button onClick={exportPdf} disabled={exporting}>PDFに保存</button></>:<p>8文を書き終えると、<br/>ここに一枚のノートが残ります。</p>)}
     </div>
    </section>
-   <section className="notebook-area" aria-label="A5学習ノート"><div className="mobile-writing-actions"><button onClick={()=>{editor.current?.focus();editor.current?.scrollIntoView({block:'center',inline:'nearest'});requestAnimationFrame(followCaret);}}>現在の行へ · {Math.min(record.index+1,8)} / 8</button>{writingAction()}</div><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button></div>
+   <section className="notebook-area" aria-label="A5学習ノート"><div className="writing-controls"><div className="mobile-writing-actions"><button onClick={()=>{editor.current?.focus();editor.current?.scrollIntoView({block:'center',inline:'nearest'});requestAnimationFrame(followCaret);}}>現在の行へ · {Math.min(record.index+1,8)} / 8</button>{writingAction()}</div><p id="writing-error" role="alert" className="writing-feedback">{error}</p></div><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button></div>
     <div className={'desk-paper-scroll '+(zoom==='read'?'reading':'')} tabIndex={0} aria-label="ノート。拡大表示は左右にスクロールできます">
      <div className="desk-pages">{layout.pages.map(p=><div className="desk-page-row" key={p.index}><div className="desk-paper" ref={p.index===0?paper:undefined}>
       <A5Notebook showPen={!annotationsOnly||!isEditing} layout={rendered} scene={scene} pageIndex={p.index} paperColor={paperColor} view={view} ink={palettes[display.marker]} time={reduced?scene.duration:time} reduced={reduced} personalInk={emptyInk}/>
@@ -141,7 +141,6 @@ export function StudyDesk(){
      </div>}</div>)}</div>
     </div>
     <p id="writing-help" className="writing-help">{personalMode?'英語でひとこと。80文字以内。Enterで保存します。':record.phase==='complete'?'8文を保存しました。ノートにひとことを添えたり、PDFにできます。':record.phase==='confirmed'?'この文は保存済みです。Enter またはボタンで続けられます。':'Enterで答え合わせ・保存して、次の文へ。入力中も筆跡になります。'} {zoom==='read'?'左右にスクロールして読めます。':''}</p>
-    <p id="writing-error" role="alert" className="desk-error">{error}</p>
     <div className="ink-actions"><button disabled={!record.entries.length||reduced} onClick={()=>{setAnnotationsOnly(false);setAnimateId(record.entries.at(-1)?.sentenceId??null);setTime(0);setPlaying(true);}}>筆跡をもう一度</button><button disabled={time>=scene.duration||reduced} onClick={()=>setPlaying(v=>!v)}>{playing?'筆記を一時停止':'筆記を続ける'}</button><button onClick={()=>{setTime(scene.duration);setPlaying(false);}}>書き終える</button></div>
    </section>
   </main>

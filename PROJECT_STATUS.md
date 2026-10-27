@@ -1,6 +1,6 @@
 # Sentence Book Muse — progress
 
-Last updated: 2026-10-27 JST. Owner: Codex — Enter continuation and five-step display.
+Last updated: 2026-10-27 JST. Owner: Codex — visible Copy correction feedback.
 
 Local checkout: `/Users/maki/sentence-book-muse`
 Public repository: https://github.com/workwell-research/sentence-book-muse
@@ -21,6 +21,12 @@ A5 is the finished note (148 × 210mm); A5/A4 are printer-sheet choices. A4 repe
 - Common A5 layout: default left18/right12mm, 31 body rules at 5.2mm, 1.6-row title band, measured main/footnote columns and continuation pages. Readability default; Tech title-only optical lift; Japanese phrase glosses raised 1mm. Memo/marker/zoom changes do not reflow. Font or explicit binding-margin changes can reflow.
 - Independent white-paper PDF with vectors and fully embedded Japanese. A5 TrimBox or A4 landscape two-up at x0/149mm, scale1; left/right binding and12/18/24mm choices. Marker override is independent. PrintScaling=None plus 100%/one-PDF-page-per-sheet instructions. English is vector paths, not searchable/tagged text.
 - Earlier `/setup`: empty shelf without fixed themes, saved interest choices and topic/language/level notes, validated interest-aware request/prompt builder. Shared `sentence_book_page_v1` contract is a new format, not recovered legacy v2. Generation route remains unavailable/503; no actual model request, account configuration or deployment in this increment.
+
+## Verification — 2026-10-27 visible Copy correction feedback
+- User reported the flow still would not move after reload. Actual IAB5317 showed2/8 with a missing letter in the current Copy draft. The mismatch message existed below the entire A5 sheet. This was not a failed Enter event; the validation result was out of sight. Inspected only the relevant UI/logs, without reading arbitrary storage or copying private material.
+- Added specific first-word/whitespace/incomplete-text feedback in a sticky region above the paper, outside horizontal scrolling, plus invalid-editor underline. Exact matching and preserved drafts remain. The message clears on editing. No automatic correction or new persistence schema.
+- 71 tests/10 files passed, including five correction/recovery cases. Both TS projects and Vite build passed (`index-DZV4O3Ng.js`). Dedicated CUA/IAB5327 at1280×720 reproduced the typo, verified visible feedback, then correction+Enter advanced with focus to4th sentence. Actual user's746×777 tab reloaded/revalidated with unchanged draft and2/8; message now at y60–98. Two screenshots viewed; synthetic evidence `.impeccable/review/copy-feedback/desktop.png`. No dedicated console errors/warnings. No fresh320/390, real OS IME/physical-device, PDF/export/print, API or deployment checks.
+- Dedicated5327 server/tab closed; existing5317 retained with the final build. Next: owner corrects the displayed word and continues; later stages remain pending. Prior user's data and this repo's canonical progress were not reset or advanced by our check.
 
 ## Verification — 2026-10-27 Enter continuation and five steps
 - Owner reported being stuck at confirmation. The previous flow removed the editor at confirmed state and required a separate Next action. Correct Enter now checks, records and advances atomically; the next blank line retains focus. The eighth correct Enter completes only Copy. Legacy confirmed records resume by Enter without duplicating entries. Errors keep the draft; syntheticIME/repeat guards and required-save protection remain.
@@ -164,3 +170,5 @@ No Meta/API call, credential setup, Pages deployment, physical-device test or ph
 - 2026-10-27: Removed the distracting pen graphic from live draft input at owner request; kept animated strokes and native caret. TS/Vite build and disposable desktop/mobile input checks passed; two captures viewed. No repeated full test/PDF/device suite.
 
 - 2026-10-27: Replaced two-part confirmation/Next with one Enter check/save/advance and immediate next-line focus. Preserved old confirmed records; added a five-stage status strip with later stages pending, and kept automatic pens out of active typing.66 tests/build and scoped disposable browser checks passed; no new PDF/device/deployment claim.
+
+- 2026-10-27: Diagnosed the actual reported stop as exact-text mismatch plus offscreen feedback. Added specific word/whitespace guidance and sticky error visibility.71 tests/build and dedicated IAB correction/recovery passed; actual user draft preserved while verifying visible feedback. No PDF/device/deployment claim.
