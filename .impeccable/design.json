@@ -637,14 +637,9 @@
         "purpose": "A5 screen paper."
       },
       {
-        "name": "line-action",
-        "value": "0 3px 9px #1f252214",
-        "purpose": "Desktop current-line action."
-      },
-      {
-        "name": "mobile-action",
+        "name": "correction-feedback",
         "value": "0 3px 12px #2430381a",
-        "purpose": "Sticky actions outside paper scrolling."
+        "purpose": "Sticky correction feedback outside paper scrolling."
       },
       {
         "name": "dialog",
@@ -694,14 +689,6 @@
       "css": ".ds-quiet{border:0;border-radius:3px;padding:8px 12px;min-height:44px;background:transparent;color:var(--desk-ink,#474d50);font-size:13px;line-height:1.6;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;cursor:pointer;}.ds-quiet:hover{background:#737b8614}.ds-quiet:focus-visible{outline:2px solid var(--focus,#446f91);outline-offset:3px;}.ds-quiet:disabled{opacity:.5;cursor:default}"
     },
     {
-      "name": "Notebook confirmation",
-      "kind": "button",
-      "refersTo": "button-confirm",
-      "description": "Desktop check-and-advance beside the current line, equivalent to Enter; exact-text checking and a successful save are required.",
-      "html": "<button class=\"ds-confirm\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" aria-hidden=\"true\"><path d=\"M4 12H20M14 6L20 12L14 18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg><span>次の文へ</span></button>",
-      "css": ".ds-confirm{box-sizing:border-box;border:0;border-radius:3px;padding:8px 12px;min-height:44px;background:transparent;color:var(--desk-ink,#474d50);font-size:13px;line-height:1.6;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:76px;min-height:62px;background:var(--control-bg,#f9f8f4);box-shadow:0 3px 9px #1f252214;font-size:12px}.ds-confirm:hover{background:#737b8614}.ds-confirm:focus-visible{outline:2px solid var(--focus,#446f91);outline-offset:3px;}.ds-confirm:disabled{opacity:.5;cursor:default}"
-    },
-    {
       "name": "PDF action",
       "kind": "button",
       "refersTo": "button-export",
@@ -737,8 +724,8 @@
       "name": "Read-only model card",
       "kind": "card",
       "refersTo": "model-card",
-      "description": "White-theme model/progress/meaning actions; the only writing field belongs on the notebook.",
-      "html": "<section class=\"ds-model\" aria-label=\"英文のお手本\"><div class=\"ds-model-heading\"><h1>Copy</h1><span>0 / 8</span></div><p class=\"ds-model-sentence\">Today, I decided to slow down.</p><p class=\"ds-model-meaning\" aria-hidden=\"true\">今日は、少しペースを落とすことにした。</p><div class=\"ds-model-actions\"><button><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" aria-hidden=\"true\"><path d=\"M4 9H8L13 5V19L8 15H4ZM17 8Q22 12 17 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>音声を聞く</button><button aria-expanded=\"false\">意味を見る</button></div></section>",
+      "description": "White-theme model/progress/meaning actions; the only writing field belongs on the notebook. Audio also supports Option/Alt+R without changing editor text/focus.",
+      "html": "<section class=\"ds-model\" aria-label=\"英文のお手本\"><div class=\"ds-model-heading\"><h1>Copy</h1><span>0 / 8</span></div><p class=\"ds-model-sentence\">Today, I decided to slow down.</p><p class=\"ds-model-meaning\" aria-hidden=\"true\">今日は、少しペースを落とすことにした。</p><div class=\"ds-model-actions\"><button><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" aria-hidden=\"true\"><path d=\"M4 9H8L13 5V19L8 15H4ZM17 8Q22 12 17 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>音声を聞く <kbd>⌥ / Alt R</kbd></button><button aria-expanded=\"false\">意味を見る</button></div></section>",
       "css": ".ds-model{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;position:relative;background:#fffefb;color:#444b50;min-width:0;height:234px;padding:24px 30px 16px;box-shadow:0 6px 16px #26343e12;display:flex;flex-direction:column;font-size:13px;line-height:1.6}.ds-model::after{content:\"\";position:absolute;left:30px;right:30px;bottom:62px;border-top:1px solid #dce5e9;pointer-events:none}.ds-model-heading{display:flex;align-items:baseline;justify-content:space-between;font-size:12px}.ds-model-heading h1{font:400 18px \"Lora\",serif;margin:0}.ds-model-sentence{font:400 clamp(19px,1.8vw,28px)/1.45 \"Lora\",Georgia,serif;margin:17px 0 8px;max-width:100%}.ds-model-meaning{font-size:12px;margin:0;min-height:36px;visibility:hidden}.ds-model-actions{display:flex;align-items:center;gap:4px;margin-top:auto}.ds-model-actions button{border:0;border-radius:3px;padding:8px 12px;min-height:44px;background:transparent;color:var(--desk-ink,#474d50);font-size:13px;line-height:1.6;font-family:-apple-system,BlinkMacSystemFont,\"Hiragino Kaku Gothic ProN\",\"Noto Sans JP\",sans-serif;cursor:pointer;display:flex;align-items:center;gap:6px;padding:6px 8px;font-size:12px;white-space:nowrap;color:inherit}.ds-model-actions button:hover{background:#737b8614}.ds-model-actions button:focus-visible{outline:2px solid var(--focus,#446f91);outline-offset:3px;}"
     },
     {
@@ -759,9 +746,9 @@
     {
       "name": "Learning paper index",
       "kind": "navigation",
-      "description": "Five physical-divider-inspired tabs; Copy selected, later stages disabled pending implementation.",
-      "html": "<div class=\"ds-learning-index\" role=\"tablist\" aria-label=\"学習の5ステップ\"><button role=\"tab\" aria-selected=\"true\">1<br>読む・写す<br><small>学習中</small></button><button role=\"tab\" aria-selected=\"false\" disabled>2<br>聞いて話す<br><small>準備中</small></button><button role=\"tab\" aria-selected=\"false\" disabled>3<br>聞き取る<br><small>準備中</small></button><button role=\"tab\" aria-selected=\"false\" disabled>4<br>組み立てる<br><small>準備中</small></button><button role=\"tab\" aria-selected=\"false\" disabled>5<br>自分で話す<br><small>準備中</small></button></div>",
-      "css": ".ds-learning-index{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;align-items:end;border-bottom:5px solid #dbe7db}.ds-learning-index button{border:0;min-height:70px;padding:9px 8px;border-radius:12px 12px 0 0;text-align:left;background:#f3e2b0;color:#514c43;font:12px/1.4 sans-serif;opacity:1}.ds-learning-index button:first-child{min-height:78px;background:#dbe7db;color:#34483b}.ds-learning-index button:nth-child(3){background:#efc7b4}.ds-learning-index button:nth-child(4){background:#eccbd4}.ds-learning-index button:nth-child(5){background:#ddd7e8}.ds-learning-index small{font-size:10px}.ds-learning-index button:focus-visible{outline:2px solid #446f91;outline-offset:3px}"
+      "description": "English-only paper index; just the selected tab is sage. Four later stages stay disabled without status badges.",
+      "html": "<div class=\"ds-learning-index\" role=\"tablist\" aria-label=\"学習の5ステップ\"><button role=\"tab\" aria-selected=\"true\">Copy</button><button role=\"tab\" aria-selected=\"false\" disabled>Shadowing</button><button role=\"tab\" aria-selected=\"false\" disabled>Dictation</button><button role=\"tab\" aria-selected=\"false\" disabled>Reconstruction</button><button role=\"tab\" aria-selected=\"false\" disabled>Speaking</button></div>",
+      "css": ".ds-learning-index{display:flex;gap:5px;align-items:end;overflow-x:auto;border-bottom:3px solid #dbe7db}.ds-learning-index button{flex:1 0 auto;border:0;min-height:40px;padding:10px 9px 9px;border-radius:9px 9px 0 0;text-align:center;background:#f0f0eb;color:#62675f;font:italic 11px/1.4 Lora,serif;white-space:nowrap;opacity:1}.ds-learning-index button[aria-selected=true]{min-height:46px;background:#dbe7db;color:#34483b}.ds-learning-index button:focus-visible{outline:2px solid #446f91;outline-offset:3px}"
     }
   ],
   "narrative": {

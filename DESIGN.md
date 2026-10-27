@@ -119,13 +119,6 @@ components:
     rounded: "{rounded.control}"
     padding: "8px 12px"
     typography: "{typography.body}"
-  button-confirm:
-    backgroundColor: "{colors.control-white}"
-    textColor: "{colors.ink-white}"
-    rounded: "{rounded.control}"
-    padding: "8px 12px"
-    width: "76px"
-    typography: "{typography.label}"
   button-export:
     backgroundColor: "{colors.export-tint}"
     textColor: "#444c4c"
@@ -181,7 +174,7 @@ The owner-approved desktop handoff replaces the former sage control-rail composi
 - A read-only model card and one native editor on the current notebook line.
 - Small graphite handwriting, pale markers and a fixed measured A5 grid.
 - Draft letters draw as they are typed; Enter checks/saves the answer and focuses the next line in one action.
-- Mobile actions remain reachable beside enlarged, horizontally scrollable paper.
+- Enter stays on the native editor beside enlarged, horizontally scrollable paper.
 
 ## Colors
 
@@ -219,11 +212,11 @@ The native editor uses the selected renamed `Sentence Notebook … Input` WOFF2 
 
 The desk has a 1552px maximum content width and 24px horizontal outer padding. Its desktop grid uses 1.25fr/1fr columns, a 48px gap and a 334px first row. Timer/pens occupy upper left, the open index sits below, the five paper index tabs and model card are upper right and notebook is below it. At 761–1200px, outer padding becomes 16px, columns 1.1fr/1fr and gap 24px. The timer retains its allocated space when hidden. Six complete horizontal pens occupy six labeled rows (54px high desktop, 44px mobile), with native radio hit areas and a selected check.
 
-At 760px and below, 14px gutters and an 18px vertical gap stack tools, model, notebook and index. The tagline disappears, settings become one column and the model card is 246px high. Mobile starts with enlarged paper; the 806px page row includes 740px paper plus the reserved 66px side space. Desktop enlarged rows are 824px (740px paper plus 84px). Fit rows cap at 556px including their side space. These are viewing scales only. Mobile check-and-advance shares the A5/zoom toolbar in a sticky region (top 8px) outside horizontal scrolling. The separate “現在の行へ” control and its band are removed; native caret/selection movement pans the enlarged paper. The desktop action remains beside the active line. Validation is in a sticky controls region above the paper, below the mobile actions when present. A 13px correction message uses the theme control surface and dark rust (light rust on Walnut); invalid inputs have a rust underline. The message is absent when there is no error. It names the first differing word, distinguishes whitespace/incomplete text, and never corrects saved text automatically.
+At 760px and below, 14px gutters and an 18px vertical gap stack tools, model, notebook and index. The tagline disappears, settings become one column and the model card is 246px high. Mobile starts with enlarged paper; enlarged rows are 740px of paper with no action gutter on desktop or mobile. Fit paper caps at 472px. These are viewing scales only. The A5/zoom toolbar stays in a sticky region (top 8px) outside horizontal scrolling; Copy proceeds with Enter only. The separate “現在の行へ” control and its band are removed; native caret/selection movement pans the enlarged paper. There is no desktop line-action or mobile Next button. Validation stays immediately below the toolbar above the paper. A 13px correction message uses the theme control surface and dark rust (light rust on Walnut); invalid inputs have a rust underline. The message is absent when there is no error. It names the first differing word, distinguishes whitespace/incomplete text, and never corrects saved text automatically.
 
 ### Learning index tabs
 
-Five paper tabs touch the model card’s top edge, following the owner’s physical-divider reference. Sage `#dbe7db`, yellow `#f3e2b0`, peach `#efc7b4`, rose `#eccbd4` and lavender `#ddd7e8`; graphite labels remain opaque when disabled. Copy sits 8px higher, joining a 5px sage edge on the card. Tabs have rounded top corners and square bases,5px gaps (4px mobile),70px minimum height (76px mobile). Each carries its sequence, short label and 学習中/完了/準備中 state. One native selected tab controls the Copy panel; four later tabs are disabled until those stages exist. No stage transition, learning or storage behavior is invented by the visual tabs.
+Five paper tabs touch the model card’s top edge, following the owner’s physical-divider reference. Labels are only Copy / Shadowing / Dictation / Reconstruction / Speaking in 11px italic Lora. Only selected Copy uses sage `#dbe7db` with `#34483b` text; all other tabs use neutral `#f0f0eb` paper with `#62675f` text. No sequence numbers or 学習中/完了/準備中 badges. Copy sits 6px higher, joining a 3px sage card edge. Tabs have 9px rounded top corners, square bases, 5px gaps (4px mobile), 40px minimum height and one-line labels. The strip scrolls horizontally when needed rather than breaking English words. Native selected/disabled states remain: four later stages are unavailable. Completion appears in the model heading and confirmed count.
 
 ### Common A5 refill
 
@@ -253,8 +246,7 @@ Depth comes from photographed material plates and restrained shadows under real 
 
 - **Model card:** `0 6px 16px #26343e12`.
 - **Notebook paper:** `0 6px 18px #1f25221c`.
-- **Line action:** `0 3px 9px #1f252214`.
-- **Mobile action strip:** `0 3px 12px #2430381a`.
+- **Sticky correction feedback:** `0 3px 12px #2430381a`.
 - **Settings dialog:** `0 16px 60px #14252b33`, with `#222a304d` backdrop.
 
 **The Material Rule.** Keep numbers, labels, rules, selection and learning content live. Material plates supply only the physical object; no flattened interface enters the notebook or PDF.
@@ -269,7 +261,7 @@ The native notebook input is transparent, borderless, square and positioned on t
 
 ### Buttons
 
-Quiet native buttons use transparent backgrounds, theme ink, 3px corners, 8×12px padding and a 44px minimum height. Hover uses a translucent gray wash; disabled buttons are half-opacity. The desktop line action is 76px wide, at least 62px high, and combines a live SVG check/arrow with Japanese text on the theme control surface. Mobile uses the sticky strip with 44px targets. The full-width PDF action uses a pale green-gray tint. Toolbar and compact mobile timer/index controls are smaller documented exceptions; do not claim universal 44px targets.
+Quiet native buttons use transparent backgrounds, theme ink, 3px corners, 8×12px padding and a 44px minimum height. Hover uses a translucent gray wash; disabled buttons are half-opacity. Copy has no separate check/Next button; Enter checks, saves and advances. Audio keeps a button and an Option/Alt+R hint. The full-width PDF action uses a pale green-gray tint. Toolbar and compact mobile timer/index controls are smaller documented exceptions; do not claim universal 44px targets.
 
 ### Inputs / Fields
 
@@ -277,7 +269,7 @@ Only one textarea appears at a time, in Copy or personal-writing mode. Enter con
 
 ### Cards / Containers
 
-The model card combines a heading/progress row, Lora sentence, a reserved meaning area, theme rule and audio/meaning actions. Toggling meaning keeps its area rather than shifting the card. The note is a measured SVG with a live textarea overlay and textual title/description; visible memo accessibility text follows visible ink. The settings dialog groups desk/type and content/print controls, with two desktop columns and one mobile column.
+The model card combines a heading/progress row, Lora sentence, a reserved meaning area, theme rule and audio/meaning actions. Toggling meaning keeps its area rather than shifting the card. Option+R / Alt+R plays the current model from the editor; the physical R key supports the Mac Option character. IME/AltGraph/settings are excluded and repeats do not restart playback. The audio button reports loading/speaking; failures appear in the reserved meaning area. Sentence changes cancel playback and stale callbacks are ignored. The note is a measured SVG with a live textarea overlay and textual title/description; visible memo accessibility text follows visible ink. The settings dialog groups desk/type and content/print controls, with two desktop columns and one mobile column.
 
 ### Navigation
 
@@ -287,7 +279,7 @@ The open index keeps five live vertical tabs on its left page and the selected p
 
 Each pen row contains a native radio, decorative atlas crop, visible color name and selected check. Hover moves only the art 3px over 150ms; reduced motion removes that transition. The optional timer has shared deadline logic, Start/Pause/Resume/Reset, live digits in White/Natural and live hands plus a numeric reading in Walnut. Timer expiry announces itself without completing Copy; changing themes or hiding it preserves the mounted timer.
 
-Keystrokes draw newly inserted/replaced letters directly on the note, without a following pen graphic; the native caret remains the insertion indicator. Existing character identities retain their ink; deletion removes only deleted letters. A new edit completes any previous pending stroke so typing cannot build a queue. One character takes up to 160ms, small insertions share at most 300ms and pastes over six characters appear immediately. Restored drafts and font changes show completed ink. Enter checks and persists the canonical entry together with the next editing position in one write, then animates only its annotations. Focus returns to the new line immediately; automatic annotation pens are hidden while editing. Legacy confirmed records expose a focused resume action. Incorrect text or a failed save retains the current line. The eighth correct Enter completes Copy; the remaining four learning stages stay visibly pending. Replay resets ink only; Pause/Resume preserves current time; Finish completes animation only. Reduced motion shows confirmed strokes directly. Meanings/markers are revealed with their associated confirmed content. Actual native speech synthesis is a browser capability and its hardware/audio behavior was not certified by synthetic QA.
+Keystrokes draw newly inserted/replaced letters directly on the note, without a following pen graphic; the native caret remains the insertion indicator. Existing character identities retain their ink; deletion removes only deleted letters. A new edit completes any previous pending stroke so typing cannot build a queue. One character takes up to 160ms, small insertions share at most 300ms and pastes over six characters appear immediately. Restored drafts and font changes show completed ink. Enter checks and persists the canonical entry together with the next editing position in one write, then animates only its annotations. Focus returns to the new line immediately; automatic annotation pens are hidden while editing. Legacy confirmed records open the next editable line in memory without writing or duplicating entries on load. Incorrect text or a failed save retains the current line. The eighth correct Enter completes Copy; the remaining four learning tabs remain disabled without status badges. Replay resets ink only; Pause/Resume preserves current time; Finish completes animation only. Reduced motion shows confirmed strokes directly. Meanings/markers are revealed with their associated confirmed content. Actual native speech synthesis is a browser capability and its hardware/audio behavior was not certified by synthetic QA.
 
 ### Print
 
@@ -302,7 +294,7 @@ The 2026-10-27 build/test/browser/PDF records are summarized in [PROJECT_STATUS.
 ### Do:
 
 - Do derive screen and independent PDF from the same A5 layout and measured glyph advances.
-- Do preserve native textarea selection, composition, caret behavior and the current-line action.
+- Do preserve native textarea selection, composition, caret behavior and Enter progression.
 - Do animate draft edits in place and let one Enter save checked Copy text and open the next line.
 - Do keep memo space, stable IDs, drafts, checks and canonical saved personal text when changing presentation.
 - Do retain labeled native controls, visible focus, reduced-motion completion and adjacent error/status feedback.

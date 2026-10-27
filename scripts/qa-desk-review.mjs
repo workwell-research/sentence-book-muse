@@ -9,16 +9,16 @@ try{
   const p=await b.newPage({viewport:{width,height:844},reducedMotion:'reduce'});await p.goto(origin);
   const e=p.locator('textarea');await e.fill('Today, I decided to slow down.');
   await e.focus();await e.evaluate(e=>{e.setSelectionRange(26,26);e.dispatchEvent(new Event('select',{bubbles:true}));});await e.press('ArrowRight');
-  const action=p.locator('.mobile-writing-actions');const box=await action.boundingBox();assert.ok(box.x>=0&&box.x+box.width<=width&&box.y>=0&&box.y+box.height<=844);
+  assert.equal(await p.locator('.mobile-writing-actions,.notebook-action').count(),0);
   assert.equal(await p.locator('textarea').count(),1);assert.ok(await p.locator('.desk-paper-scroll').evaluate(e=>e.scrollLeft>0));
   await p.screenshot({path:out+'/mobile-action-'+width+'.png'});
-  await action.getByRole('button',{name:'次の文へ',exact:true}).click();
+  await e.press('Enter');
   assert.equal(await p.evaluate(()=>JSON.parse(localStorage.getItem('sentence-book-muse:sample-copy:v1')).index),1);
-  result.mobile.push({width,reachableAction:true,caretPansPaper:true,confirmAndNext:true});await p.close();
+  result.mobile.push({width,enterOnly:true,caretPansPaper:true,confirmAndNext:true});await p.close();
  }
  const p=await b.newPage({viewport:{width:1600,height:1000},reducedMotion:'reduce'});await p.goto(origin);
  await p.evaluate(async()=>{const c=await import('/src/desk/core.ts'),{studySample:s}=await import('/src/handwriting/study-content.ts');let r=c.emptyCopy(s);for(const sentence of s.sentences)r=c.nextCopy(c.confirmCopy({...r,draft:sentence.text},s,'now'),s);r.personal=r.personalDraft='My saved words.';localStorage.setItem(c.practiceKey,JSON.stringify(r));});await p.reload();
- await p.getByRole('button',{name:'ひとこと 書く'}).click();await p.locator('textarea').fill('My edited words.');
+ await p.getByRole('button',{name:'ひとことを書く'}).click();await p.locator('textarea').fill('My edited words.');
  assert.equal(await p.locator('[data-run^="personal-user"]').count(),0);assert.equal(await p.locator('textarea').count(),1);
  await p.locator('textarea').scrollIntoViewIfNeeded();await p.screenshot({path:out+'/personal-edit.png',fullPage:true});
  assert.equal(await p.evaluate(()=>JSON.parse(localStorage.getItem('sentence-book-muse:sample-copy:v1')).personal),'My saved words.');
