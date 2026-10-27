@@ -186,11 +186,11 @@ export function visiblePages(layout:A5Layout,view:ViewSettings) {
   return layout.pages.filter(p=>view.content==='study-notes'||p.runs.some(r=>r.layer==='body'));
 }
 export interface SceneStroke extends Stroke {page:number;layer:Layer;id:string;accent:boolean;}
-export function createA5Scene(layout:A5Layout) {
+export function createA5Scene(layout:A5Layout,includePersonal=false) {
   const strokes:SceneStroke[]=[];let clock=250;
   const add=(run:InkRun,page:number,phase:Stroke['phase'])=>{
     const immediate=(run.layer==='base'&&(run.id!=='title'||page>0))||run.id==='personal-heading';
-    if(run.face!=='hand'||run.sourceId==='personal-user')return;
+    if(run.face!=='hand'||(!includePersonal&&run.sourceId==='personal-user'))return;
     let n=0;
     for(const g of run.glyphs) {
       for(const s of englishFonts[layout.fonts.english].data[g.char]?.strokes??[]) {

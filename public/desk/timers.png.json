@@ -1,0 +1,141 @@
+{
+  "id": "timers",
+  "path": "/desk/timers.png",
+  "width": 1774,
+  "height": 887,
+  "mode": "RGBA",
+  "byteSize": 1142770,
+  "sha256": "6e669eda3337378bdc175470f48754c55dfb794738bd596c26c2cf712a6af57b",
+  "generator": "built-in image_gen.imagegen",
+  "generatedOn": "2026-10-27",
+  "generationPrompt": "Use case: product-mockup\nAsset type: transparent PNG sprite atlas of THREE timer bodies for a live web app.\nPrimary request: three separate isolated objects arranged horizontally side-by-side, each object in its own equal-width column, with ample fully transparent space between. This is a reusable atlas of timer CASES with BLANK displays; the app will draw all live numbers and hands.\nReference images 1,2,3 contribute ONLY each timer's body/material family (white, oak, brass) and restrained overhead photographic quality. Never reproduce the screens, wood desks, other objects or text.\nComposition: 1536x768 wide landscape canvas. White digital body centered near x=256, oak digital body near x=768, brass watch body near x=1280. Keep every full object and its tiny shadow inside its column, no overlap. All three seen exactly from directly overhead, no rotation or perspective skew.\nLEFT: matte white digital study timer, softly squared case approximately 360px wide by 300px high. A large empty gray-green LCD window in its upper half, two small plain round unlabelled white buttons below. LCD surface completely blank, no LCD segments, no digits.\nCENTER: matching digital study timer of same shape and size, thin pale natural-oak frame around warm ivory body. Large completely empty gray-green LCD window in upper half, two plain round unlabelled ivory buttons below. No digits.\nRIGHT: antique warm brass pocket-watch CASE, round ivory blank face, crown/ring at top, a short fine brass chain curls close to its LEFT edge entirely within the right column. Restrained polished edge and fine material detail. Face is completely blank: NO hands, NO numerals, NO tick marks, NO central pin, NO subsidiary dial, NO text.\nLighting: very soft upper-left neutral light; subtle photorealism and tiny localized shadows. Genuine alpha transparency around each object. Do not paint background or floor. Preserve white paint and ivory faces as opaque material.\nText: NONE. No words, digits, letters, logos, symbols, color names, captions, controls labels, UI, watermarks or decorative marks.",
+  "generationOutputSourcePath": "/Users/maki/.codex/generated_images/01a17c72-6f03-72b1-b40b-005e02bf01fa/exec-3aeb3d31-58b8-412b-8439-32243c5d4cd3.png",
+  "referenceSourcePaths": [
+    "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/18-pure-white-model-card-notebook-input.png",
+    "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/17-natural-model-card-notebook-input.png",
+    "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/19-walnut-model-card-notebook-input.png"
+  ],
+  "referenceRole": "Approved design appearance only; new isolated material/object generation; no screenshot crop",
+  "embeddedPrompt": true,
+  "provenanceFallback": null,
+  "pixelEdits": "none; original generated RGBA/RGB pixel arrays are byte-identical; exact prompt added as PNG metadata only",
+  "alpha": {
+    "min": 0,
+    "max": 255,
+    "fullyTransparentFraction": 0.578855,
+    "note": "Native generated alpha retained without compositing, masking, recoloring or cropping."
+  },
+  "sprites": [
+    {
+      "id": "white",
+      "box": {
+        "pixels": {
+          "x": 16,
+          "y": 208,
+          "width": 564,
+          "height": 502
+        },
+        "normalized": {
+          "x": 0.009019,
+          "y": 0.234498,
+          "width": 0.317926,
+          "height": 0.565953
+        }
+      },
+      "displayBox": {
+        "pixels": {
+          "x": 115,
+          "y": 312,
+          "width": 364,
+          "height": 162
+        },
+        "normalized": {
+          "x": 0.064825,
+          "y": 0.351747,
+          "width": 0.205186,
+          "height": 0.182638
+        }
+      },
+      "displayBoxWithinSpriteNormalized": {
+        "x": 0.17553191489361702,
+        "y": 0.20717131474103587,
+        "width": 0.6453900709219859,
+        "height": 0.32270916334661354
+      }
+    },
+    {
+      "id": "natural",
+      "box": {
+        "pixels": {
+          "x": 612,
+          "y": 208,
+          "width": 570,
+          "height": 502
+        },
+        "normalized": {
+          "x": 0.344983,
+          "y": 0.234498,
+          "width": 0.321308,
+          "height": 0.565953
+        }
+      },
+      "displayBox": {
+        "pixels": {
+          "x": 718,
+          "y": 312,
+          "width": 356,
+          "height": 162
+        },
+        "normalized": {
+          "x": 0.404735,
+          "y": 0.351747,
+          "width": 0.200676,
+          "height": 0.182638
+        }
+      },
+      "displayBoxWithinSpriteNormalized": {
+        "x": 0.18596491228070175,
+        "y": 0.20717131474103587,
+        "width": 0.624561403508772,
+        "height": 0.32270916334661354
+      }
+    },
+    {
+      "id": "walnut",
+      "box": {
+        "pixels": {
+          "x": 1210,
+          "y": 120,
+          "width": 540,
+          "height": 600
+        },
+        "normalized": {
+          "x": 0.682074,
+          "y": 0.135287,
+          "width": 0.304397,
+          "height": 0.676437
+        }
+      },
+      "faceBox": {
+        "pixels": {
+          "x": 1345,
+          "y": 307,
+          "width": 345,
+          "height": 356
+        },
+        "normalized": {
+          "x": 0.758174,
+          "y": 0.34611,
+          "width": 0.194476,
+          "height": 0.401353
+        }
+      },
+      "faceCenterWithinSpriteNormalized": {
+        "x": 0.5694444444444444,
+        "y": 0.6083333333333333
+      },
+      "faceRadiusWithinSpriteWidth": 0.31666666666666665
+    }
+  ],
+  "usage": "Native live digits/analog dial/hands and interactive controls overlay the blank surfaces. Digital bodies contain unlabelled decorative buttons; provide semantic controls at those positions or below. Brass case includes short chain."
+}

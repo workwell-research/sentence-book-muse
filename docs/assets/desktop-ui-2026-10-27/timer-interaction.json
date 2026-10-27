@@ -1,0 +1,112 @@
+{
+  "version": 2,
+  "date": "2026-10-27",
+  "status": "Owner confirmed optional shown/hidden. Concrete settings placement/default and timer controls/clock behavior remain proposals; not implemented.",
+  "ownerRequirements": [
+    "place beside pens",
+    "white timer for Pure White",
+    "simple natural timer for Natural",
+    "pocket-watch-like appearance for Walnut",
+    "selectable timer shown/hidden"
+  ],
+  "proposedCommonBehavior": {
+    "display": "selectable shown/hidden is owner-confirmed; see visibility",
+    "mode": "countdown shown; count-up and duration-setting UI undecided",
+    "sample": {
+      "remainingSeconds": 1500,
+      "state": "idle",
+      "synthetic": true,
+      "defaultDurationCommitted": false
+    },
+    "states": [
+      "idle",
+      "running",
+      "paused",
+      "finished"
+    ],
+    "controls": [
+      {
+        "id": "toggle-running",
+        "idleLabel": "Start",
+        "runningLabel": "Pause",
+        "pausedLabel": "Resume",
+        "native": "button",
+        "minTargetPx": 44
+      },
+      {
+        "id": "reset",
+        "label": "Reset",
+        "native": "button",
+        "minTargetPx": 44
+      }
+    ],
+    "themeOrMarkerChange": "Preserve timer state and all learning/input state.",
+    "hide": "Preserve timer state; show current state when revealed.",
+    "finish": "Quiet notification only; never submit input, advance sentence, finish practice or write learning history.",
+    "sound": "Optional, respect sound preference; no forced audio.",
+    "reloadPersistence": "Undecided; do not imply implemented cross-reload timing.",
+    "accurateTiming": "Use a shared clock/deadline model, not animation frame counts or per-theme timer engines. Background-tab behavior needs implementation verification."
+  },
+  "rendering": {
+    "sharedState": true,
+    "pure-white": "live text digits on empty LCD body",
+    "natural": "live text digits on empty LCD body",
+    "walnut": "dynamic remaining-minute/seconds hands over static dial, not time of day; exact text companion available on focus or on demand",
+    "wholeScreenRaster": "Reference only. Never a working UI background or state source.",
+    "print": false
+  },
+  "accessibility": {
+    "keyboard": "Native focusable buttons with visible focus and current action labels.",
+    "remainingTime": "Exact text available for all skins including analog; do not rely on dial alone.",
+    "announcements": "Announce user actions and finish, not every second.",
+    "controlsGeometry": "desktop-layout.json regions.timer.controlBoxes; minimum44px",
+    "reducedMotion": "Retain exact time; avoid ornamental hand/chain motion."
+  },
+  "responsive": {
+    "scope": "Desktop concept only",
+    "narrow": "Separate compact control layout needed; do not shrink the full desktop screenshot."
+  },
+  "verification": {
+    "staticConceptsInspected": true,
+    "appImplemented": false,
+    "actualClockVerified": false,
+    "tapKeyboardIMEVerified": false,
+    "browserVerified": false,
+    "physicalDeviceVerified": false,
+    "notificationVerified": false,
+    "persistenceVerified": false
+  },
+  "visibility": {
+    "ownerConfirmed": true,
+    "ownerFeedback": "タイマーも表示・非表示を選べるようにしましょう。",
+    "setting": {
+      "container": "existing display settings",
+      "label": "タイマーを表示",
+      "nativeControl": "checkbox",
+      "defaultShown": true,
+      "defaultStatus": "proposal matching current comp, not an owner-mandated default"
+    },
+    "preferencePersistence": "Persist independently with device display preferences; do not write learning records.",
+    "hiddenElements": [
+      "timer body",
+      "digits or hands",
+      "chain",
+      "Start/Pause/Resume controls",
+      "Reset control"
+    ],
+    "layout": "Reserve desk area; all pen/book/card/notebook boxes stay unchanged.",
+    "clock": "Do not reset or pause simply because hidden; show current clock state on reveal.",
+    "focus": "Keep focus on setting; if hiding removes the focused control, return focus to visibility setting. Showing timer must not steal typing focus.",
+    "print": false,
+    "illustratedPair": [
+      "18-pure-white-model-card-notebook-input.png",
+      "20-pure-white-notebook-input-timer-hidden.png"
+    ],
+    "previousIllustratedPair": [
+      "12-pure-white-horizontal-pens.png",
+      "15-pure-white-horizontal-pens-timer-hidden.png"
+    ]
+  },
+  "latestLayoutNotes": "revision-horizontal-pens.md",
+  "latestInputCorrection": "revision-notebook-input.md"
+}

@@ -1,0 +1,215 @@
+{
+  "id": "walnut",
+  "path": "/desk/pens-walnut.png",
+  "width": 1536,
+  "height": 1024,
+  "mode": "RGBA",
+  "byteSize": 1545766,
+  "sha256": "44f6e9bd542ccd4f1ea9f6865aefa6021c72419d64eb4ac4c05f0fb5b539a69b",
+  "generator": "built-in image_gen.imagegen",
+  "generatedOn": "2026-10-27",
+  "generationPrompt": "Use case: product-mockup\nAsset type: production transparent PNG sprite atlas for The Sentence Book web app.\nPrimary request: exactly SIX separate full-length horizontal black-and-brass stationery pens, six evenly spaced parallel rows, cap ends at LEFT. Reference image 1 contributes only the Walnut theme pen material family and restrained overhead photographic quality; do not reproduce its screen.\nComposition: landscape canvas 1536x1024. Whole pens visible from x=100 to x=1436. All six pens same length and thickness, exactly horizontal, no perspective, one pen in each equally spaced row approximately y=130,282,434,586,738,890. Transparent empty gaps separate rows.\nMaterials: smooth satin black bodies and black closed caps, restrained warm brushed brass clip/rings and subtle rounded brass tail. Each left cap has a clearly visible colored small end cap and narrow colored band. Elegant practical vintage study stationery, mild realistic highlight, not ornamental luxury.\nTop to bottom six cap band colors: blue; dusty pink; lavender purple; neutral gray; warm orange; sage green. Keep the bodies black in all six rows.\nCamera: directly overhead flat lay orthographic. Lighting: gentle neutral upper-left light with tiny localized contact shadow only.\nBackground: actual alpha transparency surrounding each pen, no desk, no backplate, no floor, no opaque gradient.\nText: none. No letters, brands, color names, numbers, labels, selection marks, icons, UI, rulers or watermark. Do not add any other objects.",
+  "generationOutputSourcePath": "/Users/maki/.codex/generated_images/01a17c72-6f03-72b1-b40b-005e02bf01fa/exec-0e75d1b1-dd50-41d4-bfcb-42f3bfaf0277.png",
+  "referenceSourcePaths": [
+    "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/19-walnut-model-card-notebook-input.png"
+  ],
+  "referenceRole": "Approved design appearance only; new isolated material/object generation; no screenshot crop",
+  "embeddedPrompt": true,
+  "provenanceFallback": null,
+  "pixelEdits": "none; original generated RGBA/RGB pixel arrays are byte-identical; exact prompt added as PNG metadata only",
+  "alpha": {
+    "min": 0,
+    "max": 254,
+    "fullyTransparentFraction": 0.467028,
+    "note": "Native generated alpha retained without compositing, masking, recoloring or cropping."
+  },
+  "sprites": [
+    {
+      "id": "blue",
+      "box": {
+        "pixels": {
+          "x": 48,
+          "y": 87,
+          "width": 1440,
+          "height": 141
+        },
+        "normalized": {
+          "x": 0.03125,
+          "y": 0.084961,
+          "width": 0.9375,
+          "height": 0.137695
+        }
+      },
+      "opaqueObjectBounds": {
+        "pixels": {
+          "x": 86,
+          "y": 103,
+          "width": 1365,
+          "height": 107
+        },
+        "normalized": {
+          "x": 0.05599,
+          "y": 0.100586,
+          "width": 0.888672,
+          "height": 0.104492
+        }
+      }
+    },
+    {
+      "id": "pink",
+      "box": {
+        "pixels": {
+          "x": 48,
+          "y": 231,
+          "width": 1440,
+          "height": 140
+        },
+        "normalized": {
+          "x": 0.03125,
+          "y": 0.225586,
+          "width": 0.9375,
+          "height": 0.136719
+        }
+      },
+      "opaqueObjectBounds": {
+        "pixels": {
+          "x": 86,
+          "y": 247,
+          "width": 1365,
+          "height": 106
+        },
+        "normalized": {
+          "x": 0.05599,
+          "y": 0.241211,
+          "width": 0.888672,
+          "height": 0.103516
+        }
+      }
+    },
+    {
+      "id": "purple",
+      "box": {
+        "pixels": {
+          "x": 48,
+          "y": 376,
+          "width": 1440,
+          "height": 140
+        },
+        "normalized": {
+          "x": 0.03125,
+          "y": 0.367188,
+          "width": 0.9375,
+          "height": 0.136719
+        }
+      },
+      "opaqueObjectBounds": {
+        "pixels": {
+          "x": 86,
+          "y": 392,
+          "width": 1365,
+          "height": 106
+        },
+        "normalized": {
+          "x": 0.05599,
+          "y": 0.382812,
+          "width": 0.888672,
+          "height": 0.103516
+        }
+      }
+    },
+    {
+      "id": "gray",
+      "box": {
+        "pixels": {
+          "x": 48,
+          "y": 520,
+          "width": 1440,
+          "height": 141
+        },
+        "normalized": {
+          "x": 0.03125,
+          "y": 0.507812,
+          "width": 0.9375,
+          "height": 0.137695
+        }
+      },
+      "opaqueObjectBounds": {
+        "pixels": {
+          "x": 86,
+          "y": 536,
+          "width": 1365,
+          "height": 107
+        },
+        "normalized": {
+          "x": 0.05599,
+          "y": 0.523438,
+          "width": 0.888672,
+          "height": 0.104492
+        }
+      }
+    },
+    {
+      "id": "orange",
+      "box": {
+        "pixels": {
+          "x": 48,
+          "y": 664,
+          "width": 1440,
+          "height": 142
+        },
+        "normalized": {
+          "x": 0.03125,
+          "y": 0.648438,
+          "width": 0.9375,
+          "height": 0.138672
+        }
+      },
+      "opaqueObjectBounds": {
+        "pixels": {
+          "x": 86,
+          "y": 680,
+          "width": 1365,
+          "height": 108
+        },
+        "normalized": {
+          "x": 0.05599,
+          "y": 0.664062,
+          "width": 0.888672,
+          "height": 0.105469
+        }
+      }
+    },
+    {
+      "id": "green",
+      "box": {
+        "pixels": {
+          "x": 48,
+          "y": 808,
+          "width": 1440,
+          "height": 142
+        },
+        "normalized": {
+          "x": 0.03125,
+          "y": 0.789062,
+          "width": 0.9375,
+          "height": 0.138672
+        }
+      },
+      "opaqueObjectBounds": {
+        "pixels": {
+          "x": 86,
+          "y": 824,
+          "width": 1365,
+          "height": 108
+        },
+        "normalized": {
+          "x": 0.05599,
+          "y": 0.804688,
+          "width": 0.888672,
+          "height": 0.105469
+        }
+      }
+    }
+  ],
+  "usage": "Use sprite box as CSS overflow crop or SVG image viewBox; equal visible row spacing is supplied by layout. No rasterized labels. Suggested rendered pen width 280–380 CSS px."
+}

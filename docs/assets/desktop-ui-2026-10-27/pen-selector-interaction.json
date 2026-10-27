@@ -1,0 +1,104 @@
+{
+  "date": "2026-10-27",
+  "status": "Owner supports long horizontal layout; Natural cap-style correction pending visual review. Color-radio behavior unchanged.",
+  "supersedes": "owner-spec.md decorative-only pen behavior, plus the first comps' toolbar marker swatches and digital-panel card treatment",
+  "markerIds": [
+    "blue",
+    "pink",
+    "purple",
+    "gray",
+    "orange",
+    "green"
+  ],
+  "penCount": 6,
+  "penOrder": [
+    "blue",
+    "pink",
+    "purple",
+    "gray",
+    "orange",
+    "green"
+  ],
+  "role": "one radio group named マーカーの色",
+  "interaction": {
+    "tap": "Select the pen's marker color, not the desk theme or a handwriting engine.",
+    "keyboard": "Use native radio behavior with visible focus and arrow-key selection.",
+    "selection": "Exactly one selected. Persist the actual selected color and restore it after reload.",
+    "state": "Keep draft text, focused input selection, completed sentences, current practice step, checks, memo choices and ink playback position.",
+    "markersOff": "Selecting a color updates the stored preference without silently turning markers on. Reflect it when markers are enabled again.",
+    "themeChange": "Retain selected marker color when changing desk theme; replace pen appearance only.",
+    "fontAndLineWidth": "Selecting any theme pen or marker changes marker color only, never the shared handwriting glyphs or stroke width."
+  },
+  "colorIdentification": {
+    "required": [
+      "color-matched barrel, cap or visible band",
+      "persistent visible color name",
+      "selected mark independent of color"
+    ],
+    "walnut": "Keep black/brass fountain-pen bodies; use a clearly colored cap/finial band plus a visible color name.",
+    "referencePhotos": "Use shape/material language, not the brands/logos or the reference photo's original limited palette."
+  },
+  "selectedAppearance": {
+    "proposal": true,
+    "description": "Selected pen may shift8px left along its long axis; label gains a small check. No enlarged silhouette, glow or enclosing card.",
+    "movementPx": 8,
+    "reducedMotion": "Change state immediately without movement.",
+    "translationPx": {
+      "x": -8,
+      "y": 0
+    }
+  },
+  "targetSizing": {
+    "minimumCssPx": [
+      44,
+      44
+    ],
+    "hitRegion": "Whole pen plus color label with non-overlapping clear targets.",
+    "visualSilhouette": "Use isolated pen images over native semantic radios; transparent image gaps must not block other UI."
+  },
+  "card": {
+    "outerBox": "Shared across themes and modes; fixed above note, clear of metadata/title.",
+    "corners": "Near-square physical cardstock, no glossy round app-panel border.",
+    "material": "Subtle matte uncoated paper, visible thin paper edge and soft cast shadow; minimal theme-appropriate ruling.",
+    "input": false,
+    "controls": "Readonly source audio/meaning actions only. Confirmation belongs next to notebook, never on card.",
+    "avoid": [
+      "glass blur",
+      "blue outer glow",
+      "large rounded textbox",
+      "heavy card bevel",
+      "stained distressed parchment",
+      "ornaments over task text"
+    ],
+    "print": "Pen controls/card/material UI never enter the note PDF.",
+    "nativeEditorCount": 0,
+    "role": "read-only model, task/progress, audio/meaning"
+  },
+  "illustrationScope": "Static appearance and contracts only. Native notebook typing/IME/pen radios/persistence remain implementation work.",
+  "latestPenFamilies": {
+    "pure-white": "owner-chosen white-barrel pastel-cap study highlighters",
+    "natural": "simple slim matte capped felt-tip/study markers with molded same-color clips; no click/ballpoint hardware",
+    "walnut": "retained black/brass with colored cap bands"
+  },
+  "latestPenFamilyNotes": "revision-pen-families.md",
+  "layout": {
+    "notes": "revision-horizontal-pens.md",
+    "penAxis": "horizontal",
+    "arrangement": "six rows",
+    "orderDimension": "top-to-bottom",
+    "ariaOrientation": "vertical",
+    "labels": "persistent at right of each pen",
+    "hitRegion": "one full row per radio; no overlap",
+    "normativeRowHeightPx": 52,
+    "normativePitchPx": 58,
+    "artworkLengthPx": 504
+  },
+  "latestLayoutNotes": "revision-horizontal-pens.md",
+  "notebookInput": {
+    "count": 1,
+    "native": true,
+    "location": "measured current rule",
+    "spec": "notebook-input-interaction.json"
+  },
+  "latestInputNotes": "revision-notebook-input.md"
+}

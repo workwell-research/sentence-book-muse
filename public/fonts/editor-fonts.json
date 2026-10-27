@@ -1,0 +1,30 @@
+{
+  "license": "SIL OFL 1.1; same source copyright notices as the matching centerline faces in README.md",
+  "script": "scripts/build-editor-font.mjs + scripts/build-editor-font.py",
+  "fontTools": "4.60.2",
+  "unitsPerEm": 16384,
+  "sampleIntervalModelUnits": 2,
+  "bodyStrokeMm": 0.2,
+  "files": [
+    {
+      "path": "NotebookInput-pen.woff2",
+      "bytes": 187524,
+      "sha256": "4d6bbd5d30a9c57750df388a2c48513d89ecf0a733413d75b83dd312801db38c"
+    },
+    {
+      "path": "NotebookInput-print.woff2",
+      "bytes": 170376,
+      "sha256": "4f5e04a771713f315ac0f59410a050d3dbd550ffa18969a61beb7eaa8d0af767"
+    },
+    {
+      "path": "NotebookInput-readability.woff2",
+      "bytes": 161472,
+      "sha256": "10927d484717e0e2727ebac68610c895cbf7f5300b7b7df1176ab6081d52a26c"
+    },
+    {
+      "path": "NotebookInput-tech.woff2",
+      "bytes": 198456,
+      "sha256": "1adb43a6a6f525ac8add2669941a2014713e98ed121ad64f9240b2ac87a3a225"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "file": "desk-a5-completed",
+    "pages": 1,
+    "mm": [
+      [
+        148.0,
+        210.0
+      ]
+    ],
+    "images": 0,
+    "printScaling": "/None"
+  },
+  {
+    "file": "desk-a5-on-a4-blank",
+    "pages": 1,
+    "mm": [
+      [
+        297.0,
+        210.0
+      ]
+    ],
+    "images": 0,
+    "printScaling": "/None"
+  }
+]

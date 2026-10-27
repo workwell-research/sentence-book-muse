@@ -4,17 +4,17 @@ A new implementation for the 2026 Meta Global AI Developer Hackathon. Turn somet
 
 ## Current status
 
-This repository includes a **working handwriting and PDF prototype** at /. AI generation remains a scaffold. The shared A5 composition and memo visibility from the owner-adopted [Work design handoff](docs/studygram-notebook-implementation-spec-2026-10-27.md) are implemented on screen and in PDF. Final handwriting assets and the generated-lesson/practice connection remain pending.
+This repository includes a **working local study desk and A5 notebook** at `/`, based on the owner's [Work desktop handoff](docs/desktop-study-desk.md). AI generation remains a scaffold. The previous standalone typography prototype is retained at `/handwriting`.
 
-- Fixed physical A5 notebook: shared ruled geometry, measured sentence/gloss/footnote placement and continuation pages; independent SVG and PDF renderers.
-- Memo shown/blank controls preserve body wrapping, reserved rows, vocabulary meanings, review checks and personal writing. Sentence-only and marker choices are independent.
-- Four English handwriting choices (Readability Italic by default, EMS Tech, Print and Pen) and independent Klee One/Zen Kurenaido Japanese; the same selected fonts in PDF.
-- SVG stroke animation, following pen and markers; mobile fit or scrollable readable-size view without text reflow.
-- Pause/resume, fast-forward, completion and reduced motion.
-- Personal English line and review checks (session-only), six accent sets with graphite body ink, blue default and optional printed markers.
-- A5 portrait finished notes with binding margins; choose an A5 printer sheet or unscaled two-up on landscape A4.
-- [Handwriting architecture, research and font provenance](docs/handwriting-prototype.md).
-- Earlier interest/topic-note flow preserved at /setup.
+- Pure White, Natural and Walnut desks; six selectable horizontal pens, a live index book and optional timer. Material PNGs are separate from live text and native controls.
+- A read-only source card and one native editor on the current A5 line. Explicit confirmation saves a matching sentence before its handwriting appears; Next advances. Animation does not complete learning.
+- One synthetic eight-sentence Copy lesson, with locally saved drafts, confirmed progress, personal English writing, review marks and display choices. This is not multi-lesson history or AI-generated material.
+- Fixed physical A5 composition with measured wrapping, continuation pages and independent SVG/vector PDF renderers. Memo shown/blank retains reserved rows; Japanese phrase glosses are lifted 1mm.
+- Readability Italic default, EMS Tech, Print and Pen; independent Klee One/Zen Kurenaido Japanese. Native input fonts derive from the same English centerlines with matching advances.
+- Pause/resume, replay/finish and reduced motion. Mobile has fixed-paper zoom, caret-following horizontal scroll and reachable confirmation/Next controls.
+- A5 portrait finished notes with binding margins; A5 printer sheets or original-size two-up on landscape A4. Export uses confirmed text only, with optional markers and blank memos.
+- [Desk architecture and limitations](docs/desktop-study-desk.md); [shared handwriting and font provenance](docs/handwriting-prototype.md).
+- Earlier interest/topic-note flow preserved at `/setup`.
 
 - Vite + React + TypeScript application with an empty shelf; themes have no fixed names or count.
 - First-run interest selection with multiple choices, custom additions, skip, edit and local persistence. Interest selection does not create binders.
@@ -23,7 +23,7 @@ This repository includes a **working handwriting and PDF prototype** at /. AI ge
 - Cloudflare Pages Functions routes for health and the future generation endpoint.
 - `/api/generate` deliberately returns HTTP 503 and makes **no model request**.
 
-The owner clarified that standalone `lesson-schema-v2` is unavailable. The new [`sentence_book_page_v1` contract](docs/generation-contract.md) and shared validator define this version’s generation format. They are not wired into a live generation flow yet. Model access, API credentials, actual generation, filing, practice, deployment and physical-device behavior remain unverified.
+The owner clarified that standalone `lesson-schema-v2` is unavailable. The new [`sentence_book_page_v1` contract](docs/generation-contract.md) and shared validator define this version’s generation format. They are not wired into a live generation flow yet. Model access, API credentials, actual generation, filing, generated-lesson practice, deployment and physical-device behavior remain unverified. The synthetic local Copy flow is implemented separately.
 
 ## Provenance
 
@@ -41,7 +41,7 @@ npm run types
 npm run dev
 ```
 
-The browser app uses `http://127.0.0.1:5307`. This is a separate origin from the prior app. Its isolated storage keys are `sentence-book-muse:composer:v1` and `sentence-book-muse:interests:v1`; it does not read or migrate the prior application’s data. Existing topic notes are preserved when interests are added or changed.
+The browser app uses `http://127.0.0.1:5307`. This is a separate origin from the prior app. The earlier flow uses `sentence-book-muse:composer:v1` and `sentence-book-muse:interests:v1`. The desk adds `sentence-book-muse:desk-display:v1` and `sentence-book-muse:sample-copy:v1`; it does not read or migrate the prior application’s data. Existing topic notes are preserved when interests are added or changed.
 
 ```sh
 npm test
@@ -52,9 +52,11 @@ npm run pages:dev
 
 The last command serves `dist` and the Functions on `http://127.0.0.1:8797`. `npm run dev` serves the frontend only. The generate route still returns 503 with or without credentials.
 
-## Prototype verification
+## Local verification
 
-Run `npm test` and `npm run build`. With `npm run preview` running on its separate origin, `QA_BASE_URL=http://127.0.0.1:5308 npm run qa:a5` checks all eight font combinations, the Readability default, desktop/narrow layouts, memo-state preservation, six accents, content/marker settings, reduced motion and actual A5/A4 PDF downloads in disposable Chrome contexts. `qa:handwriting` and `qa:print` currently alias this same script; do not rerun all three. The older directly named QA scripts remain historical and target the previous page. Latest comparison outputs are `output/pdf/preferred-fonts-readability-a5.pdf` and `output/pdf/preferred-fonts-tech-a5.pdf`, with identical content, Japanese font, color and memo/marker settings. Both have two A5 pages, with personal writing on page 2. A4/blank-memo evidence and captures are in `.impeccable/review/font-expansion/`. For the interest flow, use `npm run pages:dev` and `node scripts/qa-scaffold.mjs`. No real learning data is used.
+Run `npm test` and `npm run build`. With a dedicated Vite development origin, `QA_ORIGIN=http://127.0.0.1:5327 npm run qa:desk` checks the local Copy flow, persistence/failure handling, 18 theme/color pairs, font advances, desktop/mobile layouts, timer and actual PDF downloads in disposable Chrome contexts. `QA_ORIGIN=http://127.0.0.1:5327 node scripts/qa-desk-review.mjs` checks reachable mobile actions/caret scrolling, personal editing and animation resume. Neither script touches the user's preview storage. Current evidence is in `.impeccable/review/desk/`; exported fixtures are `output/pdf/desk-a5-completed.pdf` and `output/pdf/desk-a5-on-a4-blank.pdf`.
+
+`npm run qa:a5` targets the retained `/handwriting` prototype; `qa:handwriting` and `qa:print` alias it and need not all be repeated. For the interest flow, use a separate `npm run pages:dev` origin and `node scripts/qa-scaffold.mjs`. Synthetic IME events are not real OS/mobile-keyboard verification. Physical devices, audio and printed output require separate checks.
 
 ## Next implementation steps
 
@@ -62,7 +64,7 @@ Run `npm test` and `npm run build`. With `npm run preview` running on its separa
 2. Confirm the accessible model ID in the Meta portal. `muse-spark-1.3` is only a candidate.
 3. Set `META_MODEL_API_KEY` as an encrypted Pages secret, never a `VITE_*` variable. For local Functions, use an ignored `.dev.vars` file based on `.dev.vars.example`.
 4. Implement a bounded server request, structured output and server/client validation. Add request limits before a paid public endpoint becomes reachable.
-5. Implement explicit filing approval, stable page IDs, duplicate-draft rejection, local persistence and Copy practice.
+5. Implement explicit filing approval, stable page IDs, duplicate-draft rejection, multi-lesson persistence and connect the existing sample Copy flow to accepted lessons.
 6. Verify with disposable data, then create a new Pages project and deploy the new app. Do not replace the existing personal prototype.
 
 Account sync, login, OAuth/MCP, the old curriculum, saved audio, the full five-pass course and the prior Notebook/Cards are outside this version's scope.

@@ -1,0 +1,486 @@
+{
+  "version": "1.0",
+  "date": "2026-10-27",
+  "status": "Latest owner correction: flashcard is a read-only model, writing is on the notebook. Corrected static renders; app untouched.",
+  "ownerSpec": "owner-spec.md",
+  "referenceNotebook": "../studygram-2026-10-27/blue-v2/22-blue-even-rows-footnotes-study.png",
+  "coordinateSystem": {
+    "designCanvasPx": [
+      1600,
+      1000
+    ],
+    "purpose": "Initial implementation boxes matching the common comp topology, not pixel measurements of generated artwork.",
+    "screenOnly": true
+  },
+  "regions": {
+    "header": {
+      "x": 0,
+      "y": 0,
+      "width": 1600,
+      "height": 48,
+      "layer": 5
+    },
+    "indexBook": {
+      "x": 64,
+      "y": 430,
+      "width": 749.76,
+      "height": 533.28,
+      "layer": 2,
+      "semantics": "navigation and lesson list; never a single raster containing live text",
+      "artworkScaleFromEarlier": 0.88,
+      "textScalePolicy": "Recompose live labels, do not transform-scale text/buttons with the artwork.",
+      "minimumNavigationFontPx": 20,
+      "minimumTargetPx": 44
+    },
+    "taskCard": {
+      "x": 916,
+      "y": 60,
+      "width": 634,
+      "height": 230,
+      "layer": 4,
+      "cornersPx": 1,
+      "thicknessPx": 2,
+      "positionPolicy": "Same outer box across themes/steps. Only read-only source/task/hint/media slots change; no draft or editor.",
+      "editable": false,
+      "nativeEditorCount": 0,
+      "semanticRole": "read-only model, task/hint/audio and progress"
+    },
+    "notebook": {
+      "x": 978,
+      "y": 306,
+      "width": 470.7809523809524,
+      "height": 668,
+      "aspectRatio": "148 / 210",
+      "layer": 2,
+      "gridSource": "../studygram-2026-10-27/blue-v2/refill-a5-v1.json",
+      "columnRatio": [
+        0.7,
+        0.3
+      ],
+      "inputAnchor": "Measured current sentence/current line in the common A5 layout; one native draft editor on the ruled paper."
+    },
+    "penSelector": {
+      "x": 236,
+      "y": 58,
+      "width": 628,
+      "height": 350,
+      "count": 6,
+      "order": [
+        "blue",
+        "pink",
+        "purple",
+        "gray",
+        "orange",
+        "green"
+      ],
+      "layer": 3,
+      "interactive": true,
+      "role": "radiogroup",
+      "colorChangeOnly": true,
+      "inkEngineCoupled": false,
+      "geometryStatus": "Shared initial boxes for implementation; generated pixels are approximate.",
+      "penAxis": "horizontal left-to-right",
+      "arrangement": "six rows, ordered top-to-bottom",
+      "ariaOrientation": "vertical",
+      "rowPitchPx": 58,
+      "penLengthPx": 504,
+      "labelPosition": "right of each pen",
+      "rowTargets": [
+        {
+          "color": "blue",
+          "x": 236,
+          "y": 64,
+          "width": 628,
+          "height": 52
+        },
+        {
+          "color": "pink",
+          "x": 236,
+          "y": 122,
+          "width": 628,
+          "height": 52
+        },
+        {
+          "color": "purple",
+          "x": 236,
+          "y": 180,
+          "width": 628,
+          "height": 52
+        },
+        {
+          "color": "gray",
+          "x": 236,
+          "y": 238,
+          "width": 628,
+          "height": 52
+        },
+        {
+          "color": "orange",
+          "x": 236,
+          "y": 296,
+          "width": 628,
+          "height": 52
+        },
+        {
+          "color": "green",
+          "x": 236,
+          "y": 354,
+          "width": 628,
+          "height": 52
+        }
+      ]
+    },
+    "timer": {
+      "x": 24,
+      "y": 56,
+      "width": 180,
+      "height": 262,
+      "layer": 3,
+      "interactive": true,
+      "placement": "Immediately left of the six stacked horizontal pens, above the smaller index book; empty reserved desk space when hidden.",
+      "geometryStatus": "Initial implementation box on the1600x1000 design canvas, not a pixel measurement of generated artwork.",
+      "controlBoxes": [
+        {
+          "action": "toggle-running",
+          "x": 32,
+          "y": 268,
+          "width": 76,
+          "height": 44
+        },
+        {
+          "action": "reset",
+          "x": 128,
+          "y": 268,
+          "width": 76,
+          "height": 44
+        }
+      ]
+    },
+    "notebookConfirm": {
+      "x": 1496,
+      "y": 686,
+      "width": 80,
+      "height": 72,
+      "layer": 5,
+      "screenOnly": true,
+      "positionPolicy": "Initial desk-margin location beside current writing line; production y follows measured active line/viewport, never covers paper.",
+      "buttonBox": {
+        "x": 1496,
+        "y": 686,
+        "width": 80,
+        "height": 44
+      },
+      "shortcut": "Enter; do not submit during IME composition or repeat key events."
+    }
+  },
+  "layers": [
+    "desk",
+    "index-book and A5 note",
+    "pen color selector",
+    "task flashcard",
+    "minimal controls"
+  ],
+  "themes": [
+    {
+      "id": "pure-white",
+      "label": "Pure White",
+      "image": "18-pure-white-model-card-notebook-input.png",
+      "desk": "off-white matte",
+      "paper": "#FFFEFB",
+      "penStyle": "six generic white-bodied dual-tip study highlighters with clearly colored pastel caps; owner-chosen family, no branding",
+      "cardSurface": "white matte index cardstock with fine pale ruling",
+      "indexHeading": "modern sans",
+      "cardGeometry": "shared",
+      "previousImage": "12-pure-white-horizontal-pens.png",
+      "historyImages": [
+        "01-pure-white.png",
+        "04-pure-white-pen-selector-paper-card.png",
+        "07-pure-white-pastel-highlighter-selector.png",
+        "09-pure-white-pen-side-timer.png",
+        "12-pure-white-horizontal-pens.png"
+      ],
+      "timerStyle": "white matte study timer, neutral LCD",
+      "timerState": "shared across desk skins;25-minute paused synthetic sample",
+      "penOrientation": "full-length horizontal pens in six vertical rows",
+      "timerVisibility": "owner-confirmed selectable shown/hidden; shown in this theme comp"
+    },
+    {
+      "id": "natural",
+      "label": "Natural",
+      "image": "17-natural-model-card-notebook-input.png",
+      "desk": "light oak",
+      "paper": "#F9F3E7",
+      "penStyle": "six slim matte color-matched capped felt-tip/study-marker pens, subtly faceted barrels, molded cap clips and flat rear plugs; no click hardware, metal ballpoint cones, rubber grips or branding",
+      "cardSurface": "ecru matte index cardstock with restrained ruling",
+      "indexHeading": "soft neat handwriting",
+      "cardGeometry": "shared",
+      "previousImage": "16-natural-capped-marker-pens.png",
+      "historyImages": [
+        "02-natural.png",
+        "05-natural-pen-selector-paper-card.png",
+        "08-natural-minimal-european-pen-selector.png",
+        "10-natural-pen-side-timer.png",
+        "13-natural-horizontal-pens.png",
+        "16-natural-capped-marker-pens.png"
+      ],
+      "timerStyle": "thin light-oak bezel, ivory face, neutral LCD",
+      "timerState": "shared across desk skins;25-minute paused synthetic sample",
+      "penOrientation": "full-length horizontal pens in six vertical rows",
+      "timerVisibility": "owner-confirmed selectable shown/hidden; shown in this theme comp"
+    },
+    {
+      "id": "walnut",
+      "label": "Walnut",
+      "image": "19-walnut-model-card-notebook-input.png",
+      "desk": "deep walnut",
+      "paper": "#F6EEDC",
+      "penStyle": "six black/brass fountain-pen forms with clear colored cap/finial bands; preserve the owner-liked classical style",
+      "cardSurface": "ivory matte index cardstock with a delicate printed classical rule",
+      "indexHeading": "restrained serif",
+      "cardGeometry": "shared",
+      "previousImage": "14-walnut-horizontal-pens.png",
+      "historyImages": [
+        "06-walnut-pen-selector-paper-card.png",
+        "11-walnut-pen-side-pocket-timer.png",
+        "14-walnut-horizontal-pens.png"
+      ],
+      "timerStyle": "aged-brass pocket-stopwatch case, ivory minute dial, short chain",
+      "timerState": "shared across desk skins;25-minute paused synthetic sample",
+      "penOrientation": "full-length horizontal pens in six vertical rows",
+      "timerVisibility": "owner-confirmed selectable shown/hidden; shown in this theme comp"
+    }
+  ],
+  "markerColors": [
+    {
+      "id": "blue",
+      "label": "ブルー",
+      "fill": "#D5E7F2"
+    },
+    {
+      "id": "pink",
+      "label": "ピンク",
+      "fill": "#F2D5DE"
+    },
+    {
+      "id": "purple",
+      "label": "パープル",
+      "fill": "#E1D9F0"
+    },
+    {
+      "id": "gray",
+      "label": "グレー",
+      "fill": "#E2E4E6"
+    },
+    {
+      "id": "orange",
+      "label": "オレンジ",
+      "fill": "#F5D9B8"
+    },
+    {
+      "id": "green",
+      "label": "グリーン",
+      "fill": "#DCE7D5"
+    }
+  ],
+  "markerColorStatus": "Implementation starting tokens. Latest owner color names replace the older lavender/yellow list; do not label yellow as orange without an explicit preference migration.",
+  "typography": {
+    "bodyInk": "#383A3D",
+    "noteHandwriting": "same production glyphs and baseline metrics across themes",
+    "themeVariable": "index headings only; common task/input typography remains stable",
+    "cardSource": "Large readable read-only model text, common across themes.",
+    "notebookDraft": "Readable draft on the measured note baseline; align editing/ink metrics without double-rendering glyphs."
+  },
+  "initialPreferences": {
+    "deskTheme": "pure-white",
+    "markerColor": "blue",
+    "persistence": "Persist independent theme/color preferences across reload; preserve practice state on changes.",
+    "timerVisible": true,
+    "timerVisibleStatus": "Proposed starting value matching comps; owner required the choice, not a mandatory default."
+  },
+  "combinations": {
+    "deskThemes": 3,
+    "markerColors": 6,
+    "total": 18,
+    "renderedSamples": "Three desk themes with Blue/timer shown, plus Pure White/Blue/timer hidden. Other combinations are requirements, not rendered proofs.",
+    "timerVisibilityStates": 2,
+    "withTimerVisibilityTotal": 36
+  },
+  "independentVisibility": [
+    "markers",
+    "vocabulary-explanations",
+    "grammar-explanations",
+    "key-expression-list"
+  ],
+  "blankSpace": {
+    "available": true,
+    "default": "Retain space for handwritten notes when supplemental ink is hidden. Preserve source data and canonical paper. Reconcile detailed toggles with the already adopted shown/blank memo contract."
+  },
+  "input": {
+    "owner": "notebook",
+    "region": "measured current writing line",
+    "count": 1,
+    "native": true,
+    "nativeControl": "textarea",
+    "cardInput": false,
+    "notebookInput": true,
+    "immediateDraftEcho": true,
+    "draftLocation": "On the current A5 rule after committed sentences, not in a separate form or card.",
+    "layout": "Use the same physical row plan/metrics/baseline/width/wrapping for draft and confirmed ink. Reserve active rows before later study blocks.",
+    "confirm": "Validate and persist the actual learner result before replacing the same-position draft presentation with confirmed handwriting; never infer learning completion from animation.",
+    "controls": "Notebook-side confirmation plus deliberate Enter; protect IME/repeated/modified keys and preserve existing learning flow.",
+    "animation": "Shared stroke engine, skippable/reduced-motion compatible. No duplicate draft and canonical ink or visual transfer from card.",
+    "practiceSteps": "Card source/hint/audio may vary by actual available practice step; text entry stays on notebook. Voice-only steps need no additional text editor.",
+    "printDraft": false,
+    "spec": "notebook-input-interaction.json"
+  },
+  "indexNavigation": [
+    "My Lessons",
+    "Topic Index",
+    "My Vocabulary",
+    "Review",
+    "Completed Notes"
+  ],
+  "notebookCompatibility": {
+    "finishedMm": [
+      148,
+      210
+    ],
+    "sameRefillAcrossThemes": true,
+    "keep": "dedicated1.6-row header, pale full-left dividers, English theme/date, two-rule short sentence advance, thin graphite ink, square vocabulary frame/checks and compact final bilingual pair",
+    "newColumnDirection": "Owner now requests approximately70/30 English/annotations; retain the paper geometry while fitting column text.",
+    "noteScale": "Allow readable notebook zoom without changing the A5 line plan."
+  },
+  "print": {
+    "finishedFormat": "A5",
+    "carrierOptions": [
+      "A5",
+      "A4 landscape two-up at100%"
+    ],
+    "paperSurfaceOptions": [
+      "white",
+      "theme paper tint"
+    ],
+    "defaultPaper": "white",
+    "exclude": [
+      "desk",
+      "index-book navigation",
+      "pen color selector",
+      "task-card",
+      "application controls",
+      "timer",
+      "native notebook editor presentation",
+      "draft caret",
+      "notebook confirmation controls",
+      "unconfirmed draft presentation"
+    ],
+    "notebookContent": "Canonical confirmed note content from shared measured row plan and selected marker/memo visibility; no screen editor/caret/unconfirmed draft."
+  },
+  "syntheticScene": {
+    "topic": "Daily Life / Small Habits",
+    "pageTitle": "Making time for small things",
+    "practiceStep": "Copy",
+    "currentSentence": 8,
+    "committedSentences": 7,
+    "source": "Tomorrow, I want to make time for them again.",
+    "draft": "Tomorrow, I want to",
+    "lessonTitles": [
+      "Making time for small things",
+      "A quiet morning",
+      "Small things I notice"
+    ],
+    "realLearningData": false,
+    "sourceLocation": "read-only flashcard",
+    "draftLocation": "notebook current line",
+    "editableCard": false
+  },
+  "productionMaterials": {
+    "wholeScreenRasters": "Design references only; never the actual interactive UI.",
+    "futurePlates": [
+      "subtle desk textures",
+      "blank open-book surfaces",
+      "six separate pen-color cutouts per theme",
+      "subtle paper/card material surfaces",
+      "separate timer bodies/dials with empty LCDs and no baked-in dynamic hands or time"
+    ],
+    "semanticLayers": [
+      "navigation links",
+      "lesson titles",
+      "source/hint text",
+      "read-only card source/hint/audio; one native notebook current-line editor and notebook-side confirmation",
+      "theme/color controls",
+      "measured A5 handwriting and annotations",
+      "native pen-color radios, color names, selected marks and focus",
+      "native timer controls and accessible remaining-time text; dynamic digits/hands from shared timer state"
+    ]
+  },
+  "responsive": {
+    "scope": "Desktop concepts only",
+    "mobile": "Rearrange learning controls and notebook for small screens; never shrink this entire desk screenshot to fit. Detailed mobile design remains separate."
+  },
+  "revision": 7,
+  "latestInteractionSpec": "pen-selector-interaction.json",
+  "latestRevisionNotes": "revision-notebook-input.md",
+  "referenceMapping": {
+    "status": "Previous literal attachment-to-theme assignment is superseded by the latest owner clarification.",
+    "pureWhite": "Owner chose the original white-barrel pastel-cap study-highlighter family.",
+    "natural": "Owner flagged ballpoint appearance. Current interpretation uses simple capped matte markers; concrete corrected image pending review.",
+    "walnut": "Owner-liked black/brass fountain-pen look retained from06."
+  },
+  "markerSelector": {
+    "kind": "six pen radios",
+    "toolbarMarkerSwatches": false,
+    "visibleNames": true,
+    "selectedMark": true,
+    "wholePenTapTarget": true,
+    "spec": "pen-selector-interaction.json"
+  },
+  "latestTimerSpec": "timer-interaction.json",
+  "timer": {
+    "ownerDirection": "Beside pens, with white/simple-natural/pocket-watch-style families. Prior lower-left placement suggestion is superseded.",
+    "status": "Owner-confirmed optional display; detailed controls/timing remain design proposals, not implemented.",
+    "inputOrLearningCoupled": false,
+    "stateSharedAcrossThemes": true,
+    "sampleRemainingSeconds": 1500,
+    "sampleState": "idle",
+    "displayPreference": "Owner requires selectable shown/hidden; proposed checkbox in existing display settings, persist independently, hide full prop and controls without reflow/reset.",
+    "themeSwitch": "Keep remaining time, running/paused state, draft and practice progress.",
+    "print": false,
+    "spec": "timer-interaction.json",
+    "visibilityOwnerConfirmed": true,
+    "hiddenLayout": "Keep reserved desk space and all pen/book/card/notebook boxes unchanged."
+  },
+  "imageVariants": {
+    "pure-white": {
+      "timer-hidden": "20-pure-white-notebook-input-timer-hidden.png"
+    },
+    "otherThemeHiddenStates": "Required behavior; no additional hidden-state raster created."
+  },
+  "ownerDecisions": {
+    "horizontalPenLayout": "Owner supports this arrangement: うん、この方がいい。",
+    "timerVisibility": "Owner requires selectable shown/hidden.",
+    "naturalCorrection": "Owner flags Natural as ballpoint-like; capped marker interpretation proposed.",
+    "scope": "Layout acceptance is not approval of unseen typography, production asset pixels, clock behavior or actual implementation.",
+    "inputCorrection": "Owner explicitly: flashcard is model, writing is on notebook. Highest priority for input placement."
+  },
+  "ownerSpecPriority": "Latest owner input correction in revision-notebook-input.md supersedes card-editing clauses in the archived owner-spec.md Version1.0 and old01-16 comps. Other owner directions retained.",
+  "latestNotebookInputSpec": "notebook-input-interaction.json",
+  "sourceCard": {
+    "role": "read-only model",
+    "editable": false,
+    "nativeEditorCount": 0,
+    "show": [
+      "complete current model sentence",
+      "task/progress",
+      "audio action",
+      "meaning/hint action"
+    ],
+    "neverShow": [
+      "draft textarea",
+      "editable underline",
+      "caret",
+      "confirmation action"
+    ],
+    "longSource": "Readable wrapping or internal scroll inside fixed outer box; do not shrink the note.",
+    "practiceSteps": "Hide/reveal model as actual learning step requires; never convert card into a second editor."
+  }
+}

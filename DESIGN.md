@@ -2,280 +2,316 @@
 name: "The Sentence Book"
 description: "Learn digitally. Keep it beautifully."
 colors:
-  sage: "#52634e"
-  sage-deep: "#40513d"
-  ink: "#3d443d"
-  muted: "#62695c"
-  desk: "#eeeae1"
-  paper: "#FFFEFB"
-  control-paper: "#fffdf5"
-  field: "#faf8f0"
+  desk-white: "#f5f6f6"
+  desk-oak-base: "#dfc49b"
+  desk-walnut-base: "#4f3424"
+  ink-white: "#474d50"
+  ink-natural: "#514638"
+  ink-walnut: "#f2e7d5"
+  quiet-white: "#636b70"
+  quiet-natural: "#655a4b"
+  quiet-walnut: "#e5d4ba"
+  control-white: "#f9f8f4"
+  control-natural: "#f7f0e3"
+  control-walnut: "#312c25"
+  paper-white: "#FFFEFB"
+  paper-natural: "#F9F3E7"
+  paper-walnut: "#F6EEDC"
+  card-natural: "#faf5e9"
+  card-walnut: "#f4ecd9"
+  card-ink: "#444b50"
   rule: "#D7E0E7"
-  divider: "#c9cbbc"
   graphite: "#383A3D"
-  control-ink: "#45553f"
-  control-border: "#87917c"
-  control-hover: "#e1e3d5"
-  field-border: "#aeb5a2"
-  export-tint: "#e4e7d8"
-  export-border: "#8d9a7f"
-  pink-accent: "#7c465c"
-  pink-marker: "#edbeca"
-  lavender-accent: "#66547e"
-  lavender-marker: "#cbbde6"
   blue-accent: "#47627A"
   blue-marker: "#D5E7F2"
-  green-accent: "#485747"
-  green-marker: "#c3d3b1"
-  yellow-accent: "#76602f"
-  yellow-marker: "#e5d384"
+  pink-accent: "#7c465c"
+  pink-marker: "#F2D5DE"
+  purple-accent: "#66547e"
+  purple-marker: "#E1D9F0"
   gray-accent: "#565b61"
-  gray-marker: "#ccd0d4"
-  focus: "#667752"
-  error: "#8c443c"
+  gray-marker: "#E2E4E6"
+  orange-accent: "#78552f"
+  orange-marker: "#F5D9B8"
+  green-accent: "#485747"
+  green-marker: "#DCE7D5"
+  focus-white: "#446f91"
+  focus-natural: "#745128"
+  focus-walnut: "#f4d5a1"
+  index-ink: "#514d47"
+  index-selected: "#38576b"
+  settings-paper: "#fbf9f3"
+  export-tint: "#dfe8e5"
+  error: "#994b38"
+  error-walnut: "#ffbba2"
 typography:
   display:
     fontFamily: "\"Lora\", Georgia, serif"
-    fontSize: "26px"
+    fontSize: "21px"
     fontWeight: 400
-    lineHeight: 1.3
     letterSpacing: "-0.03em"
-  headline:
-    fontFamily: "\"Yu Mincho\", \"Hiragino Mincho ProN\", serif"
-    fontSize: "26px"
+  model:
+    fontFamily: "\"Lora\", Georgia, serif"
+    fontSize: "clamp(19px, 1.8vw, 28px)"
     fontWeight: 400
-    lineHeight: 1.65
-    letterSpacing: "0.025em"
-  title:
-    fontFamily: "\"Yu Mincho\", \"Hiragino Mincho ProN\", serif"
-    fontSize: "19px"
+    lineHeight: 1.45
+  index-white:
+    fontFamily: "-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", sans-serif"
+    fontSize: "clamp(17px, 1.35vw, 22px)"
+    fontWeight: 500
+    lineHeight: 1.4
+  index-natural:
+    fontFamily: "\"Notebook Klee\", serif"
+    fontSize: "clamp(19px, 1.6vw, 26px)"
     fontWeight: 400
-    lineHeight: 1.5
+    lineHeight: 1.4
+  index-walnut:
+    fontFamily: "\"Lora\", serif"
+    fontSize: "clamp(17px, 1.35vw, 22px)"
+    fontWeight: 400
+    lineHeight: 1.4
   body:
+    fontFamily: "-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif"
+    fontSize: "13px"
+    fontWeight: 400
+    lineHeight: 1.6
+  label:
     fontFamily: "-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif"
     fontSize: "12px"
     fontWeight: 400
-    lineHeight: 2.1
-  label:
+    lineHeight: 1.6
+  help:
     fontFamily: "-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif"
     fontSize: "11px"
     fontWeight: 400
     lineHeight: 1.8
-  input:
-    fontFamily: "-apple-system, BlinkMacSystemFont, \"Hiragino Kaku Gothic ProN\", \"Noto Sans JP\", sans-serif"
-    fontSize: "15px"
+  notebook-input:
+    fontFamily: "\"Sentence Notebook Readability Input\", sans-serif"
+    fontSize: "4.1mm"
     fontWeight: 400
-    lineHeight: 1.65
+    lineHeight: "5.2mm"
+    letterSpacing: "0"
   notebook-gloss:
-    fontFamily: "Notebook Klee"
+    fontFamily: "\"Notebook Klee\""
     fontSize: "2.6mm"
     fontWeight: 400
   notebook-meaning:
-    fontFamily: "Notebook Klee"
+    fontFamily: "\"Notebook Klee\""
     fontSize: "2.7mm"
     fontWeight: 400
 rounded:
   square: "0"
   control: "3px"
+  dialog: "4px"
 spacing:
-  control-gap: "8px"
-  field-inset: "12px"
-  mobile-gutter: "20px"
-  section-gap: "28px"
-  tablet-gutter: "32px"
-  desktop-gutter: "64px"
-  workspace-gap: "72px"
+  action-gap: "4px"
+  label-gap: "8px"
+  mobile-gutter: "14px"
+  compact-gutter: "16px"
+  mobile-stack: "18px"
+  tools-gap: "20px"
+  page-gap: "24px"
+  settings-gap: "38px"
+  desk-gap: "48px"
 components:
-  button-primary:
-    backgroundColor: "{colors.sage}"
-    textColor: "{colors.control-paper}"
-    rounded: "{rounded.control}"
-    padding: "10px 15px"
-  button-primary-hover:
-    backgroundColor: "{colors.sage-deep}"
   button-quiet:
     backgroundColor: "transparent"
-    textColor: "{colors.control-ink}"
+    textColor: "{colors.ink-white}"
     rounded: "{rounded.control}"
-    padding: "10px 15px"
+    padding: "8px 12px"
+    typography: "{typography.body}"
+  button-confirm:
+    backgroundColor: "{colors.control-white}"
+    textColor: "{colors.ink-white}"
+    rounded: "{rounded.control}"
+    padding: "8px 12px"
+    width: "76px"
+    typography: "{typography.label}"
   button-export:
     backgroundColor: "{colors.export-tint}"
-    textColor: "{colors.control-ink}"
+    textColor: "#444c4c"
     rounded: "{rounded.control}"
-    padding: "10px 15px"
+    padding: "8px 12px"
     width: "100%"
-  input-personal:
-    backgroundColor: "{colors.field}"
-    textColor: "{colors.ink}"
-    typography: "{typography.input}"
-    rounded: "{rounded.control}"
-    padding: "12px"
-    width: "100%"
-  select:
+  input-notebook:
     backgroundColor: "transparent"
-    textColor: "#46533e"
-    rounded: "{rounded.square}"
-    padding: "10px 20px 10px 4px"
-  navigation:
-    textColor: "{colors.ink}"
-    typography: "{typography.display}"
-  paper-sheet:
-    backgroundColor: "{colors.paper}"
-    rounded: "{rounded.square}"
-    width: "100%"
-  handwriting:
     textColor: "{colors.graphite}"
-  palette-choice:
-    backgroundColor: "transparent"
-    textColor: "{colors.blue-accent}"
     rounded: "{rounded.square}"
-  memo-choice:
+    padding: "0"
+    typography: "{typography.notebook-input}"
+  select-setting:
     backgroundColor: "transparent"
-    textColor: "{colors.ink}"
+    textColor: "#444c4c"
+    width: "100%"
+  index-navigation:
+    backgroundColor: "transparent"
+    textColor: "{colors.index-ink}"
     rounded: "{rounded.square}"
+    padding: "8px 0"
+  model-card:
+    backgroundColor: "{colors.paper-white}"
+    textColor: "{colors.card-ink}"
+    rounded: "{rounded.square}"
+    padding: "24px 30px 16px"
+    height: "234px"
+  paper-sheet:
+    backgroundColor: "{colors.paper-white}"
+    rounded: "{rounded.square}"
+    width: "100%"
+  settings-dialog:
+    backgroundColor: "{colors.settings-paper}"
+    textColor: "#444c4c"
+    rounded: "{rounded.dialog}"
+    padding: "24px 30px"
 ---
 
 # Design System: The Sentence Book
 
 ## Overview
 
-**Creative North Star: "The Handwritten Study Notebook"**
+**Creative North Star: "The Personal Study Desk"**
 
-The Sentence Book — Learn digitally. Keep it beautifully. Korean Studygram meets a restrained editorial notebook: near-white paper, fine blue-gray rules, dark graphite handwriting, pale markers and compact study notes. The page is the keepsake; calm sage controls and Japanese labels support it. The typewriter motif and key/case animations are retired.
+The Sentence Book — Learn digitally. Keep it beautifully. A measured Studygram notebook sits among a few useful study objects. The chosen world is an overhead desk with Pure White, Natural and Walnut material families: white stationery and a digital timer; light oak with pastel pens; deep walnut with black-and-brass pens and a watch. Live text, native controls and a growing handwritten page carry the work. Quiet paper shadows and thin rules give the objects enough depth without competing with the writing.
 
-The owner adopted the Work blue notebook on 2026-10-27. The [implementation specification](docs/studygram-notebook-implementation-spec-2026-10-27.md), exact refill JSON/SVG and final blue references 22/23 govern this surface. The shared physical A5 layout and shown/blank memo controls now run at `/`. Source authority is `a5-layout.ts`, `study-content.ts`, `A5Notebook.tsx`, `study-pdf.ts`, `HandwritingDemo.tsx`, `handwriting.css` and `palettes.ts`. Earlier viewport-driven geometry and the older print-only composition are not the active root renderer.
-
-The owner rejected the earlier oversized, irregular lettering as elementary-school-like. The owner requested selectable handwriting and then explicitly chose Readability Italic as the default. Readability Italic, EMS Tech, Print and Pen English combine independently with Klee One/Zen Kurenaido Japanese, offering eight combinations. Klee One remains the Japanese default; the selection does not approve unseen production layouts or physical printing. A later Work hand-template proposal is unadopted. The sample, personal input and checks are session-only demonstration content; `/setup` retains its earlier interest/topic-note scaffold. The [finish review](.impeccable/review/shared-a5/finish-review.md) accepts this implementation increment, not final typography, production lesson fitting or physical printing.
+The owner-approved desktop handoff replaces the former sage control-rail composition at `/`, while retaining the adopted physical A5 notebook. The three themes change material, paper tint, index-heading character and the model-card rule; they do not change source content or the chosen notebook face. The retired typewriter/key/case motif stays retired. Product scope is in [PRODUCT.md](PRODUCT.md), composition and interaction authority in [the surface brief](.impeccable/surfaces/study-desk.md), implementation/provenance in [the desk note](docs/desktop-study-desk.md). `/handwriting` preserves the older typography demo and `/setup` its earlier scaffold; neither defines the current desk shell.
 
 **Key Characteristics:**
 
-- One measured A5 refill shared by screen and independently rendered PDF.
-- Dark graphite body writing with six accent palettes; blue is the initial choice.
-- Whole-row sentence wrapping, anchored Japanese meanings raised 1mm toward their highlighted English, right footnotes and a framed vocabulary block.
-- Memo blanking preserves allocated space and the learner's current writing/checks.
-- Actual English stroke motion, static licensed Japanese text and reduced-motion completion.
-- Fixed paper on narrow screens, with fit or enlarged horizontal scrolling.
+- Separate generated material plates beneath live semantic HTML and SVG.
+- Three desk families, six labeled pen choices and one shared optional timer.
+- A read-only model card and one native editor on the current notebook line.
+- Small graphite handwriting, pale markers and a fixed measured A5 grid.
+- Confirmed text is saved before animation; explicit Next controls progression.
+- Mobile actions remain reachable beside enlarged, horizontally scrollable paper.
 
 ## Colors
 
-The frontmatter is normative for the current root surface. It separates the paper's graphite/blue-gray structure from the existing warm desk and sage operation controls. Sidecar tonal ramps are display metadata, not additional application colors.
+Frontmatter records current source colors; the three material families combine neutral furniture with common graphite and six pale accent pairs. Tonal ramps in the sidecar are preview metadata, not additional application colors. Source authority is `src/desk/desk.css`, `StudyDesk.tsx`, `handwriting/palettes.ts` and the adopted refill JSON.
 
 ### Primary
 
-Sage and deep sage support playback and status. Control ink, border and hover keep quiet actions understated; export tint and border distinguish the PDF action. Palette changes do not recolor these controls. Focus remains a visible 2px outline with 4px offset.
-
-### Secondary
-
-Pink, lavender, blue, green, yellow and gray each supply an accent and pale marker. Blue is the first-use selection; choices are currently session-only. Accents color section headings, grammar labels, the annotation divider and vocabulary frames. The notebook title, body, metadata, footnotes, Japanese meanings and personal writing use graphite. The historical `annotation` palette fields are not a separate ink role in the active A5 renderer. Markers use their pale color directly, without the old opacity multiplier, at 2.25mm width.
+Blue is the default notebook accent. It colors section headings, vocabulary frames and the annotation divider; its pale partner marks phrases. The title, body, metadata, footnotes, Japanese meanings and personal writing remain graphite. Pink, Purple, Gray, Orange and Green use the same roles. The root pen order is Blue/Pink/Purple/Gray/Orange/Green. Historical Lavender/Yellow entries remain for the older prototype and are not remapped to these root choices.
 
 ### Neutral
 
-Paper is the exact refill's near-white screen surface. Rule defines the pale body/title/footer lines. Desk, control-paper, field and muted retain the surrounding interface hierarchy; divider and field border give controls structure. Error ink identifies unsupported input without discarding it.
+Pure White has a cool pale ground, gray ink and near-white note. Natural pairs a cover-scaled light-oak texture with brown ink, warm paper and a cream card. Walnut pairs a cover-scaled dark-wood texture with pale desk labels, a warm ivory note/card and dark action surfaces. The open index book keeps the same neutral material plate and dark text in all three. Wood base colors are fallbacks beneath actual assets; textures are not asserted seamless.
 
-**The Marker Rule.** Draw each pale marker once beneath the letters. Screen and PDF marker choices change only that ink; they never change text, memo allocation or the page plan.
+Focus is blue in White, brown in Natural and pale gold in Walnut, with a 2px outline and 3px offset on desk controls. The notebook field instead uses a subtle translucent wash and bottom line at focus, with a blue caret. Errors use rust ink, switching to light peach on Walnut. PDF paper stays white.
+
+**The Ink Rule.** Keep body and personal writing graphite. Accent colors identify study structure; pale markers sit beneath letters once and never move the layout.
 
 ## Typography
 
-Self-hosted **Lora** carries the wordmark; platform **Yu Mincho / Hiragino Mincho ProN** carries Japanese interface headings. System sans supports controls. Frontmatter records the UI scale. At 760px and below, wordmark, invitation and textarea become 22px, 23px and 16px; buttons become 13px.
+**Display Font:** self-hosted Lora with Georgia/serif fallback, used for the wordmark, model sentence and selected editorial labels. **Body Font:** system sans with Japanese fallbacks. **Index Heading Fonts:** system sans in Pure White, Notebook Klee in Natural, Lora in Walnut. The frontmatter contains the desktop scale; the three index heading families are deliberate theme details.
 
-**Sentence Notebook Readability** (owner-selected default, EMS Readability Italic / Source Sans Pro Light derivative), **Sentence Notebook Tech** (EMS Tech / Architects Daughter derivative), **Sentence Notebook Print** (EMS Delight / Delius derivative) and **Sentence Notebook Pen** (EMS Neato / Bad Script derivative) offer four separate-letter centerline faces. All are renamed OFL derivatives, with original authors/notices retained. See [font provenance](public/fonts/README.md). The 200-unit model sizes in millimetres are title 5.65, body/grammar/personal 4.1, footnotes 3.2, section headings 4.5, vocabulary English 3.8, grammar labels 2.8, classification 3.2, date 2.9 and footer 2.7. Source normalization is face-specific (Readability/Tech/Print 0.2, Pen 0.145) to keep actual ink inside the grid. Title stroke is 0.28mm; other English strokes are 0.20mm. These are model sizes, not visible character heights. Tech titles are lifted 25 model units (0.70625mm) inside the fixed title band to fit their long descenders; body lettering is not lifted. Real overhangs are reserved in Readability/Tech/Pen advances.
+The wordmark is 21px (20px on mobile), model sentence uses the recorded clamp (22px on mobile), card label is 18px Lora, index tabs are 15px Lora and body controls are 13px. Compact desktop reduces index heading/tab sizes to 16/12px; mobile uses 15/11px except Natural's 18px handwritten heading. Help is 11px and smaller disclosures are 10px. Avoid enlarging the fixed notebook glyphs to solve surrounding UI hierarchy.
 
-**Notebook Klee** (Klee One Regular, default) and **Notebook Zen** (Zen Kurenaido Regular) supply static Japanese handwriting. The frontmatter records the default family; the user's selected family overrides both Japanese roles. Glosses use 2.6mm and vocabulary meanings 2.7mm. Phrase glosses sit 1mm above their allocated row baseline, grouping them with the highlighted English above. The reserved rows, horizontal anchor, line wrapping, other text and pagination stay fixed; the same coordinates drive screen and PDF. The selected full WOFF2 loads on screen. `text-metrics*.json` contains exact original TTF coverage/advances for shared layout; PDF embeds that original TTF fully to preserve kana. English font choice also governs all personal strokes. Japanese has no stroke animation. Existing interface families and weights stay unchanged.
+**Notebook faces:** Sentence Notebook Readability (owner-selected default), Tech, Print and Pen are renamed OFL centerline derivatives of EMS Readability Italic, Tech, Delight and Neato. Klee One (default) and Zen Kurenaido supply static Japanese. All four English/two Japanese choices apply independently. [Font provenance](public/fonts/README.md) retains original SVGs, authors, licenses, hashes and build instructions; these are third-party derivatives, not first-party hackathon lettering.
 
-Two native selectors precede content controls, with 44px minimum height, 12px between fields and 24px below the group. Changing fonts previews completed sample ink; each English face can replay. Personal text and review checks stay intact, while new metrics may change line breaks/page count. English changes complete personal ink instead of carrying stroke indices between faces. Choices are session-only and apply to PDF automatically. Memo shown/blank preserves geometry within each combination.
+English model sizes in millimetres are title 5.65; body/grammar/personal 4.1; footnotes 3.2; section headings 4.5; vocabulary 3.8; grammar labels 2.8; classification 3.2; date 2.9; footer 2.7. These are 200-unit model sizes, not visible character heights. Title strokes are 0.28mm and other English strokes 0.20mm, with round caps/joins. Face normalization is Readability/Tech/Print 0.2 and Pen 0.145; actual overhangs are reserved where required. Tech's title alone is lifted 0.70625mm inside the existing band. Body lettering keeps its baseline.
 
-**The Stroke Rule.** English handwriting uses centerline vector paths with round caps and joins. Static Japanese text is an explicit supported fallback, not a claim of Japanese stroke animation.
+Japanese phrase glosses use 2.6mm; vocabulary meanings use 2.7mm. Phrase glosses are lifted 1mm within their reserved rows; their horizontal anchor, row allocation and the rest of the plan stay unchanged. The selected complete WOFF2 loads on screen and the original complete TTF embeds in PDF. Japanese is static; English strokes animate.
+
+The native editor uses the selected renamed `Sentence Notebook … Input` WOFF2 derived from those same centerlines and advances. Its 4.1mm model size and 5.2mm line height scale to the actual paper width. It disables kerning/ligatures and preserves native selection, caret and composition. Font readiness gates confirmation; unsupported input remains editable. Native rasterization may appear darker than final SVG. Changing fonts can reflow the physical plan and completes current ink rather than carrying incompatible stroke indices.
+
+**The Face Rule.** Use the selected English face for editor advances and final centerlines, and the selected Japanese face for screen and PDF. Theme headings never override notebook typography.
 
 ## Layout
 
-The surrounding shell remains centered at a 1440px maximum, with 64px desktop gutters, a paper column up to 720px and a 270–310px control rail. Its 72px gap becomes 90px from 1450px. At 1100px and below, gutters are 32px, the rail 275px and gap 36px.
+The desk has a 1552px maximum content width and 24px horizontal outer padding. Its desktop grid uses 1.25fr/1fr columns, a 48px gap and a 254px first row. Timer/pens occupy upper left, the open index sits below, model card is upper right and notebook is below it. At 761–1200px, outer padding becomes 16px, columns 1.1fr/1fr and gap 24px. The timer retains its allocated space when hidden. Six complete horizontal pens occupy six labeled rows (54px high desktop, 44px mobile), with native radio hit areas and a selected check.
 
-At 760px and below, 20px gutters frame the order: invitation, view settings, playback, notebook, personal input, review checks, print controls and disclosure. The introductory paragraph and secondary page caption disappear. The workspace gap is 20px. Palette radios have six columns, reducing to three at 1100px. Buttons, selectors, memo labels and review controls retain 44px minimum targets.
+At 760px and below, 14px gutters and an 18px vertical gap stack tools, model, notebook and index. The tagline disappears, settings become one column and the model card is 246px high. Mobile starts with enlarged paper; the 806px page row includes 740px paper plus the reserved 66px side space. Desktop enlarged rows are 824px (740px paper plus 84px). Fit rows cap at 556px including their side space. These are viewing scales only. Mobile Confirm/Next lives in a sticky strip (top 8px) outside horizontal scrolling, alongside current-line navigation; native caret/selection movement pans the enlarged paper. The desktop action remains beside the active line.
 
 ### Common A5 refill
 
-`a5-layout.ts` imports the adopted refill JSON directly. Both renderers consume its allocated runs, rules, boxes and markers; visibility settings are applied afterwards. Coordinates below are millimetres from the top-left:
+The exact adopted JSON is imported by `a5-layout.ts`; screen SVG and independent PDF consume the same plan. Coordinates are millimetres from top left:
 
 | Structure | Current geometry |
 | --- | --- |
-| Paper | 148 × 210; SVG viewBox remains 0 0 148 210 |
-| Default margins | Left 18, right 12 |
-| Body ruling | 31 rules, x18–136, y39.2–195.2, pitch 5.2, width 0.10 |
-| Title band | y24.64–32.96, height 8.32; title baseline y31 |
-| Title/footer rules | x0–136, width 0.35; footer rule y201 |
-| Metadata | Classification right-aligned at x136/y11; date/page at x136/y17 |
-| Body and footnotes | English x18–104; divider x106; footnote text x108–136 |
-| Footer text | Right-aligned at x136/y206 |
-| Vocabulary structure | Frame 0.25; review boxes 2.5 × 2.5 |
+| Paper | 148 × 210; SVG viewBox 0 0 148 210 |
+| Default binding / outer margin | Left 18 / right 12; selectable binding 12, 18 or 24 on either side |
+| Body ruling | 31 rules; x18–136; y39.2–195.2; pitch 5.2; width 0.10 |
+| Title band | y24.64–32.96; height 8.32 (1.6 rows); title baseline y31 |
+| Title/footer rules | x0–136; width 0.35; footer rule y201 |
+| Metadata | Right-aligned x136; classification y11 and date/page y17 |
+| Main column / footnotes | Body x18–104; divider x106; footnotes x108–136 |
+| Footer text | Right-aligned x136/y206 |
+| Vocabulary | Frame width 0.25; review squares 2.5 × 2.5 |
 
-Short sentences leave one full ruled row after the sentence. Real glyph widths decide longer wrapping onto whole rows; anchored meanings reserve their own rows before the next content. Readability and Tech each wrap the eight-sentence sample to twelve body rows. Print wraps the third and seventh sentences; Pen fits each supplied sentence on one row. The vocabulary-to-grammar gap leaves one empty row. Footnotes are measured independently and subsequent blocks start below both columns. Long content continues on identical pages; it never lengthens the paper or changes the grid. Layout tests cover continuation. The Readability/Tech comparison captures and PDFs include two pages: study content first, with the supplied personal line on a continuation page. Content is not shrunk to force one page. Metadata that does not fit raises an explicit error and retains its source; long-title/metadata display-name workflows remain future work.
+Sentences wrap in whole ruled rows using selected advances. Memo blanking hides glosses, footnotes and number marks after allocation; it leaves their space and other content intact. Root confirmed-ink filtering reveals only actual entries, then study blocks after explicit completion. Vocabulary/grammar toggles hide their ink without reallocating. Longer source/personal content can continue on identical sheets; indivisible overflow produces an error instead of shrinking/clipping. Sentence-only mode hides study/personal/memo layers and can omit sheets with no body run.
 
-Memo blanking preserves the entire allocated layout and hides only anchored Japanese glosses, footnote text and its number marks. It retains the divider, body, vocabulary English/Japanese, boxes, checks, grammar and personal input. Sentence-only mode hides study, memo and personal layers, including the rail, but keeps English positions and the remembered memo selection. Supplemental pages with no body sentence are omitted in sentence-only mode.
-
-### Paper viewport and print
-
-The screen scales the fixed sheet in fit mode. Enlarged reading uses at least 740px paper width inside its own focusable horizontal scroll region, with an explicit scroll hint. Initial narrow-screen mode is enlarged; desktop starts fitted. Switching viewport mode does not rewrap or repaginate text. Sheets have a 24px screen gap, reduced to 18px on mobile.
-
-A5 remains the finished note. A5 printer paper is 148 × 210mm; A4 landscape is 297 × 210mm and carries two identical copies of each A5 page at x0 and x149, scale 1. Cut guides at x148 and x149 mark the 1mm center strip. Both screen and PDF share explicit left/right binding variants of 12, 18 or 24mm; the opposite margin remains 12mm. These deliberate paper settings may relayout content, whereas memo/marker/zoom choices do not.
-
-`study-pdf.ts` renders the shared plan independently of SVG, viewport and animation time. `print-layout.ts` still supplies sheet registries, defaults and placement; its earlier `createPrintLayout` typography is no longer the root export composition. A5 note pages set TrimBox and the document requests PrintScaling=None. Export instructions require 100%/actual size and one PDF page per printer sheet for already-imposed A4. A viewer/driver can override that hint. B5 and measured notebook formats remain deferred.
+**The Paper Rule.** Measure the full source before hiding ink. Memo blanking preserves reserved rows; viewport changes scale or scroll the page instead of changing its line breaks.
 
 ## Elevation & Depth
 
-One ambient screen shadow lifts each A5 sheet: `0 6px 20px #3b46551a`. Controls are flat, organized by rules and restrained fills. The older two-layer paper shadow belongs to the inactive prototype stylesheet. Print uses unprinted white paper, with no shadow or texture plate.
+Depth comes from photographed material plates and restrained shadows under real paper objects. The open book, pen and timer atlases have native alpha; live headings, tab selection, labels, numbers and clock hands sit above them. Seven original generated PNGs total about 11.76MB, with exact prompts, hashes and measured crops in [assets.json](public/desk/assets.json). Prompt embedding succeeded; pixel arrays were retained. Selected families are referenced; shared book/timer atlases remain common. Do not treat these source bytes as a measured per-view network budget.
 
-**The Paper Rule.** Reserve the ambient shadow for the screen notebook. Controls stay flat and the PDF leaves the physical paper unprinted.
+### Shadow Vocabulary
+
+- **Model card:** `0 6px 16px #26343e12`.
+- **Notebook paper:** `0 6px 18px #1f25221c`.
+- **Line action:** `0 3px 9px #1f252214`.
+- **Mobile action strip:** `0 3px 12px #2430381a`.
+- **Settings dialog:** `0 16px 60px #14252b33`, with `#222a304d` backdrop.
+
+**The Material Rule.** Keep numbers, labels, rules, selection and learning content live. Material plates supply only the physical object; no flattened interface enters the notebook or PDF.
 
 ## Shapes
 
-The paper, vocabulary frame, checkboxes and native selectors are square. Buttons and textarea use a small 3px radius. Handwriting and marker paths have round caps/joins; frames remain fine geometric lines. The following pen uses a blue body and warm nib, with a pale-blue marker body; movement lifts between strokes without the older opacity-fade treatment.
+Paper and the read-only model card have square corners. Ordinary actions and pen hit areas use restrained 3px corners; the settings dialog uses 4px. The pen/book/timer silhouettes belong to their supplied material plates. The model card has a fine pale rule in White, a warm fine rule in Natural and a 3px double rule in Walnut, placed 62px above the card bottom. These are card details, not notebook ruling or PDF content.
+
+The native notebook input is transparent, borderless, square and positioned on the current measured line. It has no surrounding decorative field box. The model card stays read-only. Thin index dividers and selected dark-blue text establish navigation without changing the blank book artwork.
 
 ## Components
 
-### View settings
+### Buttons
 
-A native content selector precedes labeled shown/blank memo radios and a screen-marker checkbox. Defaults are study content, shown memos and markers on. Sentence-only disables the memo fieldset with an explanatory message while keeping its value. Help stays outside the printed page; blank mode never prints a placeholder answer. Switching settings filters an already allocated plan and preserves source IDs, in-progress body strokes, personal ink and review checks.
+Quiet native buttons use transparent backgrounds, theme ink, 3px corners, 8×12px padding and a 44px minimum height. Hover uses a translucent gray wash; disabled buttons are half-opacity. The desktop line action is 76px wide, at least 62px high, and combines a live SVG check/arrow with Japanese text on the theme control surface. Mobile uses the sticky strip with 44px targets. The full-width PDF action uses a pale green-gray tint. Toolbar and compact mobile timer/index controls are smaller documented exceptions; do not claim universal 44px targets.
 
-### Playback and personal input
+### Inputs / Fields
 
-A sage primary button supports pause/resume/replay; a quiet action completes immediately; a native selector offers 1×/2×/4×. Hover transitions take 150ms and disabled buttons use half opacity. Reduced motion shows completed strokes and disables sample playback/speed.
+Only one textarea appears at a time, in Copy or personal-writing mode. Enter confirms only outside composition and its immediate end guard; modifier/repeat handling preserves editing. Exact-text mismatch and storage failures keep the draft with adjacent alert text. Reopening personal text hides its old screen SVG while retaining canonical confirmed text for PDF. Font readiness temporarily disables input. Native settings selects use a bottom rule; theme, memo and marker controls remain labeled native choices.
 
-The personal textarea has a cream field, thin border, italic Lora placeholder, help and character count. It accepts up to 80 characters, converts newlines to spaces and visibly discloses session-only state. Unsupported characters remain in the input, produce an adjacent error and block PDF export. Typing pauses sample playback. Personal strokes draw sequentially with their own pen, pause/resume and finish actions; unchanged character identities preserve progress through edits. The personal block appears only when supplied and is included in study-content mode. No fictional reference sentence or translation replaces the learner's input.
+### Cards / Containers
 
-### Navigation and notebook
+The model card combines a heading/progress row, Lora sentence, a reserved meaning area, theme rule and audio/meaning actions. Toggling meaning keeps its area rather than shifting the card. The note is a measured SVG with a live textarea overlay and textual title/description; visible memo accessibility text follows visible ink. The settings dialog groups desk/type and content/print controls, with two desktop columns and one mobile column.
 
-Lora wordmark/tagline, setup link and license footer retain their existing hierarchy. Links inherit ink with a 5px underline offset; a focus-revealed skip link reaches the controls. The SVG title and description reflect the displayed content, including blank memos. Stroke progress uses `t - 0.105 × sin(2πt)`. Main English writing precedes markers and memo strokes. Static memo text appears at the memo phase; vocabulary Japanese is static study content.
+### Navigation
 
-The notebook includes source-based classification/date, title, numbered folio, sentences, optional meanings/footnotes, one vocabulary frame per allocated block, grammar and supplied personal writing. Review checkboxes are native controls in a disclosure outside the sheet; their corresponding vector marks appear on screen and in PDF. Checks are learner marks, not automatic assessment or stored completion.
+The open index keeps five live vertical tabs on its left page and the selected panel on the right. Arrow Up/Down, Home and End move the roving tab focus. Selected text is darker blue and semibold; both pages can scroll internally. My Vocabulary and Review expose the sample's native checkboxes, while Completed Notes reflects the explicit completion state of the same local sample. Topic Index links to the existing `/setup` workflow. Wordmark, skip link and license footer remain live links.
 
-### Palette selection
+### Pens, timer and handwriting
 
-Six labeled native radio choices above the notebook use an accent underline, pale swatch and subtle selected fill. Blue is selected initially. Changing palette updates section/structure accents and marker colors in screen/PDF without restarting writing; body and personal ink remain graphite. Choices are session-only.
+Each pen row contains a native radio, decorative atlas crop, visible color name and selected check. Hover moves only the art 3px over 150ms; reduced motion removes that transition. The optional timer has shared deadline logic, Start/Pause/Resume/Reset, live digits in White/Natural and live hands plus a numeric reading in Walnut. Timer expiry announces itself without completing Copy; changing themes or hiding it preserves the mounted timer.
+
+Confirmation persists the canonical entry before sequential SVG strokes start. Replay resets ink only; Pause/Resume preserves current time; Finish completes animation only. Reduced motion shows confirmed strokes directly. Meanings/markers are revealed with their associated confirmed content. Actual native speech synthesis is a browser capability and its hardware/audio behavior was not certified by synthetic QA.
 
 ### Print
 
-A fixed A5 finished-size readout precedes the printer-sheet selector, placement diagram, binding-side/margin selectors and PDF-marker checkbox. Defaults are A5 paper, left/18mm binding. The PDF marker setting initially follows the screen setting, then remains an independent override after explicit change. Content and memo settings match the current screen selection. Export is a full-width tinted action with status feedback and works before animation completion.
+Export uses canonical confirmed layout, never the textarea draft or the temporary personal-edit screen filter. The finished note stays A5. A5 uses a 148×210mm page/TrimBox; A4 uses a 297×210mm landscape sheet with two scale-1 copies at x0/149mm and a 1mm cut strip. Each continuation page repeats twice on its own A4 sheet. Print markers initially follow screen markers until overridden. Content/memo choices are shared; theme tint, furniture, controls and shadows are excluded. Request PrintScaling=None and instruct 100% actual size, one PDF page per printer sheet. English paths remain unsearchable and the PDF is not tagged.
 
-The PDF contains vector paths/rules plus embedded static Japanese; it contains no screenshot, paper fill or screen shadow. English paths are not searchable text and the PDF is not tagged. Current PDF evidence confirms the final sample's Japanese and geometry; physical printing, grayscale, printer-edge cut guides, hole fit, red-sheet behavior and arbitrary production lessons remain unverified. Full grammar brackets, personal translations, final glyph assets and saved completed learning pages are outside this increment.
+### Evidence boundary
+
+The 2026-10-27 build/test/browser/PDF records are summarized in [PROJECT_STATUS.md](PROJECT_STATUS.md) and [the desk note](docs/desktop-study-desk.md). The finish reviewer independently opened all 13 required/targeted captures and scored its five findings resolved (`ship`); this is scoped acceptance, not a numerical comp-reproduction or whole-product certification. This documenter read source/evidence and opened the three desktop theme captures. This documentation update adds no fresh runtime check. Real OS IME/audio, mobile hardware, physical print, unseen lessons, Meta integration and deployment remain unverified. No successful detector/comp-diff is claimed.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- Do derive screen and PDF from the same A5 layout and measured glyph advances.
-- Do allocate memo space before filtering visible ink; keep body positions, page count and study/check content unchanged between shown and blank.
-- Do keep graphite body ink across all six palettes and pale markers beneath it.
-- Do preserve visible focus, native controls, explicit pause/finish actions and direct completion for reduced motion.
-- Do retain unsupported input, explain it beside the field and block export until it is supported.
-- Do label the sample, session-only input and review checks honestly; animation completion is not learning completion.
-- Do distinguish the finished A5 note from its printer sheet and require actual-size printing.
+- Do derive screen and independent PDF from the same A5 layout and measured glyph advances.
+- Do preserve native textarea selection, composition, caret behavior and the current-line action.
+- Do save exact confirmed Copy text before animation and require an explicit Next action.
+- Do keep memo space, stable IDs, drafts, checks and canonical saved personal text when changing presentation.
+- Do retain labeled native controls, visible focus, reduced-motion completion and adjacent error/status feedback.
+- Do use the existing material families and retain original asset prompts, hashes and font notices.
+- Do distinguish a local synthetic sample from real lesson history and actual-size A5 notes from printer sheets.
 
 ### Don't:
 
-- Don't reflow notebook text to the viewport, stretch the sheet, compress the grid or shrink letters to fit more content.
-- Don't remove reserved space, vocabulary Japanese, checks, grammar or personal writing when blanking memos.
-- Don't treat the provisional glyphs or a technical ship verdict as owner approval of the final handwriting.
-- Don't restore the retired typewriter, key or case motif, or substitute a character reveal for English centerline strokes.
-- Don't spread paper shadows to controls, cover letters with markers, or paint the screen's paper tint into the PDF.
-- Don't add rankings, confetti or a chat interface to this notebook world.
-- Don't claim saved completed notes, live generation, red-sheet output, Japanese stroke animation, a redesigned /setup or verified physical printing.
+- Don't reflow notebook text to the viewport, stretch the A5 sheet, compress the grid or shrink letters to fit content.
+- Don't put the editor in the model card or add a second simultaneous text input.
+- Don't expose the saved personal SVG beneath its active editor, discard its canonical PDF value, or export a draft.
+- Don't remove reserved rows, vocabulary Japanese, grammar or checks as a side effect of blanking memos.
+- Don't treat animation, timer expiry or a vocabulary check as Copy completion.
+- Don't paint desk textures, controls, theme paper tint or screen shadows into the PDF.
+- Don't revive the typewriter motif or add rankings, confetti or a chat interface.
+- Don't claim native-device/IME/audio, physical-print, production-generation or deployment verification from synthetic browser evidence.

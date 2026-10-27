@@ -1,0 +1,24 @@
+{
+  "id": "oak",
+  "path": "/desk/desk-oak.png",
+  "width": 1536,
+  "height": 1024,
+  "mode": "RGB",
+  "byteSize": 2148503,
+  "sha256": "a3aeb619bf38167a20d8f4a62cde489bc990e9c082421a2510fefbbeee4a704a",
+  "generator": "built-in image_gen.imagegen",
+  "generatedOn": "2026-10-27",
+  "generationPrompt": "Use case: photorealistic-natural\nAsset type: subtle reusable desk-surface texture for The Sentence Book web UI.\nPrimary request: a full-frame unobstructed light natural oak desktop texture, photographed directly overhead in orthographic view.\nReference image 1 contributes ONLY the Natural theme's warm light oak tone and fine horizontal grain; exclude every object and all UI.\nComposition: 1536x1024 landscape texture fills every pixel edge to edge. Uniform warm pale honey-beige wood, quiet fine grain running horizontally. Very low contrast and delicate narrow pores. Natural material variation without prominent knots, dark stains, plank boundaries or isolated distinctive marks. No perspective, no depth, no desk edges, no vignette, no hotspots. Diffuse perfectly even illumination. Should remain visually quiet behind paper and small dark text.\nMaterials: smooth matte lightly finished light oak, subdued realistic fine wood grain; no exaggerated wavy lines, rustic distress, scratches or roughness.\nOpaque full frame. No objects, paper, pens, books, timers, shadows from objects, borders, logos, text, watermarks, patterns or UI.",
+  "generationOutputSourcePath": "/Users/maki/.codex/generated_images/01a17c72-6f03-72b1-b40b-005e02bf01fa/exec-69361868-8d1a-4891-9b78-d9f03f6287c0.png",
+  "referenceSourcePaths": [
+    "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/17-natural-model-card-notebook-input.png"
+  ],
+  "referenceRole": "Approved design appearance only; new isolated material/object generation; no screenshot crop",
+  "embeddedPrompt": true,
+  "provenanceFallback": null,
+  "pixelEdits": "none; original generated RGBA/RGB pixel arrays are byte-identical; exact prompt added as PNG metadata only",
+  "alpha": {
+    "opaque": true
+  },
+  "usage": "Full-surface background image using cover. Edge-to-edge horizontal material texture, not verified mathematically seamless; avoid tiled repeat. White theme uses CSS flat white."
+}

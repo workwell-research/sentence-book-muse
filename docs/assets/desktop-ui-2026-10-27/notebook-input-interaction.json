@@ -1,0 +1,104 @@
+{
+  "version": 1,
+  "date": "2026-10-27",
+  "authority": {
+    "ownerFeedback": "ちなみにフラッシュカードはお手本で、書くのはノートだからね",
+    "requiredRoles": {
+      "flashcard": "read-only model",
+      "notebook": "writing/input"
+    },
+    "supersedes": "Archived owner-spec.md card-editing clauses, old01-16 comps and prior card-input contracts.",
+    "status": "Role split owner-required. Corrected exact render/control placement pending review; no app implementation."
+  },
+  "sourceCard": {
+    "editable": false,
+    "editorCount": 0,
+    "content": [
+      "full model sentence once",
+      "task/progress",
+      "audio",
+      "meaning/hint"
+    ],
+    "forbidden": [
+      "draft copy",
+      "text caret",
+      "editable textarea",
+      "confirmation button"
+    ],
+    "geometry": "Fixed common outer box above note, clear of notebook metadata.",
+    "longText": "Readable wrap/internal scroll, no form conversion or note shrinking.",
+    "practiceVariation": "Readonly hints/audio/model visibility follow actual stage; no second editor."
+  },
+  "notebookEditor": {
+    "activeTextEditorCount": 1,
+    "nativeControl": "textarea",
+    "placement": "Measured current sentence/current line on the physical A5 paper after committed lines.",
+    "appearance": "Transparent/no separate form frame, actual editable text/caret on a note rule.",
+    "layout": "Use shared A5 row plan, metrics and baseline. Reserve full active sentence rows before vocabulary/grammar; long drafts/confirmed text must not cover later blocks.",
+    "interaction": [
+      "native selection/caret",
+      "keyboard",
+      "IME composition",
+      "paste",
+      "accessible label and source relationship"
+    ],
+    "focus": "Keep stable editor identity/focus/selection/composition on theme/color/memo/timer changes.",
+    "viewport": "Follow active rule with scroll/readable zoom, keep previous lines accessible; do not shrink paper or font.",
+    "feedback": "Errors keep draft/current source and earlier committed content; actual validation follows learning logic."
+  },
+  "confirmation": {
+    "location": "Desk margin next to notebook active line, outside paper; not on source card.",
+    "nativeButton": true,
+    "minTargetPx": 44,
+    "label": "確認",
+    "shortcut": "Enter",
+    "guards": [
+      "IME composition",
+      "held/repeated keys",
+      "modified shortcuts",
+      "open product dialogs"
+    ],
+    "commit": "Validate/save actual learner result first, then display handwriting at same line. No card-to-paper draft transfer, duplicate ink or animation-driven learning completion.",
+    "advance": "Follow existing deliberate learning flow; do not add auto-advance based on this visual comp."
+  },
+  "state": {
+    "preserve": [
+      "source IDs",
+      "draft",
+      "committed sentences",
+      "checks",
+      "memo choice",
+      "selected colors",
+      "learning progress"
+    ],
+    "presentationChanges": "Do not clear/reset/remount editor when changing theme, color, timer visibility or memos.",
+    "syntheticExample": {
+      "source": "Tomorrow, I want to make time for them again.",
+      "draft": "Tomorrow, I want to",
+      "committedSentences": 7,
+      "currentSentence": 8,
+      "realLearningData": false
+    }
+  },
+  "print": {
+    "include": "Canonical confirmed note content using common row plan.",
+    "exclude": [
+      "source card",
+      "native editing UI",
+      "caret",
+      "confirmation controls",
+      "unconfirmed draft presentation",
+      "desk/pen/timer/index navigation"
+    ]
+  },
+  "verification": {
+    "staticRendersInspected": true,
+    "appImplemented": false,
+    "browserVerified": false,
+    "IMEVerified": false,
+    "inputAndInkBaselineRuntimeVerified": false,
+    "longDraftPaginationVerified": false,
+    "commitPersistenceVerified": false,
+    "physicalDeviceVerified": false
+  }
+}

@@ -27,3 +27,7 @@ The owner selected Readability Italic as the default on 2026-10-27; Klee One rem
 Japanese is static handwritten-style text, without pen animation. All four English choices animate actual vector strokes. PDF embeds the complete selected Japanese TTF: prior partial subsets lost kana outlines. English PDF paths are not searchable/selectable text. Full embedding increases download size.
 
 Previous Cutlings source/readme/OFL and M PLUS 1p TTF/OFL remain as historical provenance; they are not selected by the active notebook. Lora remains the interface wordmark under its separate OFL.
+
+## Native notebook editor fonts
+
+`NotebookInput-{readability,tech,print,pen}.woff2` are renamed Sentence Notebook … Input OFL derivatives of the matching centerline data above. Original source authors and license notices remain applicable. They preserve the source advances for native selection, caret and IME; final SVG/PDF continue using centerline paths. Rebuild instructions: `docs/desktop-study-desk.md`; hashes and parameters: `editor-fonts.json`. These generated fonts are third-party derivatives, not original hackathon lettering.

@@ -1,0 +1,933 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Production desk material plates and sprite atlases; all live text and controls remain semantic UI.",
+  "approvedReferences": [
+    "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/17-natural-model-card-notebook-input.png",
+    "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/18-pure-white-model-card-notebook-input.png",
+    "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/19-walnut-model-card-notebook-input.png",
+    "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/20-pure-white-notebook-input-timer-hidden.png"
+  ],
+  "approvalContext": "Parent reports user explicitly handed off approved desktop design for implementation; these are separated material assets, not a new concept round.",
+  "coordinateConvention": "Boxes use top-left x,y,width,height; normalized values divide by original PNG width/height. Sprite placement must preserve each crop aspect ratio.",
+  "assets": [
+    {
+      "id": "white",
+      "path": "/desk/pens-white.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "byteSize": 1315587,
+      "sha256": "09d952bb1349285beb4d873d90af5a5381dbdef0879acb2d4a7b9bce990b436a",
+      "generator": "built-in image_gen.imagegen",
+      "generatedOn": "2026-10-27",
+      "generationPrompt": "Use case: product-mockup\nAsset type: production transparent PNG sprite atlas for The Sentence Book web app.\nPrimary request: exactly SIX separate full-length horizontal capped study-marker pens, arranged as six evenly spaced parallel rows. One pen per row. No other object.\nReference image 1: use ONLY the white pen material family and restrained overhead photographic quality from the approved screen; do not reproduce the screen or any UI.\nComposition: 1536 by 1024 landscape canvas, transparent background. Each pen is straight horizontal with its cap at LEFT, body toward RIGHT, whole pen visible, each of six pens same length and same thickness. All left ends aligned near x=120 and right ends aligned near x=1416. Row centerlines y=85,256,427,598,769,940 (six equal-height sprite rows). Clean generous transparent space between rows; no overlaps. Pen thickness about 66 pixels, fine molded cap clip just above barrel.\nMaterials: satin white barrel, capped white study-marker design, pastel colored small cap end, molded colored clip and matching colored tail. No pointed writing tip exposed. Similar to quality Japanese mild study highlighters but no branding.\nTop to bottom colors: muted sky blue; dusty pastel pink; soft lavender purple; neutral gray; pastel orange; sage green.\nLighting: directly overhead camera, parallel orthographic, very soft light from upper left, restrained realistic plastic highlights, tiny localized contact shadow only. White barrels remain opaque white.\nText: none. No letters, logos, color names, numbers, labels, selection marks, watermark, paper, desk, grid or UI. Actual alpha transparency surrounding each entire pen. Produce a reusable asset atlas, not a screenshot.",
+      "generationOutputSourcePath": "/Users/maki/.codex/generated_images/01a17c72-6f03-72b1-b40b-005e02bf01fa/exec-34218208-a9d8-4859-91cc-18b11f163d32.png",
+      "referenceSourcePaths": [
+        "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/18-pure-white-model-card-notebook-input.png"
+      ],
+      "referenceRole": "Approved design appearance only; new isolated material/object generation; no screenshot crop",
+      "embeddedPrompt": true,
+      "provenanceFallback": null,
+      "pixelEdits": "none; original generated RGBA/RGB pixel arrays are byte-identical; exact prompt added as PNG metadata only",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "fullyTransparentFraction": 0.359378,
+        "note": "Native generated alpha retained without compositing, masking, recoloring or cropping."
+      },
+      "sprites": [
+        {
+          "id": "blue",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 64,
+              "width": 1440,
+              "height": 134
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.0625,
+              "width": 0.9375,
+              "height": 0.130859
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 110,
+              "y": 80,
+              "width": 1319,
+              "height": 100
+            },
+            "normalized": {
+              "x": 0.071615,
+              "y": 0.078125,
+              "width": 0.858724,
+              "height": 0.097656
+            }
+          }
+        },
+        {
+          "id": "pink",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 209,
+              "width": 1440,
+              "height": 134
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.204102,
+              "width": 0.9375,
+              "height": 0.130859
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 110,
+              "y": 225,
+              "width": 1319,
+              "height": 100
+            },
+            "normalized": {
+              "x": 0.071615,
+              "y": 0.219727,
+              "width": 0.858724,
+              "height": 0.097656
+            }
+          }
+        },
+        {
+          "id": "purple",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 361,
+              "width": 1440,
+              "height": 136
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.352539,
+              "width": 0.9375,
+              "height": 0.132812
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 109,
+              "y": 377,
+              "width": 1320,
+              "height": 102
+            },
+            "normalized": {
+              "x": 0.070964,
+              "y": 0.368164,
+              "width": 0.859375,
+              "height": 0.099609
+            }
+          }
+        },
+        {
+          "id": "gray",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 517,
+              "width": 1440,
+              "height": 135
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.504883,
+              "width": 0.9375,
+              "height": 0.131836
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 110,
+              "y": 533,
+              "width": 1319,
+              "height": 101
+            },
+            "normalized": {
+              "x": 0.071615,
+              "y": 0.520508,
+              "width": 0.858724,
+              "height": 0.098633
+            }
+          }
+        },
+        {
+          "id": "orange",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 677,
+              "width": 1440,
+              "height": 135
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.661133,
+              "width": 0.9375,
+              "height": 0.131836
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 110,
+              "y": 693,
+              "width": 1319,
+              "height": 101
+            },
+            "normalized": {
+              "x": 0.071615,
+              "y": 0.676758,
+              "width": 0.858724,
+              "height": 0.098633
+            }
+          }
+        },
+        {
+          "id": "green",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 835,
+              "width": 1440,
+              "height": 135
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.81543,
+              "width": 0.9375,
+              "height": 0.131836
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 110,
+              "y": 851,
+              "width": 1319,
+              "height": 101
+            },
+            "normalized": {
+              "x": 0.071615,
+              "y": 0.831055,
+              "width": 0.858724,
+              "height": 0.098633
+            }
+          }
+        }
+      ],
+      "usage": "Use sprite box as CSS overflow crop or SVG image viewBox; equal visible row spacing is supplied by layout. No rasterized labels. Suggested rendered pen width 280–380 CSS px."
+    },
+    {
+      "id": "natural",
+      "path": "/desk/pens-natural.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "byteSize": 1605900,
+      "sha256": "694624b0e259dedc044b1aa18e8aaeca4af23a194b01b885e304936a59ac1bb8",
+      "generator": "built-in image_gen.imagegen",
+      "generatedOn": "2026-10-27",
+      "generationPrompt": "Use case: product-mockup\nAsset type: production transparent PNG sprite atlas for The Sentence Book.\nPrimary request: exactly SIX separate full-length capped study markers, six evenly spaced parallel horizontal rows, all cap ends LEFT. Reference image 1 contributes only the Natural theme's simple matte marker design and overhead photographic style; do not reproduce any screen.\nComposition: landscape canvas 1536x1024. Entire pens visible from x=100 to x=1436, all same length/thickness. Six equally spaced horizontal pens, row centers approximately 130,282,434,586,738,890. Pen barrel thickness 70px; enough fully transparent empty space between each row for separate sprites.\nPens: simple modest European stationery, elongated matte satin plastic marker barrel, matching cylindrical closed cap, thin molded PLASTIC cap clip, narrow closed flat tail. Everything is capped. All components are matching muted color, gentle molded details, no logos. NO metallic cones, NO metal, NO silver clips, NO ballpoint nibs, NO exposed points, NO click mechanism. These MUST look like capped study markers, not ballpoint pens.\nTop to bottom six colors exactly: muted cornflower blue; dusty pink; soft lavender purple; medium neutral gray; warm pastel orange; sage green.\nCamera: exact directly-overhead flat-lay orthographic with no angle or perspective convergence.\nLighting: soft neutral light from upper left; subtle photorealistic surface gradients, tiny contact shadow close to pen only.\nBackground: genuine alpha transparency, not white, not a desk, not a gradient. Each pen is an independent isolated cutout.\nNo text, labels, letters, color names, numbers, selection marks, decorative objects, UI or watermark.",
+      "generationOutputSourcePath": "/Users/maki/.codex/generated_images/01a17c72-6f03-72b1-b40b-005e02bf01fa/exec-c35ba8e1-4b5f-4fc1-a591-f5afe3009a56.png",
+      "referenceSourcePaths": [
+        "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/17-natural-model-card-notebook-input.png"
+      ],
+      "referenceRole": "Approved design appearance only; new isolated material/object generation; no screenshot crop",
+      "embeddedPrompt": true,
+      "provenanceFallback": null,
+      "pixelEdits": "none; original generated RGBA/RGB pixel arrays are byte-identical; exact prompt added as PNG metadata only",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "fullyTransparentFraction": 0.42283,
+        "note": "Native generated alpha retained without compositing, masking, recoloring or cropping."
+      },
+      "sprites": [
+        {
+          "id": "blue",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 49,
+              "width": 1440,
+              "height": 148
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.047852,
+              "width": 0.9375,
+              "height": 0.144531
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 76,
+              "y": 65,
+              "width": 1386,
+              "height": 114
+            },
+            "normalized": {
+              "x": 0.049479,
+              "y": 0.063477,
+              "width": 0.902344,
+              "height": 0.111328
+            }
+          }
+        },
+        {
+          "id": "pink",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 205,
+              "width": 1440,
+              "height": 150
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.200195,
+              "width": 0.9375,
+              "height": 0.146484
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 77,
+              "y": 221,
+              "width": 1385,
+              "height": 116
+            },
+            "normalized": {
+              "x": 0.05013,
+              "y": 0.21582,
+              "width": 0.901693,
+              "height": 0.113281
+            }
+          }
+        },
+        {
+          "id": "purple",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 365,
+              "width": 1440,
+              "height": 150
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.356445,
+              "width": 0.9375,
+              "height": 0.146484
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 76,
+              "y": 381,
+              "width": 1386,
+              "height": 116
+            },
+            "normalized": {
+              "x": 0.049479,
+              "y": 0.37207,
+              "width": 0.902344,
+              "height": 0.113281
+            }
+          }
+        },
+        {
+          "id": "gray",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 523,
+              "width": 1440,
+              "height": 151
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.510742,
+              "width": 0.9375,
+              "height": 0.147461
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 76,
+              "y": 539,
+              "width": 1386,
+              "height": 117
+            },
+            "normalized": {
+              "x": 0.049479,
+              "y": 0.526367,
+              "width": 0.902344,
+              "height": 0.114258
+            }
+          }
+        },
+        {
+          "id": "orange",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 680,
+              "width": 1440,
+              "height": 150
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.664062,
+              "width": 0.9375,
+              "height": 0.146484
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 77,
+              "y": 696,
+              "width": 1385,
+              "height": 116
+            },
+            "normalized": {
+              "x": 0.05013,
+              "y": 0.679688,
+              "width": 0.901693,
+              "height": 0.113281
+            }
+          }
+        },
+        {
+          "id": "green",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 838,
+              "width": 1440,
+              "height": 150
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.818359,
+              "width": 0.9375,
+              "height": 0.146484
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 77,
+              "y": 854,
+              "width": 1385,
+              "height": 116
+            },
+            "normalized": {
+              "x": 0.05013,
+              "y": 0.833984,
+              "width": 0.901693,
+              "height": 0.113281
+            }
+          }
+        }
+      ],
+      "usage": "Use sprite box as CSS overflow crop or SVG image viewBox; equal visible row spacing is supplied by layout. No rasterized labels. Suggested rendered pen width 280–380 CSS px."
+    },
+    {
+      "id": "walnut",
+      "path": "/desk/pens-walnut.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "byteSize": 1545766,
+      "sha256": "44f6e9bd542ccd4f1ea9f6865aefa6021c72419d64eb4ac4c05f0fb5b539a69b",
+      "generator": "built-in image_gen.imagegen",
+      "generatedOn": "2026-10-27",
+      "generationPrompt": "Use case: product-mockup\nAsset type: production transparent PNG sprite atlas for The Sentence Book web app.\nPrimary request: exactly SIX separate full-length horizontal black-and-brass stationery pens, six evenly spaced parallel rows, cap ends at LEFT. Reference image 1 contributes only the Walnut theme pen material family and restrained overhead photographic quality; do not reproduce its screen.\nComposition: landscape canvas 1536x1024. Whole pens visible from x=100 to x=1436. All six pens same length and thickness, exactly horizontal, no perspective, one pen in each equally spaced row approximately y=130,282,434,586,738,890. Transparent empty gaps separate rows.\nMaterials: smooth satin black bodies and black closed caps, restrained warm brushed brass clip/rings and subtle rounded brass tail. Each left cap has a clearly visible colored small end cap and narrow colored band. Elegant practical vintage study stationery, mild realistic highlight, not ornamental luxury.\nTop to bottom six cap band colors: blue; dusty pink; lavender purple; neutral gray; warm orange; sage green. Keep the bodies black in all six rows.\nCamera: directly overhead flat lay orthographic. Lighting: gentle neutral upper-left light with tiny localized contact shadow only.\nBackground: actual alpha transparency surrounding each pen, no desk, no backplate, no floor, no opaque gradient.\nText: none. No letters, brands, color names, numbers, labels, selection marks, icons, UI, rulers or watermark. Do not add any other objects.",
+      "generationOutputSourcePath": "/Users/maki/.codex/generated_images/01a17c72-6f03-72b1-b40b-005e02bf01fa/exec-0e75d1b1-dd50-41d4-bfcb-42f3bfaf0277.png",
+      "referenceSourcePaths": [
+        "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/19-walnut-model-card-notebook-input.png"
+      ],
+      "referenceRole": "Approved design appearance only; new isolated material/object generation; no screenshot crop",
+      "embeddedPrompt": true,
+      "provenanceFallback": null,
+      "pixelEdits": "none; original generated RGBA/RGB pixel arrays are byte-identical; exact prompt added as PNG metadata only",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "fullyTransparentFraction": 0.467028,
+        "note": "Native generated alpha retained without compositing, masking, recoloring or cropping."
+      },
+      "sprites": [
+        {
+          "id": "blue",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 87,
+              "width": 1440,
+              "height": 141
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.084961,
+              "width": 0.9375,
+              "height": 0.137695
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 86,
+              "y": 103,
+              "width": 1365,
+              "height": 107
+            },
+            "normalized": {
+              "x": 0.05599,
+              "y": 0.100586,
+              "width": 0.888672,
+              "height": 0.104492
+            }
+          }
+        },
+        {
+          "id": "pink",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 231,
+              "width": 1440,
+              "height": 140
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.225586,
+              "width": 0.9375,
+              "height": 0.136719
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 86,
+              "y": 247,
+              "width": 1365,
+              "height": 106
+            },
+            "normalized": {
+              "x": 0.05599,
+              "y": 0.241211,
+              "width": 0.888672,
+              "height": 0.103516
+            }
+          }
+        },
+        {
+          "id": "purple",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 376,
+              "width": 1440,
+              "height": 140
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.367188,
+              "width": 0.9375,
+              "height": 0.136719
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 86,
+              "y": 392,
+              "width": 1365,
+              "height": 106
+            },
+            "normalized": {
+              "x": 0.05599,
+              "y": 0.382812,
+              "width": 0.888672,
+              "height": 0.103516
+            }
+          }
+        },
+        {
+          "id": "gray",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 520,
+              "width": 1440,
+              "height": 141
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.507812,
+              "width": 0.9375,
+              "height": 0.137695
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 86,
+              "y": 536,
+              "width": 1365,
+              "height": 107
+            },
+            "normalized": {
+              "x": 0.05599,
+              "y": 0.523438,
+              "width": 0.888672,
+              "height": 0.104492
+            }
+          }
+        },
+        {
+          "id": "orange",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 664,
+              "width": 1440,
+              "height": 142
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.648438,
+              "width": 0.9375,
+              "height": 0.138672
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 86,
+              "y": 680,
+              "width": 1365,
+              "height": 108
+            },
+            "normalized": {
+              "x": 0.05599,
+              "y": 0.664062,
+              "width": 0.888672,
+              "height": 0.105469
+            }
+          }
+        },
+        {
+          "id": "green",
+          "box": {
+            "pixels": {
+              "x": 48,
+              "y": 808,
+              "width": 1440,
+              "height": 142
+            },
+            "normalized": {
+              "x": 0.03125,
+              "y": 0.789062,
+              "width": 0.9375,
+              "height": 0.138672
+            }
+          },
+          "opaqueObjectBounds": {
+            "pixels": {
+              "x": 86,
+              "y": 824,
+              "width": 1365,
+              "height": 108
+            },
+            "normalized": {
+              "x": 0.05599,
+              "y": 0.804688,
+              "width": 0.888672,
+              "height": 0.105469
+            }
+          }
+        }
+      ],
+      "usage": "Use sprite box as CSS overflow crop or SVG image viewBox; equal visible row spacing is supplied by layout. No rasterized labels. Suggested rendered pen width 280–380 CSS px."
+    },
+    {
+      "id": "book",
+      "path": "/desk/index-book.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA",
+      "byteSize": 1627162,
+      "sha256": "550c1d51ecd3cffc495bc41ead8284b66573075610e55168234fceabc1a1d201",
+      "generator": "built-in image_gen.imagegen",
+      "generatedOn": "2026-10-27",
+      "generationPrompt": "Use case: product-mockup\nAsset type: reusable transparent blank open-book plate for a live index/navigation UI.\nPrimary request: a single open blank book seen exactly from directly overhead, wide landscape spread, two spacious blank pages, restrained realistic photographic quality.\nReference image 1 contributes only the open index book's shape, page proportion, understated cream paper, binding seam and restrained shadow; none of its writing or screen must appear.\nComposition: 1536x1024 canvas; book approximately x=60..1476, y=80..920; nearly rectangular flat open spread. Two equal nearly-portrait pages meet at x=768. Long outside vertical edges and upper/lower edges are almost straight, with only gentle paper curvature at central seam. Fully visible book including thin cover, page edges and tiny close shadow. Large blank page surfaces suitable for native overlaid text.\nMaterials: neutral very pale ivory paper, subtle fine uncoated paper texture, minimal warm-gray shading in center gutter, delicately visible stacked paper edges on outside. Thin neutral taupe-brown cover visible as a narrow edge. Small natural corner radius, no curled pages. Both facing pages have same tone, flat readable illumination.\nBackground: actual alpha transparency around the book, so it can sit on white, light oak or dark walnut desk. Keep all white/ivory paper fully opaque.\nCamera: exact orthographic directly overhead; no perspective skew, no slanted rotation, no oblique photograph. Soft upper-left light and only a small subtle contact shadow.\nText: NONE. Absolutely blank paper: no rules, grids, lines, handwriting, letters, numbers, page numbers, titles, tabs, bookmarks, ribbon, decorations, UI or watermark. No objects other than this open blank book.",
+      "generationOutputSourcePath": "/Users/maki/.codex/generated_images/01a17c72-6f03-72b1-b40b-005e02bf01fa/exec-99d476b3-ba79-46bb-bf97-67d3bd3b0f3d.png",
+      "referenceSourcePaths": [
+        "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/20-pure-white-notebook-input-timer-hidden.png"
+      ],
+      "referenceRole": "Approved design appearance only; new isolated material/object generation; no screenshot crop",
+      "embeddedPrompt": true,
+      "provenanceFallback": null,
+      "pixelEdits": "none; original generated RGBA/RGB pixel arrays are byte-identical; exact prompt added as PNG metadata only",
+      "alpha": {
+        "min": 0,
+        "max": 254,
+        "fullyTransparentFraction": 0.18718,
+        "note": "Native generated alpha retained without compositing, masking, recoloring or cropping."
+      },
+      "objectBox": {
+        "pixels": {
+          "x": 64,
+          "y": 76,
+          "width": 1408,
+          "height": 864
+        },
+        "normalized": {
+          "x": 0.041667,
+          "y": 0.074219,
+          "width": 0.916667,
+          "height": 0.84375
+        }
+      },
+      "contentSafeBoxes": {
+        "left": {
+          "pixels": {
+            "x": 132,
+            "y": 138,
+            "width": 576,
+            "height": 708
+          },
+          "normalized": {
+            "x": 0.085938,
+            "y": 0.134766,
+            "width": 0.375,
+            "height": 0.691406
+          }
+        },
+        "right": {
+          "pixels": {
+            "x": 824,
+            "y": 138,
+            "width": 574,
+            "height": 708
+          },
+          "normalized": {
+            "x": 0.536458,
+            "y": 0.134766,
+            "width": 0.373698,
+            "height": 0.691406
+          }
+        }
+      },
+      "seamNormalizedX": 0.498,
+      "usage": "Full plate or objectBox viewBox. Same neutral paper in every theme; native headings, nav, rules, selection and numbers overlay blank pages. Preserve aspect ratio."
+    },
+    {
+      "id": "oak",
+      "path": "/desk/desk-oak.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "byteSize": 2148503,
+      "sha256": "a3aeb619bf38167a20d8f4a62cde489bc990e9c082421a2510fefbbeee4a704a",
+      "generator": "built-in image_gen.imagegen",
+      "generatedOn": "2026-10-27",
+      "generationPrompt": "Use case: photorealistic-natural\nAsset type: subtle reusable desk-surface texture for The Sentence Book web UI.\nPrimary request: a full-frame unobstructed light natural oak desktop texture, photographed directly overhead in orthographic view.\nReference image 1 contributes ONLY the Natural theme's warm light oak tone and fine horizontal grain; exclude every object and all UI.\nComposition: 1536x1024 landscape texture fills every pixel edge to edge. Uniform warm pale honey-beige wood, quiet fine grain running horizontally. Very low contrast and delicate narrow pores. Natural material variation without prominent knots, dark stains, plank boundaries or isolated distinctive marks. No perspective, no depth, no desk edges, no vignette, no hotspots. Diffuse perfectly even illumination. Should remain visually quiet behind paper and small dark text.\nMaterials: smooth matte lightly finished light oak, subdued realistic fine wood grain; no exaggerated wavy lines, rustic distress, scratches or roughness.\nOpaque full frame. No objects, paper, pens, books, timers, shadows from objects, borders, logos, text, watermarks, patterns or UI.",
+      "generationOutputSourcePath": "/Users/maki/.codex/generated_images/01a17c72-6f03-72b1-b40b-005e02bf01fa/exec-69361868-8d1a-4891-9b78-d9f03f6287c0.png",
+      "referenceSourcePaths": [
+        "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/17-natural-model-card-notebook-input.png"
+      ],
+      "referenceRole": "Approved design appearance only; new isolated material/object generation; no screenshot crop",
+      "embeddedPrompt": true,
+      "provenanceFallback": null,
+      "pixelEdits": "none; original generated RGBA/RGB pixel arrays are byte-identical; exact prompt added as PNG metadata only",
+      "alpha": {
+        "opaque": true
+      },
+      "usage": "Full-surface background image using cover. Edge-to-edge horizontal material texture, not verified mathematically seamless; avoid tiled repeat. White theme uses CSS flat white."
+    },
+    {
+      "id": "walnut-texture",
+      "path": "/desk/desk-walnut.png",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGB",
+      "byteSize": 2374322,
+      "sha256": "fd41cea0ae1ae8a2f5df0e544109fbfd54ab47d09ee1d97318732af348c2d53d",
+      "generator": "built-in image_gen.imagegen",
+      "generatedOn": "2026-10-27",
+      "generationPrompt": "Use case: photorealistic-natural\nAsset type: subtle reusable desk-surface texture for The Sentence Book web UI.\nPrimary request: a full-frame unobstructed deep walnut desktop texture, photographed directly overhead in orthographic view.\nReference image 1 contributes ONLY the Walnut theme's rich chocolate-brown walnut tone and fine horizontal grain; exclude every object and all UI.\nComposition: 1536x1024 landscape texture fills every pixel edge to edge. Uniform deep warm chocolate brown walnut with very fine horizontal grain. Restrained dark amber undertones. Low contrast and delicate narrow pores, quiet behind pale paper. Natural material variation without prominent knots, dark stains, plank boundaries or isolated distinctive marks. No perspective, no depth, no desk edges, no vignette, no hotspots. Diffuse perfectly even illumination.\nMaterials: smooth matte waxed walnut, understated fine wood grain; no exaggerated waves, rustic distress, scratches, roughness, orange cast or glossy reflection.\nOpaque full frame. No objects, paper, pens, books, timers, shadows from objects, borders, logos, text, watermarks, patterns or UI.",
+      "generationOutputSourcePath": "/Users/maki/.codex/generated_images/01a17c72-6f03-72b1-b40b-005e02bf01fa/exec-afd73e1c-b854-472b-935f-7341b27fb404.png",
+      "referenceSourcePaths": [
+        "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/19-walnut-model-card-notebook-input.png"
+      ],
+      "referenceRole": "Approved design appearance only; new isolated material/object generation; no screenshot crop",
+      "embeddedPrompt": true,
+      "provenanceFallback": null,
+      "pixelEdits": "none; original generated RGBA/RGB pixel arrays are byte-identical; exact prompt added as PNG metadata only",
+      "alpha": {
+        "opaque": true
+      },
+      "usage": "Full-surface background image using cover. Edge-to-edge horizontal material texture, not verified mathematically seamless; avoid tiled repeat. White theme uses CSS flat white."
+    },
+    {
+      "id": "timers",
+      "path": "/desk/timers.png",
+      "width": 1774,
+      "height": 887,
+      "mode": "RGBA",
+      "byteSize": 1142770,
+      "sha256": "6e669eda3337378bdc175470f48754c55dfb794738bd596c26c2cf712a6af57b",
+      "generator": "built-in image_gen.imagegen",
+      "generatedOn": "2026-10-27",
+      "generationPrompt": "Use case: product-mockup\nAsset type: transparent PNG sprite atlas of THREE timer bodies for a live web app.\nPrimary request: three separate isolated objects arranged horizontally side-by-side, each object in its own equal-width column, with ample fully transparent space between. This is a reusable atlas of timer CASES with BLANK displays; the app will draw all live numbers and hands.\nReference images 1,2,3 contribute ONLY each timer's body/material family (white, oak, brass) and restrained overhead photographic quality. Never reproduce the screens, wood desks, other objects or text.\nComposition: 1536x768 wide landscape canvas. White digital body centered near x=256, oak digital body near x=768, brass watch body near x=1280. Keep every full object and its tiny shadow inside its column, no overlap. All three seen exactly from directly overhead, no rotation or perspective skew.\nLEFT: matte white digital study timer, softly squared case approximately 360px wide by 300px high. A large empty gray-green LCD window in its upper half, two small plain round unlabelled white buttons below. LCD surface completely blank, no LCD segments, no digits.\nCENTER: matching digital study timer of same shape and size, thin pale natural-oak frame around warm ivory body. Large completely empty gray-green LCD window in upper half, two plain round unlabelled ivory buttons below. No digits.\nRIGHT: antique warm brass pocket-watch CASE, round ivory blank face, crown/ring at top, a short fine brass chain curls close to its LEFT edge entirely within the right column. Restrained polished edge and fine material detail. Face is completely blank: NO hands, NO numerals, NO tick marks, NO central pin, NO subsidiary dial, NO text.\nLighting: very soft upper-left neutral light; subtle photorealism and tiny localized shadows. Genuine alpha transparency around each object. Do not paint background or floor. Preserve white paint and ivory faces as opaque material.\nText: NONE. No words, digits, letters, logos, symbols, color names, captions, controls labels, UI, watermarks or decorative marks.",
+      "generationOutputSourcePath": "/Users/maki/.codex/generated_images/01a17c72-6f03-72b1-b40b-005e02bf01fa/exec-3aeb3d31-58b8-412b-8439-32243c5d4cd3.png",
+      "referenceSourcePaths": [
+        "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/18-pure-white-model-card-notebook-input.png",
+        "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/17-natural-model-card-notebook-input.png",
+        "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/19-walnut-model-card-notebook-input.png"
+      ],
+      "referenceRole": "Approved design appearance only; new isolated material/object generation; no screenshot crop",
+      "embeddedPrompt": true,
+      "provenanceFallback": null,
+      "pixelEdits": "none; original generated RGBA/RGB pixel arrays are byte-identical; exact prompt added as PNG metadata only",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "fullyTransparentFraction": 0.578855,
+        "note": "Native generated alpha retained without compositing, masking, recoloring or cropping."
+      },
+      "sprites": [
+        {
+          "id": "white",
+          "box": {
+            "pixels": {
+              "x": 16,
+              "y": 208,
+              "width": 564,
+              "height": 502
+            },
+            "normalized": {
+              "x": 0.009019,
+              "y": 0.234498,
+              "width": 0.317926,
+              "height": 0.565953
+            }
+          },
+          "displayBox": {
+            "pixels": {
+              "x": 115,
+              "y": 312,
+              "width": 364,
+              "height": 162
+            },
+            "normalized": {
+              "x": 0.064825,
+              "y": 0.351747,
+              "width": 0.205186,
+              "height": 0.182638
+            }
+          },
+          "displayBoxWithinSpriteNormalized": {
+            "x": 0.17553191489361702,
+            "y": 0.20717131474103587,
+            "width": 0.6453900709219859,
+            "height": 0.32270916334661354
+          }
+        },
+        {
+          "id": "natural",
+          "box": {
+            "pixels": {
+              "x": 612,
+              "y": 208,
+              "width": 570,
+              "height": 502
+            },
+            "normalized": {
+              "x": 0.344983,
+              "y": 0.234498,
+              "width": 0.321308,
+              "height": 0.565953
+            }
+          },
+          "displayBox": {
+            "pixels": {
+              "x": 718,
+              "y": 312,
+              "width": 356,
+              "height": 162
+            },
+            "normalized": {
+              "x": 0.404735,
+              "y": 0.351747,
+              "width": 0.200676,
+              "height": 0.182638
+            }
+          },
+          "displayBoxWithinSpriteNormalized": {
+            "x": 0.18596491228070175,
+            "y": 0.20717131474103587,
+            "width": 0.624561403508772,
+            "height": 0.32270916334661354
+          }
+        },
+        {
+          "id": "walnut",
+          "box": {
+            "pixels": {
+              "x": 1210,
+              "y": 120,
+              "width": 540,
+              "height": 600
+            },
+            "normalized": {
+              "x": 0.682074,
+              "y": 0.135287,
+              "width": 0.304397,
+              "height": 0.676437
+            }
+          },
+          "faceBox": {
+            "pixels": {
+              "x": 1345,
+              "y": 307,
+              "width": 345,
+              "height": 356
+            },
+            "normalized": {
+              "x": 0.758174,
+              "y": 0.34611,
+              "width": 0.194476,
+              "height": 0.401353
+            }
+          },
+          "faceCenterWithinSpriteNormalized": {
+            "x": 0.5694444444444444,
+            "y": 0.6083333333333333
+          },
+          "faceRadiusWithinSpriteWidth": 0.31666666666666665
+        }
+      ],
+      "usage": "Native live digits/analog dial/hands and interactive controls overlay the blank surfaces. Digital bodies contain unlabelled decorative buttons; provide semantic controls at those positions or below. Brass case includes short chain."
+    }
+  ],
+  "verification": {
+    "generationResultsVisuallyInspected": true,
+    "pngReadableAndDimensionsAndAlphaInspected": true,
+    "noPixelEdits": true,
+    "browserLightAndDarkGroundCheck": "Passed in temporary in-app browser at localhost:5347: all three pen atlases, blank book, and timer atlas inspected on #ffffff and #29190f grounds. No opaque background rectangles or missing white materials seen. No app UI behavior tested.",
+    "spriteBoxes": "Measured generated alpha silhouette and manually chosen transparent padding; app layout uses native spacing.",
+    "embeddedPromptsReadBackAndPixelIdentityChecked": true
+  },
+  "limitations": [
+    "Generated row center spacing is approximate; use individual sprite boxes in evenly spaced native rows.",
+    "Wood textures are not verified mathematically seamless; use background-size cover.",
+    "No font, app interaction, timing behavior, browser layout, physical device or PDF validation performed by asset producer."
+  ]
+}

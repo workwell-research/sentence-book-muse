@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "metrics": [
+    {
+      "id": "readability",
+      "expected": 2256.159,
+      "actual": 2256.15234375
+    },
+    {
+      "id": "tech",
+      "expected": 2387.684,
+      "actual": 2387.65869140625
+    },
+    {
+      "id": "print",
+      "expected": 1988.4999999999995,
+      "actual": 1988.5009765625
+    },
+    {
+      "id": "pen",
+      "expected": 1407.7249999999997,
+      "actual": 1407.733154296875
+    }
+  ],
+  "errors": [],
+  "scope": "Disposable Chrome origin; synthetic fixtures only; 18 theme/color pairs, IME events, Enter guards, failed copy, explicit progression, timer visibility, persistence, PDF downloads, desktop/mobile overflow."
+}

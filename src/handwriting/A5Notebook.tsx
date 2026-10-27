@@ -20,23 +20,23 @@ function Pen({x,y,marker=false}:{x:number;y:number;marker?:boolean}) {
     <path d="M 0 0 L 0 -1" stroke="#383A3D" strokeWidth=".2"/>
   </g>;
 }
-export function A5Notebook({layout,scene,view,ink,time,reduced,personalInk}:{
-  layout:A5Layout;scene:ReturnType<typeof createA5Scene>;view:ViewSettings;ink:InkPalette;
+export function A5Notebook({layout,scene,view,ink,time,reduced,personalInk,pageIndex,paperColor}:{
+  pageIndex?:number;paperColor?:string;layout:A5Layout;scene:ReturnType<typeof createA5Scene>&{memoStarts?:Record<string,number>};view:ViewSettings;ink:InkPalette;
   time:number;reduced:boolean;personalInk:ReturnType<typeof usePersonalInk>;
 }) {
   const visible=scene.strokes.filter(s=>visibleLayer(s.layer,view)&&(view.markers||s.phase!=='marking'));
   const pen=personalInk.pending?null:penPosition(visible,time,.8);
   const penPage=visible.find(s=>time<s.start+s.duration)?.page;
-  return <>{visiblePages(layout,view).map(p=>{
+  return <>{visiblePages(layout,view).filter(p=>pageIndex===undefined||p.index===pageIndex).map(p=>{
     const runs=p.runs.filter(r=>visibleLayer(r.layer,view));
     const titleId='note-title-'+p.index,descId='note-description-'+p.index;
-    const spoken=runs.filter(r=>r.layer!=='base'&&(r.layer!=='memo'||time>=scene.memoStart)).map(r=>r.text).join(' ');
+    const spoken=runs.filter(r=>r.layer!=='base'&&(r.layer!=='memo'||time>=(scene.memoStarts?.[r.sourceId]??scene.memoStart))).map(r=>r.text).join(' ');
     return <svg key={p.index} className="notebook" viewBox="0 0 148 210" role="img" aria-labelledby={titleId+' '+descId}
       data-page={p.index} data-complete={time>=scene.duration} data-memos={view.memos}>
       <title id={titleId}>{layout.source.title} — {p.index+1}ページ</title>
       <desc id={descId}>{spoken}{view.memos==='blank'?' 学習メモの欄は空欄です。':''}</desc>
       <g aria-hidden="true">
-        <rect width={148} height={210} fill={A5.paper}/>
+        <rect width={148} height={210} fill={paperColor??A5.paper}/>
         {p.lines.filter(l=>visibleLayer(l.layer,view)).map(l=><line key={l.id} data-rule={l.id}
           x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} stroke={l.accent?ink.title:A5.rule} strokeWidth={l.width}/>)}
         {view.content==='study-notes'&&p.boxes.map(b=><g key={b.id} data-box={b.id}>
@@ -45,7 +45,7 @@ export function A5Notebook({layout,scene,view,ink,time,reduced,personalInk}:{
         </g>)}
         {visible.filter(s=>s.page===p.index&&s.phase==='marking').map(s=><StrokePath key={s.id} stroke={{...s,color:ink.marker}} time={time}/>)}
         {runs.map(r=><g key={r.id} data-run={r.id} data-layer={r.layer} data-baseline={r.y}>
-          {r.face==='static'?(r.layer!=='memo'||time>=scene.memoStart)&&<text fontFamily={japaneseFonts[layout.fonts.japanese].family} fontSize={r.size} fill={r.accent?ink.title:A5.ink}>
+          {r.face==='static'?(r.layer!=='memo'||time>=(scene.memoStarts?.[r.sourceId]??scene.memoStart))&&<text fontFamily={japaneseFonts[layout.fonts.japanese].family} fontSize={r.size} fill={r.accent?ink.title:A5.ink}>
             {r.glyphs.map(g=><tspan key={g.index} x={g.x} y={g.y}>{g.char}</tspan>)}
           </text>:visible.filter(s=>s.page===p.index&&s.phase!=='marking'&&s.id.startsWith(r.id+':')).map(s=><StrokePath key={s.id} stroke={{...s,color:s.accent?ink.title:A5.ink}} time={time}/>)}
         </g>)}

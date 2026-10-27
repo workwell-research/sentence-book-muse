@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-27",
+  "source": "Separate design chat, desktop-ui-2026-10-27",
+  "authority": "Owner-directed role split and layout. Images are appearance references, not exact typography or production behavior. Older card-editing directions are superseded.",
+  "files": [
+    {
+      "name": "17-natural-model-card-notebook-input.png",
+      "sha256": "616aec4f8bbe4cfa403871b0ebfa10780892a9fad8bac943164d07cebc5e230f",
+      "bytes": 1695755
+    },
+    {
+      "name": "18-pure-white-model-card-notebook-input.png",
+      "sha256": "526de8ab8937ba5bf769eed1092bd49d8a1dcb3caa79939370e930f65761c4b0",
+      "bytes": 1496436
+    },
+    {
+      "name": "19-walnut-model-card-notebook-input.png",
+      "sha256": "87b7c9ec6803714ede5bee2d9e6d958f0b987131e4ae339ea2641b506723df93",
+      "bytes": 1899256
+    },
+    {
+      "name": "20-pure-white-notebook-input-timer-hidden.png",
+      "sha256": "18dfed1e0506749d26e624580212c655ceeed2f2c03ff201de859b61021b6421",
+      "bytes": 1496289
+    },
+    {
+      "name": "notebook-input-interaction.json",
+      "sha256": "25f6f3a566cc14e4d4f7194a2614e4c283d71af15e9f0c626bd4f908b6ee8feb",
+      "bytes": 3888
+    },
+    {
+      "name": "desktop-layout.json",
+      "sha256": "e34b1e3d937330d3a656b8547514b51e0685aed396218a805b5e3ff805bf4657",
+      "bytes": 18116
+    },
+    {
+      "name": "pen-selector-interaction.json",
+      "sha256": "927ad91f1bc5d1b2b1d938e68fcbec1e8efe610d3a339075ebcee3570cd72d2b",
+      "bytes": 4436
+    },
+    {
+      "name": "timer-interaction.json",
+      "sha256": "abd74584dae7fc9cb491eacf0c8dd7d792da8c205a4acbc378dbcf8fd4e396c5",
+      "bytes": 4527
+    },
+    {
+      "name": "revision-notebook-input.md",
+      "sha256": "d2890d0c23338cb2d77215a063170c8b1d2660bbb0a81a7040123272ecc96f7b",
+      "bytes": 4743
+    },
+    {
+      "name": "owner-spec.md",
+      "sha256": "8961a492ba5be08559f13c38c7028a10f4e7bedc92502fa1bc4de1489119d5ff",
+      "bytes": 8637
+    },
+    {
+      "name": "notebook-input-prompts.json",
+      "sha256": "893d7ab9a85d181acf1d7d09f0b7514231405df108667af166946653ec7b4a3a",
+      "bytes": 25179
+    }
+  ]
+}

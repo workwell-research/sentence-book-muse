@@ -14,7 +14,7 @@ try {
   localStorage.setItem('sentence-book-muse:interests:v1','untouched-interest-fixture');
  });
  const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));
- await page.goto(base);await page.evaluate(()=>document.fonts.ready);
+ await page.goto(base+'/handwriting');await page.evaluate(()=>document.fonts.ready);
  const englishOptions=await page.getByLabel('英語の書体',{exact:true}).locator('option').evaluateAll(os=>os.map(o=>o.value));
  assert.deepEqual(englishOptions,['readability','tech','print','pen']);
  assert.equal(await page.getByLabel('英語の書体',{exact:true}).inputValue(),'readability');

@@ -1,0 +1,72 @@
+{
+  "id": "book",
+  "path": "/desk/index-book.png",
+  "width": 1536,
+  "height": 1024,
+  "mode": "RGBA",
+  "byteSize": 1627162,
+  "sha256": "550c1d51ecd3cffc495bc41ead8284b66573075610e55168234fceabc1a1d201",
+  "generator": "built-in image_gen.imagegen",
+  "generatedOn": "2026-10-27",
+  "generationPrompt": "Use case: product-mockup\nAsset type: reusable transparent blank open-book plate for a live index/navigation UI.\nPrimary request: a single open blank book seen exactly from directly overhead, wide landscape spread, two spacious blank pages, restrained realistic photographic quality.\nReference image 1 contributes only the open index book's shape, page proportion, understated cream paper, binding seam and restrained shadow; none of its writing or screen must appear.\nComposition: 1536x1024 canvas; book approximately x=60..1476, y=80..920; nearly rectangular flat open spread. Two equal nearly-portrait pages meet at x=768. Long outside vertical edges and upper/lower edges are almost straight, with only gentle paper curvature at central seam. Fully visible book including thin cover, page edges and tiny close shadow. Large blank page surfaces suitable for native overlaid text.\nMaterials: neutral very pale ivory paper, subtle fine uncoated paper texture, minimal warm-gray shading in center gutter, delicately visible stacked paper edges on outside. Thin neutral taupe-brown cover visible as a narrow edge. Small natural corner radius, no curled pages. Both facing pages have same tone, flat readable illumination.\nBackground: actual alpha transparency around the book, so it can sit on white, light oak or dark walnut desk. Keep all white/ivory paper fully opaque.\nCamera: exact orthographic directly overhead; no perspective skew, no slanted rotation, no oblique photograph. Soft upper-left light and only a small subtle contact shadow.\nText: NONE. Absolutely blank paper: no rules, grids, lines, handwriting, letters, numbers, page numbers, titles, tabs, bookmarks, ribbon, decorations, UI or watermark. No objects other than this open blank book.",
+  "generationOutputSourcePath": "/Users/maki/.codex/generated_images/01a17c72-6f03-72b1-b40b-005e02bf01fa/exec-99d476b3-ba79-46bb-bf97-67d3bd3b0f3d.png",
+  "referenceSourcePaths": [
+    "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/20-pure-white-notebook-input-timer-hidden.png"
+  ],
+  "referenceRole": "Approved design appearance only; new isolated material/object generation; no screenshot crop",
+  "embeddedPrompt": true,
+  "provenanceFallback": null,
+  "pixelEdits": "none; original generated RGBA/RGB pixel arrays are byte-identical; exact prompt added as PNG metadata only",
+  "alpha": {
+    "min": 0,
+    "max": 254,
+    "fullyTransparentFraction": 0.18718,
+    "note": "Native generated alpha retained without compositing, masking, recoloring or cropping."
+  },
+  "objectBox": {
+    "pixels": {
+      "x": 64,
+      "y": 76,
+      "width": 1408,
+      "height": 864
+    },
+    "normalized": {
+      "x": 0.041667,
+      "y": 0.074219,
+      "width": 0.916667,
+      "height": 0.84375
+    }
+  },
+  "contentSafeBoxes": {
+    "left": {
+      "pixels": {
+        "x": 132,
+        "y": 138,
+        "width": 576,
+        "height": 708
+      },
+      "normalized": {
+        "x": 0.085938,
+        "y": 0.134766,
+        "width": 0.375,
+        "height": 0.691406
+      }
+    },
+    "right": {
+      "pixels": {
+        "x": 824,
+        "y": 138,
+        "width": 574,
+        "height": 708
+      },
+      "normalized": {
+        "x": 0.536458,
+        "y": 0.134766,
+        "width": 0.373698,
+        "height": 0.691406
+      }
+    }
+  },
+  "seamNormalizedX": 0.498,
+  "usage": "Full plate or objectBox viewBox. Same neutral paper in every theme; native headings, nav, rules, selection and numbers overlay blank pages. Preserve aspect ratio."
+}

@@ -1,0 +1,68 @@
+{
+  "fontPairs": [
+    {
+      "font": "readability",
+      "japanese": "klee",
+      "rows": 1.9898937517336195,
+      "planned": 2,
+      "draft": "Tomorrow, I want to make time for them again."
+    },
+    {
+      "font": "readability",
+      "japanese": "zen",
+      "rows": 1.9898937517336195,
+      "planned": 2,
+      "draft": "Tomorrow, I want to make time for them again."
+    },
+    {
+      "font": "tech",
+      "japanese": "klee",
+      "rows": 1.9898937517336195,
+      "planned": 2,
+      "draft": "Tomorrow, I want to make time for them again."
+    },
+    {
+      "font": "tech",
+      "japanese": "zen",
+      "rows": 1.9898937517336195,
+      "planned": 2,
+      "draft": "Tomorrow, I want to make time for them again."
+    },
+    {
+      "font": "print",
+      "japanese": "klee",
+      "rows": 1.0250967811961071,
+      "planned": 1,
+      "draft": "Tomorrow, I want to make time for them again."
+    },
+    {
+      "font": "print",
+      "japanese": "zen",
+      "rows": 1.0250967811961071,
+      "planned": 1,
+      "draft": "Tomorrow, I want to make time for them again."
+    },
+    {
+      "font": "pen",
+      "japanese": "klee",
+      "rows": 1.0250967811961071,
+      "planned": 1,
+      "draft": "Tomorrow, I want to make time for them again."
+    },
+    {
+      "font": "pen",
+      "japanese": "zen",
+      "rows": 1.0250967811961071,
+      "planned": 1,
+      "draft": "Tomorrow, I want to make time for them again."
+    }
+  ],
+  "storage": [
+    "Corrupt record preserved",
+    "Corrupt record preserved",
+    "Quota failure keeps draft and blocks confirm"
+  ],
+  "personal": [
+    "Saved learner text; no Copy progress regression"
+  ]
+}

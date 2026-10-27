@@ -18,7 +18,9 @@
     "qa:handwriting": "node scripts/qa-a5.mjs",
     "qa:print": "node scripts/qa-a5.mjs",
     "font:build": "node scripts/build-stroke-font.mjs",
-    "qa:a5": "node scripts/qa-a5.mjs"
+    "qa:a5": "node scripts/qa-a5.mjs",
+    "qa:desk": "node scripts/qa-desk.mjs",
+    "font:editor": "node scripts/build-editor-font.mjs"
   },
   "dependencies": {
     "@fontsource/lora": "5.3.0",

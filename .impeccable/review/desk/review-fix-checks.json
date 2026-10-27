@@ -1,0 +1,18 @@
+{
+  "mobile": [
+    {
+      "width": 320,
+      "reachableAction": true,
+      "caretPansPaper": true,
+      "confirmAndNext": true
+    },
+    {
+      "width": 390,
+      "reachableAction": true,
+      "caretPansPaper": true,
+      "confirmAndNext": true
+    }
+  ],
+  "personal": true,
+  "resume": true
+}

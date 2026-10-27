@@ -1,0 +1,24 @@
+{
+  "id": "walnut-texture",
+  "path": "/desk/desk-walnut.png",
+  "width": 1536,
+  "height": 1024,
+  "mode": "RGB",
+  "byteSize": 2374322,
+  "sha256": "fd41cea0ae1ae8a2f5df0e544109fbfd54ab47d09ee1d97318732af348c2d53d",
+  "generator": "built-in image_gen.imagegen",
+  "generatedOn": "2026-10-27",
+  "generationPrompt": "Use case: photorealistic-natural\nAsset type: subtle reusable desk-surface texture for The Sentence Book web UI.\nPrimary request: a full-frame unobstructed deep walnut desktop texture, photographed directly overhead in orthographic view.\nReference image 1 contributes ONLY the Walnut theme's rich chocolate-brown walnut tone and fine horizontal grain; exclude every object and all UI.\nComposition: 1536x1024 landscape texture fills every pixel edge to edge. Uniform deep warm chocolate brown walnut with very fine horizontal grain. Restrained dark amber undertones. Low contrast and delicate narrow pores, quiet behind pale paper. Natural material variation without prominent knots, dark stains, plank boundaries or isolated distinctive marks. No perspective, no depth, no desk edges, no vignette, no hotspots. Diffuse perfectly even illumination.\nMaterials: smooth matte waxed walnut, understated fine wood grain; no exaggerated waves, rustic distress, scratches, roughness, orange cast or glossy reflection.\nOpaque full frame. No objects, paper, pens, books, timers, shadows from objects, borders, logos, text, watermarks, patterns or UI.",
+  "generationOutputSourcePath": "/Users/maki/.codex/generated_images/01a17c72-6f03-72b1-b40b-005e02bf01fa/exec-afd73e1c-b854-472b-935f-7341b27fb404.png",
+  "referenceSourcePaths": [
+    "/Users/maki/Typing/docs/assets/desktop-ui-2026-10-27/19-walnut-model-card-notebook-input.png"
+  ],
+  "referenceRole": "Approved design appearance only; new isolated material/object generation; no screenshot crop",
+  "embeddedPrompt": true,
+  "provenanceFallback": null,
+  "pixelEdits": "none; original generated RGBA/RGB pixel arrays are byte-identical; exact prompt added as PNG metadata only",
+  "alpha": {
+    "opaque": true
+  },
+  "usage": "Full-surface background image using cover. Edge-to-edge horizontal material texture, not verified mathematically seamless; avoid tiled repeat. White theme uses CSS flat white."
+}
