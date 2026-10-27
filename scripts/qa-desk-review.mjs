@@ -23,7 +23,7 @@ try{
  await p.locator('textarea').scrollIntoViewIfNeeded();await p.screenshot({path:out+'/personal-edit.png',fullPage:true});
  assert.equal(await p.evaluate(()=>JSON.parse(localStorage.getItem('sentence-book-muse:sample-copy:v1')).personal),'My saved words.');
  await p.locator('textarea').press('Enter');assert.equal(await p.locator('textarea').count(),0);assert.equal(await p.evaluate(()=>JSON.parse(localStorage.getItem('sentence-book-muse:sample-copy:v1')).personal),'My edited words.');result.personal=true;await p.close();
- const q=await b.newPage({reducedMotion:'no-preference'});await q.goto(origin);await q.locator('textarea').fill('Today, I decided to slow down.');await q.locator('textarea').press('Enter');await q.waitForTimeout(220);await q.getByRole('button',{name:'筆記を一時停止',exact:true}).click();
+ const q=await b.newPage({reducedMotion:'no-preference'});await q.goto(origin);await q.locator('textarea').fill('Today, I decided to slow down.');await q.locator('textarea').press('Enter');await q.getByRole('button',{name:'筆跡をもう一度'}).click();await q.waitForTimeout(220);await q.getByRole('button',{name:'筆記を一時停止',exact:true}).click();
  const snap=()=>q.locator('[data-layer=body] path').evaluateAll(ps=>ps.map(p=>p.getAttribute('stroke-dashoffset')));const paused=await snap();await q.waitForTimeout(150);assert.deepEqual(await snap(),paused);await q.getByRole('button',{name:'筆記を続ける',exact:true}).click();await q.waitForTimeout(180);assert.notDeepEqual(await snap(),paused);assert.equal(await q.evaluate(()=>JSON.parse(localStorage.getItem('sentence-book-muse:sample-copy:v1')).phase),'confirmed');result.resume=true;
  fs.writeFileSync(out+'/review-fix-checks.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 }finally{await b.close();}

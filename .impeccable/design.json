@@ -666,7 +666,7 @@
       {
         "name": "stroke-ease",
         "value": "t - 0.105 × sin(2πt)",
-        "purpose": "English centerline progress; save-before-animation and explicit Next remain independent."
+        "purpose": "English centerline progress follows typing; explicit confirmation and Next remain independent."
       }
     ],
     "breakpoints": [
@@ -765,7 +765,7 @@
       "Three desk families, six labeled pen choices and one shared optional timer.",
       "A read-only model card and one native editor on the current notebook line.",
       "Small graphite handwriting, pale markers and a fixed measured A5 grid.",
-      "Confirmed text is saved before animation; explicit Next controls progression.",
+      "Draft letters draw as they are typed; confirmation saves the answer and explicit Next controls progression.",
       "Mobile actions remain reachable beside enlarged, horizontally scrollable paper."
     ],
     "rules": [
@@ -793,7 +793,7 @@
     "dos": [
       "Do derive screen and independent PDF from the same A5 layout and measured glyph advances.",
       "Do preserve native textarea selection, composition, caret behavior and the current-line action.",
-      "Do save exact confirmed Copy text before animation and require an explicit Next action.",
+      "Do animate draft edits in place, save only checked Copy text, and require an explicit Next action.",
       "Do keep memo space, stable IDs, drafts, checks and canonical saved personal text when changing presentation.",
       "Do retain labeled native controls, visible focus, reduced-motion completion and adjacent error/status feedback.",
       "Do use the existing material families and retain original asset prompts, hashes and font notices.",

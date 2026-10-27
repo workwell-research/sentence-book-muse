@@ -7,7 +7,7 @@ A new implementation for the 2026 Meta Global AI Developer Hackathon. Turn somet
 This repository includes a **working local study desk and A5 notebook** at `/`, based on the owner's [Work desktop handoff](docs/desktop-study-desk.md). AI generation remains a scaffold. The previous standalone typography prototype is retained at `/handwriting`.
 
 - Pure White, Natural and Walnut desks; six selectable horizontal pens, a live index book and optional timer. Material PNGs are separate from live text and native controls.
-- A read-only source card and one native editor on the current A5 line. Explicit confirmation saves a matching sentence before its handwriting appears; Next advances. Animation does not complete learning.
+- A read-only source card and one native editor on the current A5 line. Letters draw as they are typed. Explicit confirmation checks and saves the sentence without rewriting it; Next advances. Animation does not complete learning.
 - One synthetic eight-sentence Copy lesson, with locally saved drafts, confirmed progress, personal English writing, review marks and display choices. This is not multi-lesson history or AI-generated material.
 - Fixed physical A5 composition with measured wrapping, continuation pages and independent SVG/vector PDF renderers. Memo shown/blank retains reserved rows; Japanese phrase glosses are lifted 1mm.
 - Readability Italic default, EMS Tech, Print and Pen; independent Klee One/Zen Kurenaido Japanese. Native input fonts derive from the same English centerlines with matching advances.
@@ -53,6 +53,8 @@ npm run pages:dev
 The last command serves `dist` and the Functions on `http://127.0.0.1:8797`. `npm run dev` serves the frontend only. The generate route still returns 503 with or without credentials.
 
 ## Local verification
+
+For the current typing interaction, run `QA_ORIGIN=http://127.0.0.1:5327 node scripts/qa-live-ink.mjs` against a dedicated Vite dev server. It checks live stroke progression, editing/Undo, composition fallback, restore, four English faces and mobile actions; evidence is in `.impeccable/review/live-input/`.
 
 Run `npm test` and `npm run build`. With a dedicated Vite development origin, `QA_ORIGIN=http://127.0.0.1:5327 npm run qa:desk` checks the local Copy flow, persistence/failure handling, 18 theme/color pairs, font advances, desktop/mobile layouts, timer and actual PDF downloads in disposable Chrome contexts. `QA_ORIGIN=http://127.0.0.1:5327 node scripts/qa-desk-review.mjs` checks reachable mobile actions/caret scrolling, personal editing and animation resume. Neither script touches the user's preview storage. Current evidence is in `.impeccable/review/desk/`; exported fixtures are `output/pdf/desk-a5-completed.pdf` and `output/pdf/desk-a5-on-a4-blank.pdf`.
 

@@ -180,7 +180,7 @@ The owner-approved desktop handoff replaces the former sage control-rail composi
 - Three desk families, six labeled pen choices and one shared optional timer.
 - A read-only model card and one native editor on the current notebook line.
 - Small graphite handwriting, pale markers and a fixed measured A5 grid.
-- Confirmed text is saved before animation; explicit Next controls progression.
+- Draft letters draw as they are typed; confirmation saves the answer and explicit Next controls progression.
 - Mobile actions remain reachable beside enlarged, horizontally scrollable paper.
 
 ## Colors
@@ -211,7 +211,7 @@ English model sizes in millimetres are title 5.65; body/grammar/personal 4.1; fo
 
 Japanese phrase glosses use 2.6mm; vocabulary meanings use 2.7mm. Phrase glosses are lifted 1mm within their reserved rows; their horizontal anchor, row allocation and the rest of the plan stay unchanged. The selected complete WOFF2 loads on screen and the original complete TTF embeds in PDF. Japanese is static; English strokes animate.
 
-The native editor uses the selected renamed `Sentence Notebook … Input` WOFF2 derived from those same centerlines and advances. Its 4.1mm model size and 5.2mm line height scale to the actual paper width. It disables kerning/ligatures and preserves native selection, caret and composition. Font readiness gates confirmation; unsupported input remains editable. Native rasterization may appear darker than final SVG. Changing fonts can reflow the physical plan and completes current ink rather than carrying incompatible stroke indices.
+The native editor uses the selected renamed `Sentence Notebook … Input` WOFF2 derived from those same centerlines and advances. Its 4.1mm model size and 5.2mm line height scale to the actual paper width. It disables kerning/ligatures and preserves native selection, caret and composition. Font readiness gates confirmation; unsupported input remains editable. Supported English is drawn as SVG during typing, with native glyph fill hidden but caret/selection retained. Composition, unsupported text and drafts over 500 characters use visible native text; reduced motion shows complete SVG ink immediately. Changing fonts can reflow the physical plan and completes current ink rather than carrying incompatible stroke indices.
 
 **The Face Rule.** Use the selected English face for editor advances and final centerlines, and the selected Japanese face for screen and PDF. Theme headings never override notebook typography.
 
@@ -283,7 +283,7 @@ The open index keeps five live vertical tabs on its left page and the selected p
 
 Each pen row contains a native radio, decorative atlas crop, visible color name and selected check. Hover moves only the art 3px over 150ms; reduced motion removes that transition. The optional timer has shared deadline logic, Start/Pause/Resume/Reset, live digits in White/Natural and live hands plus a numeric reading in Walnut. Timer expiry announces itself without completing Copy; changing themes or hiding it preserves the mounted timer.
 
-Confirmation persists the canonical entry before sequential SVG strokes start. Replay resets ink only; Pause/Resume preserves current time; Finish completes animation only. Reduced motion shows confirmed strokes directly. Meanings/markers are revealed with their associated confirmed content. Actual native speech synthesis is a browser capability and its hardware/audio behavior was not certified by synthetic QA.
+Keystrokes draw newly inserted/replaced letters directly on the note. Existing character identities retain their ink; deletion removes only deleted letters. A new edit completes any previous pending stroke so typing cannot build a queue. One character takes up to 160ms, small insertions share at most 300ms and pastes over six characters appear immediately. Restored drafts and font changes show completed ink. Confirmation checks and persists the canonical entry without replaying the body, then animates only its annotations. Replay resets ink only; Pause/Resume preserves current time; Finish completes animation only. Reduced motion shows confirmed strokes directly. Meanings/markers are revealed with their associated confirmed content. Actual native speech synthesis is a browser capability and its hardware/audio behavior was not certified by synthetic QA.
 
 ### Print
 
@@ -299,7 +299,7 @@ The 2026-10-27 build/test/browser/PDF records are summarized in [PROJECT_STATUS.
 
 - Do derive screen and independent PDF from the same A5 layout and measured glyph advances.
 - Do preserve native textarea selection, composition, caret behavior and the current-line action.
-- Do save exact confirmed Copy text before animation and require an explicit Next action.
+- Do animate draft edits in place, save only checked Copy text, and require an explicit Next action.
 - Do keep memo space, stable IDs, drafts, checks and canonical saved personal text when changing presentation.
 - Do retain labeled native controls, visible focus, reduced-motion completion and adjacent error/status feedback.
 - Do use the existing material families and retain original asset prompts, hashes and font notices.

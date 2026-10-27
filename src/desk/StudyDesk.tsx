@@ -10,6 +10,7 @@ import {deskLayout,confirmedLayout,inputPosition,practiceScene} from './note';
 import {palettes} from '../handwriting/palettes';
 import '../handwriting/handwriting.css';
 import './desk.css';
+import {LiveDraftInk} from './LiveDraftInk';
 
 const themeNames={'pure-white':'Pure White',natural:'Natural',walnut:'Walnut'};
 const markerNames={blue:'Blue',pink:'Pink',purple:'Purple',gray:'Gray',orange:'Orange',green:'Green'};
@@ -43,6 +44,7 @@ export function StudyDesk(){
  const [notice,setNotice]=useState(loadedCopy.message||loadedDisplay.message),[error,setError]=useState('');
  const [tab,setTab]=useState(0),[meaning,setMeaning]=useState(false),[personalMode,setPersonalMode]=useState(false);
  const [zoom,setZoom]=useState<'fit'|'read'>(()=>matchMedia('(max-width: 760px)').matches?'read':'fit');
+ const [annotationsOnly,setAnnotationsOnly]=useState(false),[composingText,setComposingText]=useState(false),[inputScroll,setInputScroll]=useState({x:0,y:0});
  const [animateId,setAnimateId]=useState<string|null>(null),[time,setTime]=useState(1e9),[playing,setPlaying]=useState(false),[speed,setSpeed]=useState(2);
  const [reduced,setReduced]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches),[fontReady,setFontReady]=useState(false),[exporting,setExporting]=useState(false);
  const editor=useRef<HTMLTextAreaElement>(null),settings=useRef<HTMLDialogElement>(null),paper=useRef<HTMLDivElement>(null);
@@ -50,10 +52,12 @@ export function StudyDesk(){
  const current=studySample.sentences[record.index];
  const layout=useMemo(()=>deskLayout(record,display,personalMode),[record.personal,record.checks,display.english,display.japanese,display.binding,display.side,personalMode]);
  const rendered=useMemo(()=>confirmedLayout(layout,record,display,personalMode),[layout,record.entries,record.phase,record.personal,display.vocabulary,display.grammar,personalMode]);
- const scene=useMemo(()=>practiceScene(rendered,animateId),[rendered,animateId]);
+ const scene=useMemo(()=>practiceScene(rendered,animateId,annotationsOnly),[rendered,animateId,annotationsOnly]);
  const position=inputPosition(layout,record,personalMode);
  const isEditing=personalMode||record.phase==='editing';
  const draft=personalMode?record.personalDraft:record.draft;
+ const liveInk=fontReady&&!composingText&&draft.length<=500&&supported(draft,englishFonts[display.english].data);
+ const inputHeight=Math.min(position.rows,Math.max(2,Math.ceil(draft.length/32)+draft.split('\n').length))*5.2;
  const inputFamily='Sentence Notebook '+({readability:'Readability',tech:'Tech',print:'Print',pen:'Pen'}[display.english])+' Input';
  const view={content:display.content,memos:display.memos,markers:display.markers};
  const paperColor=display.theme==='natural'?'#F9F3E7':display.theme==='walnut'?'#F6EEDC':'#FFFEFB';
@@ -82,10 +86,10 @@ export function StudyDesk(){
   try{
    if(personalMode){if(!draft.trim()||draft.length>80||!supported(draft,englishFonts[display.english].data)||draft.includes('\n'))throw new Error('ひとことは英数字・基本記号で80文字以内の一文にしてください。入力は残っています。');if(!persist({...record,personal:draft},true))return;setPersonalMode(false);setAnimateId('personal-user');}
    else{const next=confirmCopy(record,studySample,new Date().toISOString());if(!persist(next,true))return;setAnimateId(current.id);}
-   setError('');setTime(0);setPlaying(true);
+   setError('');setAnnotationsOnly(true);setTime(0);setPlaying(true);
   }catch(e){setError((e as Error).message);editor.current?.focus();}
  }
- function advance(){if(persist(nextCopy(record,studySample),true)){setError('');setAnimateId(null);setTime(1e9);setPlaying(false);requestAnimationFrame(()=>{editor.current?.focus({preventScroll:true});editor.current?.scrollIntoView({block:'nearest',inline:'nearest'});});}}
+ function advance(){if(persist(nextCopy(record,studySample),true)){setError('');setInputScroll({x:0,y:0});setAnimateId(null);setTime(1e9);setPlaying(false);requestAnimationFrame(()=>{editor.current?.focus({preventScroll:true});editor.current?.scrollIntoView({block:'nearest',inline:'nearest'});});}}
  function keyDown(e:KeyboardEvent<HTMLTextAreaElement>){if(e.key!=='Enter'||e.shiftKey||e.altKey||e.metaKey||e.ctrlKey)return;if(e.repeat){e.preventDefault();return;}if(e.nativeEvent.isComposing||composing.current||e.keyCode===229||e.repeat||Date.now()-compositionEnded.current<100){return;}e.preventDefault();confirm();}
  function playAudio(){if(!('speechSynthesis' in window)){setNotice('このブラウザでは読み上げを利用できません。');return;}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(current.text);u.lang='en-US';u.rate=.85;u.onerror=()=>setNotice('読み上げを再生できませんでした。ブラウザの音声設定を確認してください。');speechSynthesis.speak(u);}
  async function exportPdf(){setExporting(true);try{const {exportStudyNote}=await import('../handwriting/study-pdf');const bytes=await exportStudyNote(confirmedLayout(layout,record,display),view,{...display,notebook:'a5',palette:display.marker,markers:display.printMarkers??display.markers});const url=URL.createObjectURL(new Blob([new Uint8Array(bytes)],{type:'application/pdf'}));const a=document.createElement('a');a.href=url;a.download=display.sheet==='A4'?'sentence-book-a5-on-a4.pdf':'sentence-book-a5.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);setNotice('PDFを作成しました。100%（実際のサイズ）で印刷してください。');}catch(e){setNotice((e as Error).message);}finally{setExporting(false);}}
@@ -120,16 +124,17 @@ export function StudyDesk(){
     <div className={'desk-paper-scroll '+(zoom==='read'?'reading':'')} tabIndex={0} aria-label="ノート。拡大表示は左右にスクロールできます">
      <div className="desk-pages">{layout.pages.map(p=><div className="desk-page-row" key={p.index}><div className="desk-paper" ref={p.index===0?paper:undefined}>
       <A5Notebook layout={rendered} scene={scene} pageIndex={p.index} paperColor={paperColor} view={view} ink={palettes[display.marker]} time={reduced?scene.duration:time} reduced={reduced} personalInk={emptyInk}/>
-      {p.index===position.page&&isEditing&&<textarea ref={editor} id="notebook-input" className="notebook-input" aria-label={personalMode?'ノートに自分のひとことを書く':'ノートに英文を書き写す'} aria-describedby="writing-help writing-error" aria-invalid={!!error} spellCheck={false} autoCapitalize="off" autoCorrect="off" wrap="soft" disabled={!fontReady} value={draft} rows={1}
-       style={{left:position.x*unit,top:inputTop,width:position.width*unit,height:Math.min(position.rows,Math.max(2,Math.ceil(draft.length/32)+draft.split('\n').length))*5.2*unit,fontFamily:'"'+inputFamily+'", sans-serif',fontSize:4.1*unit,lineHeight:(5.2*unit)+'px'} as CSSProperties}
-       onChange={e=>changeDraft(e.target.value)} onSelect={followCaret} onFocus={()=>requestAnimationFrame(followCaret)} onKeyDown={keyDown} onCompositionStart={()=>{composing.current=true;}} onCompositionEnd={()=>{composing.current=false;compositionEnded.current=Date.now();}}/>}
+      {p.index===position.page&&isEditing&&<textarea ref={editor} id="notebook-input" className={'notebook-input'+(liveInk?' live-ink-input':'')} aria-label={personalMode?'ノートに自分のひとことを書く':'ノートに英文を書き写す'} aria-describedby="writing-help writing-error" aria-invalid={!!error} spellCheck={false} autoCapitalize="off" autoCorrect="off" wrap="soft" disabled={!fontReady} value={draft} rows={1}
+       style={{left:position.x*unit,top:inputTop,width:position.width*unit,height:inputHeight*unit,fontFamily:'"'+inputFamily+'", sans-serif',fontSize:4.1*unit,lineHeight:(5.2*unit)+'px'} as CSSProperties}
+       onScroll={e=>setInputScroll({x:e.currentTarget.scrollLeft/unit,y:e.currentTarget.scrollTop/unit})} onChange={e=>changeDraft(e.target.value)} onSelect={followCaret} onFocus={()=>requestAnimationFrame(followCaret)} onKeyDown={keyDown} onCompositionStart={()=>{composing.current=true;setComposingText(true);}} onCompositionEnd={()=>{composing.current=false;setComposingText(false);compositionEnded.current=Date.now();}}/>}
+      {p.index===position.page&&isEditing&&<LiveDraftInk key={personalMode?'personal':current.id} text={draft.length<=500?draft:''} font={display.english} animate={liveInk&&!reduced} visible={liveInk} x={position.x} y={position.y} width={position.width} top={position.y-4.65} height={inputHeight} scrollX={inputScroll.x} scrollY={inputScroll.y}/>}
      </div>{p.index===position.page&&<div className="notebook-action" style={{top:inputTop}}>
       {writingAction()}
      </div>}</div>)}</div>
     </div>
-    <p id="writing-help" className="writing-help">{personalMode?'英語でひとこと。80文字以内。確定するとノートに残ります。':record.phase==='editing'?'ノートに書き写し、Enter または「確定」。':'確定した文章を保存しました。'} {zoom==='read'?'左右にスクロールして読めます。':''}</p>
+    <p id="writing-help" className="writing-help">{personalMode?'英語でひとこと。80文字以内。確定するとノートに残ります。':record.phase==='editing'?'入力した文字から、その場で筆跡になります。Enter または「確定」で答え合わせ。':'確定した文章を保存しました。'} {zoom==='read'?'左右にスクロールして読めます。':''}</p>
     <p id="writing-error" role="alert" className="desk-error">{error}</p>
-    <div className="ink-actions"><button disabled={!record.entries.length||reduced} onClick={()=>{setAnimateId(current.id);setTime(0);setPlaying(true);}}>筆跡をもう一度</button><button disabled={time>=scene.duration||reduced} onClick={()=>setPlaying(v=>!v)}>{playing?'筆記を一時停止':'筆記を続ける'}</button><button onClick={()=>{setTime(scene.duration);setPlaying(false);}}>書き終える</button></div>
+    <div className="ink-actions"><button disabled={!record.entries.length||reduced} onClick={()=>{setAnnotationsOnly(false);setAnimateId(current.id);setTime(0);setPlaying(true);}}>筆跡をもう一度</button><button disabled={time>=scene.duration||reduced} onClick={()=>setPlaying(v=>!v)}>{playing?'筆記を一時停止':'筆記を続ける'}</button><button onClick={()=>{setTime(scene.duration);setPlaying(false);}}>書き終える</button></div>
    </section>
   </main>
   <footer className="desk-footer"><span>サンプル教材のCopy体験 · AI生成との連携は準備中</span><a href="/fonts/README.md">書体とライセンス</a></footer>

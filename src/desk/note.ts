@@ -33,14 +33,14 @@ export function inputPosition(layout:A5Layout,record:CopyRecord,personal:boolean
  const bottom=Math.min(A5.first+(A5.rows-1)*A5.pitch+1,next?next.y-5.2:Infinity);
  return {page:page.index,x:layout.left,y:first.y,width,rows:Math.max(1,Math.floor((bottom-first.y)/A5.pitch)+1)};
 }
-export function practiceScene(layout:A5Layout,animateId:string|null) {
+export function practiceScene(layout:A5Layout,animateId:string|null,annotationsOnly=false) {
  const scene=createA5Scene(layout,true);
- if(!animateId)return {...scene,strokes:scene.strokes.map(s=>({...s,start:0,duration:1})),duration:1,memoStart:0};
+ if(!animateId)return {...scene,strokes:scene.strokes.map(s=>({...s,start:-1,duration:1})),duration:1,memoStart:0};
  const sentence=layout.source.sentences.find(s=>s.id===animateId);
  const ids=[animateId,...(sentence?.glosses??[]).map(g=>g.id),...(sentence?.footnotes??[]).map(f=>f.id)];
  let clock=0;
  const strokes=scene.strokes.map(s=>{
-  if(!ids.some(id=>s.id.startsWith(id+':')))return {...s,start:0,duration:1};
+  if(!ids.some(id=>s.id.startsWith(id+':'))||(annotationsOnly&&s.id.startsWith(animateId+':')))return {...s,start:-1,duration:1};
   const result={...s,start:clock};clock+=s.duration+5;return result;
  });
  return {...scene,strokes:strokes.sort((a,b)=>a.start-b.start),duration:clock+1,memoStart:0,memoStarts:Object.fromEntries((sentence?.glosses??[]).map(g=>[g.id,clock]))};

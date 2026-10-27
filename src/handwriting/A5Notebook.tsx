@@ -13,7 +13,7 @@ function StrokePath({stroke,time}:{stroke:Stroke;time:number}) {
     strokeLinecap="round" strokeLinejoin="round" strokeDasharray={stroke.length+' '+stroke.length}
     strokeDashoffset={stroke.length*(1-progress)} data-phase={stroke.phase}/>;
 }
-function Pen({x,y,marker=false}:{x:number;y:number;marker?:boolean}) {
+export function Pen({x,y,marker=false}:{x:number;y:number;marker?:boolean}) {
   return <g transform={'translate('+x+' '+y+') rotate(28)'} aria-hidden="true">
     <path d="M 0 0 L -.65 -2.4 L .65 -2.4 Z" fill="#a99a78"/>
     <path d="M -.65 -2.4 V -10 Q 0 -10.8 .65 -10 V -2.4 Z" fill={marker?'#90aec3':'#47627A'}/>
