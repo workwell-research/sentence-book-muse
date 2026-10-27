@@ -18,7 +18,7 @@
 .desk-wordmark{font:21px 'Lora',Georgia,serif;letter-spacing:-.03em;text-decoration:none}
 .desk-tagline{font:italic 11px 'Lora',serif;color:var(--quiet)}
 .settings-button{margin-left:auto;display:flex;align-items:center;gap:7px}
-.desk-grid{max-width:1552px;margin:auto;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);grid-template-rows:254px auto;gap:0 48px;align-items:start}
+.desk-grid{max-width:1552px;margin:auto;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);grid-template-rows:334px auto;gap:0 48px;align-items:start}
 .desk-tools{grid-column:1;grid-row:1;display:grid;grid-template-columns:180fr 628fr;gap:20px;align-items:start;padding-top:4px}
 .desk-pens{margin:0;border:0;padding:0;min-width:0;display:grid;gap:3px}
 .pen-choice{height:54px;display:grid;grid-template-columns:minmax(0,1fr) 48px 24px;gap:8px;align-items:center;position:relative;cursor:pointer;border-radius:3px}
@@ -38,7 +38,7 @@
 .model-sentence{font:400 clamp(19px,1.8vw,28px)/1.45 'Lora',Georgia,serif;margin:17px 0 8px;max-width:100%}
 .model-meaning{font-size:12px;margin:0;min-height:36px}.model-meaning.is-hidden{visibility:hidden}
 .model-actions{display:flex;align-items:center;gap:4px;margin-top:auto}.model-actions button{display:flex;align-items:center;gap:6px;padding:6px 8px;font-size:12px;white-space:nowrap}.model-actions span{font-size:11px;margin-left:auto;color:#697078}
-.index-book{grid-column:1;grid-row:2;position:relative;width:100%;max-width:780px;aspect-ratio:1.5;margin:114px auto 0;color:#514d47}
+.index-book{grid-column:1;grid-row:2;position:relative;width:100%;max-width:780px;aspect-ratio:1.5;margin:34px auto 0;color:#514d47}
 .index-plate{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .index-left,.index-right{position:absolute;top:17%;width:34%;height:69%;overflow:auto;scrollbar-width:thin;scrollbar-color:#b7b1a7 transparent}
 .index-left{left:11%}.index-right{left:55%;padding-right:3px}
@@ -59,7 +59,7 @@
 .desk-settings{width:min(820px,calc(100% - 32px));max-height:90vh;border:0;border-radius:4px;padding:24px 30px;background:#fbf9f3;color:#444c4c;box-shadow:0 16px 60px #14252b33;font-size:13px}.desk-settings::backdrop{background:#222a304d}
 .settings-heading{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ccd2cc;padding-bottom:12px}.settings-heading h2{font:22px 'Lora',serif;margin:0}.settings-columns{display:grid;grid-template-columns:1fr 1fr;gap:38px}.desk-settings h3{font-size:16px;font-weight:500;margin:24px 0 12px}.desk-settings fieldset{border:0;padding:0;margin:0 0 16px}.desk-settings legend{font-size:12px;margin:0 0 4px}.desk-settings label{display:flex;align-items:center;gap:8px;min-height:44px;flex-wrap:wrap}.desk-settings select{display:block;width:100%;border:0;border-bottom:1px solid #aeb8b3;background:transparent;margin:0 0 8px}.desk-settings input{accent-color:#476b82;width:16px;height:16px}.desk-settings p{font-size:11px;line-height:1.8;color:#68706d}.binding-fields{display:flex;gap:16px}.binding-fields label{flex:1}.pdf-button{background:#dfe8e5!important;width:100%}
 @media(min-width:761px){.desk-paper-scroll.reading .desk-pages{width:824px}.desk-paper-scroll.reading .desk-page-row{max-width:824px}}
-@media(max-width:1200px) and (min-width:761px){.study-desk{padding-inline:16px}.desk-grid{gap:0 24px;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}.desk-tools{gap:8px;grid-template-columns:130px minmax(0,1fr)}.pen-choice{grid-template-columns:minmax(0,1fr) 38px 20px;gap:2px}.pen-label{pointer-events:none;font-size:10px}.index-book{margin-top:130px}.index-tabs button{font-size:12px}.index-book h2{font-size:16px}.index-left,.index-right{width:36%}.index-right{left:54%}.index-right .lesson-link{font-size:14px}.model-card{padding:20px;height:234px}.model-actions span{display:none}}
+@media(max-width:1200px) and (min-width:761px){.study-desk{padding-inline:16px}.desk-grid{gap:0 24px;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}.desk-tools{gap:8px;grid-template-columns:130px minmax(0,1fr)}.pen-choice{grid-template-columns:minmax(0,1fr) 38px 20px;gap:2px}.pen-label{pointer-events:none;font-size:10px}.index-book{margin-top:50px}.index-tabs button{font-size:12px}.index-book h2{font-size:16px}.index-left,.index-right{width:36%}.index-right{left:54%}.index-right .lesson-link{font-size:14px}.model-card{padding:20px;height:234px}.model-actions span{display:none}}
 @media(max-width:760px){.study-desk{padding:0 14px 16px}.desk-header{height:auto;min-height:66px;gap:8px;flex-wrap:wrap}.desk-wordmark{font-size:20px}.desk-tagline{display:none}.settings-button{font-size:11px!important;padding:8px!important}.desk-grid{display:flex;flex-direction:column;gap:18px}.desk-tools{order:0;display:grid;width:100%;grid-template-columns:76px minmax(0,1fr);gap:12px;padding:0}.timer-space{min-height:180px;padding-top:14px}.timer-digits{font-size:18px}.timer-actions{flex-direction:column;gap:0}.timer-actions button{min-height:34px;font-size:10px;padding:3px}.desk-pens{gap:0}.pen-choice{height:44px;grid-template-columns:minmax(0,1fr) 38px 20px;gap:4px}.pen-art{max-height:29px}.pen-label{pointer-events:none;font-size:10px}.pen-choice input{height:44px}.model-card{order:1;width:100%;height:246px;padding:20px}.model-sentence{font-size:22px}.model-actions span{display:none}.notebook-area{order:2;width:100%}.index-book{order:3;width:100%;margin:0;max-width:650px;min-height:320px}.index-left,.index-right{top:16%;height:70%;width:37%}.index-left{left:9%}.index-right{left:54%}.index-book h2{font-size:15px;margin-bottom:6px}.index-tabs button{font-size:11px;min-height:38px}.index-right .lesson-link{font-size:14px}.index-right p{font-size:11px}.index-right .index-note{margin-top:12px}.index-plate{object-fit:fill}.notebook-toolbar{padding-right:0}.desk-page-row{padding-right:66px}.notebook-action{width:58px}.notebook-action button{width:58px;min-height:58px;font-size:11px;padding:5px}.desk-paper-scroll.reading .desk-pages{width:806px}.desk-paper-scroll.reading .desk-page-row{max-width:806px}.writing-help{max-width:none}.settings-columns{grid-template-columns:1fr;gap:0}.desk-settings{padding:20px}.desk-footer{flex-direction:column;gap:8px}.book-word{font-size:10px}.book-word small{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.pen-art{transition:none}.desk-paper-scroll{scroll-behavior:auto}}
 
@@ -83,3 +83,15 @@
 .notebook-input{z-index:2}
 .notebook-input.live-ink-input{color:transparent;-webkit-text-fill-color:transparent}
 .notebook-input.live-ink-input::selection{color:transparent;-webkit-text-fill-color:transparent;background:#b7d4e866}
+
+.lesson-panel{grid-column:2;grid-row:1;min-width:0;width:100%}
+.lesson-steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;list-style:none;margin:0;padding:0;color:var(--quiet)}
+.lesson-steps li{display:flex;align-items:center;gap:6px;min-height:32px;border-bottom:1px solid #89939355;padding-bottom:5px;font-size:12px;line-height:1.5}
+.lesson-steps li[aria-current=step]{color:var(--desk-ink);border-color:currentColor;font-weight:600}
+.step-number{font-family:'Lora',serif;font-size:15px;font-variant-numeric:tabular-nums;flex-shrink:0;display:flex;align-items:center}
+.step-number svg{width:16px;height:16px}
+.lesson-availability{font-size:11px;line-height:1.7;color:var(--quiet);margin:7px 0 16px}
+@media(max-width:1000px){.lesson-steps li{flex-direction:column;align-items:flex-start;gap:0}.lesson-availability{margin-bottom:10px}}
+@media(max-width:760px){.lesson-panel{order:1}.lesson-steps{gap:5px}.lesson-steps li{font-size:11px}.lesson-availability{font-size:11px;margin-bottom:12px}}
+
+.step-label{word-break:keep-all}

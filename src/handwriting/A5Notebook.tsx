@@ -20,12 +20,12 @@ function Pen({x,y,marker=false}:{x:number;y:number;marker?:boolean}) {
     <path d="M 0 0 L 0 -1" stroke="#383A3D" strokeWidth=".2"/>
   </g>;
 }
-export function A5Notebook({layout,scene,view,ink,time,reduced,personalInk,pageIndex,paperColor}:{
-  pageIndex?:number;paperColor?:string;layout:A5Layout;scene:ReturnType<typeof createA5Scene>&{memoStarts?:Record<string,number>};view:ViewSettings;ink:InkPalette;
+export function A5Notebook({layout,scene,view,ink,time,reduced,personalInk,pageIndex,paperColor,showPen=true}:{
+  pageIndex?:number;paperColor?:string;showPen?:boolean;layout:A5Layout;scene:ReturnType<typeof createA5Scene>&{memoStarts?:Record<string,number>};view:ViewSettings;ink:InkPalette;
   time:number;reduced:boolean;personalInk:ReturnType<typeof usePersonalInk>;
 }) {
   const visible=scene.strokes.filter(s=>visibleLayer(s.layer,view)&&(view.markers||s.phase!=='marking'));
-  const pen=personalInk.pending?null:penPosition(visible,time,.8);
+  const pen=!showPen||personalInk.pending?null:penPosition(visible,time,.8);
   const penPage=visible.find(s=>time<s.start+s.duration)?.page;
   return <>{visiblePages(layout,view).filter(p=>pageIndex===undefined||p.index===pageIndex).map(p=>{
     const runs=p.runs.filter(r=>visibleLayer(r.layer,view));

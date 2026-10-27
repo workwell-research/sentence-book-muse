@@ -19,8 +19,7 @@ await e.fill('Today, I decided to slow down.');
 await e.dispatchEvent('compositionstart');await e.dispatchEvent('keydown',{key:'Enter',code:'Enter',keyCode:229,isComposing:true});assert.equal((await saved()).entries.length,0);await e.dispatchEvent('compositionend');await page.waitForTimeout(120);
 await e.dispatchEvent('keydown',{key:'Enter',code:'Enter',repeat:true});assert.equal((await saved()).entries.length,0);
 await e.dispatchEvent('keydown',{key:'Enter',code:'Enter',ctrlKey:true});assert.equal((await saved()).entries.length,0);
-await e.press('Enter');assert.equal((await saved()).entries.length,1);assert.equal((await saved()).index,0);
-await page.getByRole('button',{name:'次の文',exact:true}).click();
+await e.press('Enter');assert.equal((await saved()).entries.length,1);assert.equal((await saved()).index,1);
 await e.fill('Preserve this draft.');await e.evaluate(el=>el.setSelectionRange(3,9));
 const before=await page.locator('.notebook [data-rule]').evaluateAll(els=>els.map(el=>['x1','y1','x2','y2','stroke-width'].map(a=>el.getAttribute(a))));
 for(const theme of ['pure-white','natural','walnut']){
@@ -49,7 +48,7 @@ await openSettings();await page.locator('input[name=desk-theme][value=pure-white
 await page.setViewportSize({width:1280,height:900});await page.screenshot({path:out+'/desktop-1280.png',fullPage:true});
 for(const width of [390,320]){await page.setViewportSize({width,height:844});await page.reload();await page.evaluate(()=>document.fonts.ready);await page.screenshot({path:out+'/mobile-'+width+'.png',fullPage:true});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));}
 await page.setViewportSize({width:1600,height:1000});await page.reload();await page.evaluate(()=>document.fonts.ready);
-await e.press('Enter');await page.getByRole('button',{name:'ノート完成',exact:true}).click();assert.equal((await saved()).phase,'complete');
+await e.press('Enter');assert.equal((await saved()).phase,'complete');
 await page.screenshot({path:out+'/completed.png',fullPage:true});
 await openSettings();let download=page.waitForEvent('download');await page.getByRole('button',{name:'確定したノートをPDFに'}).click();await(await download).saveAs('output/pdf/desk-a5-completed.pdf');
 await page.getByLabel('印刷用紙',{exact:true}).selectOption('A4');await page.getByLabel('PDFにマーカーを入れる',{exact:true}).uncheck();await page.locator('input[name=desk-memos][value=blank]').check();download=page.waitForEvent('download');await page.getByRole('button',{name:'確定したノートをPDFに'}).click();await(await download).saveAs('output/pdf/desk-a5-on-a4-blank.pdf');await closeSettings();

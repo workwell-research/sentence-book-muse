@@ -32,6 +32,12 @@ export function nextCopy(record:CopyRecord,lesson:StudyContent):CopyRecord {
  if(record.phase!=='confirmed')return record;
  return record.index===lesson.sentences.length-1?{...record,phase:'complete'}:{...record,index:record.index+1,phase:'editing',draft:''};
 }
+/** One user action checks, records and opens the next line; legacy confirmed records stay resumable. */
+export function submitCopy(record:CopyRecord,lesson:StudyContent,now:string):CopyRecord {
+ if(!validCopy(record,lesson))throw new Error('学習状態を確認してください。入力は残っています。');
+ if(record.phase==='complete')return record;
+ return nextCopy(record.phase==='confirmed'?record:confirmCopy(record,lesson,now),lesson);
+}
 export function readSaved<T>(key:string,schema:z.ZodType<T>,fallback:T,valid:(x:T)=>boolean=()=>true):{value:T;blocked:boolean;message:string}{
  try {const raw=localStorage.getItem(key);if(!raw)return{value:fallback,blocked:false,message:''};const parsed=schema.safeParse(JSON.parse(raw));if(!parsed.success||!valid(parsed.data))throw new Error();return{value:parsed.data,blocked:false,message:''};}
  catch{return{value:fallback,blocked:true,message:'保存済みデータを読み込めませんでした。元の内容を保つため、上書き保存を止めています。'};}

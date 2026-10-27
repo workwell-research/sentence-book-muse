@@ -180,7 +180,7 @@ The owner-approved desktop handoff replaces the former sage control-rail composi
 - Three desk families, six labeled pen choices and one shared optional timer.
 - A read-only model card and one native editor on the current notebook line.
 - Small graphite handwriting, pale markers and a fixed measured A5 grid.
-- Draft letters draw as they are typed; confirmation saves the answer and explicit Next controls progression.
+- Draft letters draw as they are typed; Enter checks/saves the answer and focuses the next line in one action.
 - Mobile actions remain reachable beside enlarged, horizontally scrollable paper.
 
 ## Colors
@@ -217,9 +217,9 @@ The native editor uses the selected renamed `Sentence Notebook … Input` WOFF2 
 
 ## Layout
 
-The desk has a 1552px maximum content width and 24px horizontal outer padding. Its desktop grid uses 1.25fr/1fr columns, a 48px gap and a 254px first row. Timer/pens occupy upper left, the open index sits below, model card is upper right and notebook is below it. At 761–1200px, outer padding becomes 16px, columns 1.1fr/1fr and gap 24px. The timer retains its allocated space when hidden. Six complete horizontal pens occupy six labeled rows (54px high desktop, 44px mobile), with native radio hit areas and a selected check.
+The desk has a 1552px maximum content width and 24px horizontal outer padding. Its desktop grid uses 1.25fr/1fr columns, a 48px gap and a 334px first row. Timer/pens occupy upper left, the open index sits below, the five-step progress strip and model card are upper right and notebook is below it. At 761–1200px, outer padding becomes 16px, columns 1.1fr/1fr and gap 24px. The timer retains its allocated space when hidden. Six complete horizontal pens occupy six labeled rows (54px high desktop, 44px mobile), with native radio hit areas and a selected check.
 
-At 760px and below, 14px gutters and an 18px vertical gap stack tools, model, notebook and index. The tagline disappears, settings become one column and the model card is 246px high. Mobile starts with enlarged paper; the 806px page row includes 740px paper plus the reserved 66px side space. Desktop enlarged rows are 824px (740px paper plus 84px). Fit rows cap at 556px including their side space. These are viewing scales only. Mobile Confirm/Next lives in a sticky strip (top 8px) outside horizontal scrolling, alongside current-line navigation; native caret/selection movement pans the enlarged paper. The desktop action remains beside the active line.
+At 760px and below, 14px gutters and an 18px vertical gap stack tools, model, notebook and index. The tagline disappears, settings become one column and the model card is 246px high. Mobile starts with enlarged paper; the 806px page row includes 740px paper plus the reserved 66px side space. Desktop enlarged rows are 824px (740px paper plus 84px). Fit rows cap at 556px including their side space. These are viewing scales only. Mobile check-and-advance lives in a sticky strip (top 8px) outside horizontal scrolling, alongside current-line navigation; native caret/selection movement pans the enlarged paper. The desktop action remains beside the active line.
 
 ### Common A5 refill
 
@@ -283,7 +283,7 @@ The open index keeps five live vertical tabs on its left page and the selected p
 
 Each pen row contains a native radio, decorative atlas crop, visible color name and selected check. Hover moves only the art 3px over 150ms; reduced motion removes that transition. The optional timer has shared deadline logic, Start/Pause/Resume/Reset, live digits in White/Natural and live hands plus a numeric reading in Walnut. Timer expiry announces itself without completing Copy; changing themes or hiding it preserves the mounted timer.
 
-Keystrokes draw newly inserted/replaced letters directly on the note, without a following pen graphic; the native caret remains the insertion indicator. Existing character identities retain their ink; deletion removes only deleted letters. A new edit completes any previous pending stroke so typing cannot build a queue. One character takes up to 160ms, small insertions share at most 300ms and pastes over six characters appear immediately. Restored drafts and font changes show completed ink. Confirmation checks and persists the canonical entry without replaying the body, then animates only its annotations. Replay resets ink only; Pause/Resume preserves current time; Finish completes animation only. Reduced motion shows confirmed strokes directly. Meanings/markers are revealed with their associated confirmed content. Actual native speech synthesis is a browser capability and its hardware/audio behavior was not certified by synthetic QA.
+Keystrokes draw newly inserted/replaced letters directly on the note, without a following pen graphic; the native caret remains the insertion indicator. Existing character identities retain their ink; deletion removes only deleted letters. A new edit completes any previous pending stroke so typing cannot build a queue. One character takes up to 160ms, small insertions share at most 300ms and pastes over six characters appear immediately. Restored drafts and font changes show completed ink. Enter checks and persists the canonical entry together with the next editing position in one write, then animates only its annotations. Focus returns to the new line immediately; automatic annotation pens are hidden while editing. Legacy confirmed records expose a focused resume action. Incorrect text or a failed save retains the current line. The eighth correct Enter completes Copy; the remaining four learning stages stay visibly pending. Replay resets ink only; Pause/Resume preserves current time; Finish completes animation only. Reduced motion shows confirmed strokes directly. Meanings/markers are revealed with their associated confirmed content. Actual native speech synthesis is a browser capability and its hardware/audio behavior was not certified by synthetic QA.
 
 ### Print
 
@@ -299,7 +299,7 @@ The 2026-10-27 build/test/browser/PDF records are summarized in [PROJECT_STATUS.
 
 - Do derive screen and independent PDF from the same A5 layout and measured glyph advances.
 - Do preserve native textarea selection, composition, caret behavior and the current-line action.
-- Do animate draft edits in place, save only checked Copy text, and require an explicit Next action.
+- Do animate draft edits in place and let one Enter save checked Copy text and open the next line.
 - Do keep memo space, stable IDs, drafts, checks and canonical saved personal text when changing presentation.
 - Do retain labeled native controls, visible focus, reduced-motion completion and adjacent error/status feedback.
 - Do use the existing material families and retain original asset prompts, hashes and font notices.

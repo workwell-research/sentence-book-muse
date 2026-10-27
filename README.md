@@ -7,11 +7,11 @@ A new implementation for the 2026 Meta Global AI Developer Hackathon. Turn somet
 This repository includes a **working local study desk and A5 notebook** at `/`, based on the owner's [Work desktop handoff](docs/desktop-study-desk.md). AI generation remains a scaffold. The previous standalone typography prototype is retained at `/handwriting`.
 
 - Pure White, Natural and Walnut desks; six selectable horizontal pens, a live index book and optional timer. Material PNGs are separate from live text and native controls.
-- A read-only source card and one native editor on the current A5 line. Letters draw as they are typed. Explicit confirmation checks and saves the sentence without rewriting it; Next advances. Animation does not complete learning.
+- A read-only source card and one native editor on the current A5 line. Letters draw as they are typed. Enter checks/saves the sentence and focuses the next line immediately, without rewriting it. The eighth correct entry completes Copy. The five-step strip highlights Copy and labels stages2–5 as preparation. Animation does not complete learning.
 - One synthetic eight-sentence Copy lesson, with locally saved drafts, confirmed progress, personal English writing, review marks and display choices. This is not multi-lesson history or AI-generated material.
 - Fixed physical A5 composition with measured wrapping, continuation pages and independent SVG/vector PDF renderers. Memo shown/blank retains reserved rows; Japanese phrase glosses are lifted 1mm.
 - Readability Italic default, EMS Tech, Print and Pen; independent Klee One/Zen Kurenaido Japanese. Native input fonts derive from the same English centerlines with matching advances.
-- Pause/resume, replay/finish and reduced motion. Mobile has fixed-paper zoom, caret-following horizontal scroll and reachable confirmation/Next controls.
+- Pause/resume, replay/finish and reduced motion. Mobile has fixed-paper zoom, caret-following horizontal scroll and reachable check-and-advance controls.
 - A5 portrait finished notes with binding margins; A5 printer sheets or original-size two-up on landscape A4. Export uses confirmed text only, with optional markers and blank memos.
 - [Desk architecture and limitations](docs/desktop-study-desk.md); [shared handwriting and font provenance](docs/handwriting-prototype.md).
 - Earlier interest/topic-note flow preserved at `/setup`.
@@ -59,6 +59,8 @@ For the current typing interaction, run `QA_ORIGIN=http://127.0.0.1:5327 node sc
 Run `npm test` and `npm run build`. With a dedicated Vite development origin, `QA_ORIGIN=http://127.0.0.1:5327 npm run qa:desk` checks the local Copy flow, persistence/failure handling, 18 theme/color pairs, font advances, desktop/mobile layouts, timer and actual PDF downloads in disposable Chrome contexts. `QA_ORIGIN=http://127.0.0.1:5327 node scripts/qa-desk-review.mjs` checks reachable mobile actions/caret scrolling, personal editing and animation resume. Neither script touches the user's preview storage. Current evidence is in `.impeccable/review/desk/`; exported fixtures are `output/pdf/desk-a5-completed.pdf` and `output/pdf/desk-a5-on-a4-blank.pdf`.
 
 `npm run qa:a5` targets the retained `/handwriting` prototype; `qa:handwriting` and `qa:print` alias it and need not all be repeated. For the interest flow, use a separate `npm run pages:dev` origin and `node scripts/qa-scaffold.mjs`. Synthetic IME events are not real OS/mobile-keyboard verification. Physical devices, audio and printed output require separate checks.
+
+Current Enter-flow QA: `node scripts/qa-enter-flow.mjs` checks atomic advancement, focus, legacy confirmed records, failure guards and the five-stage strip. Run against the dedicated development origin5327; evidence is in `.impeccable/review/enter-flow/`. The earlier desk/PDF captures remain dated evidence.
 
 ## Next implementation steps
 

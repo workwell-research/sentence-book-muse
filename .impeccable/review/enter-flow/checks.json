@@ -1,0 +1,7 @@
+{
+  "keyboard": "wrong/repeat/IME guarded; one atomic save; next input focused; 8th Enter completes Copy only",
+  "legacy": "Enter resumes existing confirmed record, no duplicate",
+  "failedSave": "correct draft retained; no advancement or new canonical entry",
+  "mobile": "390/320, Enter and button keep editor focused; 5 stages and no viewport overflow",
+  "errors": []
+}

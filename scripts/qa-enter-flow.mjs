@@ -1,0 +1,32 @@
+import {chromium} from '@playwright/test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const origin=process.env.QA_ORIGIN??'http://127.0.0.1:5327',out='.impeccable/review/enter-flow';
+fs.mkdirSync(out,{recursive:true});
+const browser=await chromium.launch({channel:'chrome',headless:true}),errors=[],results={};
+const state=p=>p.evaluate(()=>JSON.parse(localStorage.getItem('sentence-book-muse:sample-copy:v1')));
+const ready=async p=>{await p.goto(origin);await p.waitForFunction(()=>document.querySelector('textarea')&&!document.querySelector('textarea').disabled);};
+const focus=async p=>p.waitForFunction(()=>document.activeElement===document.querySelector('textarea'));
+try{
+ const p=await browser.newPage({viewport:{width:1600,height:1000},reducedMotion:'no-preference'});p.on('pageerror',e=>errors.push(e.message));await ready(p);
+ const sentences=await p.evaluate(async()=> (await import('/src/handwriting/study-content.ts')).studySample.sentences.map(s=>s.text)),e=p.locator('textarea');
+ assert.equal(await p.locator('.lesson-steps li').count(),5);assert.equal(await p.locator('.lesson-steps [aria-current=step]').count(),1);assert.equal(await p.locator('.lesson-steps button').count(),0);assert.match(await p.locator('.lesson-availability').innerText(),/2〜5は準備中/);
+ await e.fill('Wrong answer.');await e.press('Enter');assert.equal((await state(p)).entries.length,0);assert.equal(await e.inputValue(),'Wrong answer.');await focus(p);assert.match(await p.locator('#writing-error').innerText(),/異なる/);
+ await e.fill(sentences[0]);await e.dispatchEvent('keydown',{key:'Enter',repeat:true});assert.equal((await state(p)).entries.length,0);
+ await e.dispatchEvent('compositionstart');await e.dispatchEvent('keydown',{key:'Enter',keyCode:229,isComposing:true});assert.equal((await state(p)).entries.length,0);await e.dispatchEvent('compositionend');await e.dispatchEvent('keydown',{key:'Enter'});assert.equal((await state(p)).entries.length,0);await p.waitForTimeout(120);
+ // One save operation must contain both checked text and the new editing position.
+ await p.evaluate(()=>{window.savedWrites=[];const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k==='sentence-book-muse:sample-copy:v1')window.savedWrites.push(JSON.parse(v));return original.call(this,k,v);};});
+ const y0=await e.evaluate(el=>parseFloat(el.style.top));await e.press('Enter');await focus(p);
+ assert.equal((await state(p)).index,1);assert.equal((await state(p)).phase,'editing');assert.equal(await e.inputValue(),'');assert.ok(await e.evaluate((el,y)=>parseFloat(el.style.top)>y,y0));assert.deepEqual(await p.evaluate(()=>window.savedWrites.map(r=>[r.entries.length,r.index,r.phase])),[[1,1,'editing']]);
+ assert.ok(await p.locator('[data-layer=body] path').evaluateAll(ps=>ps.length&&ps.every(el=>Number(el.getAttribute('stroke-dashoffset'))===0)));
+ assert.equal(await p.locator('[data-testid=pen]').count(),0);await p.evaluate(()=>scrollTo(0,0));await p.screenshot({path:out+'/desktop.png',fullPage:true});
+ // Repeated Enter on the new empty line cannot advance again.
+ await e.dispatchEvent('keydown',{key:'Enter',repeat:true});assert.equal((await state(p)).entries.length,1);
+ for(let i=1;i<8;i++){await e.fill(sentences[i]);await e.press('Enter');assert.equal((await state(p)).entries.length,i+1);if(i<7){await focus(p);assert.equal(await e.inputValue(),'');assert.equal((await state(p)).index,i+1);}}
+ assert.equal((await state(p)).phase,'complete');assert.equal(await e.count(),0);assert.match(await p.locator('h1').innerText(),/Copy complete/);assert.match(await p.locator('.lesson-availability').innerText(),/読む・写すを完了/);assert.equal(await p.locator('[aria-current=step]').count(),1);await p.screenshot({path:out+'/completed.png',fullPage:true});results.keyboard='wrong/repeat/IME guarded; one atomic save; next input focused; 8th Enter completes Copy only';
+ // A legacy confirmed record resumes without adding a second entry, including after reload.
+ await p.evaluate(async()=>{const c=await import('/src/desk/core.ts'),{studySample:s}=await import('/src/handwriting/study-content.ts');localStorage.setItem(c.practiceKey,JSON.stringify(c.confirmCopy({...c.emptyCopy(s),draft:s.sentences[0].text},s,'fixture')));});await p.reload();await p.waitForFunction(()=>document.activeElement?.classList.contains('resume-copy'));await p.keyboard.press('Enter');await focus(p);assert.equal((await state(p)).index,1);assert.equal((await state(p)).entries.length,1);await p.reload();await p.waitForFunction(()=>document.querySelector('textarea')&&!document.querySelector('textarea').disabled);assert.equal((await state(p)).index,1);results.legacy='Enter resumes existing confirmed record, no duplicate';
+ await e.fill(sentences[1]);await p.evaluate(()=>{Storage.prototype.setItem=function(){throw new DOMException('quota','QuotaExceededError');};});await e.press('Enter');assert.equal((await state(p)).index,1);assert.equal((await state(p)).entries.length,1);assert.equal(await e.inputValue(),sentences[1]);assert.match(await p.locator('#writing-error').innerText(),/保存できません/);results.failedSave='correct draft retained; no advancement or new canonical entry';await p.close();
+ for(const width of [390,320]){const q=await browser.newPage({viewport:{width,height:844},reducedMotion:width===320?'reduce':'no-preference'});q.on('pageerror',err=>errors.push(err.message));await ready(q);await q.locator('.lesson-panel').scrollIntoViewIfNeeded();assert.ok(await q.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.equal(await q.locator('.lesson-steps li').count(),5);await q.screenshot({path:out+'/mobile-steps-'+width+'.png'});const input=q.locator('textarea');await input.fill(sentences[0]);await input.press('Enter');await focus(q);assert.equal((await state(q)).index,1);assert.equal(await input.inputValue(),'');await input.fill(sentences[1]);await q.locator('.mobile-writing-actions').getByRole('button',{name:'次の文へ',exact:true}).click();await focus(q);assert.equal((await state(q)).index,2);assert.equal(await input.inputValue(),'');assert.ok(await q.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await q.screenshot({path:out+'/mobile-next-'+width+'.png'});await q.close();}results.mobile='390/320, Enter and button keep editor focused; 5 stages and no viewport overflow';
+ assert.deepEqual(errors,[]);results.errors=errors;fs.writeFileSync(out+'/checks.json',JSON.stringify(results,null,2));console.log(JSON.stringify(results));
+}finally{await browser.close();}

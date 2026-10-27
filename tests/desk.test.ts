@@ -1,22 +1,22 @@
 import {describe,it,expect,vi} from 'vitest';
-import {emptyCopy,confirmCopy,nextCopy,validCopy,defaultDisplay,idleTimer,timerAt,toggleTimer,readSaved,practiceSchema,saveRecord} from '../src/desk/core';
+import {emptyCopy,confirmCopy,nextCopy,submitCopy,validCopy,defaultDisplay,idleTimer,timerAt,toggleTimer,readSaved,practiceSchema,saveRecord} from '../src/desk/core';
 import {deskLayout,confirmedLayout,inputPosition} from '../src/desk/note';
 import {studySample} from '../src/handwriting/study-content';
 
 describe('notebook Copy record',()=>{
- it('records actual confirmed text and advances only with a separate action',()=>{
+ it('keeps legacy checked records valid without duplicating them on resume',()=>{
   const start=emptyCopy(studySample);expect(start.entries).toHaveLength(0);
   expect(()=>confirmCopy({...start,draft:'wrong'},studySample,'now')).toThrow();
   const saved=confirmCopy({...start,draft:studySample.sentences[0].text},studySample,'now');
   expect(saved.index).toBe(0);expect(saved.phase).toBe('confirmed');expect(validCopy(saved,studySample)).toBe(true);
   expect(()=>confirmCopy(saved,studySample,'now')).toThrow();
-  expect(nextCopy(saved,studySample)).toMatchObject({index:1,phase:'editing',draft:''});
+  expect(submitCopy(saved,studySample,'later')).toMatchObject({index:1,phase:'editing',draft:'',entries:saved.entries});
   expect(validCopy({...saved,entries:[{...saved.entries[0],sentenceId:'other'}]},studySample)).toBe(false);
  });
- it('completes only after all eight checked sentences and final advancement',()=>{
+ it('checks and advances in one action, completing only on the eighth correct submission',()=>{
   let state=emptyCopy(studySample);
-  for(const sentence of studySample.sentences){state=confirmCopy({...state,draft:sentence.text},studySample,'now');expect(state.phase).toBe('confirmed');state=nextCopy(state,studySample);}
-  expect(state.phase).toBe('complete');expect(validCopy(state,studySample)).toBe(true);
+  for(const sentence of studySample.sentences){const before=state;expect(()=>submitCopy({...state,draft:'wrong'},studySample,'now')).toThrow();expect(state).toEqual(before);state=submitCopy({...state,draft:sentence.text},studySample,'now');expect(validCopy(state,studySample)).toBe(true);if(state.entries.length<8)expect(state).toMatchObject({phase:'editing',draft:'',index:state.entries.length});}
+  expect(state.phase).toBe('complete');expect(validCopy(state,studySample)).toBe(true);expect(submitCopy(state,studySample,'again')).toBe(state);
  });
  it('keeps draft and other reserved coordinates out of confirmed print ink',()=>{
   let state=emptyCopy(studySample);state=nextCopy(confirmCopy({...state,draft:studySample.sentences[0].text},studySample,'now'),studySample);

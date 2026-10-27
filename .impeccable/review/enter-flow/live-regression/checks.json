@@ -1,0 +1,20 @@
+{
+  "typing": true,
+  "edits": true,
+  "rapid": true,
+  "ime": true,
+  "persistence": true,
+  "confirmation": true,
+  "personal": true,
+  "mobile": [
+    390,
+    320
+  ],
+  "fonts": [
+    "readability",
+    "tech",
+    "print",
+    "pen"
+  ],
+  "errors": []
+}
