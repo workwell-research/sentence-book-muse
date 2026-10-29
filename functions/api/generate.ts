@@ -22,7 +22,13 @@ const upstreamFailures: Record<ModelFailureCode, { status: number; code: Generat
   upstream_timeout: { status: 504, code: 'upstream_timeout', message: '教材づくりに時間がかかりすぎました。もう一度お試しください。' },
   upstream_error: { status: 502, code: 'upstream_error', message: 'モデルから教材を受け取れませんでした。もう一度お試しください。' },
   empty_output: { status: 502, code: 'upstream_error', message: 'モデルの返答が空でした。もう一度お試しください。' },
+  truncated_output: { status: 502, code: 'invalid_output', message: '教材が途中で切れていたため、採用しませんでした。もう一度お試しください。' },
 };
+
+// A malformed or cut-off page is retried once with the same draft ID; auth, rate-limit and
+// request errors are not, so a misconfiguration never doubles the cost of every call.
+const RETRYABLE_OUTPUT: ReadonlySet<ModelFailureCode> = new Set(['empty_output', 'truncated_output']);
+const MAX_ATTEMPTS = 2;
 
 export async function handleGenerate(request: Request, env: ModelEnv, options: ModelCallOptions = {}): Promise<Response> {
   if (request.method !== 'POST') return fail(405, 'method_not_allowed', 'Use POST.', undefined, { Allow: 'POST' });
@@ -38,29 +44,35 @@ export async function handleGenerate(request: Request, env: ModelEnv, options: M
   if (!parsed.success) return fail(400, 'invalid_request', '依頼の内容が条件を満たしていません。関心を選ぶか、話したいことを書いてください。');
   const generation = parsed.data;
 
-  const result = await requestStructuredJson(env, {
-    messages: buildMuseMessages(generation),
-    schemaName: LESSON_CONTRACT,
-    schema: lessonDraftJsonSchema,
-  }, options);
-  if (!result.ok) {
-    const mapped = upstreamFailures[result.code];
-    return fail(mapped.status, mapped.code, mapped.message, undefined, mapped.status === 429 ? { 'Retry-After': '20' } : {});
-  }
-
-  let output: unknown;
-  try { output = JSON.parse(result.content); } catch {
-    return fail(502, 'invalid_output', '受け取った教材を読み取れなかったため、採用しませんでした。もう一度お試しください。', 'not_json');
-  }
-  const validated = validateLessonDraft(output, {
+  const context = {
     draftId: generation.draft_id, level: generation.level, nativeLanguage: generation.native_language,
     learningStateVersion: generation.based_on_learning_state_version, binderIds: generation.binders.map(binder => binder.id),
-  });
-  if (!validated.success) {
-    return fail(502, 'invalid_output', '受け取った教材が仕様に合わなかったため、採用しませんでした。もう一度お試しください。', validated.reason);
+  };
+  const messages = buildMuseMessages(generation);
+  let lastFailure: Response | null = null;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const result = await requestStructuredJson(env, { messages, schemaName: LESSON_CONTRACT, schema: lessonDraftJsonSchema }, options);
+    if (!result.ok) {
+      const mapped = upstreamFailures[result.code];
+      lastFailure = fail(mapped.status, mapped.code, mapped.message, result.code === 'truncated_output' ? 'truncated' : undefined,
+        mapped.status === 429 ? { 'Retry-After': '20' } : {});
+      if (RETRYABLE_OUTPUT.has(result.code)) continue;
+      return lastFailure;
+    }
+    let output: unknown;
+    try { output = JSON.parse(result.content); } catch {
+      lastFailure = fail(502, 'invalid_output', '受け取った教材を読み取れなかったため、採用しませんでした。もう一度お試しください。', 'not_json');
+      continue;
+    }
+    const validated = validateLessonDraft(output, context);
+    if (!validated.success) {
+      lastFailure = fail(502, 'invalid_output', '受け取った教材が仕様に合わなかったため、採用しませんでした。もう一度お試しください。', validated.reason);
+      continue;
+    }
+    const body: GenerationSuccess = { contract: LESSON_CONTRACT, draft: validated.draft, model: result.model, usage: result.usage };
+    return Response.json(body, { headers: noStore });
   }
-  const body: GenerationSuccess = { contract: LESSON_CONTRACT, draft: validated.draft, model: result.model, usage: result.usage };
-  return Response.json(body, { headers: noStore });
+  return lastFailure ?? fail(502, 'upstream_error', 'モデルから教材を受け取れませんでした。もう一度お試しください。');
 }
 
 export const onRequest: PagesFunction<ModelEnv> = ({ request, env }) => handleGenerate(request, env);

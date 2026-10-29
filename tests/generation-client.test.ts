@@ -76,3 +76,18 @@ describe('pending drafts in this browser', () => {
     expect(() => savePendingDraft(storage, page())).toThrow('quota');
   });
 });
+
+describe('removing a pending draft', () => {
+  it('removes only the filed or discarded draft and leaves unreadable data alone', async () => {
+    const { removePendingDraft } = await import('../src/lib/generation');
+    const storage = memory();
+    savePendingDraft(storage, page());
+    const other = page({ draft_id: '4fc15635-0393-4faa-ab2a-6ebd95dc8c42' });
+    savePendingDraft(storage, other);
+    expect(removePendingDraft(storage, draftId).map(draft => draft.draft_id)).toEqual([other.draft_id]);
+    expect(removePendingDraft(storage, 'missing').map(draft => draft.draft_id)).toEqual([other.draft_id]);
+    const locked = memory({ [PENDING_DRAFTS_KEY]: '{broken' });
+    expect(() => removePendingDraft(locked, draftId)).toThrow('unreadable-storage');
+    expect(locked.values.get(PENDING_DRAFTS_KEY)).toBe('{broken');
+  });
+});

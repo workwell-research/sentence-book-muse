@@ -22,12 +22,14 @@ function page(overrides: Partial<LessonDraft> = {}): LessonDraft {
     ...overrides,
   };
 }
-function modelReturning(content: string, status = 200) {
+function modelReturning(content: string, status = 200) { return modelSequence([{ content, status }]); }
+function modelSequence(replies: { content: string; status?: number; finish?: string }[]) {
   const calls: unknown[] = [];
   const fetchFn = (async (_url: RequestInfo | URL, init?: RequestInit) => {
     calls.push(JSON.parse(String(init?.body)));
-    return new Response(JSON.stringify({ model: 'muse-spark-1.3', choices: [{ message: { content } }],
-      usage: { prompt_tokens: 1, completion_tokens: 2 } }), { status, headers: { 'content-type': 'application/json' } });
+    const reply = replies[Math.min(calls.length, replies.length) - 1];
+    return new Response(JSON.stringify({ model: 'muse-spark-1.3', choices: [{ message: { content: reply.content }, finish_reason: reply.finish ?? 'stop' }],
+      usage: { prompt_tokens: 1, completion_tokens: 2 } }), { status: reply.status ?? 200, headers: { 'content-type': 'application/json' } });
   }) as typeof fetch;
   return { fetchFn, calls };
 }
@@ -72,9 +74,11 @@ describe('/api/generate', () => {
     expect(model.calls).toHaveLength(0);
   });
   it('does not adopt model output that is not JSON or does not match the request', async () => {
-    const notJson = await handleGenerate(post(generationRequest), env, { fetch: modelReturning('Sure! Here is your page.').fetchFn });
+    const notJsonModel = modelReturning('Sure! Here is your page.');
+    const notJson = await handleGenerate(post(generationRequest), env, { fetch: notJsonModel.fetchFn });
     expect(notJson.status).toBe(502);
     expect((await notJson.json()).error).toMatchObject({ code: 'invalid_output', reason: 'not_json' });
+    expect(notJsonModel.calls).toHaveLength(2);
     const otherDraft = await handleGenerate(post(generationRequest), env,
       { fetch: modelReturning(JSON.stringify(page({ draft_id: '4fc15635-0393-4faa-ab2a-6ebd95dc8c42' }))).fetchFn });
     expect((await otherDraft.json()).error).toMatchObject({ code: 'invalid_output', reason: 'request_mismatch' });
@@ -82,9 +86,23 @@ describe('/api/generate', () => {
       filing: { kind: 'existing', binderId: 'a785f741-e09f-4657-885a-2c2bed838c2e', reason: 'x', sceneTags: ['x'] } }))).fetchFn });
     expect((await unknownBinder.json()).error).toMatchObject({ code: 'invalid_output', reason: 'unknown_binder' });
   });
+  it('retries a cut-off or malformed page once with the same draft ID, then succeeds', async () => {
+    const model = modelSequence([{ content: '{"title":"half', finish: 'length' }, { content: JSON.stringify(page()) }]);
+    const response = await handleGenerate(post(generationRequest), env, { fetch: model.fetchFn });
+    expect(response.status).toBe(200);
+    expect(model.calls).toHaveLength(2);
+    const [first, second] = model.calls as { messages: { content: string }[] }[];
+    expect(second.messages[1].content).toBe(first.messages[1].content);
+    const twice = modelSequence([{ content: '{"title":"half', finish: 'length' }]);
+    const stillCut = await handleGenerate(post(generationRequest), env, { fetch: twice.fetchFn });
+    expect((await stillCut.json()).error).toMatchObject({ code: 'invalid_output', reason: 'truncated' });
+    expect(twice.calls).toHaveLength(2);
+  });
   it('maps upstream auth, rate limit and errors to distinct statuses without leaking the key', async () => {
-    const auth = await handleGenerate(post(generationRequest), env, { fetch: modelReturning('{}', 401).fetchFn });
+    const authModel = modelReturning('{}', 401);
+    const auth = await handleGenerate(post(generationRequest), env, { fetch: authModel.fetchFn });
     expect(auth.status).toBe(502);
+    expect(authModel.calls).toHaveLength(1);
     expect(await auth.text()).not.toContain('test-key-not-real');
     const limited = await handleGenerate(post(generationRequest), env, { fetch: modelReturning('{}', 429).fetchFn });
     expect(limited.status).toBe(429);

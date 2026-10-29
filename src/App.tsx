@@ -2,13 +2,18 @@ import './styles.css';
 import { useId, useRef, useState } from 'react';
 import { InterestSetup } from './InterestSetup';
 import { LessonPreview } from './LessonPreview';
+import type { FilingStatus } from './LessonPreview';
+import { Shelf } from './Shelf';
 import { readInterests } from './lib/interests';
 import type { InterestRead } from './lib/interests';
 import { EMPTY_NOTE, readNote, saveNote } from './lib/composer';
 import type { ComposerNote, Level, NoteRead } from './lib/composer';
-import { draftTicket, readPendingDrafts, requestFingerprint, requestLesson, savePendingDraft } from './lib/generation';
+import { draftTicket, readPendingDrafts, removePendingDraft, requestFingerprint, requestLesson, savePendingDraft } from './lib/generation';
 import type { DraftTicket, GenerationOutcome, PendingRead } from './lib/generation';
+import { FilingFailure, binderCatalogue, fileDraft, readLibrary } from './lib/library';
+import type { FilingDecision, LibraryRead } from './lib/library';
 import { createGenerationRequest } from '../shared/generation-request';
+import type { LessonDraft } from '../shared/lesson-schema';
 
 function restore(): NoteRead {
   try { return readNote(window.localStorage); } catch { return { kind: 'unreadable' }; }
@@ -21,6 +26,20 @@ function restoreInterests(): InterestRead {
 function restorePending(): PendingRead {
   try { return readPendingDrafts(window.localStorage); } catch { return { kind: 'unreadable' }; }
 }
+
+function restoreLibrary(): LibraryRead {
+  try { return readLibrary(window.localStorage); } catch { return { kind: 'unreadable' }; }
+}
+
+const filingErrorText: Record<FilingFailure['reason'], string> = {
+  'unreadable-storage': '保存した本棚を読み込めないため、仕舞えません。元のデータを守るため、上書きしていません。',
+  'duplicate-draft': 'このページはすでに本棚に仕舞ってあります。二重には入れません。',
+  'unknown-binder': '選んだ本が見つかりませんでした。本棚を読み直して、もう一度選んでください。',
+  'invalid-binder': '本の名前と説明を入れてください（名前80文字・説明240文字まで）。',
+  'library-full': '本棚がいっぱいです。これ以上は仕舞えません。',
+};
+
+interface Reviewing { draft: LessonDraft; model: string | null; kept: boolean; status: FilingStatus }
 
 export function App() {
   const [profile, setProfile] = useState<InterestRead>(restoreInterests);
@@ -37,28 +56,56 @@ export function App() {
   const topicId = useId();
   const blocked = initial.kind === 'unreadable';
   const [pending, setPending] = useState<PendingRead>(restorePending);
+  const [library, setLibrary] = useState<LibraryRead>(restoreLibrary);
   const [generating, setGenerating] = useState(false);
-  const [outcome, setOutcome] = useState<(GenerationOutcome & { saved?: boolean }) | null>(null);
+  const [failure, setFailure] = useState<Extract<GenerationOutcome, { kind: 'failed' }> | null>(null);
+  const [reviewing, setReviewing] = useState<Reviewing | null>(null);
   const ticket = useRef<DraftTicket | null>(null);
   const interests = profile.kind === 'ready' ? profile.profile.interests : [];
+  const binders = library.kind === 'ready' ? library.library.binders : [];
   const canGenerate = !blocked && !generating && (note.topic.trim().length > 0 || interests.length > 0);
 
   async function generate() {
     if (!canGenerate) return;
+    // Existing binders go to the model as the only valid destinations; a new one is still only a proposal.
+    const catalogue = library.kind === 'ready' ? binderCatalogue(library.library) : [];
     // The same content keeps its draft ID across retries; edited content gets a new one.
-    ticket.current = draftTicket(ticket.current, requestFingerprint({ ...note, interests, binderIds: [] }), () => crypto.randomUUID());
+    ticket.current = draftTicket(ticket.current, requestFingerprint({ ...note, interests, binderIds: catalogue.map(binder => binder.id) }), () => crypto.randomUUID());
     let request;
-    try { request = createGenerationRequest(ticket.current.id, note, interests, []); }
-    catch { setOutcome({ kind: 'failed', code: 'invalid_request', message: '関心を選ぶか、話したいことを書いてから作ってください。', retryable: false }); return; }
+    try { request = createGenerationRequest(ticket.current.id, note, interests, catalogue); }
+    catch { setFailure({ kind: 'failed', code: 'invalid_request', message: '関心を選ぶか、話したいことを書いてから作ってください。', retryable: false }); return; }
     setGenerating(true);
-    setOutcome(null);
+    setFailure(null);
     const result = await requestLesson(fetch, request);
     if (result.kind === 'ready') {
-      let saved = false;
-      try { setPending({ kind: 'ready', drafts: savePendingDraft(window.localStorage, result.draft) }); saved = true; } catch { saved = false; }
-      setOutcome({ ...result, saved });
-    } else setOutcome(result);
+      let kept = false;
+      try { setPending({ kind: 'ready', drafts: savePendingDraft(window.localStorage, result.draft) }); kept = true; } catch { kept = false; }
+      setReviewing({ draft: result.draft, model: result.model, kept, status: { state: 'open' } });
+    } else setFailure(result);
     setGenerating(false);
+  }
+
+  function review(draft: LessonDraft) {
+    setReviewing({ draft, model: null, kept: true, status: { state: 'open' } });
+  }
+
+  function discard(draftId: string) {
+    try { setPending({ kind: 'ready', drafts: removePendingDraft(window.localStorage, draftId) }); }
+    catch { setPending({ kind: 'unreadable' }); }
+    if (reviewing?.draft.draft_id === draftId) setReviewing(null);
+  }
+
+  function file(decision: FilingDecision) {
+    if (!reviewing) return;
+    try {
+      const result = fileDraft(window.localStorage, reviewing.draft, reviewing.model ?? 'muse-spark', decision);
+      setLibrary({ kind: 'ready', library: result.library });
+      try { setPending({ kind: 'ready', drafts: removePendingDraft(window.localStorage, reviewing.draft.draft_id) }); } catch { /* the page is filed; a stale pending copy is refused as a duplicate */ }
+      setReviewing({ ...reviewing, status: { state: 'filed', binderTitle: result.binder.title, createdBinder: result.createdBinder } });
+    } catch (error) {
+      const text = error instanceof FilingFailure ? filingErrorText[error.reason] : '本棚に保存できませんでした。ページはこの画面に残っています。';
+      setReviewing({ ...reviewing, status: { state: 'failed', message: text } });
+    }
   }
 
   function update(patch: Partial<ComposerNote>) {
@@ -95,17 +142,7 @@ export function App() {
         <p>旅のこと、日々のこと、大切なこと。<br />自分の言葉で練習するための、小さな本棚です。</p>
       </section>
       <div className="workspace">
-        <section className="library" id="shelf" aria-labelledby="shelf-title">
-          <div className="section-heading"><h2 id="shelf-title">あなたの本棚</h2><span>0 冊</span></div>
-          <div className="empty-shelf">
-            <span className="empty-shelf-rule" aria-hidden="true" />
-            <h3>はじまりは、まだ白紙。</h3>
-            <p>テーマは、これから。<br />話したいことに合わせて育てていく本棚です。</p>
-          </div>
-          <div className="shelf-edge" aria-hidden="true" />
-          <p className="shelf-caption">教材づくりが始まったら、仕舞う先を提案します。<br />新しい本を増やすときは、あなたが確認してから。</p>
-          <div className="inbox-line"><span>仕分けを待つページ</span><span>{pending.kind === 'ready' ? `${pending.drafts.length} ページ` : '読み込めません'}</span></div>
-        </section>
+        <Shelf library={library} pending={pending} reviewingId={reviewing?.draft.draft_id ?? null} onReview={review} onDiscard={discard} />
         <section className="writing-paper" id="compose" aria-labelledby="compose-title">
           <h2 id="compose-title" tabIndex={-1}>今日は、何を話したい？</h2>
           <p className="paper-intro">今日のひとことや、SNSに書いた短いメモでも。</p>
@@ -138,12 +175,13 @@ export function App() {
               <p>{generating ? '十数秒ほどかかります。このまま待ってください。' : canGenerate
                 ? <>関心と話したいことから、英語8文のページを1枚作ります。<br />できたページは、確認してから仕舞います。</>
                 : <>関心を選ぶか、話したいことを書くと、教材を作れます。</>}</p>
-              {outcome?.kind === 'failed' && <p className="error generation-error" role="alert">{outcome.message}</p>}
+              {failure && <p className="error generation-error" role="alert">{failure.message}</p>}
             </div>
           </form>
         </section>
       </div>
-      {outcome?.kind === 'ready' && <LessonPreview draft={outcome.draft} model={outcome.model} binders={[]} saved={outcome.saved ?? false} />}
+      {reviewing && <LessonPreview key={reviewing.draft.draft_id} draft={reviewing.draft} model={reviewing.model} binders={binders} kept={reviewing.kept}
+        status={reviewing.status} onFile={file} onDiscard={() => discard(reviewing.draft.draft_id)} onClose={() => setReviewing(null)} />}
       </>}
     </main>
     <footer><span>The Sentence Book <i>with Muse</i></span><span>あなたのペースで、一文ずつ。</span></footer>

@@ -19,7 +19,7 @@ export interface StructuredJsonRequest {
   reasoningEffort?: ReasoningEffort;
 }
 export type ModelFailureCode = 'not_configured' | 'upstream_auth' | 'upstream_rate_limited'
-  | 'upstream_timeout' | 'upstream_error' | 'empty_output';
+  | 'upstream_timeout' | 'upstream_error' | 'empty_output' | 'truncated_output';
 export type ModelResult =
   | { ok: true; content: string; model: string; usage: GenerationUsage | null }
   | { ok: false; code: ModelFailureCode; status?: number };
@@ -49,8 +49,9 @@ export async function requestStructuredJson(
         body: JSON.stringify({
           model: config.model,
           messages: request.messages,
-          // Reasoning tokens share this budget; the schema-constrained page itself is ~600 tokens.
-          max_tokens: request.maxTokens ?? 6000,
+          // Reasoning tokens share this budget; the schema-constrained page itself is ~1,000 tokens,
+          // but reasoning at 'low' has been observed to spike, and a cut-off page is unusable.
+          max_tokens: request.maxTokens ?? 12000,
           reasoning_effort: request.reasoningEffort ?? 'low',
           response_format: { type: 'json_schema', json_schema: { name: request.schemaName, schema: request.schema } },
         }),
@@ -66,6 +67,7 @@ export async function requestStructuredJson(
     }
     let body: unknown;
     try { body = await response.json(); } catch { return { ok: false, code: 'upstream_error', status: response.status }; }
+    if (finishReason(body) === 'length') return { ok: false, code: 'truncated_output', status: response.status };
     const content = extractContent(body);
     if (!content) return { ok: false, code: 'empty_output', status: response.status };
     const model = typeof (body as { model?: unknown }).model === 'string' ? (body as { model: string }).model : config.model;
@@ -73,6 +75,13 @@ export async function requestStructuredJson(
   } finally {
     clearTimeout(timer);
   }
+}
+
+function finishReason(body: unknown): string | null {
+  const choices = (body as { choices?: unknown })?.choices;
+  if (!Array.isArray(choices) || choices.length === 0) return null;
+  const reason = (choices[0] as { finish_reason?: unknown }).finish_reason;
+  return typeof reason === 'string' ? reason : null;
 }
 
 function extractContent(body: unknown): string | null {

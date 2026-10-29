@@ -38,7 +38,7 @@ describe('structured JSON request', () => {
     expect(capture.url).toBe('https://api.meta.ai/v1/chat/completions');
     expect((capture.init?.headers as Record<string, string>).authorization).toBe('Bearer test-key-not-real');
     const body = JSON.parse(String(capture.init?.body));
-    expect(body).toMatchObject({ model: 'muse-spark-1.3', reasoning_effort: 'low', max_tokens: 6000,
+    expect(body).toMatchObject({ model: 'muse-spark-1.3', reasoning_effort: 'low', max_tokens: 12000,
       response_format: { type: 'json_schema', json_schema: { name: 'page', schema: { type: 'object' } } } });
     expect(body.messages).toEqual(request.messages);
   });
@@ -53,6 +53,10 @@ describe('structured JSON request', () => {
       expect(result).toEqual({ ok: false, code, status });
       expect(JSON.stringify(result)).not.toContain('test-key-not-real');
     });
+  it('reports a cut-off completion as truncated rather than parsing a partial page', async () => {
+    const cut = { ...completion('{"title":"half'), choices: [{ message: { content: '{"title":"half' }, finish_reason: 'length' }] };
+    expect(await requestStructuredJson(env, request, { fetch: fetchReturning(200, cut) })).toMatchObject({ ok: false, code: 'truncated_output' });
+  });
   it('treats empty or malformed completions as failures rather than pages', async () => {
     expect(await requestStructuredJson(env, request, { fetch: fetchReturning(200, completion('   ')) })).toMatchObject({ ok: false, code: 'empty_output' });
     expect(await requestStructuredJson(env, request, { fetch: fetchReturning(200, { choices: [] }) })).toMatchObject({ ok: false, code: 'empty_output' });

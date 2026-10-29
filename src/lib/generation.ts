@@ -39,8 +39,11 @@ export async function requestLesson(fetchFn: typeof fetch, request: GenerationRe
   let body: unknown;
   try { body = await response.json(); } catch { return failed(response.ok ? 'unexpected' : 'upstream_error'); }
   if (!response.ok) {
-    const code = (body as { error?: { code?: unknown } })?.error?.code;
-    return failed(isGenerationErrorCode(code) ? code : 'unexpected');
+    const error = (body as { error?: { code?: unknown; reason?: unknown } })?.error;
+    const outcome = failed(isGenerationErrorCode(error?.code) ? error.code : 'unexpected');
+    // The server's reason code is shown so a failure can be reported precisely without exposing content.
+    return outcome.kind === 'failed' && typeof error?.reason === 'string'
+      ? { ...outcome, message: `${outcome.message}（理由: ${error.reason}）` } : outcome;
   }
   const success = body as Partial<GenerationSuccess>;
   // The browser re-validates: a tampered or stale server response must not become a page.
@@ -83,5 +86,13 @@ export function savePendingDraft(storage: PendingStorage, draft: LessonDraft): L
   if (current.kind === 'unreadable') throw new Error('unreadable-storage');
   const drafts = [draft, ...current.drafts.filter(item => item.draft_id !== draft.draft_id)].slice(0, MAX_PENDING_DRAFTS);
   storage.setItem(PENDING_DRAFTS_KEY, JSON.stringify({ schemaVersion: 1, drafts }));
+  return drafts;
+}
+
+export function removePendingDraft(storage: PendingStorage, draftId: string): LessonDraft[] {
+  const current = readPendingDrafts(storage);
+  if (current.kind === 'unreadable') throw new Error('unreadable-storage');
+  const drafts = current.drafts.filter(item => item.draft_id !== draftId);
+  if (drafts.length !== current.drafts.length) storage.setItem(PENDING_DRAFTS_KEY, JSON.stringify({ schemaVersion: 1, drafts }));
   return drafts;
 }

@@ -21,7 +21,8 @@ This repository includes a **working local study desk and A5 notebook** at `/`, 
 - A topic, explanation-language and level note saved locally in this browser.
 - 「教材を作る」 on `/setup`: one request per distinct content (draft ID reused on retry), a bounded server call to Meta Model API with `response_format: json_schema` derived from the shared Zod contract, validation on the server and again in the browser, a read-only preview, and local storage of the page under `sentence-book-muse:pending-drafts:v1` as 「仕分けを待つページ」.
 - `/api/generate` returns coded errors (503 when no key is configured, 400/413 for bad or oversized requests, 429 with Retry-After, 502 for upstream or non-conforming output, 504 on timeout) and never stores anything server-side. `/api/health` reports whether generation is configured and which model id is used, never the key.
-- Filing approval, binders, practising a generated page and deployment are not implemented yet.
+- Filing: the preview ends with Muse's proposal and the learner's decision — create the proposed (editable) new binder, choose any existing binder, or discard. Binders and pages live under `sentence-book-muse:library:v1` with app-issued IDs; a draft can be filed only once and a new binder is created only through that explicit choice. The shelf lists binders with their pages and the pages still waiting. Existing binders are sent to the model as the only valid existing destinations.
+- Practising a filed page on the desk and deployment are not implemented yet.
 
 The owner clarified that standalone `lesson-schema-v2` is unavailable. The new [`sentence_book_page_v1` contract](docs/generation-contract.md) and shared validator define this version’s generation format. They are wired into the live local generation flow as of 2026-10-29 (see PROJECT_STATUS.md for the real calls and browser checks). Filing, generated-lesson practice, deployment and physical-device behavior remain unverified. The synthetic local Copy flow is implemented separately.
 
@@ -65,7 +66,7 @@ Current Enter-flow QA: `node scripts/qa-enter-flow.mjs` checks atomic advancemen
 ## Next implementation steps
 
 1. Done 2026-10-29: request, prompt, structured output and validation on both sides are connected; `muse-spark-1.3` confirmed. For local Functions, copy `.dev.vars.example` to the ignored `.dev.vars`. `MODEL_API_BASE_URL`/`MODEL_ID` can point the same code at another OpenAI-compatible host (for example OpenRouter `meta/muse-spark-1.3`).
-2. Implement explicit filing approval, binders with stable IDs, duplicate-draft rejection and multi-lesson persistence; connect the desk's Copy flow to accepted pages instead of the synthetic sample.
+2. Done 2026-10-29 (late): explicit filing approval, binders with stable IDs, duplicate-draft rejection and multi-page persistence. Next: connect the desk's Copy flow to filed pages instead of the synthetic sample.
 3. Add a request/cost limit (Cloudflare rate-limit rule or token bucket) and a semantic check pass before the endpoint is public.
 4. Set `META_MODEL_API_KEY` as an encrypted Pages secret, never a `VITE_*` variable; create a new Pages project and deploy. Do not replace the existing personal prototype.
 
