@@ -4,6 +4,7 @@ import {A5Notebook} from '../handwriting/A5Notebook';
 import {englishFonts,japaneseFonts} from '../handwriting/fonts';
 import {supported} from '../handwriting/model';
 import {resolveDeskLesson} from '../lib/study-page';
+import {addLookup,expressionOf,readWordbook,requestLookup,saveWordbookEntry,tokenize} from '../lib/lookup';
 import {displayKey,displaySchema,practiceSchema,defaultDisplay,emptyCopy,validCopy,readSaved,saveRecord,submitCopy,nextCopy,markerIds,themes,idleTimer,timerAt,toggleTimer} from './core';
 import type {CopyRecord,DeskDisplay,DeskTheme} from './core';
 import {deskLayout,confirmedLayout,inputPosition,practiceScene} from './note';
@@ -53,6 +54,8 @@ export function StudyDesk(){
  const [speaker]=useState(()=>createLessonSpeaker(typeof window.SpeechSynthesisUtterance==='function'?window.speechSynthesis:undefined,text=>new SpeechSynthesisUtterance(text),setAudio));
  const [notice,setNotice]=useState(loadedCopy.message||loadedDisplay.message||resolved.notice),[error,setError]=useState('');
  const [tab,setTab]=useState(0),[meaning,setMeaning]=useState(false),[personalMode,setPersonalMode]=useState(false);
+ const [pick,setPick]=useState<{from:number;to:number}|null>(null),[lookingUp,setLookingUp]=useState(false),[lookupNote,setLookupNote]=useState('');
+ const [wordbook,setWordbook]=useState(()=>readWordbook(localStorage));
  const [zoom,setZoom]=useState<'fit'|'read'>(()=>matchMedia('(max-width: 760px)').matches?'read':'fit');
  const [annotationsOnly,setAnnotationsOnly]=useState(false),[composingText,setComposingText]=useState(false),[inputScroll,setInputScroll]=useState({x:0,y:0});
  const [animateId,setAnimateId]=useState<string|null>(null),[time,setTime]=useState(1e9),[playing,setPlaying]=useState(false),[speed,setSpeed]=useState(2);
@@ -64,7 +67,13 @@ export function StudyDesk(){
  const composing=useRef(false),compositionEnded=useRef(0),[unit,setUnit]=useState(470/148);
  const current=lesson.sentences[record.index];
  const total=lesson.sentences.length;
- const layout=useMemo(()=>deskLayout(lesson,record,display,personalMode),[lesson,record.personal,record.checks,display.english,display.japanese,display.binding,display.side,personalMode]);
+ const tokens=useMemo(()=>tokenize(current.text),[current.text]);
+ const picked=pick?{start:tokens[pick.from].start,end:tokens[pick.to].end}:null;
+ const pickedText=picked?expressionOf(current.text,picked.start,picked.end):'';
+ const sentenceLookups=record.lookups.filter(l=>l.sentenceId===current.id);
+ const pageId=resolved.page?.id??null;
+ const otherLines=wordbook.kind==='ready'?wordbook.entries.filter(e=>e.pageId!==pageId):[];
+ const layout=useMemo(()=>deskLayout(lesson,record,display,personalMode),[lesson,record.personal,record.checks,record.lookups,display.english,display.japanese,display.binding,display.side,personalMode]);
  const rendered=useMemo(()=>confirmedLayout(layout,record,display,personalMode),[layout,record.entries,record.phase,record.personal,display.vocabulary,display.grammar,personalMode]);
  const scene=useMemo(()=>practiceScene(rendered,animateId,annotationsOnly),[rendered,animateId,annotationsOnly]);
  const position=inputPosition(layout,record,personalMode);
@@ -86,6 +95,7 @@ export function StudyDesk(){
  useEffect(()=>{if(!playing||reduced)return;let frame=0,previous=0;const tick=(now:number)=>{if(previous)setTime(t=>Math.min(scene.duration,t+Math.min(50,now-previous)*speed));previous=now;frame=requestAnimationFrame(tick);};frame=requestAnimationFrame(tick);return()=>cancelAnimationFrame(frame);},[playing,reduced,speed,scene.duration]);
  useEffect(()=>{if(time>=scene.duration||reduced)setPlaying(false);},[time,scene.duration,reduced]);
  useEffect(()=>{setMeaning(false);speaker.stop();return()=>speaker.stop(true);},[record.index,speaker,display.voice,display.speechRate]);
+ useEffect(()=>{setPick(null);setLookupNote('');},[current.id]);
  useEffect(()=>{const onKey=(event:globalThis.KeyboardEvent)=>{if(event.defaultPrevented)return;const intent=audioShortcut(event,composing.current||Date.now()-compositionEnded.current<100||!!settings.current?.open);if(!intent)return;event.preventDefault();if(intent==='play')speaker.play(current.text,{voice:display.voice,rate:display.speechRate});};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey);},[current.text,speaker,display.voice,display.speechRate]);
  function changeDisplay(patch:Partial<DeskDisplay>){const next={...display,...patch};setDisplay(next);try{saveRecord(displayKey,next,loadedDisplay.blocked);}catch(e){setNotice((e as Error).message);}if(patch.english||patch.japanese){setAnimateId(null);setTime(1e9);setPlaying(false);}}
  function persist(next:CopyRecord,required=false){try{saveRecord(resolved.copyKey,next,loadedCopy.blocked);setRecord(next);return true;}catch(e){setError((e as Error).message);if(!required)setRecord(next);return false;}}
@@ -134,6 +144,21 @@ export function StudyDesk(){
  }
  function keyDown(e:KeyboardEvent<HTMLTextAreaElement>){if(e.key!=='Enter'||e.shiftKey||e.altKey||e.metaKey||e.ctrlKey)return;if(e.repeat){e.preventDefault();return;}if(e.nativeEvent.isComposing||composing.current||e.keyCode===229||e.repeat||Date.now()-compositionEnded.current<100){return;}e.preventDefault();confirm();}
  function playAudio(){speaker.play(current.text,{voice:display.voice,rate:display.speechRate});}
+ // Tapping words picks a span: first tap starts it, a later word extends it, a tap inside clears it.
+ function pickWord(i:number){setLookupNote('');setPick(p=>!p?{from:i,to:i}:i>=p.from&&i<=p.to?null:i>p.to?{from:p.from,to:i}:{from:i,to:p.to});}
+ async function lookUp(){
+  if(!picked||lookingUp)return;
+  setLookingUp(true);setLookupNote('');
+  const outcome=await requestLookup(fetch,{expression:pickedText,sentence:current.text,level:resolved.page?.level??'A2',native_language:resolved.page?.native_language??'ja'});
+  if(outcome.kind==='failed'){setLookupNote(outcome.message);setLookingUp(false);return;}
+  const entry={sentenceId:current.id,start:picked.start,end:picked.end,expression:pickedText,native:outcome.result.native,note:outcome.result.note,lookedUpAt:new Date().toISOString()};
+  let next:CopyRecord;
+  try{next=addLookup(record,entry);}catch(e){setLookupNote((e as Error).message);setLookingUp(false);return;}
+  if(!persist(next,true)){setLookingUp(false);return;}
+  // The page record already holds the line; the shared word list is kept when it is readable.
+  try{setWordbook({kind:'ready',entries:saveWordbookEntry(localStorage,{...entry,pageId,pageTitle:resolved.page?.title??lesson.title,sentence:current.text})});}catch{/* unreadable word list stays untouched */}
+  setPick(null);setLookingUp(false);
+ }
  function startPersonal(){setPersonalMode(true);changeDisplay({content:'study-notes'});requestAnimationFrame(()=>{editor.current?.focus({preventScroll:true});follow.current();});}
  async function exportPdf(){setExporting(true);try{const {exportStudyNote}=await import('../handwriting/study-pdf');const bytes=await exportStudyNote(confirmedLayout(layout,record,display),view,{...display,notebook:'a5',palette:display.marker,markers:display.printMarkers??display.markers});const url=URL.createObjectURL(new Blob([new Uint8Array(bytes)],{type:'application/pdf'}));const a=document.createElement('a');a.href=url;a.download=display.sheet==='A4'?'sentence-book-a5-on-a4.pdf':'sentence-book-a5.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);setNotice('PDFを作成しました。100%（実際のサイズ）で印刷してください。');}catch(e){setNotice((e as Error).message);}finally{setExporting(false);}}
  const inputTop=(position.y-4.65)*unit;
@@ -151,7 +176,9 @@ export function StudyDesk(){
    <div className="lesson-panel" ref={lessonPanel}>
     <ol className="lesson-steps" role="tablist" aria-label="学習の5ステップ">{lessonSteps.map((label,i)=><li key={label} role="presentation"><button type="button" role="tab" id={'learning-step-'+i} aria-selected={i===0} aria-controls={i===0?'lesson-copy':undefined} disabled={i!==0}>{label}</button></li>)}</ol>
    <section className="model-card" id="lesson-copy" role="tabpanel" aria-labelledby="learning-step-0"><div className="model-heading"><h1 id="copy-complete" tabIndex={-1}>{record.phase==='complete'?'Copy complete':'Copy'}</h1><span>{record.entries.length} / {total}</span></div>
-     <p className="model-sentence">{current.text}</p><p className={'model-meaning '+(meaning||audio.message?'':'is-hidden')+(audio.message?' audio-error':'')} aria-hidden={!meaning&&!audio.message} role={audio.message?'alert':undefined}>{audio.message||current.meaning||''}</p>
+     <p className="model-sentence" lang="en">{tokens.map((t,i)=>t.word?<button type="button" key={t.start} className={'word'+(pick&&i>=pick.from&&i<=pick.to?' is-picked':'')+(sentenceLookups.some(l=>t.start>=l.start&&t.end<=l.end)?' has-line':'')} aria-pressed={!!pick&&i>=pick.from&&i<=pick.to} onClick={()=>pickWord(i)}>{t.text}</button>:<span key={t.start}>{t.text}</span>)}</p><p className={'model-meaning '+(meaning||audio.message?'':'is-hidden')+(audio.message?' audio-error':'')} aria-hidden={!meaning&&!audio.message} role={audio.message?'alert':undefined}>{audio.message||current.meaning||''}</p>
+     {sentenceLookups.length>0&&<ul className="lookup-list" aria-label="この文で引いた線">{sentenceLookups.map(l=><li key={l.id}><span lang="en">{l.expression}</span> — {l.native}{l.note&&<small>{l.note}</small>}</li>)}</ul>}
+     <div className="lookup-bar">{picked?<><span>「<span lang="en">{pickedText}</span>」</span><button type="button" className="lookup-button" onClick={lookUp} disabled={lookingUp} aria-busy={lookingUp}>{lookingUp?'調べています…':'調べて線を引く'}</button><button type="button" className="lookup-cancel" onClick={()=>setPick(null)} disabled={lookingUp}>やめる</button></>:<span className="lookup-hint">わからない語句をタップすると、調べて線を引けます。</span>}<span role="status" className="lookup-status">{lookupNote}</span></div>
      <div className="model-actions"><button onClick={playAudio} className="audio-button" aria-keyshortcuts="Alt+R" title="音声を聞く（Mac: Option + R / Windows: Alt + R）"><Icon name="sound"/>{audio.phase==='speaking'?'読み上げ中':audio.phase==='loading'?'音声を準備中':'音声を聞く'}<kbd aria-hidden="true">⌥ / Alt R</kbd></button><button aria-expanded={meaning} onClick={()=>setMeaning(v=>!v)}>{meaning?'意味を閉じる':'意味を見る'}</button><span>{record.phase==='complete'?'ノートに残りました':'ノートの行に書き写す'}</span></div>
    </section>
    </div>
@@ -163,7 +190,8 @@ export function StudyDesk(){
       {resolved.page&&resolved.binder?<><p>「{resolved.binder.title}」のページ · {resolved.page.level}</p><p className="index-note">Museがあなたの話から作りました。<br/>このブラウザに進み具合を保存します。</p><a href="/setup#shelf">本棚で別のページを選ぶ</a><br/><a href="/?page=sample">サンプル教材に戻る</a></>
       :<><p>静かな朝の、小さな習慣。</p><p className="index-note">サンプル教材<br/>このブラウザに進み具合を保存します。</p><a href="/setup#shelf">本棚のページを練習する</a></>}</>}
      {tab===1&&<>{resolved.page?resolved.page.sceneTags.map(tag=><p key={tag}>{tag}</p>):<><p>Daily Life</p><p>Small Habits</p></>}<a href="/setup">関心と教材メモを編集</a></>}
-     {(tab===2||tab===3)&&<>{lesson.vocabulary.map(v=><label className="book-word" key={v.id}><input type="checkbox" checked={!!record.checks[v.id]} onChange={e=>persist({...record,checks:{...record.checks,[v.id]:e.target.checked}})}/><span>{v.english}<small>{v.meaning}</small></span></label>)}<p className="index-note">{lesson.vocabulary.length?'自分で復習した印をつけられます。':'このページには復習の語句がありません。'}</p></>}
+     {(tab===2||tab===3)&&<>{layout.source.vocabulary.map(v=><label className="book-word" key={v.id}><input type="checkbox" checked={!!record.checks[v.id]} onChange={e=>persist({...record,checks:{...record.checks,[v.id]:e.target.checked}})}/><span>{v.english}<small>{v.meaning}</small></span></label>)}<p className="index-note">{layout.source.vocabulary.length?'線を引いた語句はここに残ります。復習した印もつけられます。':'まだ語句がありません。見本の語句をタップして調べると、ここに残ります。'}</p>
+      {otherLines.length>0&&<><p className="index-subhead">ほかのページで引いた線 · {otherLines.length}</p>{otherLines.slice(0,12).map(e=><p className="wordbook-entry" key={e.lookedUpAt+e.expression}><span lang="en">{e.expression}</span> {e.native}<small>{e.pageTitle}</small></p>)}</>}</>}
      {tab===4&&(record.phase==='complete'?<><p>{lesson.title}</p><p>{total}文を書き終えました。</p><button onClick={startPersonal}>自分のひとことを書く</button><button onClick={exportPdf} disabled={exporting}>PDFに保存</button></>:<p>{total}文を書き終えると、<br/>ここに一枚のノートが残ります。</p>)}
     </div>
    </section>

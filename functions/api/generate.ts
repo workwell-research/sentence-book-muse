@@ -1,29 +1,14 @@
 import { generationRequestSchema } from '../../shared/generation-request';
 import { LESSON_CONTRACT, lessonDraftJsonSchema, validateLessonDraft } from '../../shared/lesson-schema';
-import type { GenerationErrorCode, GenerationFailure, GenerationSuccess } from '../../shared/generation-api';
+import type { GenerationSuccess } from '../../shared/generation-api';
 import { buildMuseMessages } from '../lib/muse-prompt';
 import { modelConfig, requestStructuredJson } from '../lib/model-client';
 import type { ModelCallOptions, ModelEnv, ModelFailureCode } from '../lib/model-client';
+import { fail, noStore, readJsonBody, upstreamFailure } from '../lib/route';
 
 // One learner request → one bounded model call → validated page or an explicit failure.
 // Nothing is stored server-side; adoption and filing happen in the browser after review.
 const MAX_BODY_BYTES = 32 * 1024;
-const noStore = { 'Cache-Control': 'no-store' };
-
-function fail(status: number, code: GenerationErrorCode, message: string, reason?: string, extraHeaders: Record<string, string> = {}): Response {
-  const body: GenerationFailure = { error: reason ? { code, message, reason } : { code, message } };
-  return Response.json(body, { status, headers: { ...noStore, ...extraHeaders } });
-}
-
-const upstreamFailures: Record<ModelFailureCode, { status: number; code: GenerationErrorCode; message: string }> = {
-  not_configured: { status: 503, code: 'generation_unavailable', message: '教材づくりは準備中です。' },
-  upstream_auth: { status: 502, code: 'upstream_auth', message: 'モデルへの接続設定が受け付けられませんでした。管理者が接続キーを確認する必要があります。' },
-  upstream_rate_limited: { status: 429, code: 'upstream_rate_limited', message: '今は混み合っています。少し待ってからもう一度お試しください。' },
-  upstream_timeout: { status: 504, code: 'upstream_timeout', message: '教材づくりに時間がかかりすぎました。もう一度お試しください。' },
-  upstream_error: { status: 502, code: 'upstream_error', message: 'モデルから教材を受け取れませんでした。もう一度お試しください。' },
-  empty_output: { status: 502, code: 'upstream_error', message: 'モデルの返答が空でした。もう一度お試しください。' },
-  truncated_output: { status: 502, code: 'invalid_output', message: '教材が途中で切れていたため、採用しませんでした。もう一度お試しください。' },
-};
 
 // A malformed or cut-off page is retried once with the same draft ID; auth, rate-limit and
 // request errors are not, so a misconfiguration never doubles the cost of every call.
@@ -33,14 +18,9 @@ const MAX_ATTEMPTS = 2;
 export async function handleGenerate(request: Request, env: ModelEnv, options: ModelCallOptions = {}): Promise<Response> {
   if (request.method !== 'POST') return fail(405, 'method_not_allowed', 'Use POST.', undefined, { Allow: 'POST' });
   if (!modelConfig(env)) return fail(503, 'generation_unavailable', '教材づくりは準備中です。');
-  const declared = Number(request.headers.get('content-length') ?? '0');
-  if (Number.isFinite(declared) && declared > MAX_BODY_BYTES) return fail(413, 'request_too_large', '依頼が大きすぎます。');
-  let text: string;
-  try { text = await request.text(); } catch { return fail(400, 'invalid_request', '依頼を読み取れませんでした。'); }
-  if (text.length > MAX_BODY_BYTES) return fail(413, 'request_too_large', '依頼が大きすぎます。');
-  let json: unknown;
-  try { json = JSON.parse(text); } catch { return fail(400, 'invalid_request', '依頼の形式が正しくありません。'); }
-  const parsed = generationRequestSchema.safeParse(json);
+  const body = await readJsonBody(request, MAX_BODY_BYTES);
+  if (!body.ok) return body.response;
+  const parsed = generationRequestSchema.safeParse(body.json);
   if (!parsed.success) return fail(400, 'invalid_request', '依頼の内容が条件を満たしていません。関心を選ぶか、話したいことを書いてください。');
   const generation = parsed.data;
 
@@ -53,9 +33,7 @@ export async function handleGenerate(request: Request, env: ModelEnv, options: M
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
     const result = await requestStructuredJson(env, { messages, schemaName: LESSON_CONTRACT, schema: lessonDraftJsonSchema }, options);
     if (!result.ok) {
-      const mapped = upstreamFailures[result.code];
-      lastFailure = fail(mapped.status, mapped.code, mapped.message, result.code === 'truncated_output' ? 'truncated' : undefined,
-        mapped.status === 429 ? { 'Retry-After': '20' } : {});
+      lastFailure = upstreamFailure(result.code);
       if (RETRYABLE_OUTPUT.has(result.code)) continue;
       return lastFailure;
     }

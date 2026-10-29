@@ -15,10 +15,13 @@ export const displaySchema=z.object({
 });
 export type DeskDisplay=z.infer<typeof displaySchema>;
 export const defaultDisplay:DeskDisplay={version:1,theme:'pure-white',marker:'blue',timerVisible:true,timerMinutes:25,voice:'auto',speechRate:1,english:'readability',japanese:'klee',memos:'shown',markers:true,vocabulary:true,grammar:true,content:'study-notes',sheet:'A5',side:'left',binding:18,printMarkers:null};
-export const practiceSchema=z.object({version:z.literal(1),lessonId:z.string(),source:z.string(),index:z.number().int().nonnegative(),phase:z.enum(['editing','confirmed','complete']),draft:z.string(),entries:z.array(z.object({sentenceId:z.string(),text:z.string(),confirmedAt:z.string()})),checks:z.record(z.string(),z.boolean()),personal:z.string(),personalDraft:z.string()});
+// A line the learner drew under an expression they looked up; offsets are code points in the sentence.
+export const lookupEntrySchema=z.object({id:z.string().min(1),sentenceId:z.string().min(1),start:z.number().int().nonnegative(),end:z.number().int().positive(),expression:z.string().min(1).max(120),native:z.string().min(1).max(120),note:z.string().max(200).nullable(),lookedUpAt:z.string()}).refine(v=>v.end>v.start,'A line covers at least one character');
+export type LookupEntry=z.infer<typeof lookupEntrySchema>;
+export const practiceSchema=z.object({version:z.literal(1),lessonId:z.string(),source:z.string(),index:z.number().int().nonnegative(),phase:z.enum(['editing','confirmed','complete']),draft:z.string(),entries:z.array(z.object({sentenceId:z.string(),text:z.string(),confirmedAt:z.string()})),checks:z.record(z.string(),z.boolean()),personal:z.string(),personalDraft:z.string(),lookups:z.array(lookupEntrySchema).max(40).default([])});
 export type CopyRecord=z.infer<typeof practiceSchema>;
 const fingerprint=(lesson:StudyContent)=>JSON.stringify(lesson.sentences.map(s=>[s.id,s.text]));
-export const emptyCopy=(lesson:StudyContent):CopyRecord=>({version:1,lessonId:lesson.id,source:fingerprint(lesson),index:0,phase:'editing',draft:'',entries:[],checks:{},personal:'',personalDraft:''});
+export const emptyCopy=(lesson:StudyContent):CopyRecord=>({version:1,lessonId:lesson.id,source:fingerprint(lesson),index:0,phase:'editing',draft:'',entries:[],checks:{},personal:'',personalDraft:'',lookups:[]});
 export function validCopy(record:CopyRecord,lesson:StudyContent){
  const expected=record.phase==='editing'?record.index:record.phase==='confirmed'?record.index+1:lesson.sentences.length;
  return record.personal.length<=80&&!record.personal.includes("\n")&&/^[ -~]*$/.test(record.personal)&&record.lessonId===lesson.id&&record.source===fingerprint(lesson)&&record.entries.length===expected&&record.index<lesson.sentences.length&&record.entries.every((v,i)=>v.sentenceId===lesson.sentences[i].id&&v.text===lesson.sentences[i].text)&&(!(record.phase==='confirmed')||record.draft===lesson.sentences[record.index].text)&&(!(record.phase==='complete')||record.index===lesson.sentences.length-1);

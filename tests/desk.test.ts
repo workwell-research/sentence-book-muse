@@ -38,6 +38,20 @@ describe('notebook Copy record',()=>{
   expect(pdf.pages.flatMap(p=>p.runs).filter(r=>r.sourceId==='personal-user').map(r=>r.text).join('')).toBe('My saved words.');
   expect(JSON.stringify(pdf.pages)).not.toContain('My edited draft.');
  });
+ it('reads legacy records without lines and plans the learner\'s lines into the page',()=>{
+  const legacy=practiceSchema.parse(JSON.parse(JSON.stringify({...emptyCopy(studySample),lookups:undefined})));
+  expect(legacy.lookups).toEqual([]);
+  const line={id:'lookup-example-story-05-2-12',sentenceId:'example-story-05',start:2,end:12,expression:'wrote down',native:'書き留めた',note:null,lookedUpAt:'2026-10-30T01:00:00.000Z'};
+  const state={...emptyCopy(studySample),lookups:[line]};
+  const plan=deskLayout(studySample,state,defaultDisplay);
+  expect(plan.source.sentences[4].glosses).toEqual([{id:line.id,start:2,end:12,quote:'wrote down',meaning:'書き留めた'}]);
+  expect(plan.source.vocabulary.at(-1)).toMatchObject({english:'wrote down'});
+  expect(plan.pages.flatMap(p=>p.markers).some(m=>m.id.startsWith(line.id+':'))).toBe(true);
+  // The line shows only once its sentence is confirmed, like the authored glosses.
+  expect(JSON.stringify(confirmedLayout(plan,state,defaultDisplay).pages)).not.toContain('書き留めた');
+  const stale={...state,lookups:[{...line,expression:'wrote DOWN'}]};
+  expect(deskLayout(studySample,stale,defaultDisplay).source).toEqual(deskLayout(studySample,emptyCopy(studySample),defaultDisplay).source);
+ });
  it('protects unreadable stored data and does not claim a failed save',()=>{
   const setItem=vi.fn();vi.stubGlobal('localStorage',{getItem:()=>'{invalid',setItem});
   const loaded=readSaved('fixture',practiceSchema,emptyCopy(studySample));expect(loaded.blocked).toBe(true);

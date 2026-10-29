@@ -5,7 +5,7 @@ import { studySample } from '../src/handwriting/study-content';
 import { practiceKey } from '../src/desk/core';
 import { LIBRARY_KEY } from '../src/lib/library';
 import type { Binder, LibraryPage } from '../src/lib/library';
-import { DESK_SELECTION_KEY, copyKey, normalizeHandText, notebookDate, requestedPageId, readSelection, rememberSelection, resolveDeskLesson, studyContentFromPage } from '../src/lib/study-page';
+import { DESK_SELECTION_KEY, copyKey, lessonWithLookups, normalizeHandText, notebookDate, requestedPageId, readSelection, rememberSelection, resolveDeskLesson, studyContentFromPage, writableMeaning } from '../src/lib/study-page';
 
 const paper = { binding: 18, side: 'left' as const };
 const binder: Binder = { id: 'a785f741-e09f-4657-885a-2c2bed838c2e', title: '仕事の英語プレゼン', description: '発表と質疑', createdAt: '2026-10-29T09:00:00.000Z', origin: 'approved-new' };
@@ -44,7 +44,7 @@ describe('typeable notebook text', () => {
 });
 
 describe('a filed page as desk material', () => {
-  it('keeps every sentence with its meaning, anchors found expressions and lists all review items as words', () => {
+  it('keeps every sentence with its meaning and lists review items as words without drawing lines', () => {
     const lesson = studyContentFromPage(page, binder, paper, defaultFonts);
     expect(lesson.kind).toBe('ready');
     if (lesson.kind !== 'ready') return;
@@ -56,9 +56,8 @@ describe('a filed page as desk material', () => {
       'My slides are almost ready...', 'I will keep my answers short and clear.',
     ]);
     expect(lesson.content.sentences[0].meaning).toBe('来週、アブダビで発表します。');
-    expect(lesson.content.sentences[0].glosses).toEqual([{ id: 'gloss-1', start: 15, end: 28, quote: 'giving a talk', meaning: '発表する' }]);
-    expect(lesson.content.sentences[1].glosses).toBeUndefined(); // "take a break" is not in the sentence; no fabricated anchor
-    expect(lesson.content.sentences[3].glosses?.[0]).toMatchObject({ quote: 'short and clear' });
+    // Muse's candidates never draw lines on the paper; the learner draws those by looking words up.
+    expect(lesson.content.sentences.every(sentence => sentence.glosses === undefined)).toBe(true);
     expect(lesson.content.vocabulary.map(v => v.english)).toEqual(['giving a talk', 'take a break', 'short and clear']);
     // The Japanese binder title cannot be written in the hand face, so the header falls back to the level.
     expect(lesson.content.classification).toEqual({ id: binder.id, label: 'Level B1' });
@@ -87,7 +86,7 @@ describe('a filed page as desk material', () => {
     const emoji = { ...page, review_items: [{ expression: 'giving a talk', native: '発表する 🙂', sentence_index: 0 }] };
     const trimmed = studyContentFromPage(emoji, binder, paper, defaultFonts);
     expect(trimmed).toMatchObject({ kind: 'ready', trimmed: true });
-    if (trimmed.kind === 'ready') { expect(trimmed.content.vocabulary).toEqual([]); expect(trimmed.content.sentences[0].glosses).toBeUndefined(); }
+    if (trimmed.kind === 'ready') expect(trimmed.content.vocabulary).toEqual([]);
     const japanese = { ...page, sentences: [{ en: '今日は電車が遅れた。', native: 'x' }, ...page.sentences.slice(1)] };
     expect(studyContentFromPage(japanese, binder, paper, defaultFonts)).toEqual({ kind: 'unavailable', reason: 'unsupported-text' });
   });
@@ -127,5 +126,33 @@ describe('which page the desk opens', () => {
     expect(unreadable.notice).toContain('読み込めない');
     expect(resolveDeskLesson(store, '?page=sample', paper, defaultFonts).lesson).toBe(studySample);
     expect(readSelection(store)).toBeNull();
+  });
+});
+
+describe('lines the learner drew', () => {
+  const base = studyContentFromPage(page, binder, paper, defaultFonts);
+  const lesson = base.kind === 'ready' ? base.content : studySample;
+  const line = { id: 'lookup-sentence-01-15-28', sentenceId: 'sentence-01', start: 15, end: 28, expression: 'giving a talk', native: '発表する', note: null, lookedUpAt: '2026-10-30T01:00:00.000Z' };
+  it('becomes a gloss under its sentence and a word in the list, and still lays out', () => {
+    const merged = lessonWithLookups(lesson, [line], defaultFonts);
+    expect(merged.sentences[0].glosses).toEqual([{ id: line.id, start: 15, end: 28, quote: 'giving a talk', meaning: '発表する' }]);
+    expect(merged.vocabulary.map(v => v.english)).toEqual(['giving a talk', 'take a break', 'short and clear']); // already a Muse candidate: not duplicated
+    const fresh = lessonWithLookups(lesson, [{ ...line, id: 'lookup-sentence-03-3-9', sentenceId: 'sentence-03', start: 3, end: 9, expression: 'slides', native: 'スライド' }], defaultFonts);
+    expect(fresh.vocabulary.at(-1)).toMatchObject({ id: 'lookup-sentence-03-3-9-word', english: 'slides', meaning: 'スライド' });
+    const layout = createA5Layout(fresh, paper, defaultFonts);
+    expect(layout.pages.flatMap(p => p.markers).some(m => m.id.startsWith('lookup-sentence-03-3-9:'))).toBe(true);
+    expect(layout.pages.flatMap(p => p.runs).some(r => r.sourceId === 'lookup-sentence-03-3-9' && r.text === 'スライド')).toBe(true);
+    expect(lessonWithLookups(lesson, [], defaultFonts)).toBe(lesson);
+  });
+  it('skips a stale span, an unknown sentence and a meaning the Japanese face cannot write', () => {
+    expect(writableMeaning('発表する 🙂', 'klee')).toBe('発表する');
+    expect(writableMeaning('🙂', 'klee')).toBe('');
+    const merged = lessonWithLookups(lesson, [
+      { ...line, expression: 'giving a TALK' }, { ...line, id: 'x', sentenceId: 'sentence-99' }, { ...line, id: 'y', native: '🙂' },
+      { ...line, id: 'z', sentenceId: 'sentence-02', start: 0, end: 1, expression: 'I', native: '私 🙂' },
+    ], defaultFonts);
+    expect(merged.sentences[0].glosses).toBeUndefined();
+    expect(merged.sentences[1].glosses).toEqual([{ id: 'z', start: 0, end: 1, quote: 'I', meaning: '私' }]);
+    expect(merged.vocabulary.map(v => v.english)).toEqual(['giving a talk', 'take a break', 'short and clear', 'I']);
   });
 });

@@ -1,12 +1,16 @@
 import {createA5Layout,createA5Scene,A5} from '../handwriting/a5-layout';
 import type {A5Layout} from '../handwriting/a5-layout';
 import type {StudyContent} from '../handwriting/study-content';
+import {lessonWithLookups} from '../lib/study-page';
 import type {CopyRecord,DeskDisplay} from './core';
 
 // Allocate the complete lesson before hiding ink. Presentation never changes row allocation.
 export function deskLayout(lesson:StudyContent,record:CopyRecord,display:DeskDisplay,personalEditing=false) {
- const content={...lesson,personal:record.personal|| (personalEditing?' ':''),vocabulary:lesson.vocabulary.map(v=>({...v,checked:record.checks[v.id]??false}))};
- return createA5Layout(content,display,{english:display.english,japanese:display.japanese});
+ const fonts={english:display.english,japanese:display.japanese};
+ const build=(source:StudyContent)=>createA5Layout({...source,personal:record.personal|| (personalEditing?' ':''),vocabulary:source.vocabulary.map(v=>({...v,checked:record.checks[v.id]??false}))},display,fonts);
+ // The learner's lines are added to the plan; if they cannot be placed, the page is still usable without them.
+ const merged=lessonWithLookups(lesson,record.lookups,fonts);
+ try{return build(merged);}catch(error){if(merged===lesson)throw error;return build(lesson);}
 }
 export function confirmedLayout(layout:A5Layout,record:CopyRecord,display:DeskDisplay,personalEditing=false):A5Layout {
  const ids=new Set(record.entries.map(e=>e.sentenceId)),annotations=new Set<string>(),markers=new Set<string>();

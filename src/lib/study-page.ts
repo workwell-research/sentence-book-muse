@@ -1,12 +1,13 @@
 import { z } from 'zod';
 import { createA5Layout, wrapInk } from '../handwriting/a5-layout';
 import type { PaperSettings } from '../handwriting/a5-layout';
-import { englishFonts } from '../handwriting/fonts';
-import type { FontSettings } from '../handwriting/fonts';
+import { englishFonts, japaneseFonts } from '../handwriting/fonts';
+import type { FontSettings, JapaneseFontId } from '../handwriting/fonts';
 import { supported } from '../handwriting/model';
 import { studySample } from '../handwriting/study-content';
 import type { AnchoredGloss, StudyContent, StudySentence } from '../handwriting/study-content';
 import { practiceKey } from '../desk/core';
+import type { LookupEntry } from '../desk/core';
 import { readLibrary } from './library';
 import type { Binder, Library, LibraryPage } from './library';
 
@@ -55,20 +56,12 @@ export function studyContentFromPage(page: LibraryPage, binder: Binder | null, p
   }));
   if (sentences.some(sentence => !sentence.text || !supported(sentence.text, font))) return { kind: 'unavailable', reason: 'unsupported-text' };
 
-  const glosses = new Map<number, AnchoredGloss[]>();
+  // Muse's review expressions are candidates in the words list only; lines on the paper are the learner's.
   const vocabulary: StudyContent['vocabulary'] = [];
   page.review_items.forEach((item, n) => {
     const expression = normalizeHandText(item.expression);
     if (!expression || !supported(expression, font)) return;
     vocabulary.push({ id: `word-${n + 1}`, english: expression, meaning: item.native, checked: false });
-    const sentence = sentences[item.sentence_index];
-    if (!sentence) return;
-    const start = codePointIndex(sentence.text, expression);
-    if (start === null) return;
-    const list = glosses.get(item.sentence_index) ?? [];
-    if (list.some(gloss => gloss.start === start)) return;
-    list.push({ id: `gloss-${n + 1}`, start, end: start + [...expression].length, quote: expression, meaning: item.native });
-    glosses.set(item.sentence_index, list);
   });
 
   const width = paperWidth(paper);
@@ -77,11 +70,7 @@ export function studyContentFromPage(page: LibraryPage, binder: Binder | null, p
   const base: StudyContent = {
     id: page.id, title, date: notebookDate(page.filedAt),
     classification: { id: binder?.id ?? `level-${page.level}`, label },
-    sentences: sentences.map((sentence, index) => {
-      const anchored = glosses.get(index);
-      return anchored ? { ...sentence, glosses: anchored } : sentence;
-    }),
-    vocabulary, personal: '',
+    sentences, vocabulary, personal: '',
   };
   // Review meanings may use characters the notebook's Japanese face lacks; sentences alone are still a lesson.
   if (fits(base, paper, fonts)) return { kind: 'ready', content: base, trimmed: false };
@@ -94,12 +83,39 @@ function fits(content: StudyContent, paper: PaperSettings, fonts: FontSettings):
   try { createA5Layout(content, paper, fonts); return true; } catch { return false; }
 }
 
-function codePointIndex(text: string, needle: string): number | null {
-  const haystack = [...text], target = [...needle];
-  for (let i = 0; i + target.length <= haystack.length; i++) {
-    if (target.every((char, j) => haystack[i + j] === char)) return i;
+// The notebook's Japanese face cannot write every character; keep what it can, drop the rest.
+export function writableMeaning(text: string, japanese: JapaneseFontId): string {
+  const ranges = japaneseFonts[japanese].metrics.ranges as [number, number][];
+  const kept = [...text.normalize('NFC')].filter(char => { const cp = char.codePointAt(0)!; return ranges.some(([a, b]) => cp >= a && cp <= b); }).join('');
+  return kept.replace(/\s+/g, ' ').trim();
+}
+
+// Lines the learner drew become glosses under their sentence and words in the list; stale or unwritable ones are skipped.
+export function lessonWithLookups(lesson: StudyContent, lookups: readonly LookupEntry[], fonts: FontSettings): StudyContent {
+  if (lookups.length === 0) return lesson;
+  const font = englishFonts[fonts.english].data;
+  const added = new Map<string, AnchoredGloss[]>();
+  const words = [...lesson.vocabulary];
+  for (const lookup of lookups) {
+    const sentence = lesson.sentences.find(item => item.id === lookup.sentenceId);
+    if (!sentence) continue;
+    const quote = [...sentence.text].slice(lookup.start, lookup.end).join('');
+    if (quote !== lookup.expression || !supported(quote, font)) continue;
+    const meaning = writableMeaning(lookup.native, fonts.japanese);
+    if (!meaning) continue;
+    const list = added.get(sentence.id) ?? [];
+    if (![...(sentence.glosses ?? []), ...list].some(gloss => gloss.start === lookup.start)) {
+      list.push({ id: lookup.id, start: lookup.start, end: lookup.end, quote, meaning });
+      added.set(sentence.id, list);
+    }
+    if (!words.some(word => word.english.toLowerCase() === lookup.expression.toLowerCase()))
+      words.push({ id: `${lookup.id}-word`, english: lookup.expression, meaning, checked: false });
   }
-  return null;
+  return {
+    ...lesson,
+    sentences: lesson.sentences.map(sentence => { const extra = added.get(sentence.id); return extra ? { ...sentence, glosses: [...(sentence.glosses ?? []), ...extra] } : sentence; }),
+    vocabulary: words,
+  };
 }
 
 // Which page the desk opens: the URL names one explicitly, otherwise the last one opened; `sample` returns to the fixture.
