@@ -1,10 +1,14 @@
 import './styles.css';
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { InterestSetup } from './InterestSetup';
+import { LessonPreview } from './LessonPreview';
 import { readInterests } from './lib/interests';
 import type { InterestRead } from './lib/interests';
 import { EMPTY_NOTE, readNote, saveNote } from './lib/composer';
 import type { ComposerNote, Level, NoteRead } from './lib/composer';
+import { draftTicket, readPendingDrafts, requestFingerprint, requestLesson, savePendingDraft } from './lib/generation';
+import type { DraftTicket, GenerationOutcome, PendingRead } from './lib/generation';
+import { createGenerationRequest } from '../shared/generation-request';
 
 function restore(): NoteRead {
   try { return readNote(window.localStorage); } catch { return { kind: 'unreadable' }; }
@@ -12,6 +16,10 @@ function restore(): NoteRead {
 
 function restoreInterests(): InterestRead {
   try { return readInterests(window.localStorage); } catch { return { kind: 'unreadable' }; }
+}
+
+function restorePending(): PendingRead {
+  try { return readPendingDrafts(window.localStorage); } catch { return { kind: 'unreadable' }; }
 }
 
 export function App() {
@@ -28,6 +36,30 @@ export function App() {
   const [dirty, setDirty] = useState(false);
   const topicId = useId();
   const blocked = initial.kind === 'unreadable';
+  const [pending, setPending] = useState<PendingRead>(restorePending);
+  const [generating, setGenerating] = useState(false);
+  const [outcome, setOutcome] = useState<(GenerationOutcome & { saved?: boolean }) | null>(null);
+  const ticket = useRef<DraftTicket | null>(null);
+  const interests = profile.kind === 'ready' ? profile.profile.interests : [];
+  const canGenerate = !blocked && !generating && (note.topic.trim().length > 0 || interests.length > 0);
+
+  async function generate() {
+    if (!canGenerate) return;
+    // The same content keeps its draft ID across retries; edited content gets a new one.
+    ticket.current = draftTicket(ticket.current, requestFingerprint({ ...note, interests, binderIds: [] }), () => crypto.randomUUID());
+    let request;
+    try { request = createGenerationRequest(ticket.current.id, note, interests, []); }
+    catch { setOutcome({ kind: 'failed', code: 'invalid_request', message: '関心を選ぶか、話したいことを書いてから作ってください。', retryable: false }); return; }
+    setGenerating(true);
+    setOutcome(null);
+    const result = await requestLesson(fetch, request);
+    if (result.kind === 'ready') {
+      let saved = false;
+      try { setPending({ kind: 'ready', drafts: savePendingDraft(window.localStorage, result.draft) }); saved = true; } catch { saved = false; }
+      setOutcome({ ...result, saved });
+    } else setOutcome(result);
+    setGenerating(false);
+  }
 
   function update(patch: Partial<ComposerNote>) {
     setNote(current => ({ ...current, ...patch }));
@@ -72,7 +104,7 @@ export function App() {
           </div>
           <div className="shelf-edge" aria-hidden="true" />
           <p className="shelf-caption">教材づくりが始まったら、仕舞う先を提案します。<br />新しい本を増やすときは、あなたが確認してから。</p>
-          <div className="inbox-line"><span>仕分けを待つページ</span><span>0 ページ</span></div>
+          <div className="inbox-line"><span>仕分けを待つページ</span><span>{pending.kind === 'ready' ? `${pending.drafts.length} ページ` : '読み込めません'}</span></div>
         </section>
         <section className="writing-paper" id="compose" aria-labelledby="compose-title">
           <h2 id="compose-title" tabIndex={-1}>今日は、何を話したい？</h2>
@@ -101,10 +133,17 @@ export function App() {
             {blocked && <p className="error" role="alert">保存したメモを読み込めませんでした。元のデータを守るため、保存を停止しています。入力する場合は、文章をコピーして控えてください。</p>}
             <div className="form-actions"><button className="save-button" type="submit" disabled={blocked || !dirty}>メモを保存</button><span>このブラウザだけに保存</span></div>
             <p className={failed ? 'save-status error' : 'save-status'} role="status">{message || (dirty ? 'まだ保存されていない変更があります。' : '')}</p>
-            <div className="generation-note"><button type="button" disabled>教材を作る · 準備中</button><p>教材づくりは、ただいま準備中です。<br />関心領域と、話したいことをメモしておけます。</p></div>
+            <div className="generation-note">
+              <button type="button" className={canGenerate ? 'generate-button' : undefined} onClick={generate} disabled={!canGenerate} aria-busy={generating}>{generating ? 'Muse が教材を作っています…' : '教材を作る'}</button>
+              <p>{generating ? '十数秒ほどかかります。このまま待ってください。' : canGenerate
+                ? <>関心と話したいことから、英語8文のページを1枚作ります。<br />できたページは、確認してから仕舞います。</>
+                : <>関心を選ぶか、話したいことを書くと、教材を作れます。</>}</p>
+              {outcome?.kind === 'failed' && <p className="error generation-error" role="alert">{outcome.message}</p>}
+            </div>
           </form>
         </section>
       </div>
+      {outcome?.kind === 'ready' && <LessonPreview draft={outcome.draft} model={outcome.model} binders={[]} saved={outcome.saved ?? false} />}
       </>}
     </main>
     <footer><span>The Sentence Book <i>with Muse</i></span><span>あなたのペースで、一文ずつ。</span></footer>

@@ -69,7 +69,7 @@ export function InterestSetup({ initial, onSaved, onDismiss }: Props) {
       <h1 id="interests-title" ref={title} tabIndex={-1}>何に、<br />心が動きますか。</h1>
       <p>好きなこと、気になること。<br />英語で話せたらうれしい領域を選んでください。</p>
       <p>Museが、選んだ関心を手がかりに<br />日々のひとことから練習の題材を考えます。</p>
-      <p className="setup-availability">教材づくりは準備中です。<br />今は関心領域とメモを保存できます。</p>
+      <p className="setup-availability">関心は、教材をつくるときの題材の手がかりになります。<br />あとから変えたり、外したりできます。</p>
     </div>
     <form className="writing-paper interest-paper" onSubmit={submit}>
       <fieldset>

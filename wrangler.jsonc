@@ -5,6 +5,7 @@
   "compatibility_date": "2026-10-26",
   "compatibility_flags": ["nodejs_compat"],
   "vars": {
-    "META_MODEL": ""
+    "MODEL_API_BASE_URL": "https://api.meta.ai/v1",
+    "MODEL_ID": "muse-spark-1.3"
   }
 }

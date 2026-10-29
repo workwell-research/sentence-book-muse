@@ -29,7 +29,7 @@ try {
   assert.equal(await page.locator('.binder').count(), 0);
   await page.getByRole('heading', { name: 'はじまりは、まだ白紙。' }).waitFor();
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
-  assert.equal(await page.getByRole('button', { name: '教材を作る · 準備中' }).isDisabled(), true);
+  assert.equal(await page.getByRole('button', { name: '教材を作る', exact: true }).isEnabled(), true);
   await page.getByLabel('話したいこと', { exact: true }).fill('Disposable QA note.');
   await page.getByLabel('練習する英語').selectOption('B1');
   await page.getByRole('button', { name: 'メモを保存', exact: true }).click();

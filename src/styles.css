@@ -62,6 +62,37 @@
   .generation-note { margin-top: 15px; padding-top: 20px; border-top: 1px solid var(--line); }
   .generation-note button { width: 100%; padding: 12px; min-height: 44px; border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 3px; font-size: 13px; }
   .generation-note p { font-size: 11px; line-height: 1.9; color: var(--muted); margin: 11px 0; text-align: center; }
+  .generation-note .generate-button { background: var(--sage); color: white; border-color: var(--sage); }
+  .generation-note .generate-button:hover:enabled { background: #394c38; }
+  .generation-note button[aria-busy="true"] { color: var(--sage); border-color: var(--sage); }
+  .generation-note .generation-error { text-align: left; margin-top: 4px; }
+  .lesson-preview { background: var(--paper); padding: 34px 36px 30px; margin-bottom: 60px; box-shadow: 0 6px 25px #4138270d; border-radius: 2px; }
+  .preview-head { display: flex; justify-content: space-between; gap: 30px; align-items: flex-end; flex-wrap: wrap; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+  .preview-kicker { font-size: 11px; letter-spacing: .08em; color: var(--sage); }
+  .lesson-preview h2 { font-family: Lora, Georgia, serif; font-size: 26px; font-weight: 500; margin-top: 6px; }
+  .lesson-preview h2:focus { outline: none; }
+  .preview-meta { display: flex; gap: 22px; margin: 0; font-size: 11px; color: var(--muted); }
+  .preview-meta div { display: flex; gap: 6px; }
+  .preview-meta dt::after { content: ':'; }
+  .preview-meta dd { margin: 0; color: var(--ink); }
+  .preview-sentences { margin: 0; padding: 22px 0 10px 1.6em; display: grid; gap: 14px; }
+  .preview-sentences li { padding-left: 6px; }
+  .preview-sentences li::marker { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .lesson-preview [lang="en"] { display: block; font-family: Lora, Georgia, serif; font-size: 17px; line-height: 1.6; }
+  .preview-native { display: block; font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .preview-answer { display: block; font-size: 12px; color: var(--muted); margin-top: 6px; padding-left: 12px; border-left: 2px solid var(--line); }
+  .preview-answer [lang="en"] { display: inline; font-size: 13px; }
+  .preview-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 18px 0 24px; border-top: 1px solid var(--line); }
+  .preview-columns h3, .preview-filing h3 { font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+  .preview-columns ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+  .preview-columns [lang="en"] { font-size: 15px; }
+  .preview-filing { border-left: 3px solid var(--sage); padding: 4px 0 4px 20px; }
+  .preview-filing p { font-size: 13px; line-height: 1.9; }
+  .preview-filing strong { font-weight: 600; }
+  .preview-reason { color: var(--muted); margin-top: 8px; }
+  .preview-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .preview-tags span { font-size: 11px; color: var(--sage); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; }
+  .preview-note { margin-top: 16px; font-size: 11px; color: var(--muted); }
   .interest-setup { display: grid; grid-template-columns: 1fr 1.15fr; gap: 72px; align-items: start; padding: 66px 0; }
   .interest-intro h1 { font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif; font-size: clamp(30px, 3.6vw, 43px); font-weight: 500; line-height: 1.6; letter-spacing: .04em; }
   .interest-intro p { margin-top: 26px; font-size: 14px; line-height: 2; color: var(--muted); }
@@ -116,6 +147,10 @@
     .writing-paper { padding: 25px 21px 15px; }
     .writing-paper h2 { font-size: 21px; }
     .preferences { gap: 10px; }
+    .lesson-preview { padding: 24px 20px 22px; margin-bottom: 36px; }
+    .lesson-preview h2 { font-size: 22px; }
+    .preview-meta { flex-wrap: wrap; gap: 8px 16px; }
+    .preview-columns { grid-template-columns: 1fr; gap: 24px; }
     footer { flex-direction: column; gap: 4px; }
   }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

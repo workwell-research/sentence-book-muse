@@ -4,7 +4,7 @@ A new implementation for the 2026 Meta Global AI Developer Hackathon. Turn somet
 
 ## Current status
 
-This repository includes a **working local study desk and A5 notebook** at `/`, based on the owner's [Work desktop handoff](docs/desktop-study-desk.md). AI generation remains a scaffold. The previous standalone typography prototype is retained at `/handwriting`.
+This repository includes a **working local study desk and A5 notebook** at `/`, based on the owner's [Work desktop handoff](docs/desktop-study-desk.md). AI generation is connected locally: `/setup` sends a validated request to `/api/generate`, which calls Meta Model API (`muse-spark-1.3`) with structured output and returns a validated page for preview. The previous standalone typography prototype is retained at `/handwriting`.
 
 - Pure White, Natural and Walnut desks; six selectable horizontal pens, a live index book and optional timer. Material PNGs are separate from live text and native controls.
 - A read-only source card and one native editor on the current A5 line. Letters draw as they are typed. Enter checks/saves the sentence and focuses the next line immediately, without rewriting it. The eighth correct entry completes Copy. Five pastel paper index tabs highlight Copy; stages2–5 stay disabled with preparation labels. Animation does not complete learning.
@@ -19,11 +19,11 @@ This repository includes a **working local study desk and A5 notebook** at `/`, 
 - Vite + React + TypeScript application with an empty shelf; themes have no fixed names or count.
 - First-run interest selection with multiple choices, custom additions, skip, edit and local persistence. Interest selection does not create binders.
 - A topic, explanation-language and level note saved locally in this browser.
-- Validated interest-aware request and Muse prompt preparation. These helpers do not make a model request yet.
-- Cloudflare Pages Functions routes for health and the future generation endpoint.
-- `/api/generate` deliberately returns HTTP 503 and makes **no model request**.
+- 「教材を作る」 on `/setup`: one request per distinct content (draft ID reused on retry), a bounded server call to Meta Model API with `response_format: json_schema` derived from the shared Zod contract, validation on the server and again in the browser, a read-only preview, and local storage of the page under `sentence-book-muse:pending-drafts:v1` as 「仕分けを待つページ」.
+- `/api/generate` returns coded errors (503 when no key is configured, 400/413 for bad or oversized requests, 429 with Retry-After, 502 for upstream or non-conforming output, 504 on timeout) and never stores anything server-side. `/api/health` reports whether generation is configured and which model id is used, never the key.
+- Filing approval, binders, practising a generated page and deployment are not implemented yet.
 
-The owner clarified that standalone `lesson-schema-v2` is unavailable. The new [`sentence_book_page_v1` contract](docs/generation-contract.md) and shared validator define this version’s generation format. They are not wired into a live generation flow yet. Model access, API credentials, actual generation, filing, generated-lesson practice, deployment and physical-device behavior remain unverified. The synthetic local Copy flow is implemented separately.
+The owner clarified that standalone `lesson-schema-v2` is unavailable. The new [`sentence_book_page_v1` contract](docs/generation-contract.md) and shared validator define this version’s generation format. They are wired into the live local generation flow as of 2026-10-29 (see PROJECT_STATUS.md for the real calls and browser checks). Filing, generated-lesson practice, deployment and physical-device behavior remain unverified. The synthetic local Copy flow is implemented separately.
 
 ## Provenance
 
@@ -64,12 +64,10 @@ Current Enter-flow QA: `node scripts/qa-enter-flow.mjs` checks atomic advancemen
 
 ## Next implementation steps
 
-1. Connect the interest-aware generation request, Muse prompt and response validator on both server and client; verify actual model output with varied ordinary notes.
-2. Confirm the accessible model ID in the Meta portal. `muse-spark-1.3` is only a candidate.
-3. Set `META_MODEL_API_KEY` as an encrypted Pages secret, never a `VITE_*` variable. For local Functions, use an ignored `.dev.vars` file based on `.dev.vars.example`.
-4. Implement a bounded server request, structured output and server/client validation. Add request limits before a paid public endpoint becomes reachable.
-5. Implement explicit filing approval, stable page IDs, duplicate-draft rejection, multi-lesson persistence and connect the existing sample Copy flow to accepted lessons.
-6. Verify with disposable data, then create a new Pages project and deploy the new app. Do not replace the existing personal prototype.
+1. Done 2026-10-29: request, prompt, structured output and validation on both sides are connected; `muse-spark-1.3` confirmed. For local Functions, copy `.dev.vars.example` to the ignored `.dev.vars`. `MODEL_API_BASE_URL`/`MODEL_ID` can point the same code at another OpenAI-compatible host (for example OpenRouter `meta/muse-spark-1.3`).
+2. Implement explicit filing approval, binders with stable IDs, duplicate-draft rejection and multi-lesson persistence; connect the desk's Copy flow to accepted pages instead of the synthetic sample.
+3. Add a request/cost limit (Cloudflare rate-limit rule or token bucket) and a semantic check pass before the endpoint is public.
+4. Set `META_MODEL_API_KEY` as an encrypted Pages secret, never a `VITE_*` variable; create a new Pages project and deploy. Do not replace the existing personal prototype.
 
 Account sync, login, OAuth/MCP, the old curriculum, saved audio, the full five-pass course and the prior Notebook/Cards are outside this version's scope.
 
