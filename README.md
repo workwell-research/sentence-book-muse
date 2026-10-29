@@ -8,7 +8,7 @@ This repository includes a **working local study desk and A5 notebook** at `/`, 
 
 - Pure White, Natural and Walnut desks; six selectable horizontal pens, a live index book and optional timer. Material PNGs are separate from live text and native controls.
 - A read-only source card and one native editor on the current A5 line. Letters draw as they are typed. Enter checks/saves the sentence and focuses the next line immediately, without rewriting it. The eighth correct entry completes Copy. Five pastel paper index tabs highlight Copy; stages2–5 stay disabled with preparation labels. Animation does not complete learning.
-- One synthetic eight-sentence Copy lesson, with locally saved drafts, confirmed progress, personal English writing, review marks and display choices. This is not multi-lesson history or AI-generated material.
+- Copy practises either the synthetic eight-sentence sample or any page filed on the shelf (`/?page=<pageId>`, remembered for the next visit). Each page keeps its own drafts, confirmed progress, personal English writing and review marks locally; display choices are shared.
 - Fixed physical A5 composition with measured wrapping, continuation pages and independent SVG/vector PDF renderers. Memo shown/blank retains reserved rows; Japanese phrase glosses are lifted 1mm.
 - Readability Italic default, EMS Tech, Print and Pen; independent Klee One/Zen Kurenaido Japanese. Native input fonts derive from the same English centerlines with matching advances.
 - Pause/resume, replay/finish and reduced motion. Mobile has fixed-paper zoom, caret-following horizontal scroll and Enter-only check-and-advance.
@@ -22,9 +22,9 @@ This repository includes a **working local study desk and A5 notebook** at `/`, 
 - 「教材を作る」 on `/setup`: one request per distinct content (draft ID reused on retry), a bounded server call to Meta Model API with `response_format: json_schema` derived from the shared Zod contract, validation on the server and again in the browser, a read-only preview, and local storage of the page under `sentence-book-muse:pending-drafts:v1` as 「仕分けを待つページ」.
 - `/api/generate` returns coded errors (503 when no key is configured, 400/413 for bad or oversized requests, 429 with Retry-After, 502 for upstream or non-conforming output, 504 on timeout) and never stores anything server-side. `/api/health` reports whether generation is configured and which model id is used, never the key.
 - Filing: the preview ends with Muse's proposal and the learner's decision — create the proposed (editable) new binder, choose any existing binder, or discard. Binders and pages live under `sentence-book-muse:library:v1` with app-issued IDs; a draft can be filed only once and a new binder is created only through that explicit choice. The shelf lists binders with their pages and the pages still waiting. Existing binders are sent to the model as the only valid existing destinations.
-- Practising a filed page on the desk and deployment are not implemented yet.
+- A filed page opens on the desk from the shelf (「机で練習する」) or straight after filing. Its English is folded to keyboard characters, its meanings back 「意味を見る」, and its review expressions become the words list and, where they occur in the sentence, anchored glosses. Shadowing and the later stages, and deployment, are not implemented yet.
 
-The owner clarified that standalone `lesson-schema-v2` is unavailable. The new [`sentence_book_page_v1` contract](docs/generation-contract.md) and shared validator define this version’s generation format. They are wired into the live local generation flow as of 2026-10-29 (see PROJECT_STATUS.md for the real calls and browser checks). Filing, generated-lesson practice, deployment and physical-device behavior remain unverified. The synthetic local Copy flow is implemented separately.
+The owner clarified that standalone `lesson-schema-v2` is unavailable. The new [`sentence_book_page_v1` contract](docs/generation-contract.md) and shared validator define this version’s generation format. They are wired into the live local generation flow as of 2026-10-29 (see PROJECT_STATUS.md for the real calls and browser checks). Deployment and physical-device behavior remain unverified; filing and Copy practice of a generated page were checked in the local browser on 2026-10-29/30. The synthetic local Copy flow is implemented separately.
 
 ## Provenance
 
@@ -66,7 +66,7 @@ Current Enter-flow QA: `node scripts/qa-enter-flow.mjs` checks atomic advancemen
 ## Next implementation steps
 
 1. Done 2026-10-29: request, prompt, structured output and validation on both sides are connected; `muse-spark-1.3` confirmed. For local Functions, copy `.dev.vars.example` to the ignored `.dev.vars`. `MODEL_API_BASE_URL`/`MODEL_ID` can point the same code at another OpenAI-compatible host (for example OpenRouter `meta/muse-spark-1.3`).
-2. Done 2026-10-29 (late): explicit filing approval, binders with stable IDs, duplicate-draft rejection and multi-page persistence. Next: connect the desk's Copy flow to filed pages instead of the synthetic sample.
+2. Done 2026-10-29 (late) and 2026-10-30: explicit filing approval, binders with stable IDs, duplicate-draft rejection, multi-page persistence, and the desk's Copy flow opening filed pages with per-page progress.
 3. Add a request/cost limit (Cloudflare rate-limit rule or token bucket) and a semantic check pass before the endpoint is public.
 4. Set `META_MODEL_API_KEY` as an encrypted Pages secret, never a `VITE_*` variable; create a new Pages project and deploy. Do not replace the existing personal prototype.
 

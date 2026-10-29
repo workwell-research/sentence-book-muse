@@ -40,6 +40,7 @@ export function Shelf({ library, pending, reviewingId, onReview, onDiscard }: Pr
               <span className="page-title">{page.title}</span>
               <span className="page-meta">{page.level} · {shortDate(page.filedAt)} · {page.sentences.length}文</span>
               <span className="page-first" lang="en">{page.sentences[0]?.en}</span>
+              <a className="page-practice" href={`/?page=${page.id}`}>机で練習する <span aria-hidden="true">→</span></a>
             </li>)}
           </ol>
         </details>
@@ -48,7 +49,7 @@ export function Shelf({ library, pending, reviewingId, onReview, onDiscard }: Pr
     <div className="shelf-edge" aria-hidden="true" />
     <p className="shelf-caption">{summaries.length === 0
       ? <>教材づくりが始まったら、仕舞う先を提案します。<br />新しい本を増やすときは、あなたが確認してから。</>
-      : <>ページは、あなたが確認した本にだけ増えていきます。<br />練習への接続は次の工程です。</>}</p>
+      : <>ページは、あなたが確認した本にだけ増えていきます。<br />「机で練習する」で、そのページを書き写せます。</>}</p>
     <div className="inbox-line"><span>仕分けを待つページ</span><span>{pending.kind === 'ready' ? `${pending.drafts.length} ページ` : '読み込めません'}</span></div>
     {pending.kind === 'ready' && pending.drafts.length > 0 && <ul className="pending-list">
       {pending.drafts.map(draft => <li key={draft.draft_id} className={draft.draft_id === reviewingId ? 'pending-item is-reviewing' : 'pending-item'}>

@@ -54,6 +54,8 @@
   select { margin-top: 7px; width: 100%; min-height: 44px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); padding: 8px; border-radius: 3px; font-size: 12px; }
   .form-actions { display: flex; gap: 15px; align-items: center; }
   .save-button { background: var(--sage); color: white; border: 0; border-radius: 3px; min-height: 44px; padding: 10px 21px; font-size: 13px; }
+  a.save-button { display: inline-flex; align-items: center; text-decoration: none; }
+  a.save-button:hover { background: #394c38; }
   .save-button:hover:enabled { background: #394c38; }
   .save-button:disabled { background: #dfe3d9; color: #626958; }
   .form-actions > span { font-size: 10px; color: var(--muted); }
@@ -112,6 +114,7 @@
   .binder-pages li { display: grid; gap: 2px; padding-top: 10px; border-top: 1px solid var(--line); }
   .page-title { font-size: 13px; font-weight: 600; overflow-wrap: anywhere; }
   .page-first { font-family: Lora, Georgia, serif; font-size: 13px; color: var(--muted); }
+  .page-practice { justify-self: start; font-size: 12px; margin-top: 4px; }
   .pending-list { list-style: none; margin: 0; padding: 0; }
   .pending-item { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 12px 2px; border-bottom: 1px solid var(--line); }
   .pending-item > div:first-child { display: grid; gap: 2px; min-width: 0; }

@@ -101,7 +101,7 @@ export function App() {
       const result = fileDraft(window.localStorage, reviewing.draft, reviewing.model ?? 'muse-spark', decision);
       setLibrary({ kind: 'ready', library: result.library });
       try { setPending({ kind: 'ready', drafts: removePendingDraft(window.localStorage, reviewing.draft.draft_id) }); } catch { /* the page is filed; a stale pending copy is refused as a duplicate */ }
-      setReviewing({ ...reviewing, status: { state: 'filed', binderTitle: result.binder.title, createdBinder: result.createdBinder } });
+      setReviewing({ ...reviewing, status: { state: 'filed', binderTitle: result.binder.title, createdBinder: result.createdBinder, pageId: result.page.id } });
     } catch (error) {
       const text = error instanceof FilingFailure ? filingErrorText[error.reason] : '本棚に保存できませんでした。ページはこの画面に残っています。';
       setReviewing({ ...reviewing, status: { state: 'failed', message: text } });

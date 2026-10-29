@@ -43,7 +43,7 @@ describe('live handwriting edits',()=>{
  });
  it('confirms completed body ink at time zero and animates only its annotations',()=>{
   const record=confirmCopy({...emptyCopy(studySample),draft:studySample.sentences[0].text},studySample,'now');
-  const scene=practiceScene(confirmedLayout(deskLayout(record,defaultDisplay),record,defaultDisplay),studySample.sentences[0].id,true);
+  const scene=practiceScene(confirmedLayout(deskLayout(studySample,record,defaultDisplay),record,defaultDisplay),studySample.sentences[0].id,true);
   const body=scene.strokes.filter(s=>s.layer==='body');
   expect(body.length).toBeGreaterThan(0);
   expect(body.every(s=>s.start+s.duration<=0)).toBe(true);
@@ -53,7 +53,7 @@ describe('live handwriting edits',()=>{
   for(const english of ['readability','tech','print','pen'] as const){
    let record=emptyCopy(studySample);
    for(const sentence of studySample.sentences){
-    const plan=deskLayout(record,{...defaultDisplay,english}),pos=inputPosition(plan,record,false);
+    const plan=deskLayout(studySample,record,{...defaultDisplay,english}),pos=inputPosition(plan,record,false);
     const typed=layoutText(sentence.text,pos.x,pos.y,pos.width,4.1,5.2,englishFonts[english].data).filter(g=>g.char!==' ');
     const final=plan.pages.flatMap(p=>p.runs.filter(r=>r.sourceId===sentence.id).flatMap(r=>r.glyphs)).filter(g=>g.char!==' ');
     expect(typed).toHaveLength(final.length);

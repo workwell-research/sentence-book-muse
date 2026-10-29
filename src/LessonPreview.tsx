@@ -4,7 +4,7 @@ import type { Binder, FilingDecision } from './lib/library';
 
 export type FilingStatus =
   | { state: 'open' }
-  | { state: 'filed'; binderTitle: string; createdBinder: boolean }
+  | { state: 'filed'; binderTitle: string; createdBinder: boolean; pageId: string }
   | { state: 'failed'; message: string };
 
 interface Props {
@@ -89,7 +89,7 @@ export function LessonPreview({ draft, model, binders, kept, status, onFile, onD
       <p className="preview-tags">{filing.sceneTags.map(tag => <span key={tag}>{tag}</span>)}</p>
       {status.state === 'filed' ? <>
         <p className="preview-filed" role="status">{status.createdBinder ? `新しい本「${status.binderTitle}」を作って、このページを仕舞いました。` : `「${status.binderTitle}」にこのページを仕舞いました。`}</p>
-        <div className="filing-actions"><button type="button" className="save-button" onClick={onClose}>閉じる</button></div>
+        <div className="filing-actions"><a className="save-button" href={`/?page=${status.pageId}`}>このページを机で練習する</a><button type="button" className="text-button" onClick={onClose}>閉じる</button></div>
       </> : <>
         <div className="filing-form">
           <label htmlFor={ids.destination}>仕舞う先</label>

@@ -1,11 +1,11 @@
 import {createA5Layout,createA5Scene,A5} from '../handwriting/a5-layout';
 import type {A5Layout} from '../handwriting/a5-layout';
-import {studySample} from '../handwriting/study-content';
+import type {StudyContent} from '../handwriting/study-content';
 import type {CopyRecord,DeskDisplay} from './core';
 
 // Allocate the complete lesson before hiding ink. Presentation never changes row allocation.
-export function deskLayout(record:CopyRecord,display:DeskDisplay,personalEditing=false) {
- const content={...studySample,personal:record.personal|| (personalEditing?' ':''),vocabulary:studySample.vocabulary.map(v=>({...v,checked:record.checks[v.id]??false}))};
+export function deskLayout(lesson:StudyContent,record:CopyRecord,display:DeskDisplay,personalEditing=false) {
+ const content={...lesson,personal:record.personal|| (personalEditing?' ':''),vocabulary:lesson.vocabulary.map(v=>({...v,checked:record.checks[v.id]??false}))};
  return createA5Layout(content,display,{english:display.english,japanese:display.japanese});
 }
 export function confirmedLayout(layout:A5Layout,record:CopyRecord,display:DeskDisplay,personalEditing=false):A5Layout {
@@ -25,7 +25,7 @@ export function confirmedLayout(layout:A5Layout,record:CopyRecord,display:DeskDi
  }))};
 }
 export function inputPosition(layout:A5Layout,record:CopyRecord,personal:boolean) {
- const id=personal?'personal-user':studySample.sentences[record.index].id;
+ const id=personal?'personal-user':layout.source.sentences[record.index].id;
  const page=layout.pages.find(p=>p.runs.some(r=>r.sourceId===id))!;
  const runs=page.runs.filter(r=>r.sourceId===id),first=runs[0];
  const width=(personal?148-layout.right:layout.mainRight)-layout.left-1;
