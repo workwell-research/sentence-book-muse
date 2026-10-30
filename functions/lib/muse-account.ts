@@ -13,7 +13,7 @@ export class MuseError extends Error { constructor(readonly code: string, readon
 export interface MuseStore {
   authenticate(token: string): Promise<Principal>;
   call<T = unknown>(who: Principal, operation: string, args?: Record<string, unknown>): Promise<T>;
-  authorization(token: string, authorizationId: string, userId: string): Promise<{ clientId: string }>;
+  authorization(token: string, authorizationId: string, userId: string): Promise<{ clientId: string; clientName: string }>;
 }
 export function museConfig(env: MuseEnv) {
   if (!env.SUPABASE_URL || !env.SUPABASE_PUBLISHABLE_KEY || !env.SUPABASE_SECRET_KEY) return null;
@@ -32,6 +32,12 @@ export function supabaseMuseStore(env: MuseEnv): MuseStore {
   } };
   const auth = createClient(config.url, config.publishableKey, options);
   const db = createClient(config.url, config.secret, options);
+  async function oauthClient(clientId: string) {
+    const { data, error } = await db.auth.admin.oauth.getClient(clientId);
+    if (error) throw new MuseError(error.status === 404 ? 'unauthorized' : 'store_unavailable', error.status === 404 ? 401 : 503);
+    if (!data || data.client_id !== clientId) throw new MuseError('unauthorized', 401);
+    return data;
+  }
   return {
     async authenticate(token) {
       // getUser verifies the signed token with Auth. Only then read its session/client claims.
@@ -42,6 +48,7 @@ export function supabaseMuseStore(env: MuseEnv): MuseStore {
       if (claims.sub !== data.user.id || claims.iss !== config.url + '/auth/v1' || claims.role !== 'authenticated' || claims.aud !== 'authenticated'
         || typeof claims.exp !== 'number' || claims.exp <= Date.now()/1000
         || !uuid.safeParse(claims.session_id).success || (claims.client_id != null && !uuid.safeParse(claims.client_id).success)) throw new MuseError('unauthorized', 401);
+      if (claims.client_id != null) await oauthClient(String(claims.client_id));
       return { userId: data.user.id, sessionId: String(claims.session_id), clientId: claims.client_id == null ? null : String(claims.client_id) };
     },
     async call<T>(who: Principal, operation: string, args: Record<string, unknown> = {}) {
@@ -57,7 +64,8 @@ export function supabaseMuseStore(env: MuseEnv): MuseStore {
       });
       const data = await response.json() as { client?: { id?: string }; user?: { id?: string }; authorization_id?: string };
       if (!response.ok || data.authorization_id !== authorizationId || data.user?.id !== userId || !uuid.safeParse(data.client?.id).success) throw new MuseError('invalid_authorization', 400);
-      return { clientId: data.client!.id! };
+      const client = await oauthClient(data.client!.id!);
+      return { clientId: client.client_id, clientName: client.client_name?.slice(0,200) || 'Muse' };
     },
   };
 }
@@ -126,7 +134,7 @@ export async function manageAccount(request: Request, env: MuseEnv, store: MuseS
     result = await store.call(who,'enroll');
   } else if (action.action === 'grant') {
     const verified = await store.authorization(bearer(request), action.authorization_id, who.userId);
-    result = await store.call(who,'grant',{ client_id: verified.clientId, ...action.permissions });
+    result = await store.call(who,'grant',{ client_id: verified.clientId, client_name: verified.clientName, ...action.permissions });
   } else {
     const { action: operation, ...args } = action;
     result = await store.call(who,operation,args);

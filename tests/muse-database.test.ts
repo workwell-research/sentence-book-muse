@@ -25,9 +25,19 @@ beforeAll(async()=>{
     insert into auth.sessions values('${sessionA}','${userA}',null,null),('${sessionB}','${userB}',null,null),('${oauthA}','${userA}','${client}',null);
     insert into auth.oauth_consents values('${userA}','${client}',null);`);
   await db.exec(readFileSync(new URL('../supabase/migrations/20261030035947_muse_inbox.sql',import.meta.url),'utf8'));
+  await db.exec(readFileSync(new URL('../supabase/migrations/20261030085531_restore_muse_oauth_read_grants.sql',import.meta.url),'utf8'));
+  await db.exec(readFileSync(new URL('../supabase/migrations/20261030085841_use_supported_muse_oauth_checks.sql',import.meta.url),'utf8'));
 },30000);
 afterAll(async()=>{await db.close();});
 describe.sequential('private account and inbox boundary (actual migration)',()=>{
+  it('works without any direct OAuth-table read privileges',async()=>{
+    expect(await call(userB,sessionA,null,'status')).toEqual({error:'unauthorized'});
+    for(const table of ['oauth_consents','oauth_clients']) {
+      for(const role of ['service_role','anon','authenticated']) {
+        expect((await db.query<{allowed:boolean}>("select has_any_column_privilege($1,$2,'SELECT') as allowed",[role,`auth.${table}`])).rows[0]!.allowed).toBe(false);
+      }
+    }
+  });
   it('refuses anonymous/authenticated table and RPC access',async()=>{
     for(const role of ['anon','authenticated']) {
       await db.exec(`set role ${role}`);
@@ -45,8 +55,9 @@ describe.sequential('private account and inbox boundary (actual migration)',()=>
   });
   it('requires an app grant in addition to OAuth consent',async()=>{
     expect(await call(userA,oauthA,client,'guide')).toEqual({error:'permission_denied'});
-    await call(userA,sessionA,null,'grant',{client_id:client,read_summary:true,deliver_drafts:false});
+    await call(userA,sessionA,null,'grant',{client_id:client,client_name:'Verified Muse',read_summary:true,deliver_drafts:false});
     expect(await call(userA,oauthA,client,'guide')).toEqual({allowed:true});
+    expect(await call(userA,sessionA,null,'connections')).toMatchObject([{client_id:client,client_name:'Verified Muse'}]);
     expect(await call(userA,oauthA,client,'deliver')).toEqual({error:'permission_denied'});
     expect(await call(userA,oauthA,client,'grant',{client_id:client,read_summary:true,deliver_drafts:true})).toEqual({error:'permission_denied'});
     expect(await call(userA,oauthA,client,'inbox')).toEqual({error:'permission_denied'});
@@ -90,7 +101,9 @@ describe.sequential('private account and inbox boundary (actual migration)',()=>
   });
   it('also refuses OAuth consent revocation, session expiry, and disabled membership',async()=>{
     await call(userA,sessionA,null,'grant',{client_id:client,read_summary:true,deliver_drafts:true});
+    // Supabase revokeGrant revokes consent and deletes the client's sessions.
     await db.exec('update auth.oauth_consents set revoked_at=now()');
+    await db.query('delete from auth.sessions where user_id=$1 and oauth_client_id=$2',[userA,client]);
     expect(await call(userA,oauthA,client,'guide')).toEqual({error:'unauthorized'});
     await db.query('update auth.sessions set not_after=now()-interval \'1 second\' where id=$1',[sessionB]);
     expect(await call(userB,sessionB,null,'inbox')).toEqual({error:'unauthorized'});

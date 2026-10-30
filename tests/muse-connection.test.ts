@@ -15,7 +15,7 @@ const who:Principal={userId,sessionId,clientId};
 const summary=learningSummarySchema.parse({level:'B1',native_language:'ja',interests:['Coffee'],binders:[],local_pending_count:0,unpractised_count:0,completed_last_7_days:0,review_candidates:[],observed_at:new Date().toISOString()});
 const token='synthetic-test-token-'.repeat(3);
 function store(identity=who):MuseStore {
-  return {authenticate:vi.fn().mockResolvedValue(identity),authorization:vi.fn().mockResolvedValue({clientId}),call:vi.fn(async(_who,op)=>{
+  return {authenticate:vi.fn().mockResolvedValue(identity),authorization:vi.fn().mockResolvedValue({clientId,clientName:'Verified Muse'}),call:vi.fn(async(_who,op)=>{
     if(op==='receipt')return {found:false};
     if(op==='state'||op==='delivery_context')return {version:3,summary,inbox_pending_count:0,updated_at:new Date().toISOString()};
     if(op==='deliver')return {receipt:'accepted'};
@@ -58,17 +58,25 @@ describe('Muse account boundary',()=>{
     const db=store({...who,clientId:null});const authorizationId='40000000-0000-4000-8000-000000000001';
     const response=await manageAccount(request('/api/muse/manage',{action:'grant',authorization_id:authorizationId,permissions:{read_summary:true,deliver_drafts:false}},{origin:ACCESS_ENV.ACCESS_ORIGIN}),ACCESS_ENV,db);
     expect(response.status).toBe(200);expect(db.authorization).toHaveBeenCalledWith(token,authorizationId,userId);
-    expect(db.call).toHaveBeenCalledWith({...who,clientId:null},'grant',{client_id:clientId,read_summary:true,deliver_drafts:false});
+    expect(db.call).toHaveBeenCalledWith({...who,clientId:null},'grant',{client_id:clientId,client_name:'Verified Muse',read_summary:true,deliver_drafts:false});
   });
   it('does not trust an unverified, foreign-issuer, wrong-audience or expired JWT',async()=>{
     const env={...ACCESS_ENV,SUPABASE_URL:'https://test.supabase.co',SUPABASE_PUBLISHABLE_KEY:'public',SUPABASE_SECRET_KEY:'private-test-only'};
     const claims={sub:userId,iss:env.SUPABASE_URL+'/auth/v1',role:'authenticated',aud:'authenticated',session_id:sessionId,client_id:clientId,exp:Math.floor(Date.now()/1000)+300};
     const jwt=(c:unknown)=>`${Buffer.from('{}').toString('base64url')}.${Buffer.from(JSON.stringify(c)).toString('base64url')}.test`;
-    vi.stubGlobal('fetch',vi.fn().mockImplementation(async()=>Response.json({id:userId,email_confirmed_at:new Date().toISOString(),is_anonymous:false})));
+    vi.stubGlobal('fetch',vi.fn().mockImplementation(async(url:string)=>Response.json(url.includes('/admin/oauth/clients/') ? {client_id:clientId,client_name:'Verified Muse'} : {id:userId,email_confirmed_at:new Date().toISOString(),is_anonymous:false})));
     expect(await supabaseMuseStore(env).authenticate(jwt(claims))).toEqual(who);
     for(const change of [{iss:'https://other.supabase.co/auth/v1'},{aud:'different-resource'},{exp:1},{session_id:'bad'},{sub:clientId}]){
       await expect(supabaseMuseStore(env).authenticate(jwt({...claims,...change}))).rejects.toMatchObject({code:'unauthorized'});
     }
+    for(const status of [404,503]) {
+      vi.stubGlobal('fetch',vi.fn().mockImplementation(async(url:string)=>url.includes('/admin/oauth/clients/')
+        ? Response.json({code:'client_not_found',message:'Unavailable'},{status})
+        : Response.json({id:userId,email_confirmed_at:new Date().toISOString(),is_anonymous:false})));
+      await expect(supabaseMuseStore(env).authenticate(jwt(claims))).rejects.toMatchObject({code:status===404?'unauthorized':'store_unavailable'});
+      expect(await supabaseMuseStore(env).authenticate(jwt({...claims,client_id:null}))).toEqual({...who,clientId:null});
+    }
+
   });
 });
 describe('validated deliveries',()=>{
