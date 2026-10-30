@@ -1,0 +1,174 @@
+{
+  "date": "2026-10-30T12:01:32.878Z",
+  "source_commit": "cd44c0f7393f45c0423751e06bfbab7a0f472820",
+  "records": [
+    {
+      "check": "public configuration ready",
+      "passed": true
+    },
+    {
+      "check": "disposable confirmed user 0",
+      "passed": true
+    },
+    {
+      "check": "real Auth session 0",
+      "passed": true
+    },
+    {
+      "check": "invite-free private inbox 0",
+      "passed": true
+    },
+    {
+      "check": "disposable confirmed user 1",
+      "passed": true
+    },
+    {
+      "check": "real Auth session 1",
+      "passed": true
+    },
+    {
+      "check": "invite-free private inbox 1",
+      "passed": true
+    },
+    {
+      "check": "explicit synthetic summary publication",
+      "passed": true
+    },
+    {
+      "check": "OAuth endpoints discovered",
+      "passed": true
+    },
+    {
+      "check": "public dynamic client registration",
+      "passed": true
+    },
+    {
+      "check": "PKCE authorization redirects to consent",
+      "passed": true
+    },
+    {
+      "check": "consent authorization ID issued",
+      "passed": true
+    },
+    {
+      "check": "verified client app permissions",
+      "passed": true
+    },
+    {
+      "check": "OAuth consent approved",
+      "passed": true
+    },
+    {
+      "check": "OAuth state returned unchanged",
+      "passed": true
+    },
+    {
+      "check": "S256 code exchange",
+      "passed": true
+    },
+    {
+      "check": "real MCP initialization",
+      "passed": true
+    },
+    {
+      "check": "three restricted MCP tools",
+      "passed": true
+    },
+    {
+      "check": "delegated shared summary read",
+      "passed": true
+    },
+    {
+      "check": "draft delivered through real MCP",
+      "passed": true
+    },
+    {
+      "check": "identical delivery deduplicated",
+      "passed": true
+    },
+    {
+      "check": "owner inbox contains delivered draft",
+      "passed": true
+    },
+    {
+      "check": "other account receives no private data",
+      "passed": true
+    },
+    {
+      "check": "cross-account receipt rejected",
+      "passed": true
+    },
+    {
+      "check": "OAuth refresh works",
+      "passed": true
+    },
+    {
+      "check": "owner receipt resolves shared inbox",
+      "passed": true
+    },
+    {
+      "check": "processed draft cannot reappear",
+      "passed": true
+    },
+    {
+      "check": "Auth grant revocation",
+      "passed": true
+    },
+    {
+      "check": "revoked access token denied immediately",
+      "passed": true
+    },
+    {
+      "check": "revoked refresh token denied",
+      "passed": true
+    },
+    {
+      "check": "app connection removal",
+      "passed": true
+    },
+    {
+      "check": "copied personal token denied after logout",
+      "passed": true
+    },
+    {
+      "cleanup": "client",
+      "ok": true
+    },
+    {
+      "cleanup": "user",
+      "ok": true
+    },
+    {
+      "cleanup": "user",
+      "ok": true
+    }
+  ],
+  "deployment": "7e4a4815",
+  "owner_approved_disposable_fixture_lifecycle": true,
+  "transport": "Real production HTTP/Supabase Auth/OAuth/DCR and MCP; scripted disposable client, not the real Muse application",
+  "authentication": "Admin-created confirmed example.invalid test emails and random test passwords; real password login. No email delivery or OTP verification.",
+  "model_requests": 0,
+  "cleanup_database_counts": {
+    "users": 0,
+    "active_oauth_clients": 0,
+    "members": 0,
+    "connections": 0,
+    "learning_states": 0,
+    "inbox": 0,
+    "sessions": 0,
+    "oauth_consents": 0
+  },
+  "earlier_attempts": [
+    "Wrong test-only DCR path; corrected to discovery registration_endpoint. Both users deleted.",
+    "Real app rejected opaque authorization_id as UUID; fixed in cd44c0f. Client/users deleted before successful retry."
+  ],
+  "remaining": [
+    "Actual email delivery and email-code login",
+    "Actual Muse app consumer compatibility",
+    "Production browser filing; previous synthetic UI QA covered local-first save and receipt retry"
+  ],
+  "ci": {
+    "result": "success",
+    "url": "https://github.com/workwell-research/sentence-book-muse/actions/runs/41052198569"
+  }
+}

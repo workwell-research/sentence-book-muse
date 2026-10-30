@@ -1,6 +1,6 @@
 {
   "date": "2026-10-30",
-  "scope": "Personal Muse implementation, synthetic UI/database QA, approved production configuration/release and anonymous/live-negative boundary checks; authenticated integration pending",
+  "scope": "Personal Muse implementation/release, synthetic UI/DB QA and approved authenticated real-service HTTP/OAuth/MCP QA; actual email/Muse app pending.",
   "automated": {
     "tests": 183,
     "test_files": 24,
@@ -44,9 +44,8 @@
     ]
   },
   "pending": [
-    "Approval for disposable production fixture creation/deletion (automatic review blocked this step; no fixtures created)",
-    "Actual email delivery and personal email-code sign-in",
-    "Authenticated OAuth/refresh/revocation/MCP delivery and actual Muse consumer compatibility",
+    "Actual email delivery and email-code login",
+    "Actual Muse app consumer compatibility and production browser filing",
     "Physical devices, real IME, assistive technology and PDF/printing not retested"
   ],
   "preservation": "Original app, real browser learning data and other contributors’ servers unchanged; approved Muse production updated. No secrets/private books in evidence.",
@@ -55,7 +54,7 @@
     "result": "success",
     "url": "https://github.com/workwell-research/sentence-book-muse/actions/runs/41004938147"
   },
-  "cleanup": "Own QA servers remain stopped. Public /connect tab retained as deliverable. Secret staging removed after encrypted upload/read-only verification. No production fixture data created.",
+  "cleanup": "Own QA servers remain stopped. Approved production fixtures deleted and DB checked. Temporary server key and fixture manifest removed; /connect tab retained.",
   "followup_open_enrollment": {
     "owner_decision": "Anyone may use their own Muse without invitation; verified login/consent remain. Paid generation/lookup keep invitations.",
     "tests": 184,
@@ -87,8 +86,8 @@
     "email_templates": "Both Confirm sign up and Magic link or OTP saved with Japanese confirmation-code subject and repository token-only HTML; revisit/reload verified.",
     "pages_secret_uploaded": true,
     "deployed": true,
-    "blocker": "Deployment complete. Authenticated disposable production QA needs explicit fixture lifecycle approval after automatic approval rejection.",
-    "existing_production": "Replaced by personal Muse deployment f39202cf. Owner-funded model routes remain invitation-protected.",
+    "blocker": null,
+    "existing_production": "7e4a4815/source cd44c0f; personal Muse invitation-free, owner-funded model routes protected.",
     "actual_email_or_muse_verified": false
   },
   "production_verification": {
@@ -221,7 +220,28 @@
     ],
     "grant_repair_outcome": "First grant-only repair was ineffective: managed OAuth tables gave postgres no SELECT WITH GRANT OPTION. Following migration removes direct OAuth-table read dependency; official Auth client API and live sessions are used.",
     "security": "Both gateway functions remain SECURITY INVOKER, service-only EXECUTE; service_role has no SELECT on OAuth tables. Four expected INFO RLS-without-policy findings only.",
-    "fixture_test": "Not executed: automatic approval review requires explicit approval for creation/deletion of two disposable users, one OAuth client and dummy lesson. Verified zero users and zero clients.",
-    "secret_handling": "No secret printed or committed; encrypted Pages setting. Private local staging removed after checks."
+    "fixture_test": "Completed after explicit approval; see authenticated_production_qa.",
+    "secret_handling": "No secret printed or committed; encrypted Pages setting. Private local staging removed after checks.",
+    "historical_checkpoint": true
+  },
+  "authenticated_production_qa": {
+    "evidence": "muse-live-production-2026-10-30.json",
+    "source_commit": "cd44c0f7393f45c0423751e06bfbab7a0f472820",
+    "deployment": "7e4a4815",
+    "checks_passed": 32,
+    "tests": 186,
+    "test_files": 24,
+    "types_build_worker": "passed",
+    "ci": "https://github.com/workwell-research/sentence-book-muse/actions/runs/41052198569",
+    "ci_result": "success",
+    "fixed": "Bounded opaque authorization_id, not UUID; client/session UUID validation preserved.",
+    "cleanup": "API cleanup succeeded; independent DB read showed zero users, active clients, sessions, consents and all four Muse tables. Temporary key/fixture manifest removed.",
+    "browser": "Reloaded public login screen; no captured warnings/errors. Authenticated flow was HTTP.",
+    "browser_evidence": "muse-connect-verified-2026-10-30.png",
+    "not_claimed": [
+      "Actual email/OTP delivery",
+      "Actual Muse app",
+      "Production browser manual filing"
+    ]
   }
 }
