@@ -10,7 +10,118 @@
   "typescript": "passed",
   "vite_build": "passed",
   "worker_compile": "passed",
-  "model": "local mock only",
-  "production": "pending explicit approval after automatic review rejection",
+  "model": "Local mock generation/lookup; production synthetic lookup once; no real generation in this change",
+  "production": {
+    "status": "deployed and verified after explicit owner approval",
+    "deployment": "ad8d0f3f-4db1-4ba3-a04e-a57b9a5e5c48",
+    "source": "d3a6ae3",
+    "canonicalOrigin": "https://sentence-book-muse.pages.dev",
+    "browser": {
+      "date": "2026-10-30T03:16:25.357Z",
+      "origin": "https://sentence-book-muse.pages.dev",
+      "results": [
+        "Both paid routes reject an anonymous browser with 401; generation control is locked.",
+        "Real invitation unlocks; secure HttpOnly SameSite=Strict cookie; code absent from localStorage; reload keeps authorization and draft.",
+        "Authenticated invalid generation reaches request validation (400, no generation call); one synthetic real lookup succeeds (200, valid contract).",
+        "Logout removes the access cookie, preserves disposable local data, and returns API access to 401; no page errors."
+      ],
+      "pageErrors": [],
+      "realModelCalls": {
+        "lookup": 1,
+        "generate": 0
+      }
+    },
+    "publicHttp": {
+      "health": 200,
+      "access": "invite_required",
+      "limits": "configured",
+      "anonymousSession": false,
+      "postWithoutOrigin": 403,
+      "newDeploymentAliasAuth": 403
+    },
+    "retiredUrlChecks": [
+      {
+        "deployment": "cb7960d9",
+        "route": "health",
+        "http": "404",
+        "curlExit": 0
+      },
+      {
+        "deployment": "cb7960d9",
+        "route": "generate",
+        "http": "404",
+        "curlExit": 0
+      },
+      {
+        "deployment": "cb7960d9",
+        "route": "lookup",
+        "http": "404",
+        "curlExit": 0
+      },
+      {
+        "deployment": "07de5e05",
+        "route": "health",
+        "http": "404",
+        "curlExit": 0
+      },
+      {
+        "deployment": "07de5e05",
+        "route": "generate",
+        "http": "404",
+        "curlExit": 0
+      },
+      {
+        "deployment": "07de5e05",
+        "route": "lookup",
+        "http": "404",
+        "curlExit": 0
+      },
+      {
+        "deployment": "3276cf68",
+        "route": "health",
+        "http": "404",
+        "curlExit": 0
+      },
+      {
+        "deployment": "3276cf68",
+        "route": "generate",
+        "http": "404",
+        "curlExit": 0
+      },
+      {
+        "deployment": "3276cf68",
+        "route": "lookup",
+        "http": "404",
+        "curlExit": 0
+      },
+      {
+        "deployment": "8b6c9d03",
+        "route": "health",
+        "http": "404",
+        "curlExit": 0
+      },
+      {
+        "deployment": "8b6c9d03",
+        "route": "generate",
+        "http": "404",
+        "curlExit": 0
+      },
+      {
+        "deployment": "8b6c9d03",
+        "route": "lookup",
+        "http": "404",
+        "curlExit": 0
+      }
+    ],
+    "remainingDeployments": [
+      "ad8d0f3f-4db1-4ba3-a04e-a57b9a5e5c48"
+    ],
+    "limits": [
+      "No production D1 outage injection",
+      "No provider billing or past abuse audit",
+      "No real generation in this verification",
+      "No physical-device, real IME or PDF retest"
+    ]
+  },
   "physical_device": "not tested"
 }
