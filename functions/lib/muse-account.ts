@@ -108,7 +108,8 @@ const manageSchema = z.discriminatedUnion('action', [
   z.strictObject({ action: z.literal('enroll') }),
   z.strictObject({ action: z.literal('publish'), expected_version: z.number().int().nonnegative(), summary: learningSummarySchema }),
   z.strictObject({ action: z.literal('unshare'), expected_version: z.number().int().nonnegative() }),
-  z.strictObject({ action: z.literal('grant'), authorization_id: uuid, permissions: permissionsSchema }),
+  // Auth authorization IDs are opaque strings, distinct from session/client UUIDs.
+  z.strictObject({ action: z.literal('grant'), authorization_id: z.string().min(1).max(512), permissions: permissionsSchema }),
   z.strictObject({ action: z.literal('revoke'), client_id: uuid }),
   z.strictObject({ action: z.literal('resolve'), draft_id: uuid, status: z.enum(['filed','discarded']) }),
 ]);

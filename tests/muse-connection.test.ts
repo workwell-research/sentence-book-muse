@@ -55,10 +55,18 @@ describe('Muse account boundary',()=>{
     expect(delegated.call).not.toHaveBeenCalled();
   });
   it('derives the granted client from Auth authorization details, never from caller input',async()=>{
-    const db=store({...who,clientId:null});const authorizationId='40000000-0000-4000-8000-000000000001';
+    const db=store({...who,clientId:null});const authorizationId='opaque-authorization-request_1234567890';
     const response=await manageAccount(request('/api/muse/manage',{action:'grant',authorization_id:authorizationId,permissions:{read_summary:true,deliver_drafts:false}},{origin:ACCESS_ENV.ACCESS_ORIGIN}),ACCESS_ENV,db);
     expect(response.status).toBe(200);expect(db.authorization).toHaveBeenCalledWith(token,authorizationId,userId);
     expect(db.call).toHaveBeenCalledWith({...who,clientId:null},'grant',{client_id:clientId,client_name:'Verified Muse',read_summary:true,deliver_drafts:false});
+  });
+  it('bounds the opaque authorization ID before calling Auth',async()=>{
+    for(const authorizationId of ['', 'x'.repeat(513), 123]) {
+      const db=store({...who,clientId:null});
+      await expect(manageAccount(request('/api/muse/manage',{action:'grant',authorization_id:authorizationId,permissions:{read_summary:true,deliver_drafts:false}},{origin:ACCESS_ENV.ACCESS_ORIGIN}),ACCESS_ENV,db)).rejects.toMatchObject({code:'invalid_request'});
+      expect(db.authorization).not.toHaveBeenCalled();
+      expect(db.call).not.toHaveBeenCalled();
+    }
   });
   it('does not trust an unverified, foreign-issuer, wrong-audience or expired JWT',async()=>{
     const env={...ACCESS_ENV,SUPABASE_URL:'https://test.supabase.co',SUPABASE_PUBLISHABLE_KEY:'public',SUPABASE_SECRET_KEY:'private-test-only'};
