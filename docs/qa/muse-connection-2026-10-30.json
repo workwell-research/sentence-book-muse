@@ -13,7 +13,10 @@
   "browser": {
     "origin": "http://127.0.0.1:8803",
     "services": "Synthetic local Auth/account/MCP-consent fixture; no real emails or model requests",
-    "widths": [1726, 375],
+    "widths": [
+      1726,
+      375
+    ],
     "passed": [
       "Email-code form, synthetic verification, invitation-gated enrollment and reload",
       "Explicit summary preview and publication; no automatic publication",
@@ -43,5 +46,11 @@
     "Live service-role RPC, personal sign-in, OAuth/refresh/revoke, actual Muse tool discovery/delivery",
     "Physical devices, real IME, assistive technology and PDF/printing not retested"
   ],
-  "preservation": "Original app, existing production release, real browser learning data and other contributors' servers unchanged. No secrets/private books in evidence."
+  "preservation": "Original app, existing production release, real browser learning data and other contributors' servers unchanged. No secrets/private books in evidence.",
+  "source_commit": "f134957d94143133973f654353c871f4704ff0bf",
+  "ci": {
+    "result": "success",
+    "url": "https://github.com/workwell-research/sentence-book-muse/actions/runs/41004938147"
+  },
+  "cleanup": "Dedicated QA server 8803 stopped. Two narrow QA tabs closed; one older synthetic tab may remain after browser cleanup timed out while the Mac was locked. SMTP/OAuth/URL configuration tabs marked for handoff."
 }
