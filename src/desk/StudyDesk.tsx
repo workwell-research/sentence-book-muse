@@ -16,6 +16,7 @@ import {LiveDraftInk} from './LiveDraftInk';
 import {audioShortcut,createLessonSpeaker,englishVoices,chooseEnglishVoice} from './audio';
 import type {AudioState} from './audio';
 import {caretOffset,revealDelta,writingPaperHeight} from './viewport';
+import {InviteAccess,useInviteAccess} from '../InviteAccess';
 
 const themeNames={'pure-white':'Pure White',natural:'Natural',walnut:'Walnut'};
 const markerNames={blue:'Blue',pink:'Pink',purple:'Purple',gray:'Gray',orange:'Orange',green:'Green'};
@@ -43,6 +44,7 @@ function Timer({theme,visible,minutes}:{theme:DeskTheme;visible:boolean;minutes:
  </div><span className="sr-only" role="status">{announcement}</span></div>;
 }
 export function StudyDesk(){
+ const access=useInviteAccess();
  const [loadedDisplay]=useState(()=>readSaved(displayKey,displaySchema,defaultDisplay));
  // The desk opens a page from the learner's shelf when one is named or remembered; otherwise the sample fixture.
  const [resolved]=useState(()=>resolveDeskLesson(localStorage,location.search,{binding:loadedDisplay.value.binding,side:loadedDisplay.value.side},{english:loadedDisplay.value.english,japanese:loadedDisplay.value.japanese}));
@@ -150,10 +152,10 @@ export function StudyDesk(){
  // Tapping written words picks a span: first tap starts it, a later word of the same line extends it, a tap inside clears it.
  function pickWord(hit:WordHit){setLookupNote('');setPick(p=>!p||p.sentenceId!==hit.sentenceId?{sentenceId:hit.sentenceId,from:hit.token,to:hit.token}:hit.token>=p.from&&hit.token<=p.to?null:hit.token>p.to?{...p,to:hit.token}:{...p,from:hit.token});}
  async function lookUp(){
-  if(!picked||!pickedSentence||lookingUp)return;
+  if(!picked||!pickedSentence||lookingUp||access.state!=='ready')return;
   setLookingUp(true);setLookupNote('');
   const outcome=await requestLookup(fetch,{expression:pickedText,sentence:pickedSentence.text,level:resolved.page?.level??'A2',native_language:resolved.page?.native_language??'ja'});
-  if(outcome.kind==='failed'){setLookupNote(outcome.message);setLookingUp(false);return;}
+  if(outcome.kind==='failed'){setLookupNote(outcome.message);if(outcome.code==='invite_required')access.expire();setLookingUp(false);return;}
   const entry={sentenceId:pickedSentence.id,start:picked.start,end:picked.end,expression:pickedText,native:outcome.result.native,note:outcome.result.note,lookedUpAt:new Date().toISOString()};
   let next:CopyRecord;
   try{next=addLookup(record,entry);}catch(e){setLookupNote((e as Error).message);setLookingUp(false);return;}
@@ -198,7 +200,7 @@ export function StudyDesk(){
      {tab===4&&(record.phase==='complete'?<><p>{lesson.title}</p><p>{total}文を書き終えました。</p><button onClick={startPersonal}>自分のひとことを書く</button><button onClick={exportPdf} disabled={exporting}>PDFに保存</button></>:<p>{total}文を書き終えると、<br/>ここに一枚のノートが残ります。</p>)}
     </div>
    </section>
-   <section className="notebook-area" aria-label="A5学習ノート"><div className="writing-controls" ref={writingControls}><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><div className="notebook-tools"><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button>{record.phase==='complete'&&!personalMode&&<button onClick={startPersonal}>ひとことを書く</button>}</div></div><p id="writing-error" role="alert" className="writing-feedback">{error}</p><div className="lookup-bar">{picked?<><span>「<span lang="en">{pickedText}</span>」</span><button type="button" className="lookup-button" onClick={lookUp} disabled={lookingUp} aria-busy={lookingUp}>{lookingUp?'調べています…':'調べて線を引く'}</button><button type="button" className="lookup-cancel" onClick={()=>setPick(null)} disabled={lookingUp}>やめる</button></>:<span className="lookup-hint">書き終えた行の語句をタップすると、調べて線を引けます。</span>}<span role="status" className="lookup-status">{lookupNote}</span></div></div>
+   <section className="notebook-area" aria-label="A5学習ノート"><div className="writing-controls" ref={writingControls}><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><div className="notebook-tools"><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button>{record.phase==='complete'&&!personalMode&&<button onClick={startPersonal}>ひとことを書く</button>}</div></div><p id="writing-error" role="alert" className="writing-feedback">{error}</p><div className="lookup-bar">{picked?<><span>「<span lang="en">{pickedText}</span>」</span><button type="button" className="lookup-button" onClick={lookUp} disabled={lookingUp||access.state!=='ready'} aria-busy={lookingUp}>{lookingUp?'調べています…':'調べて線を引く'}</button><button type="button" className="lookup-cancel" onClick={()=>setPick(null)} disabled={lookingUp}>やめる</button></>:<span className="lookup-hint">書き終えた行の語句をタップすると、調べて線を引けます。</span>}<span role="status" className="lookup-status">{lookupNote}</span></div>{picked&&access.state!=='ready'&&<InviteAccess />}</div>
     <div className={'desk-paper-scroll '+(zoom==='read'?'reading':'')} ref={paperViewport} style={isEditing?{height:paperHeight}:undefined} tabIndex={0} aria-label="ノート。入力行に合わせてスクロールします。拡大表示は左右にもスクロールできます">
      <div className="desk-pages">{layout.pages.map(p=><div className="desk-page-row" key={p.index}><div className="desk-paper" ref={p.index===0?paper:undefined}>
       <A5Notebook showPen={!annotationsOnly||!isEditing} layout={rendered} scene={scene} pageIndex={p.index} paperColor={paperColor} view={view} ink={palettes[display.marker]} time={reduced?scene.duration:time} reduced={reduced} personalInk={emptyInk}/>

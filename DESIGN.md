@@ -314,3 +314,7 @@ The 2026-10-27 build/test/browser/PDF records are summarized in [PROJECT_STATUS.
 
 ### 2026-10-27 material/voice refinement
 Paper and model cards share one theme token: Pure White #FFFFFF on #f6f6f6; both wood themes #FAF8F5. The index plate uses grayscale (wood themes add sepia0.08), retaining its physical shading; this harmonizes the family without claiming pixel-identical paper. Material PNG bytes/provenance are unchanged. Object shadows have a short contact offset plus a soft displaced blur; Walnut uses darker alpha. The timer digits scale from the object width. Native selection and navigation-key following run after the browser selection action so End does not scroll the model away. Screen viewing width changes neither physical A5 layout nor PDF. Current evidence/limits are in PROJECT_STATUS.md; heard voice naturalness remains unevaluated.
+
+## Invitation access — 2026-10-30
+
+The owner selected invitation-only generation and expression lookup. An inline code field appears above generation and beside a selected notebook phrase; it preserves the topic, selection and progress. A signed HttpOnly cookie keeps this browser authorized for seven days, with logout on setup. Public viewing, Copy practice, local filing and own-Muse imports remain available. This is a shared invitation, not personal accounts or cloud sync. Errors and session expiry return to the inline code field; the server always enforces access. [Operational details](docs/invitation-access.md).

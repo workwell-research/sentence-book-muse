@@ -1,8 +1,7 @@
 // Usage caps for the public model-backed routes: per hashed address per minute and per day, and in total per day.
 // They bound spend on the Meta key; they are not an authentication system. Counts live in D1, whose increments
 // are atomic and read-after-write consistent (KV was tried first: its 60-second read cache never saw a burst).
-// A store outage lets requests through (fail open) rather than taking the app down; a missing binding is a
-// deployment mistake and fails closed.
+// Missing configuration and store outages both stop paid calls (fail closed).
 export interface D1Like {
   prepare(query: string): { bind(...values: unknown[]): { first<T = Record<string, unknown>>(): Promise<T | null>; run(): Promise<unknown> } };
 }
@@ -18,7 +17,8 @@ export type RateScope = 'minute' | 'day' | 'global';
 export type RateVerdict =
   | { ok: true }
   | { ok: false; scope: RateScope; retryAfter: number }
-  | { ok: false; scope: 'unconfigured' };
+  | { ok: false; scope: 'unconfigured' }
+  | { ok: false; scope: 'unavailable' };
 
 const MINUTE_TTL = 120;
 const DAY_TTL = 2 * 24 * 60 * 60;
@@ -40,7 +40,7 @@ export async function checkRateLimit(env: RateLimitEnv, request: Request, policy
       return { ok: false, scope: 'day', retryAfter: untilTomorrow };
     if (await counters.increment(`${policy.name}:all:d:${day}`, seconds + DAY_TTL) > policy.globalPerDay)
       return { ok: false, scope: 'global', retryAfter: untilTomorrow };
-  } catch { return { ok: true }; }
+  } catch { return { ok: false, scope: 'unavailable' }; }
   return { ok: true };
 }
 

@@ -12,6 +12,9 @@ export type GenerationOutcome =
   | { kind: 'failed'; code: GenerationFailureCode; message: string; retryable: boolean };
 
 const failureText: Record<GenerationFailureCode, { message: string; retryable: boolean }> = {
+  invite_required: { message: '招待コードを入力して、もう一度お試しください。', retryable: false },
+  invalid_invite: { message: '招待コードを確認してください。', retryable: false },
+  access_denied: { message: 'いつものアプリのURLから開き直してください。', retryable: false },
   method_not_allowed: { message: '教材づくりの入口が見つかりませんでした。', retryable: false },
   generation_unavailable: { message: '教材づくりはまだ使えません。サーバー側の接続設定が済むまでお待ちください。', retryable: false },
   request_too_large: { message: '依頼が大きすぎます。話したいことを短くしてください。', retryable: false },
@@ -42,6 +45,7 @@ export async function requestLesson(fetchFn: typeof fetch, request: GenerationRe
   if (!response.ok) {
     const error = (body as { error?: { code?: unknown; reason?: unknown } })?.error;
     const outcome = failed(isGenerationErrorCode(error?.code) ? error.code : 'unexpected');
+    if (outcome.kind === 'failed' && error?.reason === 'rate_limit_unavailable') return { ...outcome, message: '利用回数を確認できないため、いったん止めています。少し待ってから、もう一度お試しください。', retryable: true };
     if (outcome.kind === 'failed' && outcome.code === 'rate_limited') return { ...outcome, message: rateLimitMessage(error?.reason) };
     // The server's reason code is shown so a failure can be reported precisely without exposing content.
     return outcome.kind === 'failed' && typeof error?.reason === 'string'

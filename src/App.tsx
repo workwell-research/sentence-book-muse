@@ -15,6 +15,7 @@ import { MODEL_LABEL_OWN_MUSE, clearImportTicket, importLesson, issueImportTicke
 import type { FilingDecision, LibraryRead } from './lib/library';
 import { createGenerationRequest } from '../shared/generation-request';
 import type { LessonDraft } from '../shared/lesson-schema';
+import { InviteAccess, useInviteAccess } from './InviteAccess';
 
 function restore(): NoteRead {
   try { return readNote(window.localStorage); } catch { return { kind: 'unreadable' }; }
@@ -43,6 +44,7 @@ const filingErrorText: Record<FilingFailure['reason'], string> = {
 interface Reviewing { draft: LessonDraft; model: string | null; kept: boolean; status: FilingStatus }
 
 export function App() {
+  const access = useInviteAccess();
   const [profile, setProfile] = useState<InterestRead>(restoreInterests);
   const [choosingInterests, setChoosingInterests] = useState(profile.kind !== 'ready');
   function finishInterests() {
@@ -96,7 +98,7 @@ export function App() {
   }
 
   async function generate() {
-    if (!canGenerate) return;
+    if (!canGenerate || access.state !== 'ready') return;
     // Existing binders go to the model as the only valid destinations; a new one is still only a proposal.
     const catalogue = library.kind === 'ready' ? binderCatalogue(library.library) : [];
     // The same content keeps its draft ID across retries; edited content gets a new one.
@@ -111,7 +113,7 @@ export function App() {
       let kept = false;
       try { setPending({ kind: 'ready', drafts: savePendingDraft(window.localStorage, result.draft) }); kept = true; } catch { kept = false; }
       setReviewing({ draft: result.draft, model: result.model, kept, status: { state: 'open' } });
-    } else setFailure(result);
+    } else { setFailure(result); if (result.code === 'invite_required') access.expire(); }
     setGenerating(false);
   }
 
@@ -201,7 +203,8 @@ export function App() {
             <div className="form-actions"><button className="save-button" type="submit" disabled={blocked || !dirty}>メモを保存</button><span>このブラウザだけに保存</span></div>
             <p className={failed ? 'save-status error' : 'save-status'} role="status">{message || (dirty ? 'まだ保存されていない変更があります。' : '')}</p>
             <div className="generation-note">
-              <button type="button" className={canGenerate ? 'generate-button' : undefined} onClick={generate} disabled={!canGenerate} aria-busy={generating}>{generating ? 'Muse が教材を作っています…' : '教材を作る'}</button>
+              <InviteAccess showLogout />
+              <button type="button" className={canGenerate && access.state === 'ready' ? 'generate-button' : undefined} onClick={generate} disabled={!canGenerate || access.state !== 'ready'} aria-busy={generating}>{generating ? 'Muse が教材を作っています…' : '教材を作る'}</button>
               <p>{generating ? '十数秒ほどかかります。このまま待ってください。' : canGenerate
                 ? <>関心と話したいことから、英語8文のページを1枚作ります。<br />できたページは、確認してから仕舞います。</>
                 : <>関心を選ぶか、話したいことを書くと、教材を作れます。</>}</p>

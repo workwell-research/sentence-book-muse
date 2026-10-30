@@ -1,10 +1,12 @@
+import { ACCESS_ENV, accessHeaders } from './support/access';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { handleGenerate } from '../functions/api/generate';
 import { memoryD1 } from './support/memory-d1';
 import type { LessonDraft } from '../shared/lesson-schema';
 
-let env: { META_MODEL_API_KEY: string; RATE_LIMIT: ReturnType<typeof memoryD1> };
-beforeEach(() => { env = { META_MODEL_API_KEY: 'test-key-not-real', RATE_LIMIT: memoryD1() }; });
+let env: typeof ACCESS_ENV & { META_MODEL_API_KEY: string; RATE_LIMIT: ReturnType<typeof memoryD1> };
+let authorizedHeaders: Awaited<ReturnType<typeof accessHeaders>>;
+beforeEach(async () => { env = { ...ACCESS_ENV, META_MODEL_API_KEY: 'test-key-not-real', RATE_LIMIT: memoryD1() }; authorizedHeaders = await accessHeaders(); });
 const draftId = '7f3e4b7e-5c1a-4d2b-9e8f-1a2b3c4d5e6f';
 const generationRequest = {
   draft_id: draftId, topic: '今日は電車が遅れた。', interests: ['旅'], level: 'A2', native_language: 'ja',
@@ -37,7 +39,7 @@ function modelSequence(replies: { content: string; status?: number; finish?: str
 }
 function post(body: unknown, headers: Record<string, string> = {}) {
   return new Request('https://example.test/api/generate', {
-    method: 'POST', headers: { 'content-type': 'application/json', ...headers },
+    method: 'POST', headers: { 'content-type': 'application/json', ...authorizedHeaders, ...headers },
     body: typeof body === 'string' ? body : JSON.stringify(body),
   });
 }
@@ -58,7 +60,7 @@ describe('/api/generate', () => {
   });
   it('fails closed with 503 and no model call when no key is configured', async () => {
     const model = modelReturning(JSON.stringify(page()));
-    const response = await handleGenerate(post(generationRequest), { RATE_LIMIT: memoryD1() }, { fetch: model.fetchFn });
+    const response = await handleGenerate(post(generationRequest), { ...ACCESS_ENV, RATE_LIMIT: memoryD1() }, { fetch: model.fetchFn });
     expect(response.status).toBe(503);
     expect((await response.json()).error.code).toBe('generation_unavailable');
     expect(model.calls).toHaveLength(0);
@@ -81,10 +83,10 @@ describe('/api/generate', () => {
     expect(notJson.status).toBe(502);
     expect((await notJson.json()).error).toMatchObject({ code: 'invalid_output', reason: 'not_json' });
     expect(notJsonModel.calls).toHaveLength(2);
-    const otherDraft = await handleGenerate(post(generationRequest), env,
+    const otherDraft = await handleGenerate(post(generationRequest, { 'cf-connecting-ip': '192.0.2.2' }), env,
       { fetch: modelReturning(JSON.stringify(page({ draft_id: '4fc15635-0393-4faa-ab2a-6ebd95dc8c42' }))).fetchFn });
     expect((await otherDraft.json()).error).toMatchObject({ code: 'invalid_output', reason: 'request_mismatch' });
-    const unknownBinder = await handleGenerate(post(generationRequest), env, { fetch: modelReturning(JSON.stringify(page({
+    const unknownBinder = await handleGenerate(post(generationRequest, { 'cf-connecting-ip': '192.0.2.3' }), env, { fetch: modelReturning(JSON.stringify(page({
       filing: { kind: 'existing', binderId: 'a785f741-e09f-4657-885a-2c2bed838c2e', reason: 'x', sceneTags: ['x'] } }))).fetchFn });
     expect((await unknownBinder.json()).error).toMatchObject({ code: 'invalid_output', reason: 'unknown_binder' });
   });
@@ -96,7 +98,7 @@ describe('/api/generate', () => {
     const [first, second] = model.calls as { messages: { content: string }[] }[];
     expect(second.messages[1].content).toBe(first.messages[1].content);
     const twice = modelSequence([{ content: '{"title":"half', finish: 'length' }]);
-    const stillCut = await handleGenerate(post(generationRequest), env, { fetch: twice.fetchFn });
+    const stillCut = await handleGenerate(post(generationRequest, { 'cf-connecting-ip': '192.0.2.2' }), env, { fetch: twice.fetchFn });
     expect((await stillCut.json()).error).toMatchObject({ code: 'invalid_output', reason: 'truncated' });
     expect(twice.calls).toHaveLength(2);
   });
@@ -108,7 +110,7 @@ describe('/api/generate', () => {
     expect((await capped.json()).error).toMatchObject({ code: 'rate_limited', reason: 'minute' });
     expect(Number(capped.headers.get('retry-after'))).toBeGreaterThan(0);
     expect(model.calls).toHaveLength(3);
-    const missing = await handleGenerate(post(generationRequest), { META_MODEL_API_KEY: 'test-key-not-real' }, { fetch: model.fetchFn });
+    const missing = await handleGenerate(post(generationRequest), { ...ACCESS_ENV, META_MODEL_API_KEY: 'test-key-not-real' }, { fetch: model.fetchFn });
     expect(missing.status).toBe(503);
     expect((await missing.json()).error).toMatchObject({ code: 'generation_unavailable', reason: 'rate_limit_unconfigured' });
     expect(model.calls).toHaveLength(3);

@@ -14,7 +14,7 @@ describe('usage caps', () => {
     expect(await checkRateLimit(env, from('203.0.113.7'), policy, at + 1000)).toEqual({ ok: true });
     const blocked = await checkRateLimit(env, from('203.0.113.7'), policy, at + 2000);
     expect(blocked).toMatchObject({ ok: false, scope: 'minute' });
-    if (!blocked.ok && blocked.scope !== 'unconfigured') expect(blocked.retryAfter).toBeLessThanOrEqual(60);
+    if (!blocked.ok && blocked.scope !== 'unconfigured' && blocked.scope !== 'unavailable') expect(blocked.retryAfter).toBeLessThanOrEqual(60);
     // A refused burst does not touch the daily or the shared count.
     expect([...db.counts.entries()].filter(([key]) => key.includes(':d:')).map(([, n]) => n)).toEqual([2, 2]);
     // Keys hold a hash, never the address itself; expiry bounds the storage.
@@ -24,15 +24,15 @@ describe('usage caps', () => {
     expect(await checkRateLimit(env, from('203.0.113.7'), policy, at + 61_000)).toEqual({ ok: true });
     const day = await checkRateLimit(env, from('203.0.113.7'), policy, at + 122_000);
     expect(day).toMatchObject({ ok: false, scope: 'day' });
-    if (!day.ok && day.scope !== 'unconfigured') expect(day.retryAfter).toBe(Math.ceil((Date.UTC(2026, 9, 31) - (at + 122_000)) / 1000));
+    if (!day.ok && day.scope !== 'unconfigured' && day.scope !== 'unavailable') expect(day.retryAfter).toBe(Math.ceil((Date.UTC(2026, 9, 31) - (at + 122_000)) / 1000));
     // Another address is independent until the shared budget is spent.
     expect(await checkRateLimit(env, from('198.51.100.9'), policy, at + 122_000)).toEqual({ ok: true });
     expect(await checkRateLimit(env, from('198.51.100.9'), policy, at + 183_000)).toMatchObject({ ok: false, scope: 'global' });
   });
-  it('fails closed without a store, stays open when the store errors, and hashes differently per salt', async () => {
+  it('fails closed without a store and when the store errors, and hashes differently per salt', async () => {
     expect(await checkRateLimit({}, from('203.0.113.7'), policy, at)).toEqual({ ok: false, scope: 'unconfigured' });
     const broken = { RATE_LIMIT: { prepare: () => ({ bind: () => ({ first: async () => { throw new Error('d1 down'); }, run: async () => { throw new Error('d1 down'); } }) }) } };
-    expect(await checkRateLimit(broken, from('203.0.113.7'), policy, at)).toEqual({ ok: true });
+    expect(await checkRateLimit(broken, from('203.0.113.7'), policy, at)).toEqual({ ok: false, scope: 'unavailable' });
     const a = memoryD1(), b = memoryD1();
     await checkRateLimit({ RATE_LIMIT: a, RATE_SALT: 'one' }, from('203.0.113.7'), policy, at);
     await checkRateLimit({ RATE_LIMIT: b, RATE_SALT: 'two' }, from('203.0.113.7'), policy, at);

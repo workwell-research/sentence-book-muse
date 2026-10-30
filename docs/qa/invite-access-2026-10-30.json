@@ -1,0 +1,16 @@
+{
+  "results": [
+    "Anonymous 401; wrong invitation; Enter unlock; HttpOnly/no JS or storage token; reload persistence; authorized generation via mock; logout preserves all local data.",
+    "Public Copy works while locked; selected phrase survives unlock; authorized lookup via mock; expired session returns to code input without losing progress.",
+    "375px layout without overflow, 16px code input, offline feedback retains the entered code."
+  ],
+  "errors": [],
+  "date": "2026-10-30 JST",
+  "unit_tests": 162,
+  "typescript": "passed",
+  "vite_build": "passed",
+  "worker_compile": "passed",
+  "model": "local mock only",
+  "production": "pending explicit approval after automatic review rejection",
+  "physical_device": "not tested"
+}

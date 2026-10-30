@@ -29,6 +29,7 @@ export function upstreamFailure(code: ModelFailureCode): Response {
 // A cap verdict as a response: 429 with Retry-After, or 503 when the counter binding is missing (deployment mistake).
 export function rateLimitFailure(verdict: Exclude<RateVerdict, { ok: true }>, policy: RatePolicy): Response {
   if (verdict.scope === 'unconfigured') return fail(503, 'generation_unavailable', '利用回数の管理が設定されていないため、止めています。', 'rate_limit_unconfigured');
+  if (verdict.scope === 'unavailable') return fail(503, 'generation_unavailable', '利用回数を確認できないため、いったん止めています。少し待ってから、もう一度お試しください。', 'rate_limit_unavailable', { 'Retry-After': '60' });
   const message = verdict.scope === 'minute' ? '続けて使いすぎています。1分ほど待ってから、もう一度どうぞ。'
     : verdict.scope === 'day' ? `今日の分（1日${policy.perDay}回）を使い切りました。また明日どうぞ。`
     : '今日はたくさん使われたため、いったん止めています。また明日どうぞ。';
@@ -39,8 +40,23 @@ export function rateLimitFailure(verdict: Exclude<RateVerdict, { ok: true }>, po
 export async function readJsonBody(request: Request, maxBytes: number): Promise<{ ok: true; json: unknown } | { ok: false; response: Response }> {
   const declared = Number(request.headers.get('content-length') ?? '0');
   if (Number.isFinite(declared) && declared > maxBytes) return { ok: false, response: fail(413, 'request_too_large', '依頼が大きすぎます。') };
-  let text: string;
-  try { text = await request.text(); } catch { return { ok: false, response: fail(400, 'invalid_request', '依頼を読み取れませんでした。') }; }
-  if (text.length > maxBytes) return { ok: false, response: fail(413, 'request_too_large', '依頼が大きすぎます。') };
+  let text = '', bytes = 0;
+  const reader = request.body?.getReader();
+  if (!reader) return { ok: false, response: fail(400, 'invalid_request', '依頼を読み取れませんでした。') };
+  try {
+    const decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: false });
+    while (true) {
+      const chunk = await reader.read();
+      if (chunk.done) break;
+      bytes += chunk.value.byteLength;
+      if (bytes > maxBytes) {
+        await reader.cancel().catch(() => {});
+        return { ok: false, response: fail(413, 'request_too_large', '依頼が大きすぎます。') };
+      }
+      text += decoder.decode(chunk.value, { stream: true });
+    }
+    text += decoder.decode();
+  } catch { return { ok: false, response: fail(400, 'invalid_request', '依頼を読み取れませんでした。') }; }
+  finally { reader.releaseLock(); }
   try { return { ok: true, json: JSON.parse(text) }; } catch { return { ok: false, response: fail(400, 'invalid_request', '依頼の形式が正しくありません。') }; }
 }

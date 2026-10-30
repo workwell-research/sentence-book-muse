@@ -1,0 +1,20 @@
+.invite-access { width: 100%; min-width: 0; color: #484848; font: 14px/1.7 -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", sans-serif; margin-block: 10px 16px; }
+.invite-access p { margin: 0 0 10px; font: inherit; text-align: start; color: inherit; }
+.invite-access label { display: block; font-size: 14px; margin-block-end: 6px; }
+.invite-fields { display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; }
+.invite-access input { box-sizing: border-box; flex: 1 1 180px; min-width: 0; max-width: 100%; min-height: 44px; border: 1px solid #8b8b84; border-radius: 3px; background: #fffdfa; color: #383a3d; padding: 8px 10px; font: 16px/1.5 -apple-system, BlinkMacSystemFont, sans-serif; caret-color: #47627a; }
+.invite-access input::selection { background: #d5e7f2; }
+.invite-access button { width: auto; min-height: 44px; border: 1px solid #8b8b84; border-radius: 3px; background: #f7f7f5; color: #484848; padding: 8px 12px; font: inherit; cursor: pointer; }
+.invite-access button:hover:enabled { background: #e7e7e2; }
+.invite-access button:disabled { color: #666660; background: #eeeeea; cursor: default; }
+.invite-access :is(input, button):focus-visible { outline: 2px solid #47627a; outline-offset: 3px; }
+.invite-access .invite-error { color: #923b31; margin-block-start: 8px; }
+.invite-ready { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.invite-ready span { font-size: 12px; }
+.invite-ready button { font-size: 12px; background: transparent; border-color: transparent; text-decoration: underline; text-underline-offset: 3px; }
+.theme-walnut .invite-access { color: #f2e7d5; }
+.theme-walnut .invite-access .invite-error { color: #ffbba2; }
+.theme-walnut .lookup-status { color: #ffbba2; }
+.study-desk .invite-access button:disabled { opacity: 1; }
+.theme-walnut .invite-access :is(input, button):focus-visible { outline-color: #f4d5a1; }
+@media (max-width: 480px) { .invite-fields button { flex: 1 1 100%; } }

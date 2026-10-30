@@ -4,6 +4,7 @@ import type { LessonDraft } from './lesson-schema';
 export const GENERATION_ERROR_CODES = [
   'method_not_allowed', 'generation_unavailable', 'request_too_large', 'invalid_request',
   'upstream_auth', 'upstream_rate_limited', 'upstream_timeout', 'upstream_error', 'invalid_output', 'rate_limited',
+  'invite_required', 'invalid_invite', 'access_denied',
 ] as const;
 export type GenerationErrorCode = typeof GENERATION_ERROR_CODES[number];
 

@@ -8,3 +8,10 @@ META_MODEL_API_KEY=
 
 # Salt for hashing client addresses in the usage counters (any random string; set a different one in production).
 RATE_SALT=change-me-locally
+
+# Required for invitation-only generation/lookup. Use independent random secrets in production.
+# INVITE_CODE_SHA256 is the lowercase SHA-256 hex digest of a strong random invitation code.
+INVITE_CODE_SHA256=
+SESSION_SECRET=
+# Local Pages origin only; production is the canonical HTTPS origin in wrangler.jsonc.
+ACCESS_ORIGIN=http://localhost:8797

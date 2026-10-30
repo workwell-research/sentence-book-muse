@@ -64,7 +64,11 @@ Public site: https://sentence-book-muse.pages.dev (Cloudflare Pages project `sen
 npm run build && npx wrangler pages deploy dist --project-name sentence-book-muse --branch main
 ```
 
-`META_MODEL_API_KEY` is an encrypted Pages secret (`wrangler pages secret put META_MODEL_API_KEY --project-name sentence-book-muse`, value piped from the ignored `.dev.vars`); a secret set after a deployment applies from the next deployment. `MODEL_API_BASE_URL` and `MODEL_ID` are plain vars in `wrangler.jsonc`. Usage caps: `/api/generate` 3 per minute, 20 per day per client address and 300 per day in total; `/api/lookup` 20 / 150 / 3,000. Counts live in the D1 database `sentence-book-muse-limits` (binding `RATE_LIMIT` in `wrangler.jsonc`; created with `wrangler d1 create`, no migration needed) and addresses are hashed with the `RATE_SALT` secret. Over the cap the route answers 429 `rate_limited` with `Retry-After`; without the binding it answers 503.
+`META_MODEL_API_KEY` is an encrypted Pages secret (`wrangler pages secret put META_MODEL_API_KEY --project-name sentence-book-muse`, value piped from the ignored `.dev.vars`); a secret set after a deployment applies from the next deployment. `MODEL_API_BASE_URL` and `MODEL_ID` are plain vars in `wrangler.jsonc`. Usage caps: `/api/generate` 3 per minute, 20 per day per client address and 300 per day in total; `/api/lookup` 20 / 150 / 3,000. Counts live in the D1 database `sentence-book-muse-limits` (binding `RATE_LIMIT` in `wrangler.jsonc`; created with `wrangler d1 create`, no migration needed) and addresses are hashed with the `RATE_SALT` secret. Over the cap the route answers 429 `rate_limited` with `Retry-After`; without the binding or on a counter-store error it answers 503. Generation retries consume another slot; these are attempt limits, not a dollar budget.
+
+## Invitation-only model access
+
+Generation and expression lookup require a shared invitation code. The app checks a signed, expiring HttpOnly cookie on every paid request; viewing, practice and local imports remain public. Code entry is inline on `/setup` and beside a selected phrase on the desk. See [invitation setup, rotation and old-deployment cleanup](docs/invitation-access.md). No invitation or model secret is bundled into frontend assets.
 
 ## Local verification
 
@@ -80,10 +84,10 @@ Current Enter-flow QA: `node scripts/qa-enter-flow.mjs` checks atomic advancemen
 
 1. Done 2026-10-29: request, prompt, structured output and validation on both sides are connected; `muse-spark-1.3` confirmed. For local Functions, copy `.dev.vars.example` to the ignored `.dev.vars`. `MODEL_API_BASE_URL`/`MODEL_ID` can point the same code at another OpenAI-compatible host (for example OpenRouter `meta/muse-spark-1.3`).
 2. Done 2026-10-29 (late) and 2026-10-30: explicit filing approval, binders with stable IDs, duplicate-draft rejection, multi-page persistence, and the desk's Copy flow opening filed pages with per-page progress.
-3. Add a request/cost limit (Cloudflare rate-limit rule or token bucket) and a semantic check pass before the endpoint is public.
-4. Set `META_MODEL_API_KEY` as an encrypted Pages secret, never a `VITE_*` variable; create a new Pages project and deploy. Do not replace the existing personal prototype.
+3. Done 2026-10-30: invitation checks, D1 attempt caps and fail-closed errors protect the model routes. Provider-side monetary budgets and semantic quality checks remain separate work.
+4. Deploy to the separate `sentence-book-muse` project with its encrypted model and invitation secrets. After verifying production, retire obsolete deployment URLs. Do not replace the existing personal prototype.
 
-Account sync, login, OAuth/MCP, the old curriculum, saved audio, the full five-pass course and the prior Notebook/Cards are outside this version's scope.
+Personal accounts, account sync, OAuth/MCP, the old curriculum, saved audio, the full five-pass course and the prior Notebook/Cards are outside this version's scope.
 
 ## References
 
