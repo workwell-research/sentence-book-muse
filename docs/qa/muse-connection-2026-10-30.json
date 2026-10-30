@@ -1,6 +1,6 @@
 {
   "date": "2026-10-30",
-  "scope": "Personal Muse implementation, synthetic UI QA, and new Supabase schema; production integration pending",
+  "scope": "Personal Muse implementation, synthetic UI/database QA, approved production configuration/release and anonymous/live-negative boundary checks; authenticated integration pending",
   "automated": {
     "tests": 183,
     "test_files": 24,
@@ -36,23 +36,26 @@
     "region": "ap-northeast-1",
     "migration": "20261030035947_muse_inbox.sql",
     "applied": true,
-    "verified": "Four private tables have RLS; anon/authenticated cannot select or invoke gateway; service_role may invoke; nonexistent identity rejected",
-    "advisor": "Four INFO rls_enabled_no_policy notices reflect intentional default-deny private tables; no warning/error in security result"
+    "verified": "Four private RLS tables; service-only SECURITY INVOKER functions; direct OAuth table reads absent; real secret RPC rejects nonexistent identity, public RPC denied.",
+    "advisor": "Four INFO rls_enabled_no_policy notices reflect intentional default-deny private tables; no warning/error in security result",
+    "followup_migrations_applied": [
+      "20261030085531_restore_muse_oauth_read_grants.sql",
+      "20261030085841_use_supported_muse_oauth_checks.sql"
+    ]
   },
   "pending": [
-    "Actual email delivery (owner SMTP entry/save confirmed by dashboard reload)",
-    "Recover browser control to securely transfer existing server key; OAuth/DCR/site URL/both OTP templates are saved",
-    "Encrypted Pages SUPABASE_SECRET_KEY and release",
-    "Live service-role RPC, personal sign-in, OAuth/refresh/revoke, actual Muse tool discovery/delivery",
+    "Approval for disposable production fixture creation/deletion (automatic review blocked this step; no fixtures created)",
+    "Actual email delivery and personal email-code sign-in",
+    "Authenticated OAuth/refresh/revocation/MCP delivery and actual Muse consumer compatibility",
     "Physical devices, real IME, assistive technology and PDF/printing not retested"
   ],
-  "preservation": "Original app, existing production release, real browser learning data and other contributors' servers unchanged. No secrets/private books in evidence.",
+  "preservation": "Original app, real browser learning data and other contributors’ servers unchanged; approved Muse production updated. No secrets/private books in evidence.",
   "source_commit": "f134957d94143133973f654353c871f4704ff0bf",
   "ci": {
     "result": "success",
     "url": "https://github.com/workwell-research/sentence-book-muse/actions/runs/41004938147"
   },
-  "cleanup": "Dedicated QA server 8803 stopped. Two narrow QA tabs closed; one older synthetic tab may remain after browser cleanup timed out while the Mac was locked. SMTP/OAuth/URL configuration tabs marked for handoff.",
+  "cleanup": "Own QA servers remain stopped. Public /connect tab retained as deliverable. Secret staging removed after encrypted upload/read-only verification. No production fixture data created.",
   "followup_open_enrollment": {
     "owner_decision": "Anyone may use their own Muse without invitation; verified login/consent remain. Paid generation/lookup keep invitations.",
     "tests": 184,
@@ -82,10 +85,143 @@
     "authorization_path": "/oauth/consent",
     "oauth_verification": "Reloaded dashboard and public discovery endpoint confirmed enabled OAuth and registration endpoint.",
     "email_templates": "Both Confirm sign up and Magic link or OTP saved with Japanese confirmation-code subject and repository token-only HTML; revisit/reload verified.",
-    "pages_secret_uploaded": false,
-    "deployed": false,
-    "blocker": "Browser tab control timed out. Native UI completed Auth configuration, then control timed out again during existing-key transfer; no key staged/uploaded.",
-    "existing_production": "Canonical health 200 with access invite_required and limits configured; CLI secret list contains only four prior secrets. Python urllib probe returned 403; curl returned expected 200.",
+    "pages_secret_uploaded": true,
+    "deployed": true,
+    "blocker": "Deployment complete. Authenticated disposable production QA needs explicit fixture lifecycle approval after automatic approval rejection.",
+    "existing_production": "Replaced by personal Muse deployment f39202cf. Owner-funded model routes remain invitation-protected.",
     "actual_email_or_muse_verified": false
+  },
+  "production_verification": {
+    "source_commit": "28c50001c4b006124b60fd4c6e0d80078279e1d7",
+    "deployment": "f39202cf",
+    "canonical_url": "https://sentence-book-muse.pages.dev",
+    "tests": 185,
+    "test_files": 24,
+    "types_build_worker": "passed",
+    "ci": "https://github.com/workwell-research/sentence-book-muse/actions/runs/41030804801",
+    "ci_result": "success",
+    "server_key_rpc": "200 with unauthorized for nonexistent identity; publishable key denied 401 / permission denied for function",
+    "client_api": "Official Auth admin getClient for nonexistent ID returned 404 oauth_client_not_found",
+    "http": [
+      {
+        "check": "connect",
+        "status": 200,
+        "data": {
+          "html": true
+        },
+        "wwwAuthenticate": null
+      },
+      {
+        "check": "config",
+        "status": 200,
+        "data": {
+          "configured": true,
+          "url": "https://wgyyfxlabbzhnrbtwmcc.supabase.co",
+          "publishableKey": "sb_publishable_x1sjGm62S_saNxFTk8eqjA_AxtY_OOv",
+          "origin": "https://sentence-book-muse.pages.dev"
+        },
+        "wwwAuthenticate": null
+      },
+      {
+        "check": "health",
+        "status": 200,
+        "data": {
+          "status": "ok",
+          "generation": "ready",
+          "model": "muse-spark-1.3",
+          "limits": "configured",
+          "access": "invite_required"
+        },
+        "wwwAuthenticate": null
+      },
+      {
+        "check": "metadata",
+        "status": 200,
+        "data": {
+          "resource": "https://sentence-book-muse.pages.dev/mcp",
+          "authorization_servers": [
+            "https://wgyyfxlabbzhnrbtwmcc.supabase.co/auth/v1"
+          ],
+          "bearer_methods_supported": [
+            "header"
+          ],
+          "resource_name": "The Sentence Book — private draft inbox",
+          "resource_documentation": "https://sentence-book-muse.pages.dev/api/muse/guide"
+        },
+        "wwwAuthenticate": null
+      },
+      {
+        "check": "anonymous-manage",
+        "status": 401,
+        "data": {
+          "error": {
+            "code": "unauthorized"
+          }
+        },
+        "wwwAuthenticate": "Bearer resource_metadata=\"https://sentence-book-muse.pages.dev/.well-known/oauth-protected-resource/mcp\""
+      },
+      {
+        "check": "anonymous-mcp",
+        "status": 401,
+        "data": {
+          "error": {
+            "code": "unauthorized"
+          }
+        },
+        "wwwAuthenticate": "Bearer resource_metadata=\"https://sentence-book-muse.pages.dev/.well-known/oauth-protected-resource/mcp\""
+      },
+      {
+        "check": "anonymous-generate",
+        "status": 401,
+        "data": {
+          "error": {
+            "code": "invite_required",
+            "message": "招待コードを入力してください。"
+          }
+        },
+        "wwwAuthenticate": null
+      },
+      {
+        "check": "anonymous-lookup",
+        "status": 401,
+        "data": {
+          "error": {
+            "code": "invite_required",
+            "message": "招待コードを入力してください。"
+          }
+        },
+        "wwwAuthenticate": null
+      },
+      {
+        "check": "cross-origin-enroll",
+        "status": 403,
+        "data": {
+          "error": {
+            "code": "wrong_origin"
+          }
+        },
+        "wwwAuthenticate": null
+      },
+      {
+        "check": "hash-url-config",
+        "status": 403,
+        "data": {
+          "error": {
+            "code": "wrong_origin"
+          }
+        },
+        "wwwAuthenticate": null
+      }
+    ],
+    "browser": "Chrome 1726px /connect rendered invitation-free email login; no captured warnings/errors. No real sign-in.",
+    "evidence": "muse-connect-production-2026-10-30.png",
+    "migration_followups": [
+      "20261030085531_restore_muse_oauth_read_grants.sql",
+      "20261030085841_use_supported_muse_oauth_checks.sql"
+    ],
+    "grant_repair_outcome": "First grant-only repair was ineffective: managed OAuth tables gave postgres no SELECT WITH GRANT OPTION. Following migration removes direct OAuth-table read dependency; official Auth client API and live sessions are used.",
+    "security": "Both gateway functions remain SECURITY INVOKER, service-only EXECUTE; service_role has no SELECT on OAuth tables. Four expected INFO RLS-without-policy findings only.",
+    "fixture_test": "Not executed: automatic approval review requires explicit approval for creation/deletion of two disposable users, one OAuth client and dummy lesson. Verified zero users and zero clients.",
+    "secret_handling": "No secret printed or committed; encrypted Pages setting. Private local staging removed after checks."
   }
 }
