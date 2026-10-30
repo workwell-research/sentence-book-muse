@@ -2,7 +2,7 @@ import { describe,it,expect,vi,afterEach } from 'vitest';
 import { dailyDraftId,learningSummarySchema } from '../shared/muse-connection';
 import { LESSON_CONTRACT } from '../shared/lesson-schema';
 import type { LessonDraft } from '../shared/lesson-schema';
-import { deliverDraft,getLearningState,manageAccount,principal,MuseError,supabaseMuseStore } from '../functions/lib/muse-account';
+import { deliverDraft,getLearningState,manageAccount,connectionKeyHash,principal,MuseError,supabaseMuseStore } from '../functions/lib/muse-account';
 import type { MuseStore,Principal } from '../functions/lib/muse-account';
 import { handleMcp } from '../functions/mcp';
 import { ACCESS_ENV } from './support/access';
@@ -131,4 +131,44 @@ describe('explicit minimal summary',()=>{
     expect(JSON.stringify(result)).not.toContain('PRIVATE');expect(result.interests).toEqual(['Travel']);expect(result.review_candidates).toEqual([{expression:'test',native:'試す'}]);expect(storage.setItem).not.toHaveBeenCalled();
   });
   it('blocks sharing on unreadable data without overwriting it',()=>{const storage=memory({[WORDBOOK_KEY]:'{bad'});expect(()=>buildLearningSummary(storage)).toThrow();expect(storage.setItem).not.toHaveBeenCalled();});
+});
+
+describe('personal connection key HTTP boundary',()=>{
+  const env={...ACCESS_ENV,SUPABASE_URL:'https://test.supabase.co',SUPABASE_PUBLISHABLE_KEY:'public',SUPABASE_SECRET_KEY:'private-test-only'};
+  it('issues unique high-entropy credentials once, with only hashes sent to the database',async()=>{
+    const db=store({...who,clientId:null});const tokens=new Set<string>();
+    for(let i=0;i<3;i++) {
+      const response=await manageAccount(request('/api/muse/manage',{action:'create_key',label:' Muse ',permissions:{read_summary:true,deliver_drafts:false}},{origin:ACCESS_ENV.ACCESS_ORIGIN}),env,db);
+      const result=await response.json() as {token:string};
+      expect(response.headers.get('cache-control')).toContain('no-store');expect(result.token).toMatch(/^sbm_[A-Za-z0-9_-]{43}$/);tokens.add(result.token);
+      expect(db.call).toHaveBeenLastCalledWith({...who,clientId:null},'create_key',{label:'Muse',read_summary:true,deliver_drafts:false,key_hash:await connectionKeyHash(result.token)});
+      expect(JSON.stringify(vi.mocked(db.call).mock.calls)).not.toContain(result.token);
+    }
+    expect(tokens.size).toBe(3);
+  });
+  it('requires explicit permissions and direct login for key management',async()=>{
+    const personal=store({...who,clientId:null});
+    await expect(manageAccount(request('/api/muse/manage',{action:'create_key',label:'Muse',permissions:{read_summary:false,deliver_drafts:false}},{origin:ACCESS_ENV.ACCESS_ORIGIN}),env,personal)).rejects.toMatchObject({code:'invalid_request'});
+    expect(personal.call).not.toHaveBeenCalled();
+    const key=store({...who,sessionId:null,keyHash:'a'.repeat(64)});
+    await expect(manageAccount(request('/api/muse/manage',{action:'revoke_key',key_id:clientId},{origin:ACCESS_ENV.ACCESS_ORIGIN}),env,key)).rejects.toMatchObject({code:'permission_denied'});
+    expect(key.call).not.toHaveBeenCalled();
+  });
+  it('authenticates opaque keys via hash only, then rechecks hash in each gateway call',async()=>{
+    const raw='sbm_'+'x'.repeat(43);const hash=await connectionKeyHash(raw);
+    const fetcher=vi.fn(async(_input:RequestInfo|URL,init?:RequestInit)=>Response.json(String(init?.body).includes('p_hash')?{user_id:userId,key_id:clientId}:{allowed:true}));
+    vi.stubGlobal('fetch',fetcher);const db=supabaseMuseStore(env);const key=await db.authenticate(raw);
+    expect(key).toEqual({userId,sessionId:null,clientId,keyHash:hash});await db.call(key,'guide');
+    expect(fetcher).toHaveBeenCalledTimes(2);
+    const bodies=fetcher.mock.calls.map(c=>JSON.parse(String(c[1]?.body)));
+    expect(bodies[0]).toEqual({p_hash:hash});expect(bodies[1]).toMatchObject({p_user:userId,p_session:null,p_client:clientId,p_key_hash:hash});
+    expect(JSON.stringify(bodies)).not.toContain(raw);
+  });
+  it('fails closed for invalid, missing, expired and unavailable key lookups',async()=>{
+    const fetcher=vi.fn(async()=>Response.json({error:'unauthorized'}));vi.stubGlobal('fetch',fetcher);
+    await expect(supabaseMuseStore(env).authenticate('sbm_invalid')).rejects.toMatchObject({code:'unauthorized'});expect(fetcher).not.toHaveBeenCalled();
+    await expect(supabaseMuseStore(env).authenticate('sbm_'+'x'.repeat(43))).rejects.toMatchObject({code:'unauthorized'});
+    fetcher.mockImplementation(async()=>Response.json({message:'database failure'},{status:503}));
+    await expect(supabaseMuseStore(env).authenticate('sbm_'+'x'.repeat(43))).rejects.toMatchObject({code:'store_unavailable'});
+  });
 });

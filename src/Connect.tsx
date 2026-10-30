@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { OAuthAuthorizationDetails, Session, SupabaseClient } from '@supabase/supabase-js';
 import type { InboxItem, LearningSummary } from '../shared/muse-connection';
 import { LessonPreview } from './LessonPreview';
+import { ConnectionKeys } from './ConnectionKeys';
 import type { FilingStatus } from './LessonPreview';
 import { fileDraft, readLibrary } from './lib/library';
 import type { FilingDecision } from './lib/library';
@@ -150,8 +151,9 @@ function AccountView({client,session}:{client:SupabaseClient;session:Session}) {
             <div className="filing-actions"><button className="save-button" disabled={busy} onClick={()=>void act(async()=>{await accountRequest(client,{action:'publish',expected_version:account.state?.version??0,summary:preview});setPreview(null);await refresh();setMessage('確認した要約を共有しました。');},'summary')}>この内容を共有する</button><button className="text-button" disabled={busy} onClick={()=>setPreview(null)}>閉じる</button></div></div>}
           {feedbackScope==='summary' && <Feedback error={error} message={message}/>}
         </section>
-        <section className="connect-section"><h2>Museをつなぐ</h2><ol className="connect-steps"><li>上で、Museに伝える学習の要約を確認して共有します。</li><li>Museの外部サービス接続で、次の接続先を追加します。<label>接続先（MCP）<input readOnly value={`${location.origin}/mcp`} onFocus={event=>event.target.select()}/></label></li><li>開いた確認画面で、この受信箱への接続を許可します。</li><li>Museに「教材ガイドと学習の要約を読み、今日の教材を1ページ作って受信箱へ届けて」と頼みます。</li></ol>
-          <p className="connect-note">Muse側に外部サービスの追加が表示されない場合は、<a href="/setup#compose">コピーと貼り付けで教材を受け取る</a>方法も使えます。定期実行は、接続を試してからMuseで設定してください。</p>
+        {location.pathname!=='/oauth/consent' && <ConnectionKeys client={client} keys={account.keys??[]} disabled={busy} onChange={keys=>setAccount(current=>current?{...current,keys}:current)}/>}
+        <section className="connect-section"><h2>ログインで許可した接続</h2>
+          <p className="connect-note">OAuthで許可した接続はこちらに表示されます。接続キーは上の欄で管理できます。Museの接続画面が開かない場合は、<a href="/setup#compose">コピーと貼り付けで教材を受け取る</a>方法も使えます。</p>
           <h3>許可した接続</h3>{!account.connections?.length ? <p>まだ接続を許可していません。</p> : <ul className="connect-inbox">{account.connections.map(connection=><li key={connection.client_id}><div><h4>{connection.client_name}</h4><p>{[connection.read_summary?'学習の要約を読む':'',connection.deliver_drafts?'教材を受信箱へ届ける':''].filter(Boolean).join(' ／ ')||'許可なし'}</p></div><button className="text-button" disabled={busy} onClick={()=>void act(async()=>{
             await accountRequest(client,{action:'revoke',client_id:connection.client_id});
             const result = await client.auth.oauth.revokeGrant({clientId:connection.client_id});

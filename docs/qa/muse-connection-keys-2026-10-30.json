@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-30",
+  "tests": {
+    "files": 25,
+    "passed": 200,
+    "typescript": "passed",
+    "vite": "passed",
+    "worker": "passed"
+  },
+  "database": {
+    "project": "wgyyfxlabbzhnrbtwmcc",
+    "migration": "20261030140542_muse_connection_keys.sql",
+    "rollback_probe_passed": true,
+    "anon_key_rpc": false,
+    "browser_gateway": false,
+    "browser_key_table": false,
+    "server_key_rpc": true,
+    "key_table_rls": true,
+    "remaining_rollback_fixture_keys": 0
+  },
+  "browser": {
+    "origin": "http://127.0.0.1:8804",
+    "synthetic": true,
+    "checks": [
+      "Explicit unchecked permissions; public copyable instructions use correct contract and contain no key.",
+      "Issue failure preserves selections; retry issues once; one-time key masked, focused, copy works, never stored in localStorage.",
+      "Display/hide/dismiss; reload cannot recover raw key; metadata remains for revocation.",
+      "Revocation removes metadata; logout unmounts and clears the one-time credential."
+    ],
+    "viewports": [
+      1280,
+      375,
+      1726
+    ],
+    "expected_http_errors": [
+      "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+    ],
+    "runtime_errors": []
+  },
+  "review": "ship, scoped UI extension",
+  "limitations": [
+    "No authenticated real Muse key read/delivery yet",
+    "No physical-device or assistive-technology verification",
+    "Existing leaked-password-protection warning unchanged; email OTP UI; https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
+  ],
+  "production_app": "pending deployment"
+}

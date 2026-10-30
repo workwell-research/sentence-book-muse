@@ -8,7 +8,7 @@ import { dailyDraftId, deliverySchema, learningSummarySchema, lessonGuide, permi
 import { validateLessonDraft } from '../../shared/lesson-schema';
 
 export interface MuseEnv extends AccessEnv { SUPABASE_URL?: string; SUPABASE_PUBLISHABLE_KEY?: string; SUPABASE_SECRET_KEY?: string }
-export interface Principal { userId: string; sessionId: string; clientId: string | null }
+export interface Principal { userId: string; sessionId: string | null; clientId: string | null; keyHash?: string }
 export class MuseError extends Error { constructor(readonly code: string, readonly status = 400) { super(code); } }
 export interface MuseStore {
   authenticate(token: string): Promise<Principal>;
@@ -24,6 +24,13 @@ export function museConfig(env: MuseEnv) {
   } catch { return null; }
 }
 const uuid = z.uuid();
+export async function connectionKeyHash(token: string) {
+  return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token))), b => b.toString(16).padStart(2,'0')).join('');
+}
+function newConnectionKey() {
+  const bytes = crypto.getRandomValues(new Uint8Array(32));
+  return 'sbm_' + btoa(String.fromCharCode(...bytes)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
 export function supabaseMuseStore(env: MuseEnv): MuseStore {
   const config = museConfig(env);
   if (!config) throw new MuseError('not_configured', 503);
@@ -40,6 +47,14 @@ export function supabaseMuseStore(env: MuseEnv): MuseStore {
   }
   return {
     async authenticate(token) {
+      if (token.startsWith('sbm_')) {
+        if (!/^sbm_[A-Za-z0-9_-]{43}$/.test(token)) throw new MuseError('unauthorized',401);
+        const keyHash = await connectionKeyHash(token);
+        const { data,error } = await db.rpc('muse_key_identity',{p_hash:keyHash});
+        if (error) throw new MuseError('store_unavailable',503);
+        if (data?.error || !uuid.safeParse(data?.user_id).success || !uuid.safeParse(data?.key_id).success) throw new MuseError('unauthorized',401);
+        return {userId:data.user_id,sessionId:null,clientId:data.key_id,keyHash};
+      }
       // getUser verifies the signed token with Auth. Only then read its session/client claims.
       const { data, error } = await auth.auth.getUser(token);
       if (error || !data.user || data.user.is_anonymous || !data.user.email_confirmed_at) throw new MuseError('unauthorized', 401);
@@ -52,7 +67,7 @@ export function supabaseMuseStore(env: MuseEnv): MuseStore {
       return { userId: data.user.id, sessionId: String(claims.session_id), clientId: claims.client_id == null ? null : String(claims.client_id) };
     },
     async call<T>(who: Principal, operation: string, args: Record<string, unknown> = {}) {
-      const { data, error } = await db.rpc('muse_gateway', { p_user: who.userId, p_session: who.sessionId, p_client: who.clientId, p_op: operation, p_args: args });
+      const { data, error } = await db.rpc('muse_gateway', { p_user: who.userId, p_session: who.sessionId, p_client: who.clientId, p_op: operation, p_args: args, ...(who.keyHash ? {p_key_hash:who.keyHash} : {}) });
       if (error) throw new MuseError('store_unavailable', 503);
       if (data?.error) throw new MuseError(data.error, errorStatus(data.error));
       return data as T;
@@ -73,7 +88,7 @@ export function supabaseMuseStore(env: MuseEnv): MuseStore {
 function errorStatus(code: string) {
   if (code === 'unauthorized') return 401;
   if (['permission_denied','invitation_required'].includes(code)) return 403;
-  if (['state_conflict','delivery_conflict','summary_not_shared','inbox_full'].includes(code)) return 409;
+  if (['state_conflict','delivery_conflict','summary_not_shared','inbox_full','key_limit'].includes(code)) return 409;
   if (code === 'not_found') return 404;
   return 400;
 }
@@ -111,6 +126,8 @@ const manageSchema = z.discriminatedUnion('action', [
   // Auth authorization IDs are opaque strings, distinct from session/client UUIDs.
   z.strictObject({ action: z.literal('grant'), authorization_id: z.string().min(1).max(512), permissions: permissionsSchema }),
   z.strictObject({ action: z.literal('revoke'), client_id: uuid }),
+  z.strictObject({ action: z.literal('create_key'), label: z.string().trim().min(1).max(80), permissions: permissionsSchema.refine(p => p.read_summary || p.deliver_drafts) }),
+  z.strictObject({ action: z.literal('revoke_key'), key_id: uuid }),
   z.strictObject({ action: z.literal('resolve'), draft_id: uuid, status: z.enum(['filed','discarded']) }),
 ]);
 export async function manageAccount(request: Request, env: MuseEnv, store: MuseStore): Promise<Response> {
@@ -119,8 +136,8 @@ export async function manageAccount(request: Request, env: MuseEnv, store: MuseS
   if (request.method === 'GET') {
     const status = await store.call<{ valid: boolean; member: boolean }>(who, 'status');
     if (!status.member) return Response.json({ member: false }, { headers: noStore });
-    const [state, inbox, connections] = await Promise.all([store.call(who,'own_state'), store.call(who,'inbox'), store.call(who,'connections')]);
-    return Response.json({ member: true, state, inbox, connections }, { headers: noStore });
+    const [state, inbox, connections, keys] = await Promise.all([store.call(who,'own_state'), store.call(who,'inbox'), store.call(who,'connections'), store.call(who,'keys')]);
+    return Response.json({ member: true, state, inbox, connections, keys }, { headers: noStore });
   }
   if (request.method !== 'POST') throw new MuseError('method_not_allowed', 405);
   const body = await readJsonBody(request, 64 * 1024);
@@ -133,6 +150,10 @@ export async function manageAccount(request: Request, env: MuseEnv, store: MuseS
     // Anyone with a verified personal session may use their own Muse.
     // The invitation cookie only protects the owner's model-backed routes.
     result = await store.call(who,'enroll');
+  } else if (action.action === 'create_key') {
+    const token = newConnectionKey();
+    const key = await store.call(who,'create_key',{label:action.label,...action.permissions,key_hash:await connectionKeyHash(token)});
+    result = {key,token}; // One response only. The database never receives the raw credential.
   } else if (action.action === 'grant') {
     const verified = await store.authorization(bearer(request), action.authorization_id, who.userId);
     result = await store.call(who,'grant',{ client_id: verified.clientId, client_name: verified.clientName, ...action.permissions });

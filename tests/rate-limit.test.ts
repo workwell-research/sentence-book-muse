@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { POLICIES, checkRateLimit, d1Counters } from '../functions/lib/rate-limit';
 import { memoryD1 } from './support/memory-d1';
 
@@ -7,6 +7,9 @@ const from = (ip: string) => new Request('https://example.test/api/generate', { 
 const policy = { name: 'test', perMinute: 2, perDay: 3, globalPerDay: 4 };
 
 describe('usage caps', () => {
+  // Purging and request windows must share the fixture clock.
+  beforeEach(() => { vi.spyOn(Date, 'now').mockReturnValue(at); });
+  afterEach(() => vi.restoreAllMocks());
   it('counts per hashed address per minute and per day, and in total per day, with expiring rows', async () => {
     const db = memoryD1();
     const env = { RATE_LIMIT: db, RATE_SALT: 'salt' };

@@ -27,6 +27,7 @@ beforeAll(async()=>{
   await db.exec(readFileSync(new URL('../supabase/migrations/20261030035947_muse_inbox.sql',import.meta.url),'utf8'));
   await db.exec(readFileSync(new URL('../supabase/migrations/20261030085531_restore_muse_oauth_read_grants.sql',import.meta.url),'utf8'));
   await db.exec(readFileSync(new URL('../supabase/migrations/20261030085841_use_supported_muse_oauth_checks.sql',import.meta.url),'utf8'));
+  await db.exec(readFileSync(new URL('../supabase/migrations/20261030140542_muse_connection_keys.sql',import.meta.url),'utf8'));
 },30000);
 afterAll(async()=>{await db.close();});
 describe.sequential('private account and inbox boundary (actual migration)',()=>{

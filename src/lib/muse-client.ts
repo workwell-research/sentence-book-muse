@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Connection, InboxItem, SharedState } from '../../shared/muse-connection';
+import type { Connection, ConnectionKey, InboxItem, SharedState } from '../../shared/muse-connection';
 
-export interface Account { member: boolean; state?: SharedState; inbox?: InboxItem[]; connections?: Connection[] }
+export interface Account { member: boolean; state?: SharedState; inbox?: InboxItem[]; connections?: Connection[]; keys?: ConnectionKey[] }
 let clientPromise: Promise<SupabaseClient> | null = null;
 export function museClient() {
   return clientPromise ??= (async () => {
@@ -25,6 +25,7 @@ export async function accountRequest<T = Account>(client: SupabaseClient, action
 export function connectionError(error: unknown): string {
   const code = error instanceof Error ? error.message : '';
   return ({
+    key_limit:'有効な接続キーは5個までです。使わないキーを無効にしてから発行してください。',
     not_configured:'接続機能の準備中です。今の教材は本棚から練習できます。',
     unauthorized:'ログインの期限が切れました。一度ログアウトして、確認コードで入り直してください。',
     state_conflict:'別の端末で共有内容が更新されました。最新の状態を読み込み直してください。',

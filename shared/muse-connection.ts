@@ -48,3 +48,6 @@ export function lessonGuide() {
     does_not_do: ['Call the app owner’s model API', 'Read full learning history', 'Adopt or delete library pages', 'Set a recurring task without the learner asking'],
   };
 }
+
+export interface ConnectionKey { id: string; label: string; read_summary: boolean; deliver_drafts: boolean; created_at: string; expires_at: string }
+export interface IssuedConnectionKey { key: ConnectionKey; token: string }
