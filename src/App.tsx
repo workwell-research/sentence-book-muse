@@ -1,5 +1,5 @@
 import './styles.css';
-import { useId, useRef, useState } from 'react';
+import { useId, useMemo, useRef, useState } from 'react';
 import { InterestSetup } from './InterestSetup';
 import { LessonPreview } from './LessonPreview';
 import type { FilingStatus } from './LessonPreview';
@@ -11,6 +11,7 @@ import type { ComposerNote, Level, NoteRead } from './lib/composer';
 import { draftTicket, readPendingDrafts, removePendingDraft, requestFingerprint, requestLesson, savePendingDraft } from './lib/generation';
 import type { DraftTicket, GenerationOutcome, PendingRead } from './lib/generation';
 import { FilingFailure, binderCatalogue, fileDraft, readLibrary } from './lib/library';
+import { MODEL_LABEL_OWN_MUSE, clearImportTicket, importLesson, issueImportTicket, musePromptFor } from './lib/import';
 import type { FilingDecision, LibraryRead } from './lib/library';
 import { createGenerationRequest } from '../shared/generation-request';
 import type { LessonDraft } from '../shared/lesson-schema';
@@ -61,9 +62,38 @@ export function App() {
   const [failure, setFailure] = useState<Extract<GenerationOutcome, { kind: 'failed' }> | null>(null);
   const [reviewing, setReviewing] = useState<Reviewing | null>(null);
   const ticket = useRef<DraftTicket | null>(null);
+  // Bring your own Muse: a locally issued ticket binds the pasted page to this request, like a server draft ID.
+  const [importText, setImportText] = useState('');
+  const [importMessage, setImportMessage] = useState<{ text: string; failed: boolean } | null>(null);
+  const [promptCopied, setPromptCopied] = useState('');
+  const [ticketEpoch, setTicketEpoch] = useState(0);
+  const importId = useId();
   const interests = profile.kind === 'ready' ? profile.profile.interests : [];
   const binders = library.kind === 'ready' ? library.library.binders : [];
   const canGenerate = !blocked && !generating && (note.topic.trim().length > 0 || interests.length > 0);
+  const catalogue = library.kind === 'ready' ? binderCatalogue(library.library) : [];
+  const binderKey = catalogue.map(binder => binder.id).join(',');
+  const importTicket = useMemo(() => issueImportTicket(window.localStorage, { level: note.level, nativeLanguage: note.nativeLanguage, binderIds: binderKey ? binderKey.split(',') : [] }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [note.level, note.nativeLanguage, binderKey, ticketEpoch]);
+  const musePrompt = musePromptFor(importTicket, note, interests, catalogue);
+
+  async function copyPrompt() {
+    if (!musePrompt) return;
+    try { await navigator.clipboard.writeText(musePrompt); setPromptCopied('コピーしました。Museアプリに貼って送ってください。'); }
+    catch { setPromptCopied('自動でコピーできませんでした。下の文を選んでコピーしてください。'); }
+  }
+  function importFromMuse() {
+    const outcome = importLesson(importText, importTicket);
+    if (outcome.kind === 'failed') { setImportMessage({ text: outcome.message, failed: true }); return; }
+    let kept = false;
+    try { setPending({ kind: 'ready', drafts: savePendingDraft(window.localStorage, outcome.draft) }); kept = true; } catch { kept = false; }
+    setReviewing({ draft: outcome.draft, model: MODEL_LABEL_OWN_MUSE, kept, status: { state: 'open' } });
+    clearImportTicket(window.localStorage);
+    setTicketEpoch(epoch => epoch + 1);
+    setImportText('');
+    setImportMessage({ text: 'ページを受け取りました。下で確認して、仕舞う先を決めてください。', failed: false });
+  }
 
   async function generate() {
     if (!canGenerate) return;
@@ -178,6 +208,19 @@ export function App() {
               {failure && <p className="error generation-error" role="alert">{failure.message}</p>}
             </div>
           </form>
+          <details className="own-muse">
+            <summary>自分のMuseアプリで作る場合</summary>
+            <p className="own-muse-intro">Museアプリに下の頼み方を貼って送り、返ってきた JSON をここに貼ると、同じ確認と仕舞う流れに入ります。</p>
+            {musePrompt ? <>
+              <div className="own-muse-actions"><button type="button" className="text-button" onClick={copyPrompt}>Museへの頼み方をコピー</button><span role="status">{promptCopied}</span></div>
+              <textarea className="own-muse-prompt" readOnly value={musePrompt} rows={5} aria-label="Museへの頼み方" onFocus={event => event.currentTarget.select()} />
+            </> : <p className="own-muse-intro">関心を選ぶか、話したいことを書くと、頼み方ができます。</p>}
+            <label htmlFor={importId}>Museの返事（JSON）</label>
+            <textarea id={importId} value={importText} rows={5} placeholder='{"draft_id": …}' spellCheck={false}
+              onChange={event => { setImportText(event.target.value); setImportMessage(null); }} />
+            <div className="form-actions"><button type="button" className="save-button" onClick={importFromMuse} disabled={!importText.trim()}>確認する</button><span>このブラウザだけで検証</span></div>
+            <p className={importMessage?.failed ? 'save-status error' : 'save-status'} role="status">{importMessage?.text ?? ''}</p>
+          </details>
         </section>
       </div>
       {reviewing && <LessonPreview key={reviewing.draft.draft_id} draft={reviewing.draft} model={reviewing.model} binders={binders} kept={reviewing.kept}

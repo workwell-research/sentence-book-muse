@@ -54,7 +54,7 @@ export function LessonPreview({ draft, model, binders, kept, status, onFile, onD
       <dl className="preview-meta">
         <div><dt>レベル</dt><dd>{levelLabel[draft.level]}</dd></div>
         <div><dt>目安</dt><dd>{draft.estimated_minutes}分（モデルの見積もり）</dd></div>
-        {model && <div><dt>作成</dt><dd>{model}</dd></div>}
+        {model && <div><dt>作成</dt><dd>{model === 'muse-app' ? 'あなたのMuseアプリ' : model}</dd></div>}
       </dl>
     </div>
     <ol className="preview-sentences">

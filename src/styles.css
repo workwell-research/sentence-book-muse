@@ -68,6 +68,13 @@
   .generation-note .generate-button:hover:enabled { background: #394c38; }
   .generation-note button[aria-busy="true"] { color: var(--sage); border-color: var(--sage); }
   .generation-note .generation-error { text-align: left; margin-top: 4px; }
+  .own-muse { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+  .own-muse summary { cursor: pointer; font-size: 12px; color: var(--muted); padding: 6px 0; }
+  .own-muse-intro { font-size: 11px; line-height: 1.9; color: var(--muted); margin: 8px 0; }
+  .own-muse-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 11px; color: var(--sage); }
+  .own-muse-prompt { width: 100%; box-sizing: border-box; font: 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 8px; background: transparent; resize: vertical; margin-bottom: 12px; }
+  .own-muse label { display: block; font-size: 12px; margin: 8px 0 6px; }
+  .own-muse textarea:not(.own-muse-prompt) { width: 100%; box-sizing: border-box; font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; border: 1px solid var(--line); border-radius: 3px; padding: 8px; background: transparent; resize: vertical; }
   .lesson-preview { background: var(--paper); padding: 34px 36px 30px; margin-bottom: 60px; box-shadow: 0 6px 25px #4138270d; border-radius: 2px; }
   .preview-head { display: flex; justify-content: space-between; gap: 30px; align-items: flex-end; flex-wrap: wrap; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
   .preview-kicker { font-size: 11px; letter-spacing: .08em; color: var(--sage); }
