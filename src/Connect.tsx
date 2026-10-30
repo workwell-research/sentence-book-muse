@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { OAuthAuthorizationDetails, Session, SupabaseClient } from '@supabase/supabase-js';
 import type { InboxItem, LearningSummary } from '../shared/muse-connection';
-import { InviteAccess, useInviteAccess } from './InviteAccess';
 import { LessonPreview } from './LessonPreview';
 import type { FilingStatus } from './LessonPreview';
 import { fileDraft, readLibrary } from './lib/library';
@@ -69,12 +68,11 @@ function Login({client}:{client:SupabaseClient}) {
         {sentTo && <button className="text-button" type="button" disabled={busy} onClick={()=>{setSentTo('');setMessage('');}}>送り直す・アドレスを変更</button>}</div>
       <p role="status" className="connect-message">{message}</p>
     </form>
-    <p className="connect-note">受信箱を有効にするときに招待コードを確認します。本棚と練習の記録は、このブラウザに保存されています。</p>
+    <p className="connect-note">自分のMuseから教材を受け取る機能は、招待コードなしで利用できます。本棚と練習の記録は、このブラウザに保存されています。</p>
   </section>;
 }
 
 function AccountView({client,session}:{client:SupabaseClient;session:Session}) {
-  const access = useInviteAccess();
   const [account,setAccount] = useState<Account | null>(null), [busy,setBusy] = useState(false);
   const [error,setError] = useState(''), [message,setMessage] = useState('');
   const [feedbackScope,setFeedbackScope] = useState('account');
@@ -124,8 +122,8 @@ function AccountView({client,session}:{client:SupabaseClient;session:Session}) {
     <div className="connect-account"><span>{session.user.email}</span><button className="text-button" disabled={busy} onClick={()=>void act(async()=>{const r=await client.auth.signOut({scope:'local'});if(r.error)throw r.error;})}>ログアウト</button></div>
     {feedbackScope==='account' && <Feedback error={error} message={message}/>}
     {!account ? <button className="text-button" disabled={busy} onClick={()=>void act(refresh)}>受信箱を読み込む</button>
-      : !account.member ? <section className="connect-section"><h2>招待を確認して、受信箱を開く</h2><InviteAccess/>
-        <button className="save-button" disabled={busy || access.state!=='ready'} onClick={()=>void act(async()=>{await accountRequest(client,{action:'enroll'});await refresh();})}>受信箱を有効にする</button></section>
+      : !account.member ? <section className="connect-section"><h2>あなたの受信箱を開く</h2><p>自分のMuseから届く教材を、あなた専用の受信箱で受け取れます。</p>
+        <button className="save-button" disabled={busy} onClick={()=>void act(async()=>{await accountRequest(client,{action:'enroll'});await refresh();})}>受信箱を有効にする</button></section>
       : <>
         {location.pathname==='/oauth/consent' ? consentId ? <Consent key={consentId} client={client} authorizationId={consentId} userId={session.user.id}/>
           : <p role="alert">接続の依頼がありません。Museから接続を開始してください。</p> : null}

@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { decodeJwt } from 'jose';
 import { z } from 'zod';
 import type { AccessEnv } from './access';
-import { accessConfig, requireAccess } from './access';
+import { accessConfig } from './access';
 import { noStore, readJsonBody } from './route';
 import { dailyDraftId, deliverySchema, learningSummarySchema, lessonGuide, permissionsSchema } from '../../shared/muse-connection';
 import { validateLessonDraft } from '../../shared/lesson-schema';
@@ -121,8 +121,8 @@ export async function manageAccount(request: Request, env: MuseEnv, store: MuseS
   const action = parsed.data;
   let result;
   if (action.action === 'enroll') {
-    const denied = await requireAccess(request, env);
-    if (denied) return denied;
+    // Anyone with a verified personal session may use their own Muse.
+    // The invitation cookie only protects the owner's model-backed routes.
     result = await store.call(who,'enroll');
   } else if (action.action === 'grant') {
     const verified = await store.authorization(bearer(request), action.authorization_id, who.userId);

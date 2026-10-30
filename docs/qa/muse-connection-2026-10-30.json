@@ -52,5 +52,20 @@
     "result": "success",
     "url": "https://github.com/workwell-research/sentence-book-muse/actions/runs/41004938147"
   },
-  "cleanup": "Dedicated QA server 8803 stopped. Two narrow QA tabs closed; one older synthetic tab may remain after browser cleanup timed out while the Mac was locked. SMTP/OAuth/URL configuration tabs marked for handoff."
+  "cleanup": "Dedicated QA server 8803 stopped. Two narrow QA tabs closed; one older synthetic tab may remain after browser cleanup timed out while the Mac was locked. SMTP/OAuth/URL configuration tabs marked for handoff.",
+  "followup_open_enrollment": {
+    "owner_decision": "Anyone may use their own Muse without invitation; verified login/consent remain. Paid generation/lookup keep invitations.",
+    "tests": 184,
+    "test_files": 24,
+    "build": "Both TS, Vite and Worker passed",
+    "browser": "Synthetic 8803, invitation access false: inbox enabled without code, logout and updated login copy; 1726/375 captures inspected, no overflow or captured warnings/errors.",
+    "review": "ship for this adjustment",
+    "database": "No schema/grants/RLS change; applied migration remains immutable.",
+    "production": "Still pending SMTP and OAuth/key/release configuration.",
+    "evidence": [
+      "../../.impeccable/review/muse-connect/open-enrollment-desktop.png",
+      "../../.impeccable/review/muse-connect/open-enrollment-mobile.png",
+      "../../.impeccable/review/muse-connect/open-login-mobile.png"
+    ]
+  }
 }

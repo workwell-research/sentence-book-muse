@@ -5,7 +5,7 @@ import type { LessonDraft } from '../shared/lesson-schema';
 import { deliverDraft,getLearningState,manageAccount,principal,MuseError,supabaseMuseStore } from '../functions/lib/muse-account';
 import type { MuseStore,Principal } from '../functions/lib/muse-account';
 import { handleMcp } from '../functions/mcp';
-import { ACCESS_ENV,accessHeaders } from './support/access';
+import { ACCESS_ENV } from './support/access';
 import { buildLearningSummary } from '../src/lib/learning-summary';
 import { COMPOSER_KEY } from '../src/lib/composer';
 import { INTERESTS_KEY } from '../src/lib/interests';
@@ -36,13 +36,23 @@ describe('Muse account boundary',()=>{
     await expect(principal(request(),store({...who,clientId:null}),true)).rejects.toMatchObject({code:'permission_denied'});
     await expect(principal(new Request('https://example.test/mcp'),store(),true)).rejects.toMatchObject({code:'unauthorized'});
   });
-  it('requires an invitation for first enrollment and exact Origin for account writes',async()=>{
+  it('lets a verified personal session enroll without an invitation, while enforcing Origin',async()=>{
     const db=store({...who,clientId:null});
-    const denied=await manageAccount(request('/api/muse/manage',{action:'enroll'},{origin:ACCESS_ENV.ACCESS_ORIGIN}),ACCESS_ENV,db);
-    expect(denied.status).toBe(401);expect(db.call).not.toHaveBeenCalled();
     await expect(manageAccount(request('/api/muse/manage',{action:'enroll'}),ACCESS_ENV,db)).rejects.toMatchObject({code:'wrong_origin'});
-    const allowed=await manageAccount(request('/api/muse/manage',{action:'enroll'},await accessHeaders()),ACCESS_ENV,db);
+    expect(db.call).not.toHaveBeenCalled();
+    const allowed=await manageAccount(request('/api/muse/manage',{action:'enroll'},{origin:ACCESS_ENV.ACCESS_ORIGIN}),ACCESS_ENV,db);
     expect(allowed.status).toBe(200);expect(db.call).toHaveBeenCalledWith({...who,clientId:null},'enroll');
+  });
+  it('still rejects anonymous and delegated enrollment without creating an inbox',async()=>{
+    const headers={origin:ACCESS_ENV.ACCESS_ORIGIN};
+    const anonymous=store({...who,clientId:null});
+    const anonymousRequest=request('/api/muse/manage',{action:'enroll'},headers);
+    anonymousRequest.headers.delete('authorization');
+    await expect(manageAccount(anonymousRequest,ACCESS_ENV,anonymous)).rejects.toMatchObject({code:'unauthorized'});
+    expect(anonymous.call).not.toHaveBeenCalled();
+    const delegated=store();
+    await expect(manageAccount(request('/api/muse/manage',{action:'enroll'},headers),ACCESS_ENV,delegated)).rejects.toMatchObject({code:'permission_denied'});
+    expect(delegated.call).not.toHaveBeenCalled();
   });
   it('derives the granted client from Auth authorization details, never from caller input',async()=>{
     const db=store({...who,clientId:null});const authorizationId='40000000-0000-4000-8000-000000000001';

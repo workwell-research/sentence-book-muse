@@ -14,7 +14,7 @@ http.createServer(async(req,res)=>{
     const url=new URL(req.url,origin);const body=await new Promise((resolve,reject)=>{let text='';req.on('data',c=>{text+=c;if(text.length>1000000)reject(new Error('large'));});req.on('end',()=>resolve(text?JSON.parse(text):{}));});
     const json=(data,status=200)=>{res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
     if(url.pathname==='/__qa/control'){failAction=body.failAction??'';if(body.seed){draft.draft_id='40000000-0000-4000-8000-000000000002';account.inbox=[{draft_id:draft.draft_id,draft,status:'pending',received_at:new Date().toISOString()}];}json({ready:true});return;}
-    if(url.pathname==='/api/access'){json({authorized:true});return;}
+    if(url.pathname==='/api/access'){json({authorized:false});return;}
     if(url.pathname==='/api/muse/config'){json({configured:true,url:origin,publishableKey:'synthetic-public-key',origin});return;}
     if(url.pathname==='/auth/v1/otp'){json({});return;}
     if(url.pathname==='/auth/v1/verify'||url.pathname==='/auth/v1/token'){json({access_token:token(),refresh_token:'synthetic-refresh-token',token_type:'bearer',expires_in:3600,user});return;}
