@@ -40,8 +40,8 @@
     "advisor": "Four INFO rls_enabled_no_policy notices reflect intentional default-deny private tables; no warning/error in security result"
   },
   "pending": [
-    "Custom SMTP password entry/save by owner and actual email delivery",
-    "OAuth server/DCR, site URL and email templates configuration",
+    "Actual email delivery (owner SMTP entry/save confirmed by dashboard reload)",
+    "Recover browser control to securely transfer existing server key; OAuth/DCR/site URL/both OTP templates are saved",
     "Encrypted Pages SUPABASE_SECRET_KEY and release",
     "Live service-role RPC, personal sign-in, OAuth/refresh/revoke, actual Muse tool discovery/delivery",
     "Physical devices, real IME, assistive technology and PDF/printing not retested"
@@ -61,11 +61,31 @@
     "browser": "Synthetic 8803, invitation access false: inbox enabled without code, logout and updated login copy; 1726/375 captures inspected, no overflow or captured warnings/errors.",
     "review": "ship for this adjustment",
     "database": "No schema/grants/RLS change; applied migration remains immutable.",
-    "production": "Still pending SMTP and OAuth/key/release configuration.",
+    "production": "Explicitly approved. SMTP and Auth configuration saved; Pages server-key transfer and deployment pending browser recovery.",
     "evidence": [
       "../../.impeccable/review/muse-connect/open-enrollment-desktop.png",
       "../../.impeccable/review/muse-connect/open-enrollment-mobile.png",
       "../../.impeccable/review/muse-connect/open-login-mobile.png"
-    ]
+    ],
+    "source_commit": "73cf7084e1de22424b467a36d9b4a923173828d7",
+    "ci": {
+      "result": "success",
+      "url": "https://github.com/workwell-research/sentence-book-muse/actions/runs/41005609786"
+    }
+  },
+  "production_configuration": {
+    "owner_authorized": true,
+    "smtp": "Owner reported save; dashboard reload confirmed custom SMTP enabled and hidden stored password. No actual delivery test.",
+    "site_url": "https://sentence-book-muse.pages.dev",
+    "oauth_server": true,
+    "dynamic_registration": true,
+    "authorization_path": "/oauth/consent",
+    "oauth_verification": "Reloaded dashboard and public discovery endpoint confirmed enabled OAuth and registration endpoint.",
+    "email_templates": "Both Confirm sign up and Magic link or OTP saved with Japanese confirmation-code subject and repository token-only HTML; revisit/reload verified.",
+    "pages_secret_uploaded": false,
+    "deployed": false,
+    "blocker": "Browser tab control timed out. Native UI completed Auth configuration, then control timed out again during existing-key transfer; no key staged/uploaded.",
+    "existing_production": "Canonical health 200 with access invite_required and limits configured; CLI secret list contains only four prior secrets. Python urllib probe returned 403; curl returned expected 200.",
+    "actual_email_or_muse_verified": false
   }
 }
