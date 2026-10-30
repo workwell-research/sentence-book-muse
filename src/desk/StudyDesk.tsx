@@ -7,7 +7,8 @@ import {resolveDeskLesson} from '../lib/study-page';
 import {addLookup,expressionOf,readWordbook,requestLookup,saveWordbookEntry,tokenize} from '../lib/lookup';
 import {displayKey,displaySchema,practiceSchema,defaultDisplay,emptyCopy,validCopy,readSaved,saveRecord,submitCopy,nextCopy,markerIds,themes,idleTimer,timerAt,toggleTimer} from './core';
 import type {CopyRecord,DeskDisplay,DeskTheme} from './core';
-import {deskLayout,confirmedLayout,inputPosition,practiceScene} from './note';
+import {deskLayout,confirmedLayout,inputPosition,practiceScene,wordHits} from './note';
+import type {WordHit} from './note';
 import {palettes} from '../handwriting/palettes';
 import '../handwriting/handwriting.css';
 import './desk.css';
@@ -54,7 +55,7 @@ export function StudyDesk(){
  const [speaker]=useState(()=>createLessonSpeaker(typeof window.SpeechSynthesisUtterance==='function'?window.speechSynthesis:undefined,text=>new SpeechSynthesisUtterance(text),setAudio));
  const [notice,setNotice]=useState(loadedCopy.message||loadedDisplay.message||resolved.notice),[error,setError]=useState('');
  const [tab,setTab]=useState(0),[meaning,setMeaning]=useState(false),[personalMode,setPersonalMode]=useState(false);
- const [pick,setPick]=useState<{from:number;to:number}|null>(null),[lookingUp,setLookingUp]=useState(false),[lookupNote,setLookupNote]=useState('');
+ const [pick,setPick]=useState<{sentenceId:string;from:number;to:number}|null>(null),[lookingUp,setLookingUp]=useState(false),[lookupNote,setLookupNote]=useState('');
  const [wordbook,setWordbook]=useState(()=>readWordbook(localStorage));
  const [zoom,setZoom]=useState<'fit'|'read'>(()=>matchMedia('(max-width: 760px)').matches?'read':'fit');
  const [annotationsOnly,setAnnotationsOnly]=useState(false),[composingText,setComposingText]=useState(false),[inputScroll,setInputScroll]=useState({x:0,y:0});
@@ -67,15 +68,17 @@ export function StudyDesk(){
  const composing=useRef(false),compositionEnded=useRef(0),[unit,setUnit]=useState(470/148);
  const current=lesson.sentences[record.index];
  const total=lesson.sentences.length;
- const tokens=useMemo(()=>tokenize(current.text),[current.text]);
- const picked=pick?{start:tokens[pick.from].start,end:tokens[pick.to].end}:null;
- const pickedText=picked?expressionOf(current.text,picked.start,picked.end):'';
- const sentenceLookups=record.lookups.filter(l=>l.sentenceId===current.id);
+ // Lines are drawn on written sentences only, so the picked words are always the model's words.
+ const pickedSentence=pick?lesson.sentences.find(s=>s.id===pick.sentenceId)??null:null;
+ const pickedTokens=useMemo(()=>pickedSentence?tokenize(pickedSentence.text):[],[pickedSentence]);
+ const picked=pick&&pickedSentence&&pickedTokens[pick.from]&&pickedTokens[pick.to]?{start:pickedTokens[pick.from].start,end:pickedTokens[pick.to].end}:null;
+ const pickedText=picked&&pickedSentence?expressionOf(pickedSentence.text,picked.start,picked.end):'';
  const pageId=resolved.page?.id??null;
  const otherLines=wordbook.kind==='ready'?wordbook.entries.filter(e=>e.pageId!==pageId):[];
  const layout=useMemo(()=>deskLayout(lesson,record,display,personalMode),[lesson,record.personal,record.checks,record.lookups,display.english,display.japanese,display.binding,display.side,personalMode]);
  const rendered=useMemo(()=>confirmedLayout(layout,record,display,personalMode),[layout,record.entries,record.phase,record.personal,display.vocabulary,display.grammar,personalMode]);
  const scene=useMemo(()=>practiceScene(rendered,animateId,annotationsOnly),[rendered,animateId,annotationsOnly]);
+ const hits=useMemo(()=>wordHits(rendered),[rendered]);
  const position=inputPosition(layout,record,personalMode);
  const isEditing=personalMode||record.phase==='editing';
  const draft=personalMode?record.personalDraft:record.draft;
@@ -144,20 +147,22 @@ export function StudyDesk(){
  }
  function keyDown(e:KeyboardEvent<HTMLTextAreaElement>){if(e.key!=='Enter'||e.shiftKey||e.altKey||e.metaKey||e.ctrlKey)return;if(e.repeat){e.preventDefault();return;}if(e.nativeEvent.isComposing||composing.current||e.keyCode===229||e.repeat||Date.now()-compositionEnded.current<100){return;}e.preventDefault();confirm();}
  function playAudio(){speaker.play(current.text,{voice:display.voice,rate:display.speechRate});}
- // Tapping words picks a span: first tap starts it, a later word extends it, a tap inside clears it.
- function pickWord(i:number){setLookupNote('');setPick(p=>!p?{from:i,to:i}:i>=p.from&&i<=p.to?null:i>p.to?{from:p.from,to:i}:{from:i,to:p.to});}
+ // Tapping written words picks a span: first tap starts it, a later word of the same line extends it, a tap inside clears it.
+ function pickWord(hit:WordHit){setLookupNote('');setPick(p=>!p||p.sentenceId!==hit.sentenceId?{sentenceId:hit.sentenceId,from:hit.token,to:hit.token}:hit.token>=p.from&&hit.token<=p.to?null:hit.token>p.to?{...p,to:hit.token}:{...p,from:hit.token});}
  async function lookUp(){
-  if(!picked||lookingUp)return;
+  if(!picked||!pickedSentence||lookingUp)return;
   setLookingUp(true);setLookupNote('');
-  const outcome=await requestLookup(fetch,{expression:pickedText,sentence:current.text,level:resolved.page?.level??'A2',native_language:resolved.page?.native_language??'ja'});
+  const outcome=await requestLookup(fetch,{expression:pickedText,sentence:pickedSentence.text,level:resolved.page?.level??'A2',native_language:resolved.page?.native_language??'ja'});
   if(outcome.kind==='failed'){setLookupNote(outcome.message);setLookingUp(false);return;}
-  const entry={sentenceId:current.id,start:picked.start,end:picked.end,expression:pickedText,native:outcome.result.native,note:outcome.result.note,lookedUpAt:new Date().toISOString()};
+  const entry={sentenceId:pickedSentence.id,start:picked.start,end:picked.end,expression:pickedText,native:outcome.result.native,note:outcome.result.note,lookedUpAt:new Date().toISOString()};
   let next:CopyRecord;
   try{next=addLookup(record,entry);}catch(e){setLookupNote((e as Error).message);setLookingUp(false);return;}
   if(!persist(next,true)){setLookingUp(false);return;}
   // The page record already holds the line; the shared word list is kept when it is readable.
-  try{setWordbook({kind:'ready',entries:saveWordbookEntry(localStorage,{...entry,pageId,pageTitle:resolved.page?.title??lesson.title,sentence:current.text})});}catch{/* unreadable word list stays untouched */}
+  try{setWordbook({kind:'ready',entries:saveWordbookEntry(localStorage,{...entry,pageId,pageTitle:resolved.page?.title??lesson.title,sentence:pickedSentence.text})});}catch{/* unreadable word list stays untouched */}
   setPick(null);setLookingUp(false);
+  // The sentence is already written, so the line and its memo are drawn right away.
+  setAnimateId(pickedSentence.id);setAnnotationsOnly(true);setTime(0);setPlaying(true);
  }
  function startPersonal(){setPersonalMode(true);changeDisplay({content:'study-notes'});requestAnimationFrame(()=>{editor.current?.focus({preventScroll:true});follow.current();});}
  async function exportPdf(){setExporting(true);try{const {exportStudyNote}=await import('../handwriting/study-pdf');const bytes=await exportStudyNote(confirmedLayout(layout,record,display),view,{...display,notebook:'a5',palette:display.marker,markers:display.printMarkers??display.markers});const url=URL.createObjectURL(new Blob([new Uint8Array(bytes)],{type:'application/pdf'}));const a=document.createElement('a');a.href=url;a.download=display.sheet==='A4'?'sentence-book-a5-on-a4.pdf':'sentence-book-a5.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);setNotice('PDFを作成しました。100%（実際のサイズ）で印刷してください。');}catch(e){setNotice((e as Error).message);}finally{setExporting(false);}}
@@ -176,9 +181,7 @@ export function StudyDesk(){
    <div className="lesson-panel" ref={lessonPanel}>
     <ol className="lesson-steps" role="tablist" aria-label="学習の5ステップ">{lessonSteps.map((label,i)=><li key={label} role="presentation"><button type="button" role="tab" id={'learning-step-'+i} aria-selected={i===0} aria-controls={i===0?'lesson-copy':undefined} disabled={i!==0}>{label}</button></li>)}</ol>
    <section className="model-card" id="lesson-copy" role="tabpanel" aria-labelledby="learning-step-0"><div className="model-heading"><h1 id="copy-complete" tabIndex={-1}>{record.phase==='complete'?'Copy complete':'Copy'}</h1><span>{record.entries.length} / {total}</span></div>
-     <p className="model-sentence" lang="en">{tokens.map((t,i)=>t.word?<button type="button" key={t.start} className={'word'+(pick&&i>=pick.from&&i<=pick.to?' is-picked':'')+(sentenceLookups.some(l=>t.start>=l.start&&t.end<=l.end)?' has-line':'')} aria-pressed={!!pick&&i>=pick.from&&i<=pick.to} onClick={()=>pickWord(i)}>{t.text}</button>:<span key={t.start}>{t.text}</span>)}</p><p className={'model-meaning '+(meaning||audio.message?'':'is-hidden')+(audio.message?' audio-error':'')} aria-hidden={!meaning&&!audio.message} role={audio.message?'alert':undefined}>{audio.message||current.meaning||''}</p>
-     {sentenceLookups.length>0&&<ul className="lookup-list" aria-label="この文で引いた線">{sentenceLookups.map(l=><li key={l.id}><span lang="en">{l.expression}</span> — {l.native}{l.note&&<small>{l.note}</small>}</li>)}</ul>}
-     <div className="lookup-bar">{picked?<><span>「<span lang="en">{pickedText}</span>」</span><button type="button" className="lookup-button" onClick={lookUp} disabled={lookingUp} aria-busy={lookingUp}>{lookingUp?'調べています…':'調べて線を引く'}</button><button type="button" className="lookup-cancel" onClick={()=>setPick(null)} disabled={lookingUp}>やめる</button></>:<span className="lookup-hint">わからない語句をタップすると、調べて線を引けます。</span>}<span role="status" className="lookup-status">{lookupNote}</span></div>
+     <p className="model-sentence" lang="en">{current.text}</p><p className={'model-meaning '+(meaning||audio.message?'':'is-hidden')+(audio.message?' audio-error':'')} aria-hidden={!meaning&&!audio.message} role={audio.message?'alert':undefined}>{audio.message||current.meaning||''}</p>
      <div className="model-actions"><button onClick={playAudio} className="audio-button" aria-keyshortcuts="Alt+R" title="音声を聞く（Mac: Option + R / Windows: Alt + R）"><Icon name="sound"/>{audio.phase==='speaking'?'読み上げ中':audio.phase==='loading'?'音声を準備中':'音声を聞く'}<kbd aria-hidden="true">⌥ / Alt R</kbd></button><button aria-expanded={meaning} onClick={()=>setMeaning(v=>!v)}>{meaning?'意味を閉じる':'意味を見る'}</button><span>{record.phase==='complete'?'ノートに残りました':'ノートの行に書き写す'}</span></div>
    </section>
    </div>
@@ -195,10 +198,11 @@ export function StudyDesk(){
      {tab===4&&(record.phase==='complete'?<><p>{lesson.title}</p><p>{total}文を書き終えました。</p><button onClick={startPersonal}>自分のひとことを書く</button><button onClick={exportPdf} disabled={exporting}>PDFに保存</button></>:<p>{total}文を書き終えると、<br/>ここに一枚のノートが残ります。</p>)}
     </div>
    </section>
-   <section className="notebook-area" aria-label="A5学習ノート"><div className="writing-controls" ref={writingControls}><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><div className="notebook-tools"><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button>{record.phase==='complete'&&!personalMode&&<button onClick={startPersonal}>ひとことを書く</button>}</div></div><p id="writing-error" role="alert" className="writing-feedback">{error}</p></div>
+   <section className="notebook-area" aria-label="A5学習ノート"><div className="writing-controls" ref={writingControls}><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><div className="notebook-tools"><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button>{record.phase==='complete'&&!personalMode&&<button onClick={startPersonal}>ひとことを書く</button>}</div></div><p id="writing-error" role="alert" className="writing-feedback">{error}</p><div className="lookup-bar">{picked?<><span>「<span lang="en">{pickedText}</span>」</span><button type="button" className="lookup-button" onClick={lookUp} disabled={lookingUp} aria-busy={lookingUp}>{lookingUp?'調べています…':'調べて線を引く'}</button><button type="button" className="lookup-cancel" onClick={()=>setPick(null)} disabled={lookingUp}>やめる</button></>:<span className="lookup-hint">書き終えた行の語句をタップすると、調べて線を引けます。</span>}<span role="status" className="lookup-status">{lookupNote}</span></div></div>
     <div className={'desk-paper-scroll '+(zoom==='read'?'reading':'')} ref={paperViewport} style={isEditing?{height:paperHeight}:undefined} tabIndex={0} aria-label="ノート。入力行に合わせてスクロールします。拡大表示は左右にもスクロールできます">
      <div className="desk-pages">{layout.pages.map(p=><div className="desk-page-row" key={p.index}><div className="desk-paper" ref={p.index===0?paper:undefined}>
       <A5Notebook showPen={!annotationsOnly||!isEditing} layout={rendered} scene={scene} pageIndex={p.index} paperColor={paperColor} view={view} ink={palettes[display.marker]} time={reduced?scene.duration:time} reduced={reduced} personalInk={emptyInk}/>
+      {hits.filter(h=>h.page===p.index).map(h=>{const lined=record.lookups.find(l=>l.sentenceId===h.sentenceId&&h.start>=l.start&&h.end<=l.end);const on=!!pick&&pick.sentenceId===h.sentenceId&&h.token>=pick.from&&h.token<=pick.to;return <button type="button" key={h.sentenceId+':'+h.token+':'+h.x} className={'word-hit'+(on?' is-picked':'')} style={{left:h.x*unit,top:h.y*unit,width:h.width*unit,height:h.height*unit}} aria-label={lined?'「'+h.text+'」— '+lined.native:'「'+h.text+'」を選ぶ'} aria-pressed={on} title={lined?.native} onClick={()=>pickWord(h)}/>;})}
       {p.index===position.page&&isEditing&&<textarea ref={editor} id="notebook-input" className={'notebook-input'+(liveInk?' live-ink-input':'')} aria-label={personalMode?'ノートに自分のひとことを書く':'ノートに英文を書き写す'} aria-describedby="writing-help writing-error" aria-invalid={!!error} enterKeyHint={personalMode||record.index===total-1?'done':'next'} spellCheck={false} autoCapitalize="off" autoCorrect="off" wrap="soft" disabled={!fontReady} value={draft} rows={1}
        style={{left:position.x*unit,top:inputTop,width:position.width*unit,height:inputHeight*unit,fontFamily:'"'+inputFamily+'", sans-serif',fontSize:4.1*unit,lineHeight:(5.2*unit)+'px'} as CSSProperties}
        onScroll={e=>setInputScroll({x:e.currentTarget.scrollLeft/unit,y:e.currentTarget.scrollTop/unit})} onChange={e=>changeDraft(e.target.value)} onSelect={()=>requestAnimationFrame(followCaret)} onKeyUp={e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(e.key))requestAnimationFrame(followCaret);}} onFocus={()=>requestAnimationFrame(followCaret)} onKeyDown={keyDown} onCompositionStart={()=>{composing.current=true;setComposingText(true);}} onCompositionEnd={()=>{composing.current=false;setComposingText(false);compositionEnded.current=Date.now();requestAnimationFrame(()=>follow.current());}}/>}

@@ -2,6 +2,7 @@ import {createA5Layout,createA5Scene,A5} from '../handwriting/a5-layout';
 import type {A5Layout} from '../handwriting/a5-layout';
 import type {StudyContent} from '../handwriting/study-content';
 import {lessonWithLookups} from '../lib/study-page';
+import {tokenize} from '../lib/lookup';
 import type {CopyRecord,DeskDisplay} from './core';
 
 // Allocate the complete lesson before hiding ink. Presentation never changes row allocation.
@@ -48,4 +49,23 @@ export function practiceScene(layout:A5Layout,animateId:string|null,annotationsO
   const result={...s,start:clock};clock+=s.duration+5;return result;
  });
  return {...scene,strokes:strokes.sort((a,b)=>a.start-b.start),duration:clock+1,memoStart:0,memoStarts:Object.fromEntries((sentence?.glosses??[]).map(g=>[g.id,clock]))};
+}
+// Tap targets over the written words: one per word per line segment, only for sentences the layout shows (confirmed ones).
+export interface WordHit {page:number;sentenceId:string;token:number;text:string;start:number;end:number;x:number;y:number;width:number;height:number}
+export function wordHits(layout:A5Layout):WordHit[] {
+ const hits:WordHit[]=[];
+ for(const sentence of layout.source.sentences) {
+  const runs=layout.pages.flatMap(p=>p.runs.filter(r=>r.layer==='body'&&r.sourceId===sentence.id).map(r=>({page:p.index,run:r})));
+  if(!runs.length)continue;
+  tokenize(sentence.text).forEach((t,token)=>{
+   if(!t.word)return;
+   for(const {page,run} of runs) {
+    const glyphs=run.glyphs.filter(g=>g.index>=t.start&&g.index<t.end&&g.char!==' ');
+    if(!glyphs.length)continue;
+    const x=glyphs[0].x,right=glyphs.at(-1)!.x+glyphs.at(-1)!.advance;
+    hits.push({page,sentenceId:sentence.id,token,text:t.text,start:t.start,end:t.end,x:x-.4,y:run.y-4.1,width:right-x+.8,height:5.2});
+   }
+  });
+ }
+ return hits;
 }

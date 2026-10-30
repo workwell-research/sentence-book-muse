@@ -1,6 +1,6 @@
 import {describe,it,expect,vi} from 'vitest';
 import {emptyCopy,confirmCopy,nextCopy,submitCopy,validCopy,defaultDisplay,idleTimer,timerAt,toggleTimer,readSaved,practiceSchema,saveRecord} from '../src/desk/core';
-import {deskLayout,confirmedLayout,inputPosition} from '../src/desk/note';
+import {deskLayout,confirmedLayout,inputPosition,wordHits} from '../src/desk/note';
 import {studySample} from '../src/handwriting/study-content';
 
 describe('notebook Copy record',()=>{
@@ -49,6 +49,15 @@ describe('notebook Copy record',()=>{
   expect(plan.pages.flatMap(p=>p.markers).some(m=>m.id.startsWith(line.id+':'))).toBe(true);
   // The line shows only once its sentence is confirmed, like the authored glosses.
   expect(JSON.stringify(confirmedLayout(plan,state,defaultDisplay).pages)).not.toContain('書き留めた');
+  // Tap targets exist only over written sentences, one per word, placed on that word's glyphs.
+  expect(wordHits(confirmedLayout(plan,state,defaultDisplay))).toEqual([]);
+  const written=nextCopy(confirmCopy({...state,draft:studySample.sentences[0].text},studySample,'now'),studySample);
+  const hits=wordHits(confirmedLayout(deskLayout(studySample,written,defaultDisplay),written,defaultDisplay));
+  expect(hits.map(h=>h.text)).toEqual(['Today','I','decided','to','slow','down']);
+  expect(new Set(hits.map(h=>h.sentenceId))).toEqual(new Set(['example-story-01']));
+  for(let i=1;i<hits.length;i++)expect(hits[i].x).toBeGreaterThan(hits[i-1].x+hits[i-1].width-1);
+  expect(hits[0]).toMatchObject({page:0,token:0,start:0,end:5,height:5.2});
+  expect(hits[0].y).toBeCloseTo(39.2-4.1);
   const stale={...state,lookups:[{...line,expression:'wrote DOWN'}]};
   expect(deskLayout(studySample,stale,defaultDisplay).source).toEqual(deskLayout(studySample,emptyCopy(studySample),defaultDisplay).source);
  });
