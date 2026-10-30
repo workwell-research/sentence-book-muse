@@ -43,5 +43,71 @@
     "No physical-device or assistive-technology verification",
     "Existing leaked-password-protection warning unchanged; email OTP UI; https://supabase.com/docs/guides/auth/password-security#password-strength-and-leaked-password-protection"
   ],
-  "production_app": "pending deployment"
+  "production_app": {
+    "source": "fac70c1c671ae2e323eb647e3a215a0eae78c058",
+    "deployment": "a2f0a6c6",
+    "canonical": "https://sentence-book-muse.pages.dev",
+    "ci": "https://github.com/workwell-research/sentence-book-muse/actions/runs/41071120205",
+    "ci_result": "success",
+    "http_probes": [
+      {
+        "path": "/connect",
+        "status": 200,
+        "cacheControl": "public, max-age=0, must-revalidate"
+      },
+      {
+        "path": "/api/muse/guide",
+        "status": 200,
+        "cacheControl": "no-store",
+        "contract": "sentence_book_page_v1"
+      },
+      {
+        "path": "/api/muse/manage",
+        "status": 401,
+        "cacheControl": "no-store",
+        "error": {
+          "code": "unauthorized"
+        }
+      },
+      {
+        "path": "/mcp",
+        "status": 401,
+        "cacheControl": "no-store",
+        "error": {
+          "code": "unauthorized"
+        }
+      },
+      {
+        "path": "/api/muse/learning-state",
+        "status": 401,
+        "cacheControl": "no-store",
+        "error": {
+          "code": "unauthorized"
+        }
+      },
+      {
+        "path": "/api/generate",
+        "status": 401,
+        "cacheControl": "no-store",
+        "error": {
+          "code": "invite_required",
+          "message": "招待コードを入力してください。"
+        }
+      },
+      {
+        "path": "/api/lookup",
+        "status": 401,
+        "cacheControl": "no-store",
+        "error": {
+          "code": "invite_required",
+          "message": "招待コードを入力してください。"
+        }
+      },
+      {
+        "deployedKeyUI": true
+      }
+    ],
+    "browser": "Real signed-in account loaded new form with unchecked permissions and no issued key. No personal summary was published or key created by Codex.",
+    "handoff": "Detailed public instructions sent to authorized existing Muse conversation; Muse replied with button; empty API-key input opened. User must review/share summary, issue personal key and enter it directly."
+  }
 }
