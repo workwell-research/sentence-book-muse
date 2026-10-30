@@ -56,6 +56,16 @@ npm run pages:dev
 
 The last command serves `dist` and the Functions on `http://127.0.0.1:8797`. `npm run dev` serves the frontend only. The generate route still returns 503 with or without credentials.
 
+## Deployment
+
+Public site: https://sentence-book-muse.pages.dev (Cloudflare Pages project `sentence-book-muse`, production branch `main`). Deploys are manual for now:
+
+```bash
+npm run build && npx wrangler pages deploy dist --project-name sentence-book-muse --branch main
+```
+
+`META_MODEL_API_KEY` is an encrypted Pages secret (`wrangler pages secret put META_MODEL_API_KEY --project-name sentence-book-muse`, value piped from the ignored `.dev.vars`); a secret set after a deployment applies from the next deployment. `MODEL_API_BASE_URL` and `MODEL_ID` are plain vars in `wrangler.jsonc`. The public `/api/generate` and `/api/lookup` have no rate or cost limit yet.
+
 ## Local verification
 
 For the current typing interaction, run `QA_ORIGIN=http://127.0.0.1:5327 node scripts/qa-live-ink.mjs` against a dedicated Vite dev server. It checks live stroke progression, editing/Undo, composition fallback, restore, four English faces and mobile Enter behavior; evidence is in `.impeccable/review/live-input/`.
