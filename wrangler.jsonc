@@ -7,6 +7,8 @@
   "d1_databases": [{ "binding": "RATE_LIMIT", "database_name": "sentence-book-muse-limits", "database_id": "c7ce1021-0b24-4a2c-b195-8fcade0536df" }],
   "vars": {
     "ACCESS_ORIGIN": "https://sentence-book-muse.pages.dev",
+    "SUPABASE_URL": "https://wgyyfxlabbzhnrbtwmcc.supabase.co",
+    "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_x1sjGm62S_saNxFTk8eqjA_AxtY_OOv",
     "MODEL_API_BASE_URL": "https://api.meta.ai/v1",
     "MODEL_ID": "muse-spark-1.3"
   }

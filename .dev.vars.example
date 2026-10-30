@@ -15,3 +15,7 @@ INVITE_CODE_SHA256=
 SESSION_SECRET=
 # Local Pages origin only; production is the canonical HTTPS origin in wrangler.jsonc.
 ACCESS_ORIGIN=http://localhost:8797
+
+# Private Muse inbox. Public URL/key are in wrangler.jsonc; use a separate QA project locally.
+# This server-only secret must never be a VITE variable or appear in browser assets.
+SUPABASE_SECRET_KEY=

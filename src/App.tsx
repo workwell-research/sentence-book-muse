@@ -174,7 +174,7 @@ export function App() {
         <p>旅のこと、日々のこと、大切なこと。<br />自分の言葉で練習するための、小さな本棚です。</p>
       </section>
       <div className="workspace">
-        <Shelf library={library} pending={pending} reviewingId={reviewing?.draft.draft_id ?? null} onReview={review} onDiscard={discard} />
+        <div><p className="inbox-line"><a href="/connect">あなたのMuseをつなぐ・受信箱を開く</a></p><Shelf library={library} pending={pending} reviewingId={reviewing?.draft.draft_id ?? null} onReview={review} onDiscard={discard} /></div>
         <section className="writing-paper" id="compose" aria-labelledby="compose-title">
           <h2 id="compose-title" tabIndex={-1}>今日は、何を話したい？</h2>
           <p className="paper-intro">今日のひとことや、SNSに書いた短いメモでも。</p>

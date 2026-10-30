@@ -1,0 +1,54 @@
+.connect-main { max-width: 980px; }
+.connect-main .intro { align-items: start; gap: 36px; }
+.connect-main .intro h1 { font-size: clamp(26px,3vw,36px); }
+.connect-main .intro p { padding-top: 8px; flex-shrink: 0; }
+.connect-section { padding: 32px 0 38px; border-top: 1px solid var(--line); }
+.connect-section h2 { font-family: 'Hiragino Mincho ProN','Yu Mincho',serif; font-size: 23px; font-weight: 500; margin-bottom: 16px; }
+.connect-section h3 { font-size: 16px; margin-top: 24px; margin-bottom: 10px; }
+.connect-section p { max-width: 70ch; }
+.connect-note { margin-top: 12px; color: var(--muted); font-size: 13px; }
+.connect-login { max-width: 600px; }
+.connect-login form { margin-top: 24px; max-width: 440px; }
+.connect-main input:not([type=checkbox]) { display: block; width: 100%; min-height: 46px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); padding: 10px 12px; border-radius: 3px; margin-top: 8px; font-size: 16px; }
+.connect-main button { min-height: 44px; }
+.connect-account,.connect-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+.connect-account { padding-bottom: 16px; font-size: 13px; overflow-wrap: anywhere; }
+.connect-heading h2 { margin: 0; }
+.connect-message { color: var(--sage); font-size: 13px; }
+.connect-message:not(:empty) { margin: 16px 0; }
+.connect-error { color: #923b31; font-size: 14px; margin: 16px 0; }
+.connect-empty { padding: 32px 0 6px; color: var(--muted); }
+.connect-inbox { list-style: none; padding: 0; margin: 20px 0 0; }
+.connect-inbox li { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 18px 0; border-top: 1px solid var(--line); }
+.connect-inbox h3,.connect-inbox h4 { font-weight: 600; font-size: 16px; margin: 0 0 4px; }
+.connect-inbox span,.connect-inbox p { font-size: 12px; color: var(--muted); }
+.connect-inbox button { flex-shrink: 0; }
+.connect-review { border: 0; padding: 0; margin: 0; min-width: 0; }
+.connect-review .lesson-preview { margin-top: 12px; }
+.connect-summary { margin-top: 24px; padding: 24px; background: var(--paper); }
+.connect-summary h3 { margin-top: 0; }
+.connect-facts { font-size: 13px; margin: 20px 0; }
+.connect-facts > div { display: grid; grid-template-columns: 160px minmax(0,1fr); gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.connect-facts dt { color: var(--muted); }
+.connect-facts dd { margin: 0; overflow-wrap: anywhere; }
+.connect-facts ul { margin: 0; padding-left: 20px; }
+.connect-section details { margin-top: 16px; }
+.connect-section summary { cursor: pointer; }
+.connect-steps { padding-left: 24px; display: grid; gap: 18px; }
+.connect-steps input { font-size: 14px !important; }
+.connect-consent fieldset { padding: 20px 0 0; border: 0; }
+.connect-consent label { display: flex; align-items: start; gap: 12px; padding: 8px 0; font-size: 14px; font-weight: 400; }
+.connect-consent input { width: 20px; height: 20px; flex-shrink: 0; }
+.connect-consent .connect-note { overflow-wrap: anywhere; }
+.connect-address { overflow-wrap: anywhere; margin-bottom: 14px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+@media(max-width:640px) {
+  .connect-main { width: calc(100% - 36px); }
+  .connect-main .intro { display: block; padding: 32px 0; }
+  .connect-main .intro p { margin-top: 14px; }
+  .connect-section { padding-block: 26px; }
+  .connect-facts > div { grid-template-columns: 1fr; gap: 4px; }
+  .connect-summary { padding: 18px; }
+  .connect-inbox li { align-items: start; flex-direction: column; gap: 4px; }
+  .connect-main .lesson-preview { padding: 20px 18px; }
+}

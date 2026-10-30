@@ -12,6 +12,7 @@ interface Props {
   model: string | null;
   binders: readonly Binder[];
   kept: boolean;
+  inbox?: boolean;
   status: FilingStatus;
   onFile: (decision: FilingDecision) => void;
   onDiscard: () => void;
@@ -22,7 +23,7 @@ const levelLabel: Record<LessonDraft['level'], string> = { A2: 'A2 · 短い文�
 const NEW = '__new__';
 
 // Read-only review of one generated page, followed by the learner's explicit filing decision.
-export function LessonPreview({ draft, model, binders, kept, status, onFile, onDiscard, onClose }: Props) {
+export function LessonPreview({ draft, model, binders, kept, inbox = false, status, onFile, onDiscard, onClose }: Props) {
   const title = useRef<HTMLHeadingElement>(null);
   const ids = { destination: useId(), title: useId(), description: useId() };
   const filing = draft.filing;
@@ -89,6 +90,7 @@ export function LessonPreview({ draft, model, binders, kept, status, onFile, onD
       <p className="preview-tags">{filing.sceneTags.map(tag => <span key={tag}>{tag}</span>)}</p>
       {status.state === 'filed' ? <>
         <p className="preview-filed" role="status">{status.createdBinder ? `新しい本「${status.binderTitle}」を作って、このページを仕舞いました。` : `「${status.binderTitle}」にこのページを仕舞いました。`}</p>
+        {inbox && <p className="preview-note">教材はこのブラウザの本棚に保存されました。受信箱への完了連絡が済むと、ほかの端末の受信箱からも消えます。</p>}
         <div className="filing-actions"><a className="save-button" href={`/?page=${status.pageId}`}>このページを机で練習する</a><button type="button" className="text-button" onClick={onClose}>閉じる</button></div>
       </> : <>
         <div className="filing-form">
@@ -105,13 +107,14 @@ export function LessonPreview({ draft, model, binders, kept, status, onFile, onD
           </div>}
         </div>
         {status.state === 'failed' && <p className="error" role="alert">{status.message}</p>}
+        {inbox && <p className="preview-note">仕舞うと教材はこのブラウザの本棚に保存され、すべての端末の受信箱から消えます。「使わない」を選ぶと、本棚には保存せず、すべての端末の受信箱から削除します。</p>}
         <div className="filing-actions">
           <button type="button" className="save-button" onClick={file} disabled={!canFile}>
             {chosen ? `「${chosen.title}」に仕舞う` : newTitle.trim() ? `新しい本「${newTitle.trim()}」を作って仕舞う` : '新しい本を作って仕舞う'}
           </button>
           <button type="button" className="text-button" onClick={onDiscard}>このページは使わない</button>
         </div>
-        <p className="preview-note">{kept
+        <p className="preview-note">{inbox ? '決めるまでは、ログインしたあなたの受信箱に置いてあります。新しい本は、ここで決めたときだけ作られます。' : kept
           ? '仕舞うまで、このページは「仕分けを待つページ」に置いてあります。新しい本は、ここで決めたときだけ作られます。'
           : 'このブラウザに置けなかったため、仕舞わずに画面を閉じると消えます。'}</p>
       </>}

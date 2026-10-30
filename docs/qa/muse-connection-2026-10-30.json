@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-30",
+  "scope": "Personal Muse implementation, synthetic UI QA, and new Supabase schema; production integration pending",
+  "automated": {
+    "tests": 183,
+    "test_files": 24,
+    "result": "passed",
+    "typechecks": "both passed",
+    "vite": "passed; existing main/PDF chunk-size advisory",
+    "worker_compile": "passed",
+    "database_tests": "Actual migration in PGlite with disposable Auth schemas, identities and roles; anonymous/authenticated denial, account isolation, live session/consent, direct/delegated boundaries, versioning, idempotency and capacity"
+  },
+  "browser": {
+    "origin": "http://127.0.0.1:8803",
+    "services": "Synthetic local Auth/account/MCP-consent fixture; no real emails or model requests",
+    "widths": [1726, 375],
+    "passed": [
+      "Email-code form, synthetic verification, invitation-gated enrollment and reload",
+      "Explicit summary preview and publication; no automatic publication",
+      "One-shot publish failure stays beside actions and retry succeeds",
+      "Populated draft preview states browser-local filing and all-device inbox removal",
+      "Explicit filing saves locally; failed cloud receipt preserves saved page and exposes retry",
+      "Receipt retry clears inbox; replay of the same draft retains the same local page ID",
+      "Consent starts unchecked/disabled, explains actual email scope in Japanese, and supports synthetic approval return",
+      "Unsharing, connection revocation and logout; local library retained",
+      "No horizontal overflow at verified 375px; no captured warning/error logs in latest QA tab"
+    ],
+    "evidence": "../../.impeccable/review/muse-connect/",
+    "review": "Independent targeted verdict scored all three UX findings resolved; no live integration claim"
+  },
+  "remote_schema": {
+    "project": "wgyyfxlabbzhnrbtwmcc",
+    "region": "ap-northeast-1",
+    "migration": "20261030035947_muse_inbox.sql",
+    "applied": true,
+    "verified": "Four private tables have RLS; anon/authenticated cannot select or invoke gateway; service_role may invoke; nonexistent identity rejected",
+    "advisor": "Four INFO rls_enabled_no_policy notices reflect intentional default-deny private tables; no warning/error in security result"
+  },
+  "pending": [
+    "Custom SMTP password entry/save by owner and actual email delivery",
+    "OAuth server/DCR, site URL and email templates configuration",
+    "Encrypted Pages SUPABASE_SECRET_KEY and release",
+    "Live service-role RPC, personal sign-in, OAuth/refresh/revoke, actual Muse tool discovery/delivery",
+    "Physical devices, real IME, assistive technology and PDF/printing not retested"
+  ],
+  "preservation": "Original app, existing production release, real browser learning data and other contributors' servers unchanged. No secrets/private books in evidence."
+}

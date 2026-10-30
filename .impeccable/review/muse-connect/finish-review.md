@@ -1,0 +1,45 @@
+# Muse connection finish review — 2026-10-30
+
+Disposition: **fix**, then one targeted confirmation pass. Preserve the incumbent visual direction; no rebuild or new visual world is needed.
+
+## Evidence validity
+
+This independent review inspected `inbox-desktop.png`, `inbox-mobile.png`, and `consent-mobile.png`, plus current `src/Connect.tsx`, `src/connect.css`, `src/lib/muse-client.ts`, routing and the small `/setup` link. PRODUCT.md, DESIGN.md, PROJECT_STATUS.md, the Impeccable craft floor, and incumbent `src/styles.css` supplied context. `LessonPreview` and the inbox resolution implementation were read only to check the truth of reused UI copy.
+
+The supplied screenshots show synthetic QA at reported viewport widths 1726px and 375px; image content widths are 1711px and 360px. Their headings, copy, selected consent controls and layout agree with the inspected implementation. They establish the shown empty-inbox/shared-summary state and selected consent state, not every application state. There is no approved comparison comp, detector result, or reproduction score. The parent reports the launcher was unavailable.
+
+The parent reports mocked email OTP, invitation enrollment, summary preview/publish, draft preview/explicit filing and consent return checks, 183 passing unit tests, and database isolation checks. Those are attributed results, not tests rerun by this reviewer. Real email delivery, Muse/OAuth interoperability, deployed configuration, assistive technology and physical devices remain unverified.
+
+## Material findings
+
+1. **P2 — Explain account-data consent in the user's language.** `src/Connect.tsx:192` displays `アカウント情報の要求：email`, and substitutes `email` when the returned scope is empty. The consent capture reproduces this raw protocol term above two readable, optional app permissions. A person cannot readily tell that approving may also release account information beyond those checkboxes, and the empty-scope fallback asserts a request without evidence. Map the actually requested supported scopes to accurate Japanese descriptions (for example, email address for `email`), explicitly distinguish these account permissions from the selectable summary/delivery permissions, and do not invent a scope when none is returned. Keep the requesting client and return destination visible. Confirm the explanation against the configured OAuth scopes before real deployment.
+
+2. **P2 — State the cross-device effect where the learner files or discards.** `src/Connect.tsx:127` correctly distinguishes the common inbox from browser-local lessons and practice. However, `src/Connect.tsx:135` passes `kept` to the incumbent preview, which says the draft lives in local `「仕分けを待つページ」`. These cloud drafts actually live in this account's inbox, and both filing and discard resolve the shared row and clear its draft (`src/Connect.tsx:94–114,136`; migration `20261030035947_muse_inbox.sql`, inbox/resolve branches). Explain next to the preview actions that filing saves the lesson only in this browser and removes the draft from the inbox on all devices, and that “使わない” removes it from all devices without filing. Supply context-appropriate waiting-location copy instead of the local pending-list statement. No additional confirmation modal is needed solely to solve this copy issue.
+
+3. **P2 — Show action outcomes at the action location.** Account errors and success announcements render only near the top (`src/Connect.tsx:118–119`), while summary publishing/unsharing, connection revocation and a long lesson's filing actions are much farther down (`138–153`, plus the preview). In the supplied mobile composition those locations span several screens. A failure can re-enable a button with no visible explanation at the place the person is looking; `role="alert"` alone does not address visual feedback. Add adjacent status/error output for the affected action, or deliberately reveal a focused error summary. For a local filing failure, the reused preview already supports `FilingStatus` `failed`; use that adjacent output while preserving entered destination data. Keep the separate “saved locally, receipt pending” recovery explicit after partial success. Verify one rejected summary/revoke action and a filing/receipt failure at narrow width.
+
+## What passes in this scope
+
+The extension keeps `/setup`'s warm paper, serif section headings, restrained rules, sage controls and native form semantics. The captured desktop and narrow compositions have clear section hierarchy and no observed horizontal clipping. The shared-inbox/local-library distinction, manual summary publication, excluded full lesson/draft-note content, manual filing, named connection and explicit refusal path are present. Source initializes both app-permission checkboxes unchecked; the screenshot shows them after selection.
+
+Labels, native checkboxes, fieldset legends, error/status roles, skip link, focus-visible treatment and minimum 44px button height exist in source. Declared CSS color calculations give body/desk 10.30:1, muted/desk 4.84:1, sage/desk 6.03:1, white/sage 6.80:1, and error/desk 6.44:1. These are token checks, not a computed-style or full accessibility audit. No visual finding warrants replacing the existing typography, palette, desk, or shelf.
+
+## Handoff
+
+Apply the three fixes in one batch. Capture the revised consent disclosure and a populated draft's filing area at narrow width, including adjacent error/partial-success feedback; inspect those and the existing desktop layout once. Do not repeat unrelated desk/PDF work. Keep the local mocked-flow evidence distinct from the still-pending real email, OAuth, Muse and deployment verification. Parent owns the final PROJECT_STATUS.md reconciliation; this reviewer wrote only this report and changed no application source, account, browser data, server or configuration.
+
+## Targeted verdict after the fix batch — 2026-10-30
+
+Disposition: **ship for these three UI findings**. This verdict supersedes the initial `fix` disposition for this list only; it is not approval of live integration or a new whole-surface audit.
+
+| Finding | Score | Confirmation |
+| --- | --- | --- |
+| 1. Account-data consent | **Resolved** | `Connect.tsx:205–206` maps returned scopes to Japanese, uses `要求なし` for no returned scope, and distinguishes account data from the two selectable learning permissions. Updated `consent-mobile.png` visibly names the email address and shows both learning permissions unchecked with approval disabled. Requesting client and return destination remain visible. |
+| 2. Cross-device filing/discard effects | **Resolved** | The cloud preview receives `inbox`. `LessonPreview.tsx:93,110,117` explains browser-only lesson storage, removal from every device's inbox, discard without filing, and waiting in the signed-in inbox. `draft-mobile.png` shows the disclosure beside the filing/discard actions; `receipt-error-mobile.png` accurately qualifies removal as occurring after the completion receipt. |
+| 3. Feedback near the action | **Resolved** | `Connect.tsx:89–93,115–118,142–144,153,162` routes section feedback locally, renders local filing/discard failures through the preview's failed status, and preserves successful filing with an adjacent receipt-retry notice. `summary-error-mobile.png` shows a readable failure directly below the publish controls. `receipt-error-mobile.png` shows the saved lesson and its nearby actionable completion-receipt warning. The generic inbox alert is supplemental; the useful partial-success explanation is beside the saved preview. |
+
+This pass inspected only current `Connect.tsx`/`LessonPreview.tsx` changes relevant to the three findings and the four updated synthetic captures: `consent-mobile.png`, `draft-mobile.png`, `summary-error-mobile.png`, and `receipt-error-mobile.png`. The parent reports actual inner width 375px; the images show 360px of content. The revised copy and feedback fit those captures without observed clipping. Earlier desktop evidence remains unchanged and was not recaptured by this reviewer. No new detector, comp comparison, browser operation, test run, account access or source/settings/status edit was performed.
+
+The parent additionally reports a one-shot 503 during summary publication, a 503 after successful local filing, successful receipt retry clearing the inbox, and repeated draft handling reusing the same saved page ID without increasing the two-page synthetic library. It reports all 183 tests across 24 files, both TypeScript projects, Vite and Worker compilation passing after the batch. These are attributed verification results. Revocation feedback and local-storage failure placement were confirmed in source, not independently exercised or captured here.
+
+No further UI correction is requested for this fix list. Proceed with the separate configuration/integration handoff and PROJECT_STATUS.md reconciliation. Real email, real OAuth/Muse interoperability, deployed personal-account configuration, assistive technology and physical-device behavior remain outside this verdict. Only this report was appended.

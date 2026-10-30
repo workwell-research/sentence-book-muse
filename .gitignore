@@ -1,6 +1,8 @@
 node_modules/
 dist/
 .wrangler/
+supabase/.temp/
+supabase/.branches/
 .env*
 !.env.example
 .dev.vars*

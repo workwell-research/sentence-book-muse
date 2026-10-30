@@ -6,5 +6,7 @@ import { StudyDesk } from './desk/StudyDesk';
 import { HandwritingDemo } from './handwriting/HandwritingDemo';
 import { InviteAccessProvider } from './InviteAccess';
 const Setup = lazy(() => import('./App').then(module => ({ default: module.App })));
+const Connect = lazy(() => import('./Connect').then(module => ({ default: module.Connect })));
 const setup = window.location.pathname === '/setup';
-createRoot(document.getElementById('root')!).render(<StrictMode><InviteAccessProvider>{setup ? <Suspense fallback={<p>開いています…</p>}><Setup /></Suspense> : window.location.pathname==='/handwriting' ? <HandwritingDemo /> : <StudyDesk />}</InviteAccessProvider></StrictMode>);
+const connect = ['/connect','/oauth/consent'].includes(window.location.pathname);
+createRoot(document.getElementById('root')!).render(<StrictMode><InviteAccessProvider>{connect ? <Suspense fallback={<p>開いています…</p>}><Connect /></Suspense> : setup ? <Suspense fallback={<p>開いています…</p>}><Setup /></Suspense> : window.location.pathname==='/handwriting' ? <HandwritingDemo /> : <StudyDesk />}</InviteAccessProvider></StrictMode>);
