@@ -1,5 +1,6 @@
 import type { GenerationErrorCode, GenerationFailure } from '../../shared/generation-api';
 import type { ModelFailureCode } from './model-client';
+import type { RatePolicy, RateVerdict } from './rate-limit';
 
 // Shared pieces of the model-backed routes: coded failures, upstream mapping and bounded JSON bodies.
 export const noStore = { 'Cache-Control': 'no-store' };
@@ -23,6 +24,15 @@ export function upstreamFailure(code: ModelFailureCode): Response {
   const mapped = upstreamFailures[code];
   return fail(mapped.status, mapped.code, mapped.message, code === 'truncated_output' ? 'truncated' : undefined,
     mapped.status === 429 ? { 'Retry-After': '20' } : {});
+}
+
+// A cap verdict as a response: 429 with Retry-After, or 503 when the counter binding is missing (deployment mistake).
+export function rateLimitFailure(verdict: Exclude<RateVerdict, { ok: true }>, policy: RatePolicy): Response {
+  if (verdict.scope === 'unconfigured') return fail(503, 'generation_unavailable', '利用回数の管理が設定されていないため、止めています。', 'rate_limit_unconfigured');
+  const message = verdict.scope === 'minute' ? '続けて使いすぎています。1分ほど待ってから、もう一度どうぞ。'
+    : verdict.scope === 'day' ? `今日の分（1日${policy.perDay}回）を使い切りました。また明日どうぞ。`
+    : '今日はたくさん使われたため、いったん止めています。また明日どうぞ。';
+  return fail(429, 'rate_limited', message, verdict.scope, { 'Retry-After': String(verdict.retryAfter) });
 }
 
 // Reads a JSON body no larger than maxBytes; anything else becomes a coded 4xx before any model call.

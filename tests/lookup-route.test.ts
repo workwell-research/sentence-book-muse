@@ -1,7 +1,9 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { handleLookup } from '../functions/api/lookup';
+import { memoryD1 } from './support/memory-d1';
 
-const env = { META_MODEL_API_KEY: 'test-key-not-real' };
+let env: { META_MODEL_API_KEY: string; RATE_LIMIT: ReturnType<typeof memoryD1> };
+beforeEach(() => { env = { META_MODEL_API_KEY: 'test-key-not-real', RATE_LIMIT: memoryD1() }; });
 const lookup = { expression: 'giving a talk', sentence: "Next week, I'm giving a talk in Abu Dhabi.", level: 'B1', native_language: 'ja' };
 function model(content: string, status = 200) {
   const calls: unknown[] = [];
@@ -34,7 +36,8 @@ describe('/api/lookup', () => {
   it('refuses before calling the model: wrong method, no key, expression outside the sentence, extra keys', async () => {
     const m = model('{}');
     expect((await handleLookup(new Request('https://example.test/api/lookup'), env, { fetch: m.fetchFn })).status).toBe(405);
-    expect((await handleLookup(post(lookup), {}, { fetch: m.fetchFn })).status).toBe(503);
+    expect((await handleLookup(post(lookup), { RATE_LIMIT: memoryD1() }, { fetch: m.fetchFn })).status).toBe(503);
+    expect((await (await handleLookup(post(lookup), { META_MODEL_API_KEY: 'test-key-not-real' }, { fetch: m.fetchFn })).json()).error.reason).toBe('rate_limit_unconfigured');
     expect((await handleLookup(post({ ...lookup, expression: 'take a break' }), env, { fetch: m.fetchFn })).status).toBe(400);
     expect((await handleLookup(post({ ...lookup, extra: true }), env, { fetch: m.fetchFn })).status).toBe(400);
     expect(m.calls).toHaveLength(0);

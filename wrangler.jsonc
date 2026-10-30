@@ -4,6 +4,7 @@
   "pages_build_output_dir": "./dist",
   "compatibility_date": "2026-10-26",
   "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [{ "binding": "RATE_LIMIT", "database_name": "sentence-book-muse-limits", "database_id": "c7ce1021-0b24-4a2c-b195-8fcade0536df" }],
   "vars": {
     "MODEL_API_BASE_URL": "https://api.meta.ai/v1",
     "MODEL_ID": "muse-spark-1.3"

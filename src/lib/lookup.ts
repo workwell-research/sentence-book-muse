@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isGenerationErrorCode } from '../../shared/generation-api';
+import { isGenerationErrorCode, rateLimitMessage } from '../../shared/generation-api';
 import type { GenerationErrorCode } from '../../shared/generation-api';
 import { validateLookup } from '../../shared/lookup-schema';
 import type { LookupRequest, LookupResult } from '../../shared/lookup-schema';
@@ -22,6 +22,7 @@ const failureText: Record<LookupFailureCode, { message: string; retryable: boole
   upstream_timeout: { message: '調べるのに時間がかかりすぎました。もう一度お試しください。', retryable: true },
   upstream_error: { message: '意味を受け取れませんでした。もう一度お試しください。', retryable: true },
   invalid_output: { message: '受け取った意味が選んだ語句と合わなかったため、採用しませんでした。もう一度お試しください。', retryable: true },
+  rate_limited: { message: rateLimitMessage(undefined), retryable: true },
   network: { message: '通信できませんでした。接続を確認して、もう一度お試しください。', retryable: true },
   unexpected: { message: '意味を受け取れませんでした。もう一度お試しください。', retryable: true },
 };
@@ -37,6 +38,7 @@ export async function requestLookup(fetchFn: typeof fetch, request: LookupReques
   if (!response.ok) {
     const error = (body as { error?: { code?: unknown; reason?: unknown } })?.error;
     const outcome = failed(isGenerationErrorCode(error?.code) ? error.code : 'unexpected');
+    if (outcome.kind === 'failed' && outcome.code === 'rate_limited') return { ...outcome, message: rateLimitMessage(error?.reason) };
     return outcome.kind === 'failed' && typeof error?.reason === 'string' ? { ...outcome, message: `${outcome.message}（理由: ${error.reason}）` } : outcome;
   }
   // The browser re-validates: the meaning must be for exactly the span the learner picked.

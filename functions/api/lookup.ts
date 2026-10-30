@@ -4,14 +4,16 @@ import type { GenerationUsage } from '../../shared/generation-api';
 import { buildLookupMessages } from '../lib/lookup-prompt';
 import { modelConfig, requestStructuredJson } from '../lib/model-client';
 import type { ModelCallOptions, ModelEnv } from '../lib/model-client';
-import { fail, noStore, readJsonBody, upstreamFailure } from '../lib/route';
+import { POLICIES, checkRateLimit } from '../lib/rate-limit';
+import type { RateLimitEnv } from '../lib/rate-limit';
+import { fail, noStore, rateLimitFailure, readJsonBody, upstreamFailure } from '../lib/route';
 
 // One selected expression → one bounded model call → a validated meaning or a coded failure.
 // Nothing is stored server-side; the browser keeps the line and the word.
 const MAX_BODY_BYTES = 8 * 1024;
 export interface LookupSuccess { contract: typeof LOOKUP_CONTRACT; result: LookupResult; model: string; usage: GenerationUsage | null }
 
-export async function handleLookup(request: Request, env: ModelEnv, options: ModelCallOptions = {}): Promise<Response> {
+export async function handleLookup(request: Request, env: ModelEnv & RateLimitEnv, options: ModelCallOptions = {}): Promise<Response> {
   if (request.method !== 'POST') return fail(405, 'method_not_allowed', 'Use POST.', undefined, { Allow: 'POST' });
   if (!modelConfig(env)) return fail(503, 'generation_unavailable', '調べる機能は準備中です。');
   const body = await readJsonBody(request, MAX_BODY_BYTES);
@@ -19,6 +21,8 @@ export async function handleLookup(request: Request, env: ModelEnv, options: Mod
   const parsed = lookupRequestSchema.safeParse(body.json);
   if (!parsed.success) return fail(400, 'invalid_request', '調べる語句は、その文の中から選んでください。');
   const lookup = parsed.data;
+  const verdict = await checkRateLimit(env, request, POLICIES.lookup);
+  if (!verdict.ok) return rateLimitFailure(verdict, POLICIES.lookup);
 
   const result = await requestStructuredJson(env, {
     messages: buildLookupMessages(lookup), schemaName: LOOKUP_CONTRACT, schema: lookupResultJsonSchema,
@@ -35,4 +39,4 @@ export async function handleLookup(request: Request, env: ModelEnv, options: Mod
   return Response.json(success, { headers: noStore });
 }
 
-export const onRequest: PagesFunction<ModelEnv> = ({ request, env }) => handleLookup(request, env);
+export const onRequest: PagesFunction<ModelEnv & RateLimitEnv> = ({ request, env }) => handleLookup(request, env);

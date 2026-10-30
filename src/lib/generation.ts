@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isGenerationErrorCode } from '../../shared/generation-api';
+import { isGenerationErrorCode, rateLimitMessage } from '../../shared/generation-api';
 import type { GenerationErrorCode, GenerationSuccess } from '../../shared/generation-api';
 import type { GenerationRequest } from '../../shared/generation-request';
 import { lessonDraftSchema, validateLessonDraft } from '../../shared/lesson-schema';
@@ -21,6 +21,7 @@ const failureText: Record<GenerationFailureCode, { message: string; retryable: b
   upstream_timeout: { message: '教材づくりに時間がかかりすぎました。もう一度お試しください。', retryable: true },
   upstream_error: { message: 'モデルから教材を受け取れませんでした。もう一度お試しください。', retryable: true },
   invalid_output: { message: '受け取った教材が仕様に合わなかったため、採用しませんでした。もう一度お試しください。', retryable: true },
+  rate_limited: { message: rateLimitMessage(undefined), retryable: true },
   network: { message: '通信できませんでした。接続を確認して、もう一度お試しください。', retryable: true },
   unexpected: { message: '教材を受け取れませんでした。もう一度お試しください。', retryable: true },
 };
@@ -41,6 +42,7 @@ export async function requestLesson(fetchFn: typeof fetch, request: GenerationRe
   if (!response.ok) {
     const error = (body as { error?: { code?: unknown; reason?: unknown } })?.error;
     const outcome = failed(isGenerationErrorCode(error?.code) ? error.code : 'unexpected');
+    if (outcome.kind === 'failed' && outcome.code === 'rate_limited') return { ...outcome, message: rateLimitMessage(error?.reason) };
     // The server's reason code is shown so a failure can be reported precisely without exposing content.
     return outcome.kind === 'failed' && typeof error?.reason === 'string'
       ? { ...outcome, message: `${outcome.message}（理由: ${error.reason}）` } : outcome;

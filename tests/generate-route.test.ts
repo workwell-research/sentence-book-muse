@@ -1,8 +1,10 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { handleGenerate } from '../functions/api/generate';
+import { memoryD1 } from './support/memory-d1';
 import type { LessonDraft } from '../shared/lesson-schema';
 
-const env = { META_MODEL_API_KEY: 'test-key-not-real' };
+let env: { META_MODEL_API_KEY: string; RATE_LIMIT: ReturnType<typeof memoryD1> };
+beforeEach(() => { env = { META_MODEL_API_KEY: 'test-key-not-real', RATE_LIMIT: memoryD1() }; });
 const draftId = '7f3e4b7e-5c1a-4d2b-9e8f-1a2b3c4d5e6f';
 const generationRequest = {
   draft_id: draftId, topic: '今日は電車が遅れた。', interests: ['旅'], level: 'A2', native_language: 'ja',
@@ -56,7 +58,7 @@ describe('/api/generate', () => {
   });
   it('fails closed with 503 and no model call when no key is configured', async () => {
     const model = modelReturning(JSON.stringify(page()));
-    const response = await handleGenerate(post(generationRequest), {}, { fetch: model.fetchFn });
+    const response = await handleGenerate(post(generationRequest), { RATE_LIMIT: memoryD1() }, { fetch: model.fetchFn });
     expect(response.status).toBe(503);
     expect((await response.json()).error.code).toBe('generation_unavailable');
     expect(model.calls).toHaveLength(0);
@@ -97,6 +99,19 @@ describe('/api/generate', () => {
     const stillCut = await handleGenerate(post(generationRequest), env, { fetch: twice.fetchFn });
     expect((await stillCut.json()).error).toMatchObject({ code: 'invalid_output', reason: 'truncated' });
     expect(twice.calls).toHaveLength(2);
+  });
+  it('caps use per address and fails closed when the counter store is missing, before any model call', async () => {
+    const model = modelReturning(JSON.stringify(page()));
+    for (let i = 0; i < 3; i++) expect((await handleGenerate(post(generationRequest), env, { fetch: model.fetchFn })).status).toBe(200);
+    const capped = await handleGenerate(post(generationRequest), env, { fetch: model.fetchFn });
+    expect(capped.status).toBe(429);
+    expect((await capped.json()).error).toMatchObject({ code: 'rate_limited', reason: 'minute' });
+    expect(Number(capped.headers.get('retry-after'))).toBeGreaterThan(0);
+    expect(model.calls).toHaveLength(3);
+    const missing = await handleGenerate(post(generationRequest), { META_MODEL_API_KEY: 'test-key-not-real' }, { fetch: model.fetchFn });
+    expect(missing.status).toBe(503);
+    expect((await missing.json()).error).toMatchObject({ code: 'generation_unavailable', reason: 'rate_limit_unconfigured' });
+    expect(model.calls).toHaveLength(3);
   });
   it('maps upstream auth, rate limit and errors to distinct statuses without leaking the key', async () => {
     const authModel = modelReturning('{}', 401);

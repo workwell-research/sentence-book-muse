@@ -64,7 +64,7 @@ Public site: https://sentence-book-muse.pages.dev (Cloudflare Pages project `sen
 npm run build && npx wrangler pages deploy dist --project-name sentence-book-muse --branch main
 ```
 
-`META_MODEL_API_KEY` is an encrypted Pages secret (`wrangler pages secret put META_MODEL_API_KEY --project-name sentence-book-muse`, value piped from the ignored `.dev.vars`); a secret set after a deployment applies from the next deployment. `MODEL_API_BASE_URL` and `MODEL_ID` are plain vars in `wrangler.jsonc`. The public `/api/generate` and `/api/lookup` have no rate or cost limit yet.
+`META_MODEL_API_KEY` is an encrypted Pages secret (`wrangler pages secret put META_MODEL_API_KEY --project-name sentence-book-muse`, value piped from the ignored `.dev.vars`); a secret set after a deployment applies from the next deployment. `MODEL_API_BASE_URL` and `MODEL_ID` are plain vars in `wrangler.jsonc`. Usage caps: `/api/generate` 3 per minute, 20 per day per client address and 300 per day in total; `/api/lookup` 20 / 150 / 3,000. Counts live in the D1 database `sentence-book-muse-limits` (binding `RATE_LIMIT` in `wrangler.jsonc`; created with `wrangler d1 create`, no migration needed) and addresses are hashed with the `RATE_SALT` secret. Over the cap the route answers 429 `rate_limited` with `Retry-After`; without the binding it answers 503.
 
 ## Local verification
 

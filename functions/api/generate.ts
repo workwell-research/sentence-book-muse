@@ -4,7 +4,9 @@ import type { GenerationSuccess } from '../../shared/generation-api';
 import { buildMuseMessages } from '../lib/muse-prompt';
 import { modelConfig, requestStructuredJson } from '../lib/model-client';
 import type { ModelCallOptions, ModelEnv, ModelFailureCode } from '../lib/model-client';
-import { fail, noStore, readJsonBody, upstreamFailure } from '../lib/route';
+import { POLICIES, checkRateLimit } from '../lib/rate-limit';
+import type { RateLimitEnv } from '../lib/rate-limit';
+import { fail, noStore, rateLimitFailure, readJsonBody, upstreamFailure } from '../lib/route';
 
 // One learner request → one bounded model call → validated page or an explicit failure.
 // Nothing is stored server-side; adoption and filing happen in the browser after review.
@@ -15,7 +17,7 @@ const MAX_BODY_BYTES = 32 * 1024;
 const RETRYABLE_OUTPUT: ReadonlySet<ModelFailureCode> = new Set(['empty_output', 'truncated_output']);
 const MAX_ATTEMPTS = 2;
 
-export async function handleGenerate(request: Request, env: ModelEnv, options: ModelCallOptions = {}): Promise<Response> {
+export async function handleGenerate(request: Request, env: ModelEnv & RateLimitEnv, options: ModelCallOptions = {}): Promise<Response> {
   if (request.method !== 'POST') return fail(405, 'method_not_allowed', 'Use POST.', undefined, { Allow: 'POST' });
   if (!modelConfig(env)) return fail(503, 'generation_unavailable', '教材づくりは準備中です。');
   const body = await readJsonBody(request, MAX_BODY_BYTES);
@@ -23,6 +25,9 @@ export async function handleGenerate(request: Request, env: ModelEnv, options: M
   const parsed = generationRequestSchema.safeParse(body.json);
   if (!parsed.success) return fail(400, 'invalid_request', '依頼の内容が条件を満たしていません。関心を選ぶか、話したいことを書いてください。');
   const generation = parsed.data;
+  // Counted only for a valid request, right before the model is called.
+  const verdict = await checkRateLimit(env, request, POLICIES.generate);
+  if (!verdict.ok) return rateLimitFailure(verdict, POLICIES.generate);
 
   const context = {
     draftId: generation.draft_id, level: generation.level, nativeLanguage: generation.native_language,
@@ -53,4 +58,4 @@ export async function handleGenerate(request: Request, env: ModelEnv, options: M
   return lastFailure ?? fail(502, 'upstream_error', 'モデルから教材を受け取れませんでした。もう一度お試しください。');
 }
 
-export const onRequest: PagesFunction<ModelEnv> = ({ request, env }) => handleGenerate(request, env);
+export const onRequest: PagesFunction<ModelEnv & RateLimitEnv> = ({ request, env }) => handleGenerate(request, env);

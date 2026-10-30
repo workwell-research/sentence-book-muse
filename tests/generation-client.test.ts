@@ -24,6 +24,12 @@ function memory(initial: Record<string, string> = {}) {
 }
 
 describe('requesting a lesson from the browser', () => {
+  it('explains the app\'s own usage caps by scope', async () => {
+    const day = await requestLesson(server(429, { error: { code: 'rate_limited', message: 'x', reason: 'day' } }), request);
+    expect(day).toMatchObject({ kind: 'failed', code: 'rate_limited', retryable: true, message: expect.stringContaining('明日') });
+    const minute = await requestLesson(server(429, { error: { code: 'rate_limited', message: 'x', reason: 'minute' } }), request);
+    expect(minute.kind === 'failed' && minute.message).toContain('1分');
+  });
   it('accepts a page only after validating it against the original request', async () => {
     const ok = await requestLesson(server(200, { contract: 'sentence_book_page_v1', draft: page(), model: 'muse-spark-1.3', usage: null }), request);
     expect(ok).toEqual({ kind: 'ready', draft: page(), model: 'muse-spark-1.3' });
