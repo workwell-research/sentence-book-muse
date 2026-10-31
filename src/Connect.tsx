@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { OAuthAuthorizationDetails, Session, SupabaseClient } from '@supabase/supabase-js';
 import type { InboxItem, LearningSummary } from '../shared/muse-connection';
 import { LessonPreview } from './LessonPreview';
-import { ConnectionKeys } from './ConnectionKeys';
+import { ConnectionKeys, Done, shortDate } from './ConnectionKeys';
 import type { FilingStatus } from './LessonPreview';
 import { fileDraft, readLibrary } from './lib/library';
 import type { FilingDecision } from './lib/library';
@@ -31,18 +31,19 @@ export function Connect() {
     }).catch(failure => { if (live) { setError(connectionError(failure)); setReady(true); } });
     return () => { live = false; unsubscribe(); };
   },[attempt]);
-  return <>
+  const consent = location.pathname === '/oauth/consent';
+  return <div className="connect-page">
     <a className="skip-link" href="#connect-main">本文へ</a>
-    <header className="masthead"><a className="wordmark" href="/">The Sentence Book</a><a className="header-link" href="/setup#shelf">本棚へ戻る</a></header>
+    <header className="connect-header"><a className="connect-wordmark" href="/">The Sentence Book</a><span className="connect-tagline" lang="en">with Muse</span>
+      <nav aria-label="ページ"><a href="/">机へ</a><a href="/setup#shelf">本棚へ</a></nav></header>
     <main className="connect-main" id="connect-main">
-      <div className="intro"><h1>{location.pathname === '/oauth/consent' ? 'Museとの接続を確認' : 'あなたのMuseから、受信箱へ。'}</h1>
-        <p>届いたページを読んで、<br/>気に入ったものを本に仕舞う。</p></div>
-      {error ? <section className="connect-section"><p role="alert">{error}</p><button className="text-button" onClick={()=>setAttempt(attempt+1)}>もう一度読み込む</button></section>
-        : !ready || !client ? <p role="status">受信箱を開いています…</p>
+      <h1 className={consent ? 'connect-title' : 'visually-hidden'}>{consent ? 'Museとの接続を確認' : 'Museの受信箱'}</h1>
+      {error ? <section className="connect-block"><p className="connect-error" role="alert">{error}</p><button className="text-button" onClick={()=>setAttempt(attempt+1)}>もう一度読み込む</button></section>
+        : !ready || !client ? <p className="connect-loading" role="status">開いています…</p>
         : session ? <AccountView key={session.user.id} client={client} session={session} /> : <Login client={client} />}
     </main>
-    <footer><span>The Sentence Book <i>with Muse</i></span><span>あなたのペースで、一文ずつ。</span></footer>
-  </>;
+    <footer className="connect-footer"><span>The Sentence Book <i lang="en">with Muse</i></span><span>一文ずつ、あなたのペースで。</span></footer>
+  </div>;
 }
 
 function Login({client}:{client:SupabaseClient}) {
@@ -56,20 +57,21 @@ function Login({client}:{client:SupabaseClient}) {
       const {error} = verify ? await client.auth.verifyOtp({ email:sentTo,token:code.trim(),type:'email' })
         : await client.auth.signInWithOtp({ email:email.trim() });
       if (error) throw error;
-      if (!verify) { setSentTo(email.trim()); setCode(''); setMessage('確認コードを送りました。メールを開いて入力してください。'); }
-    } catch { setMessage(verify ? 'コードを確認できませんでした。最新のメールのコードを入力するか、送り直してください。' : '確認コードを送れませんでした。メールアドレスを確認して、少し待ってからお試しください。'); }
+      if (!verify) { setSentTo(email.trim()); setCode(''); setMessage('数字を送りました。メールを開いてください。'); }
+    } catch { setMessage(verify ? '数字が合いませんでした。最新のメールの数字を入れるか、送り直してください。' : '送れませんでした。メールアドレスを確かめて、少し待ってからもう一度。'); }
     finally { pending.current = false; setBusy(false); }
   }
-  return <section className="connect-section connect-login"><h2>メールでログイン</h2>
-    <p>同じメールでログインすると、別の端末からも同じ受信箱を開けます。初めての方もこちらから。</p>
-    <form onSubmit={event=>{event.preventDefault();void submit(Boolean(sentTo));}}>
+  return <section className="connect-block connect-login" aria-labelledby="login-title">
+    <div className="block-head"><p className="kicker" lang="en">Sign in</p><h2 id="login-title">メールでログイン</h2></div>
+    <form className="connect-paper" onSubmit={event=>{event.preventDefault();void submit(Boolean(sentTo));}}>
+      <p>{sentTo ? 'メールに届いた数字を入れます。' : 'メールに届く数字で入ります。'}</p>
       {!sentTo ? <label>メールアドレス<input type="email" autoComplete="email" required maxLength={254} value={email} onChange={event=>setEmail(event.target.value)} disabled={busy}/></label>
-        : <><p className="connect-address">{sentTo}</p><label>メールの確認コード<input autoComplete="one-time-code" inputMode="numeric" pattern="[0-9]{6,8}" required maxLength={8} value={code} onChange={event=>setCode(event.target.value)} disabled={busy}/></label></>}
-      <div className="filing-actions"><button className="save-button" disabled={busy}>{busy ? '確認しています…' : sentTo ? 'ログインする' : '確認コードを送る'}</button>
-        {sentTo && <button className="text-button" type="button" disabled={busy} onClick={()=>{setSentTo('');setMessage('');}}>送り直す・アドレスを変更</button>}</div>
+        : <><p className="connect-address">{sentTo}</p><label>確認の数字<input autoComplete="one-time-code" inputMode="numeric" pattern="[0-9]{6,8}" required maxLength={8} value={code} onChange={event=>setCode(event.target.value)} disabled={busy}/></label></>}
+      <div className="step-actions"><button className="save-button" disabled={busy}>{busy ? '確認しています…' : sentTo ? 'ログイン' : '数字を送る'}</button>
+        {sentTo && <button className="text-button" type="button" disabled={busy} onClick={()=>{setSentTo('');setMessage('');}}>送り直す</button>}</div>
       <p role="status" className="connect-message">{message}</p>
     </form>
-    <p className="connect-note">自分のMuseから教材を受け取る機能は、招待コードなしで利用できます。本棚と練習の記録は、このブラウザに保存されています。</p>
+    <p className="step-note">同じメールなら、別の端末でも同じ受信箱を開けます。</p>
   </section>;
 }
 
@@ -119,48 +121,69 @@ function AccountView({client,session}:{client:SupabaseClient;session:Session}) {
     setReceiptRetry(draft.draft_id);
     await resolve(draft.draft_id,'filed');
   }
+  const consent = location.pathname==='/oauth/consent';
+  const shared = Boolean(account?.state?.summary);
+  const now = Date.now();
+  const connected = shared && (Boolean(account?.connections?.some(c=>c.read_summary&&c.deliver_drafts))
+    || Boolean(account?.keys?.some(k=>k.read_summary&&k.deliver_drafts&&Date.parse(k.expires_at)>now)));
+  // Decide the section order once, so finishing a step never remounts the steps and loses a just-issued key.
+  const inboxFirst = useRef<boolean | null>(null);
+  if (account?.member && inboxFirst.current === null) inboxFirst.current = connected;
+  const summaryPanel = useRef<HTMLHeadingElement>(null);
+  useEffect(()=>{if(preview){summaryPanel.current?.focus({preventScroll:true});summaryPanel.current?.scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}},[preview]);
+  const openSummary = ()=>{setFeedbackScope('summary');setMessage('');try{setPreview(buildLearningSummary(localStorage));setError('');}catch(failure){setError(connectionError(failure));}};
+  const share = <>
+    {shared && <Done>共有中・{shortDate(account!.state!.updated_at)}</Done>}
+    <div className="step-actions"><button className={shared?'text-button':'save-button'} type="button" disabled={busy} aria-expanded={Boolean(preview)} aria-controls="summary-panel" onClick={openSummary}>内容を確かめる</button>
+      {shared && <button className="text-button" type="button" disabled={busy} onClick={()=>void act(async()=>{await accountRequest(client,{action:'unshare',expected_version:account!.state!.version});setPreview(null);await refresh();setMessage('共有をやめました。新しい教材も届きません。');},'summary')}>共有をやめる</button>}</div>
+  </>;
+  const sharePanel = <>
+    {preview && <div className="connect-paper connect-summary" id="summary-panel"><h3 ref={summaryPanel} tabIndex={-1}>Museと共有する内容</h3><Summary summary={preview}/>
+      <p className="step-note">教材の全文や書きかけのメモは含みません。共有したくない名前がないか確かめてください。</p>
+      <div className="step-actions"><button className="save-button" type="button" disabled={busy} onClick={()=>void act(async()=>{await accountRequest(client,{action:'publish',expected_version:account?.state?.version??0,summary:preview});setPreview(null);await refresh();setMessage('Museと共有しました。');},'summary')}>この内容で共有する</button><button className="text-button" type="button" disabled={busy} onClick={()=>setPreview(null)}>閉じる</button></div></div>}
+    {!preview && account?.state?.summary && <details className="connect-shown"><summary>いま共有している内容</summary><Summary summary={account.state.summary}/></details>}
+    {feedbackScope==='summary' && <Feedback error={error} message={message}/>}
+  </>;
+  const inbox = account?.member && <section key="inbox" className="connect-block" id="inbox" aria-labelledby="inbox-title">
+    <div className="block-head"><p className="kicker" lang="en">Inbox</p><h2 id="inbox-title">受信箱</h2>
+      <button className="text-button block-action" disabled={busy} onClick={()=>void act(refresh,'inbox')}>更新</button></div>
+    <div className="connect-paper">
+      {!account.inbox?.length ? <p className="connect-empty">まだ届いていません。</p>
+        : <ul className="connect-rows connect-inbox">{account.inbox.map(item=><li key={item.draft_id} className={review?.draft_id===item.draft_id?'is-open':undefined}><div><h3>{item.draft.title}</h3><p>{shortDate(item.received_at)} · {item.draft.level} · {item.draft.sentences.length}文</p></div>
+          <button className="save-button" disabled={busy} onClick={()=>{setReview(item);setFiling({state:'open'});setLibrary(readLibrary(localStorage));}}>開く</button></li>)}</ul>}
+    </div>
+    {feedbackScope==='inbox' && <Feedback error={error} message={message}/>}
+    {review && <fieldset className="connect-review" disabled={busy}><legend className="visually-hidden">届いたページの確認</legend>
+      <button className="text-button review-close" type="button" onClick={()=>setReview(null)}>閉じる</button>
+      <LessonPreview draft={review.draft} model="muse-app" binders={library.kind==='ready'?library.library.binders:[]} kept inbox status={filing}
+        onFile={decision=>void act(()=>file(decision),'inbox')} onDiscard={()=>void act(async()=>{try{await resolve(review.draft_id,'discarded');setReview(null);}catch(failure){setFiling({state:'failed',message:connectionError(failure)});}},'inbox')} onClose={()=>setReview(null)}/>
+    </fieldset>}
+    {receiptRetry && <p className="connect-error" role="status">このブラウザには仕舞いました。受信箱への連絡だけ、もう一度送ってください。 <button className="text-button" disabled={busy} onClick={()=>void act(()=>resolve(receiptRetry,'filed'),'inbox')}>もう一度送る</button></p>}
+  </section>;
+  const connect = account?.member && (consent
+    ? <section key="connect" className="connect-block" aria-labelledby="share-title"><div className="block-head"><p className="kicker" lang="en">Share</p><h2 id="share-title">Museと共有する学習内容</h2></div>{share}{sharePanel}</section>
+    : <ConnectionKeys key="connect" client={client} keys={account.keys??[]} disabled={busy} connected={connected} shared={shared} share={share} sharePanel={sharePanel}
+        onChange={keys=>setAccount(current=>current?{...current,keys}:current)}/>);
   return <>
     <div className="connect-account"><span>{session.user.email}</span><button className="text-button" disabled={busy} onClick={()=>void act(async()=>{const r=await client.auth.signOut({scope:'local'});if(r.error)throw r.error;})}>ログアウト</button></div>
     {feedbackScope==='account' && <Feedback error={error} message={message}/>}
     {!account ? <button className="text-button" disabled={busy} onClick={()=>void act(refresh)}>受信箱を読み込む</button>
-      : !account.member ? <section className="connect-section"><h2>あなたの受信箱を開く</h2><p>自分のMuseから届く教材を、あなた専用の受信箱で受け取れます。</p>
-        <button className="save-button" disabled={busy} onClick={()=>void act(async()=>{await accountRequest(client,{action:'enroll'});await refresh();})}>受信箱を有効にする</button></section>
+      : !account.member ? <section className="connect-block" aria-labelledby="enroll-title"><div className="block-head"><p className="kicker" lang="en">Inbox</p><h2 id="enroll-title">受信箱をつくる</h2></div>
+        <div className="connect-paper"><p>Museから届く教材を受け取る、あなた専用の受信箱です。</p>
+          <div className="step-actions"><button className="save-button" disabled={busy} onClick={()=>void act(async()=>{await accountRequest(client,{action:'enroll'});await refresh();})}>受信箱をつくる</button></div></div></section>
       : <>
-        {location.pathname==='/oauth/consent' ? consentId ? <Consent key={consentId} client={client} authorizationId={consentId} userId={session.user.id}/>
-          : <p role="alert">接続の依頼がありません。Museから接続を開始してください。</p> : null}
-        <section className="connect-section" id="inbox"><div className="connect-heading"><h2>Museから届いたページ</h2><button className="text-button" disabled={busy} onClick={()=>void act(refresh,'inbox')}>最新の状態を読み込む</button></div>
-          <p className="connect-note">受信箱は端末間で共通です。仕舞った教材と練習記録は、このブラウザに残ります。</p>
-          {!account.inbox?.length ? <p className="connect-empty">まだ届いていません。下の手順でMuseをつなぐと、ここに届きます。</p>
-            : <ul className="connect-inbox">{account.inbox.map(item=><li key={item.draft_id}><div><h3>{item.draft.title}</h3><span>{new Date(item.received_at).toLocaleDateString('ja-JP')} · {item.draft.level} · {item.draft.sentences.length}文</span></div>
-              <button className="text-button" disabled={busy} onClick={()=>{setReview(item);setFiling({state:'open'});setLibrary(readLibrary(localStorage));}}>読んで仕分ける</button></li>)}</ul>}
-          {feedbackScope==='inbox' && <Feedback error={error} message={message}/>}
-        </section>
-        {review && <fieldset className="connect-review" disabled={busy}><legend className="visually-hidden">届いたページの確認</legend>
-          <button className="text-button" onClick={()=>setReview(null)}>確認を閉じる</button>
-          <LessonPreview draft={review.draft} model="muse-app" binders={library.kind==='ready'?library.library.binders:[]} kept inbox status={filing}
-            onFile={decision=>void act(()=>file(decision),'inbox')} onDiscard={()=>void act(async()=>{try{await resolve(review.draft_id,'discarded');setReview(null);}catch(failure){setFiling({state:'failed',message:connectionError(failure)});}},'inbox')} onClose={()=>setReview(null)}/>
-        </fieldset>}
-        {receiptRetry && <p className="connect-error" role="status">教材はこのブラウザに保存済みです。受信箱への完了連絡を再試行してください。 <button className="text-button" disabled={busy} onClick={()=>void act(()=>resolve(receiptRetry,'filed'),'inbox')}>完了を連絡する</button></p>}
-        <section className="connect-section"><h2>Museに伝える学習の要約</h2>
-          <p>このブラウザの関心・本の一覧・練習量・引いた語句を、確認してから共有します。教材の全文や入力途中のメモは含めません。</p>
-          <p className="connect-note">{account.state?.summary ? `共有中：${new Date(account.state.updated_at).toLocaleString('ja-JP')} 時点。自動更新はしません。` : 'まだ共有していません。教材を受け取るには、まず要約を共有してください。'}</p>
-          {account.state?.summary && <details><summary>現在共有している内容</summary><Summary summary={account.state.summary}/></details>}
-          <div className="filing-actions"><button className="text-button" disabled={busy} onClick={()=>{setFeedbackScope('summary');try{setPreview(buildLearningSummary(localStorage));setError('');}catch(failure){setError(connectionError(failure));}}}>このブラウザの共有内容を確認</button>
-            {account.state?.summary && <button className="text-button" disabled={busy} onClick={()=>void act(async()=>{await accountRequest(client,{action:'unshare',expected_version:account.state!.version});setPreview(null);await refresh();setMessage('要約の共有と新しい教材の受信を止めました。');},'summary')}>要約の共有を止める</button>}</div>
-          {preview && <div className="connect-summary"><h3>この内容を共有します</h3><Summary summary={preview}/><p className="connect-note">接続を許可したMuseが読めるようになります。使わない関心や本の名前が含まれていないか確認してください。</p>
-            <div className="filing-actions"><button className="save-button" disabled={busy} onClick={()=>void act(async()=>{await accountRequest(client,{action:'publish',expected_version:account.state?.version??0,summary:preview});setPreview(null);await refresh();setMessage('確認した要約を共有しました。');},'summary')}>この内容を共有する</button><button className="text-button" disabled={busy} onClick={()=>setPreview(null)}>閉じる</button></div></div>}
-          {feedbackScope==='summary' && <Feedback error={error} message={message}/>}
-        </section>
-        {location.pathname!=='/oauth/consent' && <ConnectionKeys client={client} keys={account.keys??[]} disabled={busy} onChange={keys=>setAccount(current=>current?{...current,keys}:current)}/>}
-        <section className="connect-section"><h2>ログインで許可した接続</h2>
-          <p className="connect-note">OAuthで許可した接続はこちらに表示されます。接続キーは上の欄で管理できます。Museの接続画面が開かない場合は、<a href="/setup#compose">コピーと貼り付けで教材を受け取る</a>方法も使えます。</p>
-          <h3>許可した接続</h3>{!account.connections?.length ? <p>まだ接続を許可していません。</p> : <ul className="connect-inbox">{account.connections.map(connection=><li key={connection.client_id}><div><h4>{connection.client_name}</h4><p>{[connection.read_summary?'学習の要約を読む':'',connection.deliver_drafts?'教材を受信箱へ届ける':''].filter(Boolean).join(' ／ ')||'許可なし'}</p></div><button className="text-button" disabled={busy} onClick={()=>void act(async()=>{
+        {consent ? consentId ? <Consent key={consentId} client={client} authorizationId={consentId} userId={session.user.id}/>
+          : <p className="connect-error" role="alert">接続の依頼がありません。Museから接続を始めてください。</p> : null}
+        {inboxFirst.current ? [inbox,connect] : [connect,inbox]}
+        {account.connections?.length ? <section className="connect-block" aria-labelledby="links-title"><div className="block-head"><p className="kicker" lang="en">Links</p><h2 id="links-title">ほかの接続</h2></div>
+          <ul className="connect-rows">{account.connections.map(connection=><li key={connection.client_id}><div><h4>{connection.client_name}</h4><p>{[connection.read_summary?'読む':'',connection.deliver_drafts?'届ける':''].filter(Boolean).join('・')||'許可なし'}</p></div><button className="text-button" disabled={busy} onClick={()=>void act(async()=>{
             await accountRequest(client,{action:'revoke',client_id:connection.client_id});
             const result = await client.auth.oauth.revokeGrant({clientId:connection.client_id});
-            await refresh();setMessage(result.error?'受信箱への接続を解除しました。Muse側にも接続が残っていれば削除してください。':'Museとの接続を解除しました。');
-          },'connection')}>接続を解除</button></li>)}</ul>}
+            await refresh();setMessage(result.error?'受信箱への接続を解除しました。Museに残っていれば削除してください。':'接続を解除しました。');
+          },'connection')}>解除する<span className="visually-hidden">：{connection.client_name}</span></button></li>)}</ul>
           {feedbackScope==='connection' && <Feedback error={error} message={message}/>}
-        </section>
+        </section> : null}
+        <p className="connect-fallback">つながらないときは <a href="/setup#compose">コピーと貼り付けで受け取る</a></p>
       </>}
   </>;
 }
@@ -199,13 +222,13 @@ function Consent({client,authorizationId,userId}:{client:SupabaseClient;authoriz
       location.assign(result.data.redirect_url);
     }catch(failure){setError(connectionError(failure));}finally{pending.current=false;setBusy(false);}
   }
-  return <section className="connect-section connect-consent"><h2>この接続に許可すること</h2>
+  return <section className="connect-block connect-consent" aria-labelledby="consent-title"><div className="block-head"><p className="kicker" lang="en">Allow</p><h2 id="consent-title">この接続に許可すること</h2></div><div className="connect-paper">
     {error && <p role="alert" className="connect-error">{error}</p>}
     {redirect ? <><p>この依頼はすでに認証されています。接続先に戻って続けてください。</p><a className="save-button" href={redirect}>接続先へ戻る</a></>
       : details ? <><p><strong>{details.client.name || '名称未設定の接続'}</strong> からの依頼です。</p><p className="connect-note">戻り先：{details.redirect_uri}<br/>接続先に渡るアカウント情報：{details.scope.trim().split(/\s+/).filter(Boolean).map(scope=>({openid:'アカウントの識別子',email:'メールアドレス',profile:'名前・プロフィール画像',phone:'電話番号'} as Record<string,string>)[scope]??scope).join('、') || '要求なし'}</p>
-        <fieldset disabled={busy}><legend>これとは別に、学習アプリで許可することを選んでください</legend><label><input type="checkbox" checked={read} onChange={event=>setRead(event.target.checked)}/> 確認して共有した学習の要約を読む</label>
-          <label><input type="checkbox" checked={deliver} onChange={event=>setDeliver(event.target.checked)}/> 教材の下書きを受信箱へ届ける</label></fieldset>
-        <p className="connect-note">本への仕分けはあなたが決めます。接続はこの画面からいつでも解除できます。</p><div className="filing-actions"><button className="save-button" disabled={busy||(!read&&!deliver)} onClick={()=>void decide(true)}>選んだ内容で接続を許可</button><button className="text-button" disabled={busy} onClick={()=>void decide(false)}>許可しない</button></div></>
+        <fieldset disabled={busy}><legend>許可すること</legend><label><input type="checkbox" checked={read} onChange={event=>setRead(event.target.checked)}/> 学習のようすを読む</label>
+          <label><input type="checkbox" checked={deliver} onChange={event=>setDeliver(event.target.checked)}/> 教材を受信箱に届ける</label></fieldset>
+        <p className="connect-note">本への仕分けはあなたが決めます。接続はこの画面からいつでも解除できます。</p><div className="step-actions"><button className="save-button" disabled={busy||(!read&&!deliver)} onClick={()=>void decide(true)}>選んだ内容で接続を許可</button><button className="text-button" disabled={busy} onClick={()=>void decide(false)}>許可しない</button></div></>
       : !error ? <p role="status">接続の依頼を確認しています…</p> : null}
-  </section>;
+  </div></section>;
 }

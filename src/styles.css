@@ -6,15 +6,16 @@
   button, a, input, textarea, select { -webkit-tap-highlight-color: transparent; }
 }
 @layer base {
-  :root { color-scheme: light; --paper: #fffdf7; --desk: #f5f1e8; --ink: #363a32; --muted: #676b60; --sage: #4d604b; --line: #d8d3c6; }
+  /* Pure White study desk (2026-10-31): white paper, graphite ink, the notebook's blue as the one accent. */
+  :root { color-scheme: light; --paper: #fff; --desk: #f6f6f6; --ink: #484848; --muted: #656565; --sage: #47627a; --line: #e4e4e4; --sheet-shadow: 0 1px 2px rgba(24,20,18,.10), 0 6px 16px rgba(38,52,62,.07); }
   html { scroll-behavior: smooth; scroll-padding-top: 28px; }
   body { background: var(--desk); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif; font-size: 15px; line-height: 1.8; }
-  ::selection { color: #fffdf7; background: #52664c; }
-  :focus-visible { outline: 3px solid #536c9b; outline-offset: 4px; }
+  ::selection { color: #303b45; background: #d6e5ef; }
+  :focus-visible { outline: 2px solid #555; outline-offset: 3px; }
   a { color: inherit; text-underline-offset: .3em; }
   button { cursor: pointer; }
   button:disabled { cursor: default; }
-  input, textarea, select { caret-color: var(--sage); accent-color: var(--sage); }
+  input, textarea, select { caret-color: #2b647f; accent-color: var(--sage); }
   h1, h2, h3, p { margin: 0; }
   h1, h2, h3 { text-wrap: balance; }
   .masthead, main, footer { width: min(1180px, calc(100% - 80px)); margin-inline: auto; }
@@ -22,14 +23,18 @@
 @layer components {
   .skip-link { position: fixed; left: 20px; top: 12px; z-index: 2; padding: 12px 20px; background: var(--paper); clip-path: inset(50%); width: 1px; height: 1px; overflow: hidden; }
   .skip-link:focus { clip-path: none; width: auto; height: auto; overflow: visible; }
-  .masthead { min-height: 122px; display: flex; justify-content: space-between; align-items: center; gap: 24px; border-bottom: 1px solid var(--line); }
-  .wordmark { text-decoration: none; font-family: Lora, Georgia, serif; font-size: 25px; line-height: 1.4; }
+  .masthead { height: 52px; display: flex; align-items: center; gap: 16px; }
+  .masthead nav { margin-left: auto; display: flex; gap: 4px; }
+  .masthead nav a { padding: 10px; font-size: 13px; text-decoration: none; border-radius: 3px; }
+  .masthead nav a:hover { background: #737b8614; }
+  .tagline { font: italic 11px Lora, serif; color: var(--muted); }
+  .wordmark { text-decoration: none; font-family: Lora, Georgia, serif; font-size: 21px; letter-spacing: -.03em; line-height: 1.4; }
   .wordmark span { display: block; margin-top: 7px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; font-size: 11px; letter-spacing: .08em; color: var(--muted); }
-  .header-link { padding: 11px 0; color: var(--sage); font-size: 13px; text-decoration: none; }
+  .header-link { padding: 11px 0; color: var(--ink); font-size: 13px; text-decoration: none; }
   .header-link:hover { text-decoration: underline; }
   .header-link span { padding-left: 14px; }
   .intro { display: flex; align-items: flex-end; gap: 64px; padding: 57px 0 49px; }
-  .intro h1 { font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif; font-size: clamp(30px, 3.6vw, 43px); font-weight: 500; line-height: 1.6; letter-spacing: .04em; }
+  .intro h1 { font-size: clamp(22px, 2.4vw, 28px); font-weight: 500; line-height: 1.6; letter-spacing: .02em; }
   .intro p { padding-bottom: 10px; font-size: 13px; color: var(--muted); line-height: 2.1; }
   .workspace { display: grid; grid-template-columns: 1.15fr 1fr; gap: 62px; align-items: start; padding-bottom: 60px; }
   .section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 7px 0 25px; }
@@ -37,17 +42,17 @@
   .section-heading > span { color: var(--muted); font-size: 12px; }
   .empty-shelf { min-height: 300px; padding: 46px 20px 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
   .empty-shelf-rule { display: block; width: 34px; height: 1px; background: var(--sage); margin-bottom: 23px; }
-  .empty-shelf h3 { font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif; font-size: 22px; font-weight: 500; letter-spacing: .04em; }
+  .empty-shelf h3 { font-size: 18px; font-weight: 500; }
   .empty-shelf p { margin-top: 15px; font-size: 13px; line-height: 2; color: var(--muted); }
-  .shelf-edge { height: 14px; background: #aa8d65; border-bottom: 4px solid #8a7050; box-shadow: 0 7px 13px #6153401c; border-radius: 2px; }
+  .shelf-edge { height: 10px; background: #e6e6e6; border-bottom: 3px solid #d2d2d2; box-shadow: 0 6px 12px rgba(38,52,62,.08); border-radius: 1px; }
   .shelf-caption { padding: 27px 0; text-align: center; font-size: 13px; line-height: 2; color: var(--muted); }
   .inbox-line { padding: 17px 2px; border-block: 1px solid var(--line); display: flex; justify-content: space-between; gap: 20px; font-size: 12px; color: var(--muted); }
-  .writing-paper { background: var(--paper); padding: 30px 32px 18px; box-shadow: 0 6px 25px #4138270d; border-radius: 2px; }
-  .writing-paper h2 { font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif; font-size: 22px; font-weight: 600; }
+  .writing-paper { background: var(--paper); padding: 30px 32px 18px; box-shadow: var(--sheet-shadow); }
+  .writing-paper h2 { font-size: 20px; font-weight: 500; }
   .paper-intro { color: var(--muted); font-size: 12px; margin: 5px 0 26px; }
   label { display: block; font-size: 12px; font-weight: 600; }
-  textarea { display: block; resize: vertical; min-height: 130px; width: 100%; margin: 8px 0 0; padding: 12px; font-size: 14px; line-height: 1.9; border: 1px solid var(--line); border-radius: 3px; color: var(--ink); background: #fffcf5; }
-  textarea::placeholder { color: #767568; }
+  textarea { display: block; resize: vertical; min-height: 130px; width: 100%; margin: 8px 0 0; padding: 12px; font-size: 14px; line-height: 1.9; border: 1px solid var(--line); border-radius: 3px; color: var(--ink); background: var(--paper); }
+  textarea::placeholder { color: #8a8a8a; }
   .field-hint { font-size: 10px; color: var(--muted); display: flex; justify-content: space-between; gap: 12px; padding-top: 6px; font-variant-numeric: tabular-nums; }
   .preferences { display: flex; gap: 18px; margin: 24px 0; }
   .preferences label { flex: 1; min-width: 0; }
@@ -55,17 +60,18 @@
   .form-actions { display: flex; gap: 15px; align-items: center; }
   .save-button { background: var(--sage); color: white; border: 0; border-radius: 3px; min-height: 44px; padding: 10px 21px; font-size: 13px; }
   a.save-button { display: inline-flex; align-items: center; text-decoration: none; }
-  a.save-button:hover { background: #394c38; }
-  .save-button:hover:enabled { background: #394c38; }
-  .save-button:disabled { background: #dfe3d9; color: #626958; }
+  a.save-button:hover { background: #3a5166; }
+  .save-button:hover:enabled { background: #3a5166; }
+  .save-button:disabled { background: #e4e7ea; color: #6b7076; }
   .form-actions > span { font-size: 10px; color: var(--muted); }
   .save-status { min-height: 31px; padding-top: 7px; font-size: 11px; color: var(--sage); }
-  .error { color: #923b31; font-size: 12px; }
+  .error { color: #994b38; font-size: 12px; }
   .generation-note { margin-top: 15px; padding-top: 20px; border-top: 1px solid var(--line); }
   .generation-note button { width: 100%; padding: 12px; min-height: 44px; border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 3px; font-size: 13px; }
   .generation-note p { font-size: 11px; line-height: 1.9; color: var(--muted); margin: 11px 0; text-align: center; }
+  .generation-note .generate-link { display: flex; justify-content: center; width: 100%; }
   .generation-note .generate-button { background: var(--sage); color: white; border-color: var(--sage); }
-  .generation-note .generate-button:hover:enabled { background: #394c38; }
+  .generation-note .generate-button:hover:enabled { background: #3a5166; }
   .generation-note button[aria-busy="true"] { color: var(--sage); border-color: var(--sage); }
   .generation-note .generation-error { text-align: left; margin-top: 4px; }
   .own-muse { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
@@ -75,7 +81,7 @@
   .own-muse-prompt { width: 100%; box-sizing: border-box; font: 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 8px; background: transparent; resize: vertical; margin-bottom: 12px; }
   .own-muse label { display: block; font-size: 12px; margin: 8px 0 6px; }
   .own-muse textarea:not(.own-muse-prompt) { width: 100%; box-sizing: border-box; font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; border: 1px solid var(--line); border-radius: 3px; padding: 8px; background: transparent; resize: vertical; }
-  .lesson-preview { background: var(--paper); padding: 34px 36px 30px; margin-bottom: 60px; box-shadow: 0 6px 25px #4138270d; border-radius: 2px; }
+  .lesson-preview { background: var(--paper); padding: 34px 36px 30px; margin-bottom: 60px; box-shadow: var(--sheet-shadow); }
   .preview-head { display: flex; justify-content: space-between; gap: 30px; align-items: flex-end; flex-wrap: wrap; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
   .preview-kicker { font-size: 11px; letter-spacing: .08em; color: var(--sage); }
   .lesson-preview h2 { font-family: Lora, Georgia, serif; font-size: 26px; font-weight: 500; margin-top: 6px; }
@@ -100,21 +106,21 @@
   .preview-filing strong { font-weight: 600; }
   .preview-reason { color: var(--muted); margin-top: 8px; }
   .preview-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-  .preview-tags span { font-size: 11px; color: var(--sage); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; }
+  .preview-tags span { font-size: 11px; color: var(--sage); background: #f4f8fb; border: 1px solid #d5e7f2; border-radius: 999px; padding: 2px 10px; }
   .preview-note { margin-top: 16px; font-size: 11px; color: var(--muted); }
   .preview-proposal { font-size: 13px; }
   .filing-form { margin-top: 18px; max-width: 520px; }
   .filing-form label { margin-top: 12px; }
   .filing-form select { margin-top: 6px; }
-  .new-binder input { display: block; width: 100%; min-height: 44px; margin-top: 6px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 3px; background: #fffcf5; color: var(--ink); font-size: 14px; }
+  .new-binder input { display: block; width: 100%; min-height: 44px; margin-top: 6px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 3px; background: var(--paper); color: var(--ink); font-size: 14px; }
   .filing-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 18px; }
   .preview-filed { margin-top: 14px; font-size: 14px; color: var(--sage); font-weight: 600; }
   .binders { list-style: none; margin: 0 0 6px; padding: 0; display: grid; gap: 10px; }
-  .binder details { background: var(--paper); border: 1px solid var(--line); border-radius: 3px; box-shadow: 0 3px 12px #4138270a; }
+  .binder details { background: var(--paper); box-shadow: var(--sheet-shadow); }
   .binder summary { display: grid; grid-template-columns: 10px 1fr auto; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; list-style: none; }
   .binder summary::-webkit-details-marker { display: none; }
   .binder-spine { display: block; width: 10px; height: 34px; border-radius: 2px; background: var(--sage); }
-  .binder-title { font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif; font-size: 16px; font-weight: 600; overflow-wrap: anywhere; }
+  .binder-title { font-family: Lora, -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', sans-serif; font-size: 17px; font-weight: 400; overflow-wrap: anywhere; }
   .binder-meta, .page-meta { font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
   .binder-description { padding: 0 16px 10px 38px; font-size: 12px; color: var(--muted); }
   .binder-pages { margin: 0; padding: 0 16px 14px 38px; list-style: none; display: grid; gap: 10px; }
@@ -125,15 +131,15 @@
   .pending-list { list-style: none; margin: 0; padding: 0; }
   .pending-item { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 12px 2px; border-bottom: 1px solid var(--line); }
   .pending-item > div:first-child { display: grid; gap: 2px; min-width: 0; }
-  .pending-item.is-reviewing { background: #f1eee4; }
+  .pending-item.is-reviewing { background: #f4f8fb; }
   .pending-actions { display: flex; gap: 6px; flex-shrink: 0; }
   .pending-actions .text-button { padding-inline: 6px; }
   .interest-setup { display: grid; grid-template-columns: 1fr 1.15fr; gap: 72px; align-items: start; padding: 66px 0; }
-  .interest-intro h1 { font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif; font-size: clamp(30px, 3.6vw, 43px); font-weight: 500; line-height: 1.6; letter-spacing: .04em; }
+  .interest-intro h1 { font-size: clamp(24px, 2.6vw, 30px); font-weight: 500; line-height: 1.6; letter-spacing: .02em; }
   .interest-intro p { margin-top: 26px; font-size: 14px; line-height: 2; color: var(--muted); }
   .interest-intro .setup-availability { margin-top: 40px; font-size: 12px; }
   .interest-paper fieldset { margin: 0 0 28px; padding: 0; border: 0; min-width: 0; }
-  .interest-paper legend { font-size: 20px; font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif; font-weight: 600; }
+  .interest-paper legend { font-size: 18px; font-weight: 500; }
   .interest-hint { color: var(--muted); font-size: 12px; margin: 5px 0 17px; }
   .interest-options { display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
   .interest-choice { display: flex; align-items: center; gap: 10px; min-height: 55px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 13px; font-weight: 400; cursor: pointer; overflow-wrap: anywhere; }
@@ -141,9 +147,9 @@
   .interest-choice input { width: 18px; height: 18px; flex: 0 0 auto; margin: 0; }
   .custom-interest { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
   .custom-interest input { min-width: 0; width: 100%; min-height: 44px; border: 1px solid var(--line); border-radius: 3px; background: var(--paper); padding: 10px; color: var(--ink); font-size: 14px; }
-  .custom-interest input::placeholder { color: #767568; }
-  .text-button { border: 0; background: transparent; color: var(--sage); padding: 10px 4px; min-height: 44px; font-size: 12px; text-decoration: underline; text-underline-offset: .3em; flex-shrink: 0; }
-  .text-button:hover:enabled { color: #263f25; }
+  .custom-interest input::placeholder { color: #8a8a8a; }
+  .text-button { border: 0; background: transparent; color: var(--ink); padding: 10px 4px; min-height: 44px; font-size: 12px; text-decoration: underline; text-underline-offset: .3em; flex-shrink: 0; }
+  .text-button:hover:enabled { color: #2f4356; }
   .text-button:disabled { color: var(--muted); text-decoration: none; }
   .interest-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 8px; }
   .interest-footnote { color: var(--muted); font-size: 11px; margin-top: 21px; line-height: 1.9; }
@@ -191,4 +197,17 @@
     footer { flex-direction: column; gap: 4px; }
   }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+}
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.workspace { padding-top: 28px; }
+.section-heading h2 { font-size: 18px; font-weight: 500; }
+/* handwriting.css (loaded with the desk) also sets these on :root, unlayered; this wins on /setup and /connect. */
+html:root { --paper: #fff; --desk: #f6f6f6; --ink: #484848; --muted: #656565; --sage: #47627a; --line: #e4e4e4; color: #484848; background: #f6f6f6; }
+html:root ::selection { color: #303b45; background: #d6e5ef; }
+html:root :focus-visible { outline: 2px solid #555; outline-offset: 3px; }
+@media (max-width: 700px) {
+  .masthead { min-height: 0; height: 52px; gap: 8px; }
+  .wordmark { font-size: 19px; white-space: nowrap; }
+  .tagline { display: none; }
+  .masthead nav a { white-space: nowrap; padding: 10px 6px; }
 }

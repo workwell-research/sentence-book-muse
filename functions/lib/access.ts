@@ -9,14 +9,19 @@ const encoder = new TextEncoder();
 const hex = (bytes: ArrayBuffer) => Array.from(new Uint8Array(bytes), byte => byte.toString(16).padStart(2, '0')).join('');
 const unhex = (value: string) => Uint8Array.from(value.match(/.{2}/g) ?? [], byte => parseInt(byte, 16));
 
-export function accessConfig(env: AccessEnv): AccessConfig | null {
-  if (!env.ACCESS_ORIGIN || !/^[a-f0-9]{64}$/.test(env.INVITE_CODE_SHA256 ?? '') || (env.SESSION_SECRET?.length ?? 0) < 32) return null;
+function canonicalOrigin(env: AccessEnv): { origin: string; secure: boolean } | null {
+  if (!env.ACCESS_ORIGIN) return null;
   try {
     const url = new URL(env.ACCESS_ORIGIN);
     const secure = url.protocol === 'https:';
     if (url.origin !== env.ACCESS_ORIGIN || (!secure && !(url.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname)))) return null;
-    return { origin: url.origin, inviteHash: env.INVITE_CODE_SHA256!, secret: env.SESSION_SECRET!, secure };
+    return { origin: url.origin, secure };
   } catch { return null; }
+}
+export function accessConfig(env: AccessEnv): AccessConfig | null {
+  if (!/^[a-f0-9]{64}$/.test(env.INVITE_CODE_SHA256 ?? '') || (env.SESSION_SECRET?.length ?? 0) < 32) return null;
+  const canonical = canonicalOrigin(env);
+  return canonical && { ...canonical, inviteHash: env.INVITE_CODE_SHA256!, secret: env.SESSION_SECRET! };
 }
 
 const cookieName = (config: AccessConfig) => config.secure ? '__Host-sentence-book-access' : 'sentence-book-access-local';
@@ -53,7 +58,7 @@ export async function hasSession(request: Request, config: AccessConfig, now = D
 
 // Canonical-host checks also close the new deployment's hash/branch aliases.
 // Origin/media type are CSRF protection, never a substitute for the signed session.
-export function requestBoundary(request: Request, config: AccessConfig): Response | null {
+export function requestBoundary(request: Request, config: Pick<AccessConfig, 'origin'>): Response | null {
   if (new URL(request.url).origin !== config.origin) return fail(403, 'access_denied', 'いつものアプリのURLから開いてください。');
   if (request.method !== 'GET') {
     if (request.headers.get('origin') !== config.origin || (request.headers.get('sec-fetch-site') && request.headers.get('sec-fetch-site') !== 'same-origin'))
@@ -70,4 +75,11 @@ export async function requireAccess(request: Request, env: AccessEnv): Promise<R
   if (boundary) return boundary;
   if (!await hasSession(request, config)) return fail(401, 'invite_required', '招待コードを入力してください。');
   return null;
+}
+// Open to everyone (the line marker): same canonical-host, same-origin and JSON checks, no invitation.
+// Spending is bounded by the route's rate limits, which fail closed.
+export function requirePublicBoundary(request: Request, env: AccessEnv): Response | null {
+  const canonical = canonicalOrigin(env);
+  if (!canonical) return fail(503, 'generation_unavailable', '利用の準備が整うまでお待ちください。', 'access_unconfigured');
+  return requestBoundary(request, canonical);
 }

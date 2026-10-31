@@ -47,7 +47,7 @@ export function A5Notebook({layout,scene,view,ink,time,reduced,personalInk,pageI
         {runs.map(r=><g key={r.id} data-run={r.id} data-layer={r.layer} data-baseline={r.y}>
           {r.face==='static'?(r.layer!=='memo'||time>=(scene.memoStarts?.[r.sourceId]??scene.memoStart))&&<text fontFamily={japaneseFonts[layout.fonts.japanese].family} fontSize={r.size} fill={r.accent?ink.title:A5.ink}>
             {r.glyphs.map(g=><tspan key={g.index} x={g.x} y={g.y}>{g.char}</tspan>)}
-          </text>:visible.filter(s=>s.page===p.index&&s.phase!=='marking'&&s.id.startsWith(r.id+':')).map(s=><StrokePath key={s.id} stroke={{...s,color:s.accent?ink.title:A5.ink}} time={time}/>)}
+          </text>:visible.filter(s=>s.page===p.index&&s.phase!=='marking'&&s.id.startsWith(r.id+':')).map(s=><StrokePath key={s.id} stroke={{...s,color:s.faint?A5.faint:s.accent?ink.title:A5.ink}} time={time}/>)}
         </g>)}
         {view.content==='study-notes'&&p.index===layout.personalPage&&<g data-testid="personal-strokes">
           {personalInk.paths.map(path=><StrokePath key={path.key} stroke={path.stroke} time={path.time}/>)}

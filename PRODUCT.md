@@ -55,4 +55,6 @@ The latest desk refinement uses neutral Pure White and consistent warm-white pap
 
 ## Invitation access — 2026-10-30
 
+**Superseded 2026-10-31 for the hackathon:** lessons come only from the learner's own Muse (inbox at `/connect` or copy-paste import); in-app generation and the invitation UI are removed, the expression lookup (line marker) is open to everyone behind same-origin checks and fail-closed rate caps, and the server generate route stays invitation-only. The text below is the earlier design.
+
 The owner selected invitation-only generation and expression lookup. An inline code field appears above generation and beside a selected notebook phrase; it preserves the topic, selection and progress. A signed HttpOnly cookie keeps this browser authorized for seven days, with logout on setup. Public viewing, Copy practice, local filing and own-Muse imports remain available. This is a shared invitation, not personal accounts or cloud sync. Errors and session expiry return to the inline code field; the server always enforces access. [Operational details](docs/invitation-access.md).

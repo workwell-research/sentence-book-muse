@@ -7,7 +7,7 @@ import type { ModelCallOptions, ModelEnv } from '../lib/model-client';
 import { POLICIES, checkRateLimit } from '../lib/rate-limit';
 import type { RateLimitEnv } from '../lib/rate-limit';
 import { fail, noStore, rateLimitFailure, readJsonBody, upstreamFailure } from '../lib/route';
-import { requireAccess } from '../lib/access';
+import { requirePublicBoundary } from '../lib/access';
 import type { AccessEnv } from '../lib/access';
 
 // One selected expression → one bounded model call → a validated meaning or a coded failure.
@@ -17,7 +17,7 @@ export interface LookupSuccess { contract: typeof LOOKUP_CONTRACT; result: Looku
 
 export async function handleLookup(request: Request, env: ModelEnv & RateLimitEnv & AccessEnv, options: ModelCallOptions = {}): Promise<Response> {
   if (request.method !== 'POST') return fail(405, 'method_not_allowed', 'Use POST.', undefined, { Allow: 'POST' });
-  const denied = await requireAccess(request, env);
+  const denied = requirePublicBoundary(request, env);
   if (denied) return denied;
   if (!modelConfig(env)) return fail(503, 'generation_unavailable', '調べる機能は準備中です。');
   const body = await readJsonBody(request, MAX_BODY_BYTES);

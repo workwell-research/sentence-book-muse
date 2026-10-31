@@ -1,5 +1,5 @@
 import './styles.css';
-import { useId, useMemo, useRef, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 import { InterestSetup } from './InterestSetup';
 import { LessonPreview } from './LessonPreview';
 import type { FilingStatus } from './LessonPreview';
@@ -8,14 +8,12 @@ import { readInterests } from './lib/interests';
 import type { InterestRead } from './lib/interests';
 import { EMPTY_NOTE, readNote, saveNote } from './lib/composer';
 import type { ComposerNote, Level, NoteRead } from './lib/composer';
-import { draftTicket, readPendingDrafts, removePendingDraft, requestFingerprint, requestLesson, savePendingDraft } from './lib/generation';
-import type { DraftTicket, GenerationOutcome, PendingRead } from './lib/generation';
+import { readPendingDrafts, removePendingDraft, savePendingDraft } from './lib/generation';
+import type { PendingRead } from './lib/generation';
 import { FilingFailure, binderCatalogue, fileDraft, readLibrary } from './lib/library';
 import { MODEL_LABEL_OWN_MUSE, clearImportTicket, importLesson, issueImportTicket, musePromptFor } from './lib/import';
 import type { FilingDecision, LibraryRead } from './lib/library';
-import { createGenerationRequest } from '../shared/generation-request';
 import type { LessonDraft } from '../shared/lesson-schema';
-import { InviteAccess, useInviteAccess } from './InviteAccess';
 
 function restore(): NoteRead {
   try { return readNote(window.localStorage); } catch { return { kind: 'unreadable' }; }
@@ -44,7 +42,6 @@ const filingErrorText: Record<FilingFailure['reason'], string> = {
 interface Reviewing { draft: LessonDraft; model: string | null; kept: boolean; status: FilingStatus }
 
 export function App() {
-  const access = useInviteAccess();
   const [profile, setProfile] = useState<InterestRead>(restoreInterests);
   const [choosingInterests, setChoosingInterests] = useState(profile.kind !== 'ready');
   function finishInterests() {
@@ -60,10 +57,7 @@ export function App() {
   const blocked = initial.kind === 'unreadable';
   const [pending, setPending] = useState<PendingRead>(restorePending);
   const [library, setLibrary] = useState<LibraryRead>(restoreLibrary);
-  const [generating, setGenerating] = useState(false);
-  const [failure, setFailure] = useState<Extract<GenerationOutcome, { kind: 'failed' }> | null>(null);
   const [reviewing, setReviewing] = useState<Reviewing | null>(null);
-  const ticket = useRef<DraftTicket | null>(null);
   // Bring your own Muse: a locally issued ticket binds the pasted page to this request, like a server draft ID.
   const [importText, setImportText] = useState('');
   const [importMessage, setImportMessage] = useState<{ text: string; failed: boolean } | null>(null);
@@ -72,7 +66,6 @@ export function App() {
   const importId = useId();
   const interests = profile.kind === 'ready' ? profile.profile.interests : [];
   const binders = library.kind === 'ready' ? library.library.binders : [];
-  const canGenerate = !blocked && !generating && (note.topic.trim().length > 0 || interests.length > 0);
   const catalogue = library.kind === 'ready' ? binderCatalogue(library.library) : [];
   const binderKey = catalogue.map(binder => binder.id).join(',');
   const importTicket = useMemo(() => issueImportTicket(window.localStorage, { level: note.level, nativeLanguage: note.nativeLanguage, binderIds: binderKey ? binderKey.split(',') : [] }),
@@ -95,26 +88,6 @@ export function App() {
     setTicketEpoch(epoch => epoch + 1);
     setImportText('');
     setImportMessage({ text: 'ページを受け取りました。下で確認して、仕舞う先を決めてください。', failed: false });
-  }
-
-  async function generate() {
-    if (!canGenerate || access.state !== 'ready') return;
-    // Existing binders go to the model as the only valid destinations; a new one is still only a proposal.
-    const catalogue = library.kind === 'ready' ? binderCatalogue(library.library) : [];
-    // The same content keeps its draft ID across retries; edited content gets a new one.
-    ticket.current = draftTicket(ticket.current, requestFingerprint({ ...note, interests, binderIds: catalogue.map(binder => binder.id) }), () => crypto.randomUUID());
-    let request;
-    try { request = createGenerationRequest(ticket.current.id, note, interests, catalogue); }
-    catch { setFailure({ kind: 'failed', code: 'invalid_request', message: '関心を選ぶか、話したいことを書いてから作ってください。', retryable: false }); return; }
-    setGenerating(true);
-    setFailure(null);
-    const result = await requestLesson(fetch, request);
-    if (result.kind === 'ready') {
-      let kept = false;
-      try { setPending({ kind: 'ready', drafts: savePendingDraft(window.localStorage, result.draft) }); kept = true; } catch { kept = false; }
-      setReviewing({ draft: result.draft, model: result.model, kept, status: { state: 'open' } });
-    } else { setFailure(result); if (result.code === 'invite_required') access.expire(); }
-    setGenerating(false);
   }
 
   function review(draft: LessonDraft) {
@@ -163,18 +136,15 @@ export function App() {
   return <>
     <a className="skip-link" href={choosingInterests ? "#interests" : "#compose"}>{choosingInterests ? "関心を選ぶ" : "メモを書く"}</a>
     <header className="masthead">
-      <a className="wordmark" href={choosingInterests ? "#interests" : "#shelf"}>The Sentence Book<span>自分の言葉を、自分の本に。</span></a>
-      <a className="header-link" href={choosingInterests ? "#interests" : "#compose"}>{choosingInterests ? "関心を選ぶ" : "メモを書く"} <span aria-hidden="true">→</span></a>
+      <a className="wordmark" href="/">The Sentence Book</a><span className="tagline" lang="en">with Muse</span>
+      <nav aria-label="ページ"><a href="/">机へ</a><a href="/connect">受信箱</a></nav>
     </header>
     <main>
       {choosingInterests ? <InterestSetup initial={profile} onDismiss={finishInterests}
         onSaved={saved => { setProfile({ kind: 'ready', profile: saved }); finishInterests(); }} /> : <>
-      <section className="intro" aria-labelledby="intro-title">
-        <h1 id="intro-title">話したいことから、<br />一ページずつ。</h1>
-        <p>旅のこと、日々のこと、大切なこと。<br />自分の言葉で練習するための、小さな本棚です。</p>
-      </section>
+      <h1 className="visually-hidden">本棚とメモ</h1>
       <div className="workspace">
-        <div><p className="inbox-line"><a href="/connect">あなたのMuseをつなぐ・受信箱を開く</a></p><Shelf library={library} pending={pending} reviewingId={reviewing?.draft.draft_id ?? null} onReview={review} onDiscard={discard} /></div>
+        <Shelf library={library} pending={pending} reviewingId={reviewing?.draft.draft_id ?? null} onReview={review} onDiscard={discard} />
         <section className="writing-paper" id="compose" aria-labelledby="compose-title">
           <h2 id="compose-title" tabIndex={-1}>今日は、何を話したい？</h2>
           <p className="paper-intro">今日のひとことや、SNSに書いた短いメモでも。</p>
@@ -203,12 +173,8 @@ export function App() {
             <div className="form-actions"><button className="save-button" type="submit" disabled={blocked || !dirty}>メモを保存</button><span>このブラウザだけに保存</span></div>
             <p className={failed ? 'save-status error' : 'save-status'} role="status">{message || (dirty ? 'まだ保存されていない変更があります。' : '')}</p>
             <div className="generation-note">
-              <InviteAccess showLogout />
-              <button type="button" className={canGenerate && access.state === 'ready' ? 'generate-button' : undefined} onClick={generate} disabled={!canGenerate || access.state !== 'ready'} aria-busy={generating}>{generating ? 'Muse が教材を作っています…' : '教材を作る'}</button>
-              <p>{generating ? '十数秒ほどかかります。このまま待ってください。' : canGenerate
-                ? <>関心と話したいことから、英語8文のページを1枚作ります。<br />できたページは、確認してから仕舞います。</>
-                : <>関心を選ぶか、話したいことを書くと、教材を作れます。</>}</p>
-              {failure && <p className="error generation-error" role="alert">{failure.message}</p>}
+              <a className="save-button generate-link" href="/connect">Museから受け取る</a>
+              <p>教材は、あなたのMuseが作って受信箱に届けます。</p>
             </div>
           </form>
           <details className="own-muse">

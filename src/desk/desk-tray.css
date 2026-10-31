@@ -1,0 +1,185 @@
+/* Desk tray, ported from the owner-approved 10/28 prototype (docs/assets/desk-tray-2026-10-28 in the Typing repo).
+   Ported: tray materials, quieter desk, fit-to-window layout, tray/pens/book, handle, loose-leaf holes, phone overlay.
+   Not ported: Files, four-step practice screens, the index typography rework. */
+/* ---------- Materials ----------
+   Every theme uses the same board: a flat top face, a thin front edge, a shadow on the desk,
+   and a recessed floor whose walls are shaded top/left and catch light bottom/right.
+   Only the material tokens change. No gloss lines, no moulded radius. */
+.study-desk{
+ --tray-w:clamp(420px,44vw,680px);
+ /* Pure White: matte resin */
+ --tray-face:linear-gradient(170deg,#f7f6f3 0%,#f0efeb 100%);
+ --tray-floor:#f8f7f4;
+ --tray-board-shadow:inset 0 0 0 1px #0000000a,0 2px 0 #dddbd6,0 3px 1px #00000014,0 16px 30px -16px #00000033;
+ --tray-wall-shadow:inset 0 3px 0 #00000010,inset 3px 0 0 #0000000a,inset -1px 0 0 #ffffffcc,inset 0 -2px 0 #ffffffcc,inset 0 7px 10px -7px #00000024;
+ --tray-bar:linear-gradient(90deg,#c4c7ca 0%,#f2f3f4 45%,#dfe1e3 62%,#b4b8bc 100%);
+ --tray-post:#cfd1d3;
+ --punch:#e4e2de;
+ --punch-shade:#c9c6c0;
+ --paper-tone:#fcfbf8;
+ --tab:#efeeeb;--tab-current:#e3e1dc;--tab-ink:#76736d;--tab-ink-current:#3f3d39;
+}
+.theme-natural{
+ /* Natural: brushed aluminium tray on the pale birch desk */
+ --tray-face:repeating-linear-gradient(90deg,#ffffff1f 0 1px,#0000 1px 3px,#3c414608 3px 4px),linear-gradient(160deg,#e8e9e8 0%,#d9dbdb 38%,#e3e4e3 62%,#cfd2d3 100%);
+ --tray-floor:repeating-linear-gradient(90deg,#ffffff18 0 1px,#0000 1px 3px,#3c414606 3px 4px),linear-gradient(180deg,#dcdedd 0%,#e2e3e2 55%,#e6e7e6 100%);
+ --tray-board-shadow:inset 0 1px 0 #ffffffb3,inset 0 0 0 1px #5f666b26,0 2px 0 #b9bdbf,0 3px 1px #4a3c2a2e,0 16px 30px -16px #4a3c2a59;
+ --tray-wall-shadow:inset 0 3px 0 #5f666b33,inset 3px 0 0 #5f666b1f,inset -1px 0 0 #ffffffcc,inset 0 -2px 0 #ffffffcc,inset 0 7px 10px -7px #3c414638;
+ --tray-bar:linear-gradient(90deg,#b7bbbe 0%,#eef0f1 45%,#d6d9db 62%,#a9aeb2 100%);
+ --tray-post:#c6c9cb;
+ --punch:#e2d5bf;
+ --punch-shade:#c4b293;
+ --paper-tone:#fbf6ec;
+ --tab:#f1e9db;--tab-current:#e6dac6;--tab-ink:#7a6c58;--tab-ink-current:#4f4335;
+ --contact-shadow:#5a483026;--soft-shadow:#5a483017;
+}
+.theme-walnut{
+ /* Walnut: antique brass, brushed and softened rather than polished */
+ --tray-face:repeating-linear-gradient(90deg,#fff2d00a 0 1px,#0000 1px 3px,#2a1a0008 3px 4px),linear-gradient(155deg,#c6a56a 0%,#ad8a51 40%,#b99760 68%,#94743f 100%);
+ --tray-floor:repeating-linear-gradient(90deg,#fff2d006 0 1px,#0000 1px 3px,#00000010 3px 4px),linear-gradient(180deg,#5a4629 0%,#66512f 45%,#6d5733 100%);
+ --tray-board-shadow:inset 0 0 0 1px #3a280f40,0 2px 0 #6e5428,0 3px 1px #00000066,0 18px 34px -16px #000000a6;
+ --tray-wall-shadow:inset 0 3px 0 #00000052,inset 3px 0 0 #00000033,inset -1px 0 0 #e2c88f55,inset 0 -2px 0 #e2c88f4d,inset 0 8px 12px -8px #0000007a;
+ --tray-bar:linear-gradient(90deg,#8a6c38 0%,#dcc28b 45%,#bc9c5e 62%,#7c5f2d 100%);
+ --tray-post:#9a7c45;
+ --punch:#4f3726;
+ --punch-shade:#2c1e14;
+ --paper-tone:#f8f2e6;
+ --tab:#ece3d2;--tab-current:#ddd0b8;--tab-ink:#6d604c;--tab-ink-current:#43392b;
+}
+
+/* Natural desk reads as pale birch: the oak photo is washed out rather than replaced. */
+.study-desk.theme-natural{background:#efe8dc}
+.study-desk.theme-natural::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:url(/desk/desk-oak.png) top/cover;filter:saturate(.45) brightness(1.17) contrast(.85)}
+.theme-natural .desk-tray .timer-object{filter:saturate(.4) brightness(1.06) drop-shadow(0 2px 2px #5a48301f) drop-shadow(1px 5px 5px #5a483014)}
+.theme-natural .desk-tray .pen-art{filter:saturate(.82) drop-shadow(0 2px 1px #5a48301f) drop-shadow(1px 4px 3px #5a483014)}
+.theme-natural .desk-tray .pen-choice:has(input:checked) .pen-art{filter:saturate(.82) drop-shadow(0 3px 2px #5a483026) drop-shadow(2px 9px 7px #5a48301c)}
+
+/* Paper matched to each desk; the lesson tabs are paper too, not grey plastic. */
+.desk-grid:has(>.desk-tray){--paper:var(--paper-tone)}
+.desk-grid:has(>.desk-tray) .desk-paper svg.notebook rect[width="148"][height="210"]{fill:var(--paper-tone)}
+.desk-grid:has(>.desk-tray) .lesson-panel{--index-current:var(--tab-current)}
+.desk-grid:has(>.desk-tray) .lesson-steps li{--index-paper:var(--tab)}
+.desk-grid:has(>.desk-tray) .lesson-steps li:has([aria-selected=true]){--index-paper:var(--index-current)}
+.desk-grid:has(>.desk-tray) .lesson-steps button{color:var(--tab-ink)}
+.desk-grid:has(>.desk-tray) .lesson-steps button[aria-selected=true]{color:var(--tab-ink-current)}
+
+/* ---------- Quieter desk: objects instead of captions ---------- */
+.study-desk .desk-tagline,
+.study-desk .desk-footer,
+.study-desk .writing-help,
+.study-desk .model-actions>span,
+.study-desk .notebook-toolbar>span{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.study-desk .settings-button{font-size:0!important;min-width:44px;justify-content:center;opacity:.7}
+.study-desk .settings-button:hover{opacity:1}
+.study-desk .notebook-toolbar{height:28px;margin:0;justify-content:flex-end;background:transparent!important}
+.study-desk .notebook-tools button{min-height:28px!important;font-size:11px;opacity:.55}
+.study-desk .notebook-tools button:hover,.study-desk .notebook-tools button:focus-visible{opacity:1}
+
+/* ---------- Fit the desk to the window; the paper scrolls, not the page ---------- */
+html:has(.desk-tray),html:has(.desk-tray) body,html:has(.desk-tray) #root{height:100%;overflow:hidden}
+.study-desk:has(.desk-tray){height:100dvh;min-height:0;display:flex;flex-direction:column;padding:0 24px 0;overflow:hidden}
+.study-desk:has(.desk-tray) .desk-header{flex:none;width:100%;max-width:none}
+.desk-grid:has(>.desk-tray){
+ flex:1;min-height:0;width:100%;max-width:none;
+ display:grid!important;
+ grid-template-columns:var(--tray-w) minmax(0,1fr)!important;
+ grid-template-rows:auto minmax(0,1fr)!important;
+ column-gap:44px!important;row-gap:10px!important;
+ transition:grid-template-columns 480ms cubic-bezier(.22,.8,.22,1),column-gap 480ms cubic-bezier(.22,.8,.22,1);
+}
+.desk-grid:has(>.desk-tray.is-stowed){grid-template-columns:0px minmax(0,1fr)!important;column-gap:64px!important}
+.desk-grid:has(>.desk-tray) .lesson-panel{grid-area:1/2!important;justify-self:center;width:min(760px,100%)}
+/* the notebook column must fill (not outgrow) its row, so the page scrolls inside the paper, never off the desk */
+.desk-grid:has(>.desk-tray) .notebook-area{grid-area:2/2!important;justify-self:center;align-self:stretch;width:min(760px,100%);min-height:0;overflow:hidden;display:flex;flex-direction:column}
+.desk-grid:has(>.desk-tray) .writing-controls{flex:none}
+.desk-grid:has(>.desk-tray) .desk-paper-scroll{flex:1;min-height:0;height:auto!important;max-height:none!important;padding:6px 0 24px}
+.desk-grid:has(>.desk-tray) .desk-notice:empty{display:none}
+/* ---------- The tray ---------- */
+.desk-tray{
+ grid-area:1/1/3/2;align-self:center;position:relative;z-index:5;
+ width:var(--tray-w);box-sizing:border-box;padding:16px;border-radius:12px;
+ background:var(--tray-face);box-shadow:var(--tray-board-shadow);
+ transition:transform 480ms cubic-bezier(.22,.8,.22,1);
+ max-height:100%;
+}
+.desk-tray.is-stowed{transform:translateX(calc(-1 * var(--tray-w) - 24px + 30px))}
+.desk-tray.is-dragging{transition:none}
+.tray-well{
+ border-radius:6px;padding:16px 18px 14px;
+ background:var(--tray-floor);box-shadow:var(--tray-wall-shadow);
+ display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto;gap:6px;
+ max-height:calc(100dvh - 52px - 36px - 12px);overflow:auto;scrollbar-width:none;
+}
+.desk-tray.is-stowed .tray-well{visibility:hidden;transition:visibility 0s 480ms}
+
+/* timer + pens side by side, book below */
+.desk-tray .desk-tools{min-width:0;width:100%!important;display:grid!important;grid-template-columns:22% minmax(0,1fr)!important;gap:16px!important;padding:0!important;align-items:center}
+.desk-tray .timer-space{min-height:0!important;padding-top:6px!important}
+.desk-tray .timer-actions{gap:0}
+.desk-tray .timer-actions button{min-height:30px!important;padding:2px 4px!important;font-size:10px!important;color:var(--quiet);opacity:.75}
+.desk-tray .timer-actions button:hover{opacity:1}
+/* pens lie packed side by side like a set just out of the box: choosing a colour needs no more room than that */
+.desk-tray .desk-pens{gap:0!important;width:80%;justify-self:center;align-self:center;padding:4px 0!important}
+.desk-tray .pen-choice{display:block!important;height:auto!important;margin:-1.1% 0}
+.desk-tray .pen-art{display:block;width:100%;height:auto;max-height:none!important;transition:translate .22s cubic-bezier(.22,.8,.22,1),filter .22s}
+.desk-tray .pen-label,.desk-tray .pen-check{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* the chosen pen sits slightly lifted out of the row */
+.desk-tray .pen-choice:has(input:checked) .pen-art{translate:9% 0;filter:drop-shadow(0 3px 2px var(--contact-shadow)) drop-shadow(2px 9px 7px var(--soft-shadow))}
+.desk-tray .pen-choice:hover .pen-art{translate:3% 0}
+.desk-tray .pen-choice:has(input:checked):hover .pen-art{translate:9% 0}
+.desk-tray .index-book{width:100%!important;max-width:none!important;margin:2px 0 0!important;aspect-ratio:1.5}
+/* Index book pages take the theme's paper: the grey plate is tinted by multiplying paper-tone through its own outline */
+.desk-tray .index-plate{filter:grayscale(1) brightness(1.03) drop-shadow(0 2px 2px var(--contact-shadow)) drop-shadow(1px 6px 7px var(--soft-shadow))!important}
+.desk-tray .index-book::after{content:"";position:absolute;inset:0;pointer-events:none;background:var(--paper-tone);mix-blend-mode:multiply;-webkit-mask:url(/desk/index-book.png) 0 0/100% 100%;mask:url(/desk/index-book.png) 0 0/100% 100%}
+.desk-tray .index-left,.desk-tray .index-right{top:14%;height:73%;width:33%}
+.desk-tray .index-left{left:11.5%}
+.desk-tray .index-right{left:55.5%}
+.desk-tray .index-right .book-word small{display:block;margin-top:2px;font:400 11px/1.5 "Notebook Klee",serif;color:var(--index-faint)}
+
+/* ---------- The pull handle: a bar on the tray's outer edge ---------- */
+.desk-tray .tray-pull{
+ position:absolute;top:50%;right:-34px;transform:translateY(-50%);
+ width:44px;height:140px;min-height:0!important;padding:0!important;border-radius:6px!important;
+ background:transparent!important;cursor:grab;touch-action:none;
+}
+.desk-tray .tray-pull::before{ /* the bar */
+ content:"";position:absolute;left:18px;top:14px;bottom:14px;width:9px;border-radius:3px;
+ background:var(--tray-bar);box-shadow:1px 2px 3px #00000040,0 0 0 .5px #0000001a;
+ transition:transform .2s;
+}
+.desk-tray .tray-pull::after{ /* the two posts that hold it */
+ content:"";position:absolute;left:8px;top:22px;bottom:22px;width:12px;
+ background:linear-gradient(var(--tray-post),var(--tray-post)) top/100% 5px no-repeat,linear-gradient(var(--tray-post),var(--tray-post)) bottom/100% 5px no-repeat;
+ border-radius:2px;
+}
+.desk-tray .tray-pull:hover::before{transform:translateX(2px)}
+.desk-tray .tray-pull:active{cursor:grabbing}
+.desk-tray .tray-pull:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.desk-tray.is-dragging .tray-pull{cursor:grabbing}
+
+/* ---------- Loose-leaf sheet: 20 square punch holes down the A5 edge (9.5mm pitch), desk showing through ---------- */
+.desk-grid:has(>.desk-tray) .desk-paper::before{
+ content:"";position:absolute;z-index:3;pointer-events:none;
+ left:0;width:calc(100% * 10 / 148);top:calc(100% * 10 / 210);height:calc(100% * 190 / 210);
+ background:linear-gradient(var(--punch-shade) 0 42%,var(--punch) 52%) 0 0/100% 5% repeat-y;
+ -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 9.5'%3E%3Crect x='4.1' y='2.75' width='3.6' height='4' rx='.7'/%3E%3C/svg%3E") 0 0/100% 5% repeat-y;
+ mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 9.5'%3E%3Crect x='4.1' y='2.75' width='3.6' height='4' rx='.7'/%3E%3C/svg%3E") 0 0/100% 5% repeat-y;
+}
+
+@media (max-width:760px){
+ .study-desk:has(.desk-tray){padding:0 14px}
+ .desk-grid:has(>.desk-tray),.desk-grid:has(>.desk-tray.is-stowed){grid-template-columns:minmax(0,1fr)!important;column-gap:0!important}
+ .desk-grid:has(>.desk-tray) .lesson-panel{grid-area:1/1!important;padding-left:22px}
+ .desk-grid:has(>.desk-tray) .notebook-area{grid-area:2/1!important;padding-left:22px}
+ .desk-tray{position:fixed;left:0;top:56px;width:min(420px,calc(100vw - 40px));--tray-w:min(420px,calc(100vw - 40px));padding:12px;border-radius:0 20px 20px 0;z-index:30}
+ .desk-tray.is-stowed{transform:translateX(calc(-100% + 18px))}
+ .desk-tray .tray-pull{right:-30px}
+ .tray-well{padding:10px 12px;max-height:calc(100dvh - 90px)}
+ .desk-tray .index-book{min-height:0!important}
+}
+@media (prefers-reduced-motion:reduce){
+ .desk-tray,.desk-grid:has(>.desk-tray),.desk-tray .pen-art{transition:none!important}
+}
+/* Inside the tray the index headings stay on one line so all six entries fit the page in every theme. */
+.study-desk .desk-tray .index-book h2{white-space:nowrap;font-size:clamp(15px,1.15vw,19px)}
+@media (max-width:760px){.study-desk .desk-tray .index-book h2{font-size:12px;white-space:normal}}
