@@ -10,14 +10,16 @@ export const A5 = { width:refill.page.widthMm, height:refill.page.heightMm,
   left:geometry.bindingMarginMm, right:geometry.outerMarginMm, first:geometry.bodyFirstRuleMm,
   pitch:geometry.rulePitchMm, rows:Math.round((geometry.bodyLastRuleMm-geometry.bodyFirstRuleMm)/geometry.rulePitchMm)+1,
   titleTop:geometry.headerTopRuleMm, titleBottom:geometry.headerBottomRuleMm, titleBaseline:refill.slots.title.baselineMm,
-  footer:geometry.footerRuleMm, rule:geometry.bodyRuleColor, paper:refill.page.paper, ink:'#383A3D' } as const;
+  footer:geometry.footerRuleMm, rule:geometry.bodyRuleColor, paper:refill.page.paper, ink:'#383A3D',
+  // Page furniture (title/date/footer lines, “The Sentence Book”) stays about as light as the rules.
+  faint:'#B9C3CB', dateLineY:18, dateLineLength:42 } as const;
 export interface PaperSettings { binding:number; side:'left'|'right'; }
 export interface ViewSettings { content:'study-notes'|'sentences-only'; memos:'shown'|'blank'; markers:boolean; }
 export const defaultView:ViewSettings = {content:'study-notes',memos:'shown',markers:true};
 export type Layer = 'base'|'body'|'memo'|'study'|'personal';
 export interface InkRun {
   id:string; sourceId:string; text:string; x:number; y:number; size:number;
-  face:'hand'|'static'; layer:Layer; accent:boolean; glyphs:Glyph[];
+  face:'hand'|'static'; layer:Layer; accent:boolean; faint?:boolean; glyphs:Glyph[];
 }
 export interface PaperLine {id:string;x1:number;y1:number;x2:number;y2:number;width:number;layer:Layer;accent?:boolean;}
 export interface PaperBox {id:string;x:number;y:number;width:number;height:number;checked?:boolean;}
@@ -52,19 +54,30 @@ const baseline=(row:number)=>A5.first+(row%A5.rows)*A5.pitch;
 const pageAt=(row:number)=>Math.floor(row/A5.rows);
 const lineText=(glyphs:Glyph[])=>glyphs.map(g=>g.char).join('').trimEnd();
 
+// Owner's print review (2026-10-31): rules and bands run edge to edge like loose-leaf refills,
+// so front and back look alike; the outer margin is narrower than the adopted 12 mm.
+export const outerMarginMm=8;
+// Every page shares the same furniture: one title line, a short date line at the outer top, and a footer line.
+// Title and date are written only on the first copied page; the others leave the lines blank.
+function paperLines(edge:number):PaperLine[] {
+  return [
+    ...Array.from({length:A5.rows},(_,n)=>({id:'rule-'+n,x1:0,x2:A5.width,y1:A5.first+n*A5.pitch,y2:A5.first+n*A5.pitch,width:.10,layer:'base' as const})),
+    {id:'band-title',x1:0,x2:A5.width,y1:A5.titleBottom,y2:A5.titleBottom,width:.22,layer:'base'},
+    {id:'band-footer',x1:0,x2:A5.width,y1:A5.footer,y2:A5.footer,width:.18,layer:'base'},
+    {id:'date-line',x1:edge-A5.dateLineLength,x2:edge,y1:A5.dateLineY,y2:A5.dateLineY,width:.18,layer:'base'},
+  ];
+}
+
 export function createA5Layout(source:StudyContent,paper:PaperSettings={binding:18,side:'left'},fonts:FontSettings=defaultFonts):A5Layout {
   const wrap=(text:string,width:number,size:number,face:'hand'|'static')=>wrapInk(text,width,size,face,fonts);
   if(![12,18,24].includes(paper.binding)||!['left','right'].includes(paper.side))throw new Error('綴じ代の設定を確認してください。');
-  const left=paper.side==='left'?paper.binding:12,right=paper.side==='right'?paper.binding:12;
+  const left=paper.side==='left'?paper.binding:outerMarginMm,right=paper.side==='right'?paper.binding:outerMarginMm;
   const edge=A5.width-right,mainRight=edge-32,railX=edge-28,mainWidth=mainRight-left;
   const pages:A5Page[]=[];
   const page=(index:number):A5Page=>{
     while(pages.length<=index) {
       const i=pages.length;
-      pages.push({index:i,runs:[],boxes:[],markers:[],lines:[
-        ...Array.from({length:A5.rows},(_,n)=>({id:'rule-'+n,x1:left,x2:edge,y1:A5.first+n*A5.pitch,y2:A5.first+n*A5.pitch,width:.10,layer:'base' as const})),
-        ...[A5.titleTop,A5.titleBottom,A5.footer].map((y,n)=>({id:'band-'+n,x1:0,x2:edge,y1:y,y2:y,width:.35,layer:'base' as const})),
-      ]});
+      pages.push({index:i,runs:[],boxes:[],markers:[],lines:paperLines(edge)});
     }
     return pages[index];
   };
@@ -162,56 +175,76 @@ export function createA5Layout(source:StudyContent,paper:PaperSettings={binding:
   }
   page(0);
   for(const p of pages) {
-    const metadata=(id:string,text:string,x:number,y:number,size:number,align:'left'|'right',maxWidth:number)=>{
+    const metadata=(id:string,text:string,x:number,y:number,size:number,align:'left'|'right',maxWidth:number,faint=false)=>{
       const lines=wrap(text,maxWidth,size,'hand');
       // Metadata is never silently truncated, nor allowed to move the body grid.
       if(lines.length>1)throw new Error('タイトルまたは分類名が欄に収まりません。表示名を短くしてください。元の内容は保持されています。');
       const g=lines[0]??[],w=g.reduce((n,l)=>n+l.advance,0),left=align==='right'?x-w:x;
-      p.runs.push({id,sourceId:source.id,text,x:left,y,size,face:'hand',layer:'base',accent:false,glyphs:g.map(l=>({...l,x:l.x+left,y:y-(id==='title'?englishFonts[fonts.english].titleLift*size/200:0)}))});
+      p.runs.push({id,sourceId:source.id,text,x:left,y,size,face:'hand',layer:'base',accent:false,faint,glyphs:g.map(l=>({...l,x:l.x+left,y:y-(id==='title'?englishFonts[fonts.english].titleLift*size/200:0)}))});
     };
-    metadata('title',source.title,left,A5.titleBaseline,5.65,'left',edge-left);
-    metadata('classification',source.classification?.label??'Unfiled',edge,11,3.2,'right',edge-left);
-    metadata('date',(source.date??'Draft')+' / '+String(p.index+1).padStart(2,'0'),edge,17,2.9,'right',edge-left);
-    metadata('footer','The Sentence Book / '+(p.index+1),edge,206,2.7,'right',edge-left);
+    if(p.index===0) {
+      metadata('title',source.title,left,A5.titleBaseline,5.65,'left',edge-left);
+      metadata('classification',source.classification?.label??'Unfiled',edge,11,3.2,'right',edge-left);
+      metadata('date',source.date??'Draft',edge,A5.dateLineY-1,2.9,'right',edge-left);
+    }
+    metadata('footer','The Sentence Book',edge,206,2.7,'right',edge-left,true);
   }
   return {pages,left,right,mainRight,railX,personal,personalPage,source,fonts:{...fonts}};
 }
 
-// The back of the daily sheet: each sentence's meaning, then ruled rows to write the English from memory.
-// Built in front orientation on the same grid; the PDF mirrors it for long-edge duplex.
-export function createReviewPage(layout:A5Layout,index:number):A5Page {
-  const {source,fonts,left}=layout,edge=A5.width-layout.right;
+// Pages printed with the copied note but not written on screen: built in front orientation on the
+// same grid, and placed on the right side of the sheet by `printPages`.
+function extraPage(layout:A5Layout,index:number,title:string|null) {
+  const {fonts,left}=layout,edge=A5.width-layout.right;
+  const page:A5Page={index,runs:[],boxes:[],markers:[],lines:paperLines(edge)};
   const wrap=(text:string,width:number,size:number,face:'hand'|'static')=>wrapInk(text,width,size,face,fonts);
-  const page:A5Page={index,runs:[],boxes:[],markers:[],lines:[
-    ...Array.from({length:A5.rows},(_,n)=>({id:'rule-'+n,x1:left,x2:edge,y1:A5.first+n*A5.pitch,y2:A5.first+n*A5.pitch,width:.10,layer:'base' as const})),
-    ...[A5.titleTop,A5.titleBottom,A5.footer].map((y,n)=>({id:'band-'+n,x1:0,x2:edge,y1:y,y2:y,width:.35,layer:'base' as const})),
-  ]};
-  const place=(id:string,text:string,glyphs:Glyph[],x:number,y:number,size:number,face:'hand'|'static',layer:Layer,accent=false)=>
-    page.runs.push({id,sourceId:id,text,x,y,size,face,layer,accent,glyphs:glyphs.map(g=>({...g,x:g.x+x,y}))});
-  const metadata=(id:string,text:string,x:number,y:number,size:number,align:'left'|'right')=>{
+  const place=(id:string,text:string,glyphs:Glyph[],x:number,y:number,size:number,face:'hand'|'static',layer:Layer,accent=false,faint=false)=>
+    page.runs.push({id,sourceId:id,text,x,y,size,face,layer,accent,faint,glyphs:glyphs.map(g=>({...g,x:g.x+x,y}))});
+  const metadata=(id:string,text:string,x:number,y:number,size:number,align:'left'|'right',faint=false)=>{
     const g=wrap(text,edge-left,size,'hand')[0]??[],w=g.reduce((n,l)=>n+l.advance,0);
-    place(id,text,g,align==='right'?x-w:x,y-(id==='title'?englishFonts[fonts.english].titleLift*size/200:0),size,'hand','base');
+    place(id,text,g,align==='right'?x-w:x,y-(id==='title'?englishFonts[fonts.english].titleLift*size/200:0),size,'hand','base',false,faint);
   };
-  metadata('title','Review',left,A5.titleBaseline,5.65,'left');
-  metadata('classification',source.title,edge,11,3.2,'right');
-  metadata('date',(source.date??'Draft')+' / back',edge,17,2.9,'right');
-  metadata('footer','The Sentence Book / back',edge,206,2.7,'right');
-  const items=source.sentences.map((s,i)=>({n:i+1,meaning:s.meaning?.trim()??''})).filter(s=>s.meaning);
-  const numberWidth=6,meaningWidth=edge-left-numberWidth;
-  // A meaning the notebook font cannot draw is left off the back rather than blocking the whole PDF.
-  const wrapped=items.flatMap(item=>{try{return [{...item,lines:wrap(item.meaning,meaningWidth,2.9,'static')}];}catch{return [];}});
-  // Two writing rows per item when they fit, otherwise one; never shrink the type.
-  const needed=(writing:number)=>wrapped.reduce((n,item)=>n+item.lines.length+writing,0);
-  const writing=needed(2)<=A5.rows?2:needed(1)<=A5.rows?1:0;
-  if(!writing)throw new Error('確認問題が裏面に収まりません。訳を短くしてください。');
+  // The lesson title and date belong to the first copied page only; a review page names itself on the title line.
+  if(title)metadata('title',title,left,A5.titleBaseline,5.65,'left');
+  metadata('footer','The Sentence Book',edge,206,2.7,'right',true);
+  return {page,place,wrap,left,edge};
+}
+
+// The review: each sentence's meaning, then two ruled rows to write the English from memory.
+// Long translations continue on another page instead of blocking the PDF; the type never shrinks.
+export function createReviewPages(layout:A5Layout,firstIndex:number):A5Page[] {
+  const items=layout.source.sentences.map((s,i)=>({n:i+1,meaning:s.meaning?.trim()??''})).filter(s=>s.meaning);
+  const pages:A5Page[]=[];
+  let current=extraPage(layout,firstIndex,'Review');pages.push(current.page);
+  const next=()=>{current=extraPage(layout,firstIndex+pages.length,'Review (continued)');pages.push(current.page);};
+  const numberWidth=6,meaningWidth=current.edge-current.left-numberWidth,writing=2;
+  // A meaning the notebook font cannot draw is left off rather than blocking the whole PDF.
+  const wrapped=items.flatMap(item=>{try{return [{...item,lines:current.wrap(item.meaning,meaningWidth,2.9,'static')}];}catch{return [];}});
   let row=0;
   for(const item of wrapped) {
-    const number=wrap(item.n+'.',numberWidth,3.2,'hand')[0]??[];
-    place('review-number-'+item.n,item.n+'.',number,left,A5.first+row*A5.pitch,3.2,'hand','body',true);
-    for(const [i,g] of item.lines.entries())place('review-'+item.n+':'+i,item.meaning,g,left+numberWidth,A5.first+(row+i)*A5.pitch-1,2.9,'static','body');
-    row+=item.lines.length+writing;
+    // Keep an item together when it fits on a fresh page.
+    if(row>0&&row+item.lines.length+writing>A5.rows){next();row=0;}
+    current.place('review-number-'+item.n,item.n+'.',current.wrap(item.n+'.',numberWidth,3.2,'hand')[0]??[],current.left,A5.first+row*A5.pitch,3.2,'hand','body',true);
+    for(const [i,g] of item.lines.entries()) {
+      if(row>=A5.rows){next();row=0;}
+      current.place('review-'+item.n+':'+i,item.meaning,g,current.left+numberWidth,A5.first+row*A5.pitch-1,2.9,'static','body');
+      row++;
+    }
+    row+=writing;
   }
-  return page;
+  return pages;
+}
+export const createNotesPage=(layout:A5Layout,index:number):A5Page=>extraPage(layout,index,null).page;
+
+// Print order for long-edge duplex: every copied page on a front, the review behind the last one,
+// and plain ruled notes behind any earlier copied page. Odd positions are backs.
+export function printPages(layout:A5Layout,view:ViewSettings):A5Page[] {
+  const copied=visiblePages(layout,view),pages:A5Page[]=[];
+  for(const [i,p] of copied.entries()) {
+    pages.push(p);
+    if(i<copied.length-1)pages.push(createNotesPage(layout,pages.length));
+  }
+  return [...pages,...createReviewPages(layout,pages.length)];
 }
 
 export function visibleLayer(layer:Layer,view:ViewSettings) {
@@ -222,7 +255,7 @@ export function visibleLayer(layer:Layer,view:ViewSettings) {
 export function visiblePages(layout:A5Layout,view:ViewSettings) {
   return layout.pages.filter(p=>view.content==='study-notes'||p.runs.some(r=>r.layer==='body'));
 }
-export interface SceneStroke extends Stroke {page:number;layer:Layer;id:string;accent:boolean;}
+export interface SceneStroke extends Stroke {page:number;layer:Layer;id:string;accent:boolean;faint?:boolean;}
 export function createA5Scene(layout:A5Layout,includePersonal=false) {
   const strokes:SceneStroke[]=[];let clock=250;
   const add=(run:InkRun,page:number,phase:Stroke['phase'])=>{
@@ -232,7 +265,7 @@ export function createA5Scene(layout:A5Layout,includePersonal=false) {
     for(const g of run.glyphs) {
       for(const s of englishFonts[layout.fonts.english].data[g.char]?.strokes??[]) {
         const duration=Math.max(16,s.length*g.scale*11);
-        strokes.push({...s,x:g.x,y:g.y,scale:g.scale,start:clock,duration,phase,width:(run.id==='title'?.28:.20)/g.scale,color:A5.ink,page,layer:run.layer,id:run.id+':'+n++,accent:run.accent});
+        strokes.push({...s,x:g.x,y:g.y,scale:g.scale,start:clock,duration,phase,width:(run.id==='title'?.28:.20)/g.scale,color:A5.ink,page,layer:run.layer,id:run.id+':'+n++,accent:run.accent,faint:run.faint});
         // Metadata is present immediately; handwriting is the authored motion.
         if(!immediate)clock+=duration+5;
         else {strokes.at(-1)!.start=0;strokes.at(-1)!.duration=1;}

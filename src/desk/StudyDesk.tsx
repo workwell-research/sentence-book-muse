@@ -18,6 +18,7 @@ import type {AudioState} from './audio';
 import {caretOffset,revealDelta,writingPaperHeight} from './viewport';
 import {NoteStyle,PrintPanel,useDismiss} from './DeskControls';
 import type {ChangeDisplay} from './DeskControls';
+import type {PrintSides} from '../handwriting/study-pdf';
 
 const themeNames={'pure-white':'Pure White',natural:'Natural',walnut:'Walnut'};
 const markerNames={blue:'Blue',pink:'Pink',purple:'Purple',gray:'Gray',orange:'Orange',green:'Green'};
@@ -180,7 +181,7 @@ export function StudyDesk(){
   setAnimateId(pickedSentence.id);setAnnotationsOnly(true);setTime(0);setPlaying(true);
  }
  function startPersonal(){setPersonalMode(true);changeDisplay({content:'study-notes'});requestAnimationFrame(()=>{editor.current?.focus({preventScroll:true});follow.current();});}
- async function exportPdf(){setExporting(true);try{const {exportStudyNote}=await import('../handwriting/study-pdf');const bytes=await exportStudyNote(confirmedLayout(layout,record,display),view,{...display,notebook:'a5',palette:display.marker,markers:display.printMarkers??display.markers});const url=URL.createObjectURL(new Blob([new Uint8Array(bytes)],{type:'application/pdf'}));const a=document.createElement('a');a.href=url;a.download=display.sheet==='A4'?'sentence-book-a5-on-a4.pdf':'sentence-book-a5.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);setNotice('PDFを作成しました。100%（実際のサイズ）で印刷してください。');}catch(e){setNotice((e as Error).message);}finally{setExporting(false);}}
+ async function exportPdf(sides:PrintSides='both'){setExporting(true);try{const {exportStudyNote}=await import('../handwriting/study-pdf');const bytes=await exportStudyNote(confirmedLayout(layout,record,display),view,{...display,notebook:'a5',palette:display.marker,markers:display.printMarkers??display.markers},undefined,sides);const url=URL.createObjectURL(new Blob([new Uint8Array(bytes)],{type:'application/pdf'}));const a=document.createElement('a');a.href=url;a.download=(display.sheet==='A4'?'sentence-book-a5-on-a4':'sentence-book-a5')+(sides==='both'?'':'-'+sides)+'.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);setNotice(sides==='front'?'表のPDFを作成しました。刷ったら紙を裏返して入れ直し、裏を刷ってください。':sides==='back'?'裏のPDFを作成しました。表を刷った紙を裏返して入れてください。':'PDFを作成しました。100%（実際のサイズ）で両面印刷してください。');}catch(e){setNotice((e as Error).message);}finally{setExporting(false);}}
  const inputTop=(position.y-4.65)*unit;
  return <div className={'study-desk theme-'+display.theme+(isEditing?' is-writing':'')} style={{'--paper':paperColor} as CSSProperties}>
   <a className="desk-skip" href="#notebook-input">ノートの入力へ</a>
@@ -221,7 +222,7 @@ export function StudyDesk(){
      {(tab===2||tab===3)&&<>{layout.source.vocabulary.map(v=><label className="book-word" key={v.id}><input type="checkbox" checked={!!record.checks[v.id]} onChange={e=>persist({...record,checks:{...record.checks,[v.id]:e.target.checked}})}/><span>{v.english}<small>{v.meaning}</small></span></label>)}<p className="index-note">{layout.source.vocabulary.length?'線を引いた語句はここに残ります。復習した印もつけられます。':'まだ語句がありません。見本の語句をタップして調べると、ここに残ります。'}</p>
       {otherLines.length>0&&<><p className="index-subhead">ほかのページで引いた線 · {otherLines.length}</p>{otherLines.slice(0,12).map(e=><p className="wordbook-entry" key={e.lookedUpAt+e.expression}><span lang="en">{e.expression}</span> {e.native}<small>{e.pageTitle}</small></p>)}</>}</>}
      {tab===4&&<>{record.phase==='complete'?<><p>{lesson.title}</p><p>{total}文を書き終えました。</p><button onClick={startPersonal}>自分のひとことを書く</button></>:<p>{total}文を書き終えると、<br/>ここに一枚のノートが残ります。</p>}
-      <PrintPanel display={display} change={changeDisplay} ready={record.entries.length>0} exporting={exporting} onExport={exportPdf}/></>}
+      <PrintPanel display={display} change={changeDisplay} ready={record.entries.length>0} exporting={exporting} onExport={sides=>void exportPdf(sides)}/></>}
      {tab===5&&<NoteStyle display={display} change={changeDisplay}/>}
     </div>
    </section>

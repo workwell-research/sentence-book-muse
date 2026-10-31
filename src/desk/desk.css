@@ -180,3 +180,4 @@
 .study-desk .print-panel .pdf-button{width:100%;margin-top:6px;background:#e7e7e7;font-size:12px}
 .print-panel .index-note{margin-top:8px}
 @media(max-width:1200px){.study-desk .index-tabs button{min-height:28px;padding-block:4px}}
+.print-sides{display:flex;gap:4px;margin-top:6px}.study-desk .print-sides button{flex:1;font-size:11px;padding:6px 2px;min-height:36px;border:1px solid #d2cdc4;margin:0}

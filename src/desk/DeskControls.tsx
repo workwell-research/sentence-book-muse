@@ -4,6 +4,7 @@ import {englishFonts,japaneseFonts} from '../handwriting/fonts';
 import type {EnglishFontId,JapaneseFontId} from '../handwriting/fonts';
 import {layoutText} from '../handwriting/model';
 import type {DeskDisplay} from './core';
+import type {PrintSides} from '../handwriting/study-pdf';
 
 // Settings live on the objects they change: hand and page contents in the index book,
 // print with the finished notes, timer length on the timer, voice on the card.
@@ -57,7 +58,8 @@ export function NoteStyle({display,change}:{display:DeskDisplay;change:ChangeDis
 }
 
 // Each daily note prints as one two-sided sheet: the copied page, and the review page on the back.
-export function PrintPanel({display,change,ready,exporting,onExport}:{display:DeskDisplay;change:ChangeDisplay;ready:boolean;exporting:boolean;onExport:()=>void}) {
+// Printers without A5 duplex print one side, then the same sheet turned over.
+export function PrintPanel({display,change,ready,exporting,onExport}:{display:DeskDisplay;change:ChangeDisplay;ready:boolean;exporting:boolean;onExport:(sides:PrintSides)=>void}) {
  return <div className="print-panel">
   <p className="index-subhead">印刷</p>
   <fieldset className="style-group print-sheets"><legend className="sr-only">用紙</legend>
@@ -65,7 +67,8 @@ export function PrintPanel({display,change,ready,exporting,onExport}:{display:De
    <label><input type="radio" name="print-sheet" checked={display.sheet==='A4'} onChange={()=>change({sheet:'A4'})}/>A4に2部</label>
   </fieldset>
   <label className="print-check"><input type="checkbox" checked={display.printMarkers??display.markers} onChange={e=>change({printMarkers:e.target.checked})}/>マーカーも印刷</label>
-  <button className="pdf-button" disabled={!ready||exporting} onClick={onExport}>{exporting?'作成中…':'PDFにする'}</button>
-  <p className="index-note">100%・両面（{display.sheet==='A4'?'短辺とじ':'長辺とじ'}）。裏は確認問題です。</p>
+  <div className="print-sides" role="group" aria-label="PDFにする"><button className="pdf-button" disabled={!ready||exporting} onClick={()=>onExport('both')}>{exporting?'作成中…':'両面'}</button>
+   <button disabled={!ready||exporting} onClick={()=>onExport('front')}>表だけ</button><button disabled={!ready||exporting} onClick={()=>onExport('back')}>裏だけ</button></div>
+  <p className="index-note">100%で印刷。両面は{display.sheet==='A4'?'短辺とじ':'長辺とじ'}、裏は確認問題。両面に対応しないプリンタは、表を刷った紙を裏返して裏を。まず1枚で向きを確かめてください。</p>
  </div>;
 }

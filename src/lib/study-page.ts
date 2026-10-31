@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createA5Layout, wrapInk } from '../handwriting/a5-layout';
+import { createA5Layout, outerMarginMm, wrapInk } from '../handwriting/a5-layout';
 import type { PaperSettings } from '../handwriting/a5-layout';
 import { englishFonts, japaneseFonts } from '../handwriting/fonts';
 import type { FontSettings, JapaneseFontId } from '../handwriting/fonts';
@@ -32,7 +32,7 @@ export function notebookDate(iso: string): string | null {
   return Number.isNaN(date.getTime()) ? null : `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
 }
 
-const paperWidth = (paper: PaperSettings) => 148 - (paper.side === 'right' ? paper.binding : 12) - (paper.side === 'left' ? paper.binding : 12);
+const paperWidth = (paper: PaperSettings) => 148 - (paper.side === 'right' ? paper.binding : outerMarginMm) - (paper.side === 'left' ? paper.binding : outerMarginMm);
 // Header fields must stay on one line; the title is shortened word by word, never cut mid-word.
 function fitLine(text: string, size: number, width: number, fonts: FontSettings): string | null {
   const clean = normalizeHandText(text);
