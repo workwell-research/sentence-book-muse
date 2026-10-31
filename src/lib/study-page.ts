@@ -51,9 +51,13 @@ export type DeskLesson =
 
 export function studyContentFromPage(page: LibraryPage, binder: Binder | null, paper: PaperSettings, fonts: FontSettings): DeskLesson {
   const font = englishFonts[fonts.english].data;
+  // Muse's review expression for a sentence becomes that sentence's Reconstruction hint.
+  const hintFor = (index: number) => page.review_items.find(item => item.sentence_index === index)?.expression;
   const sentences: StudySentence[] = page.sentences.map((pair, index) => ({
     id: `sentence-${String(index + 1).padStart(2, '0')}`, text: normalizeHandText(pair.en), meaning: pair.native,
+    ...(hintFor(index) ? { hint: hintFor(index) } : {}),
   }));
+  const questions = page.questions.map((question, index) => ({ id: `question-${index + 1}`, en: question.en, native: question.native }));
   if (sentences.some(sentence => !sentence.text || !supported(sentence.text, font))) return { kind: 'unavailable', reason: 'unsupported-text' };
 
   // Muse's review expressions are candidates in the words list only; lines on the paper are the learner's.
@@ -70,7 +74,7 @@ export function studyContentFromPage(page: LibraryPage, binder: Binder | null, p
   const base: StudyContent = {
     id: page.id, title, date: notebookDate(page.filedAt),
     classification: { id: binder?.id ?? `level-${page.level}`, label },
-    sentences, vocabulary, personal: '',
+    sentences, vocabulary, personal: '', questions,
   };
   // Review meanings may use characters the notebook's Japanese face lacks; sentences alone are still a lesson.
   if (fits(base, paper, fonts)) return { kind: 'ready', content: base, trimmed: false };

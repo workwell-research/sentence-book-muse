@@ -136,18 +136,15 @@ export function App() {
   return <>
     <a className="skip-link" href={choosingInterests ? "#interests" : "#compose"}>{choosingInterests ? "関心を選ぶ" : "メモを書く"}</a>
     <header className="masthead">
-      <a className="wordmark" href={choosingInterests ? "#interests" : "#shelf"}>The Sentence Book<span>自分の言葉を、自分の本に。</span></a>
-      <a className="header-link" href={choosingInterests ? "#interests" : "#compose"}>{choosingInterests ? "関心を選ぶ" : "メモを書く"} <span aria-hidden="true">→</span></a>
+      <a className="wordmark" href="/">The Sentence Book</a><span className="tagline" lang="en">with Muse</span>
+      <nav aria-label="ページ"><a href="/">机へ</a><a href="/connect">受信箱</a></nav>
     </header>
     <main>
       {choosingInterests ? <InterestSetup initial={profile} onDismiss={finishInterests}
         onSaved={saved => { setProfile({ kind: 'ready', profile: saved }); finishInterests(); }} /> : <>
-      <section className="intro" aria-labelledby="intro-title">
-        <h1 id="intro-title">話したいことから、<br />一ページずつ。</h1>
-        <p>旅のこと、日々のこと、大切なこと。<br />自分の言葉で練習するための、小さな本棚です。</p>
-      </section>
+      <h1 className="visually-hidden">本棚とメモ</h1>
       <div className="workspace">
-        <div><p className="inbox-line"><a href="/connect">あなたのMuseをつなぐ・受信箱を開く</a></p><Shelf library={library} pending={pending} reviewingId={reviewing?.draft.draft_id ?? null} onReview={review} onDiscard={discard} /></div>
+        <Shelf library={library} pending={pending} reviewingId={reviewing?.draft.draft_id ?? null} onReview={review} onDiscard={discard} />
         <section className="writing-paper" id="compose" aria-labelledby="compose-title">
           <h2 id="compose-title" tabIndex={-1}>今日は、何を話したい？</h2>
           <p className="paper-intro">今日のひとことや、SNSに書いた短いメモでも。</p>

@@ -1,0 +1,94 @@
+/* Shadowing, Dictation, Reconstruction and Speaking, ported from the owner-approved 10/29 prototype
+   (Typing repo docs/assets/desk-tray-2026-10-28/desk-steps.css). The card tapes over what a pass keeps closed;
+   a fresh loose leaf lies where the notebook was. */
+.lesson-steps button{cursor:pointer}
+.lesson-steps button[aria-selected=false]:hover{color:#363636}
+.lesson-panel>.model-card[hidden]{display:none!important}
+.notebook-area[data-in-step]>:not(.step-sheet){display:none!important}
+.step-sheet{flex:1;min-height:0;display:flex;flex-direction:column;padding:34px 20px 0 0}
+.notebook-area:not(:has(.step-sheet)) .step-sheet{display:none}
+.step-card .model-sentence{min-height:1.45em}
+.step-card .model-sentence.is-small{font-size:clamp(17px,1.45vw,22px);margin-top:6px}
+.step-card .model-cue{margin:15px 0 0;font:400 clamp(16px,1.3vw,19px)/1.5 "Notebook Klee",serif;color:inherit}
+.step-card .step-done{color:color-mix(in srgb,currentColor 75%,transparent)}
+.step-card .say-word{transition:color .12s,background-color .12s;border-radius:2px}
+.step-card .say-word.is-said{background:linear-gradient(transparent 58%,var(--step-marker) 58% 94%,transparent 94%)}
+.step-card .model-actions{gap:2px}
+.step-card .model-actions button{min-height:0}
+.step-card .model-actions .step-chip[aria-pressed=true]{color:var(--step-pen);text-decoration:underline;text-decoration-thickness:.5px;text-underline-offset:4px}
+.step-card .model-actions .step-next{color:var(--step-pen)}
+.step-card .step-sound{width:15px;height:15px;flex:none;background:currentColor;
+ -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 9H8L13 5V19L8 15H4ZM17 8Q22 12 17 16'/%3E%3C/svg%3E") center/contain no-repeat;
+ mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 9H8L13 5V19L8 15H4ZM17 8Q22 12 17 16'/%3E%3C/svg%3E") center/contain no-repeat}
+.step-card .step-hint{font:italic 400 12.5px/1 Lora,serif;color:var(--step-pen);padding:0 6px}
+.step-card .step-hint.is-hidden{display:none}
+.step-card .step-note{margin-left:auto;font-size:11px;color:#697078;white-space:nowrap}
+
+/* Masking tape over what this pass keeps closed; it peels away to check */
+.taped{position:relative;display:inline-block;max-width:100%}
+.taped-text{visibility:hidden}
+.taped.is-open .taped-text{visibility:visible}
+.step-card .tape{position:absolute;inset:-3px -10px -2px -8px;min-height:0;padding:0;border:0;border-radius:0;cursor:pointer;rotate:-.6deg;
+ background:repeating-linear-gradient(100deg,#ffffff1f 0 2px,transparent 2px 7px),color-mix(in srgb,var(--step-marker),var(--step-pen) 22%)!important;
+ box-shadow:0 1px 1.5px #00000014;opacity:.97;
+ -webkit-mask:var(--tape-edge);mask:var(--tape-edge);
+ --tape-edge:linear-gradient(#000,#000) 6px 0/calc(100% - 12px) 100% no-repeat,
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 8' preserveAspectRatio='none'%3E%3Cpath d='M6 0H1L3 1 0 2 2 3 0 4 3 5 1 6 2 7 0 8H6Z'/%3E%3C/svg%3E") 0 0/6px 8px repeat-y,
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 8' preserveAspectRatio='none'%3E%3Cpath d='M0 0H5L3 1 6 2 4 3 6 4 3 5 5 6 4 7 6 8H0Z'/%3E%3C/svg%3E") 100% 0/6px 8px repeat-y;
+ transition:translate .45s cubic-bezier(.3,.7,.3,1),rotate .45s,opacity .35s .1s}
+.step-card .tape:hover{translate:0 -1px}
+.step-card .taped.is-open .tape{pointer-events:none;translate:16px -18px;rotate:-7deg;opacity:0}
+@media (prefers-reduced-motion:reduce){.step-card .tape{transition:none}}
+
+.step-paper{--rule:34px;flex:1;min-height:0;overflow:auto;scrollbar-width:none;border-radius:2px 2px 0 0;outline:none;
+ background:var(--paper-tone,#fcfbf8);box-shadow:0 2px 3px #00000014,0 7px 14px #0000000f}
+.step-paper:focus-visible{box-shadow:0 0 0 2px var(--step-pen),0 7px 14px #0000000f}
+.step-page{position:relative;min-height:100%;padding:calc(var(--rule) * .6) 44px calc(var(--rule) * 2) 92px;
+ background:repeating-linear-gradient(transparent 0 calc(var(--rule) - 1px),color-mix(in srgb,#7d97ad 26%,transparent) calc(var(--rule) - 1px) var(--rule)) 0 calc(var(--rule) * 3.2)/100% 100% no-repeat}
+/* square loose-leaf holes down the edge, showing the desk */
+.step-page::before{content:"";position:absolute;left:0;top:0;bottom:0;width:44px;
+ background:linear-gradient(var(--punch-shade,#c9c6c0) 0 42%,var(--punch,#e4e2de) 52%) 0 0/100% 36px repeat-y;
+ -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 36'%3E%3Crect x='17' y='12' width='14' height='15' rx='2.6'/%3E%3C/svg%3E") 0 0/100% 36px repeat-y;
+ mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 36'%3E%3Crect x='17' y='12' width='14' height='15' rx='2.6'/%3E%3C/svg%3E") 0 0/100% 36px repeat-y}
+.step-meta{margin:0;height:calc(var(--rule) * .8);text-align:right;font:400 11px/1 "Notebook Klee",serif;letter-spacing:.06em;color:var(--tab-ink,#8a8a8a)}
+.step-title{margin:0 0 calc(var(--rule) * .2);height:calc(var(--rule) * 1.6);font:400 21px/calc(var(--rule) * 1.6) "Notebook Klee",serif;color:var(--step-pen);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.step-rows{list-style:none;margin:0;padding:0;counter-reset:step-row}
+.step-row{position:relative;min-height:var(--rule);font:400 17px/var(--rule) "Notebook Klee",serif;color:#383a3d}
+.step-row>span{position:relative;top:5px}
+.step-row:not(.is-model,.is-label,.is-own)::before{counter-increment:step-row;content:counter(step-row);position:absolute;left:-28px;top:5px;width:18px;text-align:right;font:400 10px/var(--rule) Lora,serif;color:var(--tab-ink,#9a9a9a)}
+.row-hand{font:400 17.5px/var(--rule) var(--step-hand),"Notebook Klee",serif;color:#46484b}
+.step-row.is-print{cursor:default}
+.step-row.is-print .row-text{color:color-mix(in srgb,#383a3d 70%,transparent);transition:background-size .3s}
+.step-sheet:has(.step-page:not(:has(.step-stamp))) .step-row.is-print:not(.is-current){cursor:pointer}
+.step-row.is-current .row-text{color:#383a3d;background:linear-gradient(transparent 52%,var(--step-marker) 52% 92%,transparent 92%)}
+.step-row.is-said::after{content:"";position:absolute;left:-46px;top:calc(var(--rule) / 2 - 1px);width:9px;height:5px;border:solid var(--step-pen);border-width:0 0 1.5px 1.5px;rotate:-45deg}
+.step-row.is-model{font-size:13px;color:var(--tab-ink,#8a8a8a)}
+.step-row.is-model .row-model{top:3px}
+.step-row.is-model mark{background:linear-gradient(transparent 50%,var(--step-marker) 50% 95%,transparent 95%);color:#383a3d}
+.step-row.is-quiet{font-style:normal}
+.step-row.is-label{margin-top:var(--rule);font:400 11px/var(--rule) "Notebook Klee",serif;letter-spacing:.08em;color:var(--step-pen)}
+.step-row.is-label>*{top:0}
+.step-input{position:relative;top:4px;display:block;width:100%;height:var(--rule);min-height:0;margin:0;padding:0;border:0;outline:none;resize:none;overflow:hidden;background:transparent;
+ font:400 17.5px/calc(var(--rule) - 6px) var(--step-hand),"Notebook Klee",serif;color:#383a3d;caret-color:var(--step-pen)}
+/* a dated stamp in the pen's colour marks a finished pass */
+.step-stamp{position:absolute;right:38px;top:calc(var(--rule) * 1.6);width:78px;height:78px;border:1.5px solid var(--step-pen);border-radius:50%;display:grid;place-content:center;gap:2px;rotate:-12deg;opacity:.78;
+ color:var(--step-pen);text-align:center;box-shadow:inset 0 0 0 3px var(--paper-tone,#fcfbf8),inset 0 0 0 4px var(--step-pen)}
+.step-stamp span{font:italic 400 10px/1 Lora,serif}
+.step-stamp b{font:400 13px/1 Lora,serif;letter-spacing:.08em}
+
+@media (max-width:760px){
+ .step-sheet{padding:12px 0 0 0;min-height:60dvh}
+ .step-page{padding-left:62px;padding-right:22px}
+ .step-page::before{width:34px}
+ .step-row:not(.is-model,.is-label,.is-own)::before{left:-22px}
+ .step-row.is-said::after{left:-36px}
+ .step-card .step-note:not([role=status]){display:none}
+ .step-card .step-note[role=status]{flex-basis:100%;margin-left:0;white-space:normal}
+ .step-stamp{right:14px;width:64px;height:64px}
+ .step-title{font-size:17px}
+}
+
+.step-card .model-actions .step-hint{flex:none;margin-left:0;white-space:nowrap;font-size:12.5px}
+.study-desk .step-input:focus-visible{outline:none}
+/* Muse takes over feedback and conversation; the button only copies a message. */
+.step-card .model-actions .step-muse{color:var(--step-pen)}

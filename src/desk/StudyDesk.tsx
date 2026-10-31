@@ -16,13 +16,15 @@ import {LiveDraftInk} from './LiveDraftInk';
 import {audioShortcut,createLessonSpeaker,englishVoices,chooseEnglishVoice} from './audio';
 import type {AudioState} from './audio';
 import {caretOffset,revealDelta,writingPaperHeight} from './viewport';
-import {NoteStyle,PrintPanel,useDismiss} from './DeskControls';
+import {NoteStyle,PrintPanel,TrayHandle,useDismiss} from './DeskControls';
+import {usePractice} from './PracticeSteps';
+import './practice.css';
+import './desk-tray.css';
 import type {ChangeDisplay} from './DeskControls';
 import type {PrintSides} from '../handwriting/study-pdf';
 
 const themeNames={'pure-white':'Pure White',natural:'Natural',walnut:'Walnut'};
 const markerNames={blue:'Blue',pink:'Pink',purple:'Purple',gray:'Gray',orange:'Orange',green:'Green'};
-const lessonSteps=['Copy','Shadowing','Dictation','Reconstruction','Speaking'];
 const tabs=['My Lessons','Topic Index','My Vocabulary','Review','Completed Notes','Note Style'];
 const penRows={ 'pure-white':[[64,134],[209,134],[361,136],[517,135],[677,135],[835,135]],natural:[[49,148],[205,150],[365,150],[523,151],[680,150],[838,150]],walnut:[[87,141],[231,140],[376,140],[520,141],[664,142],[808,142]]};
 const penFiles={'pure-white':'white',natural:'natural',walnut:'walnut'};
@@ -78,6 +80,9 @@ export function StudyDesk(){
  const [animateId,setAnimateId]=useState<string|null>(null),[time,setTime]=useState(1e9),[playing,setPlaying]=useState(false),[speed,setSpeed]=useState(2);
  const [reduced,setReduced]=useState(()=>matchMedia('(prefers-reduced-motion: reduce)').matches),[fontReady,setFontReady]=useState(false),[exporting,setExporting]=useState(false);
  const editor=useRef<HTMLTextAreaElement>(null),settings=useRef<HTMLDialogElement>(null),paper=useRef<HTMLDivElement>(null);
+ // The tray holds the timer, pens and index book; it slides away as soon as writing starts and comes back by its handle.
+ const [trayStowed,setTrayStowed]=useState(()=>matchMedia('(max-width: 760px)').matches),tray=useRef<HTMLElement>(null);
+ const stowTray=(stowed:boolean,focusWriting=false)=>{setTrayStowed(stowed);if(focusWriting)requestAnimationFrame(()=>editor.current?.focus({preventScroll:true}));};
  const lessonPanel=useRef<HTMLDivElement>(null),paperViewport=useRef<HTMLDivElement>(null),writingControls=useRef<HTMLDivElement>(null);
  const [paperHeight,setPaperHeight]=useState(320);
  const follow=useRef(()=>{});
@@ -101,6 +106,9 @@ export function StudyDesk(){
  const liveInk=fontReady&&!composingText&&draft.length<=500&&supported(draft,englishFonts[display.english].data);
  const inputHeight=Math.min(position.rows,Math.max(2,Math.ceil(draft.length/32)+draft.split('\n').length))*5.2;
  const inputFamily='Sentence Notebook '+({readability:'Readability',tech:'Tech',print:'Print',pen:'Pen'}[display.english])+' Input';
+ // Shadowing, Dictation, Reconstruction and Speaking keep their own record; Copy's record is never touched by them.
+ const practice=usePractice({lesson,display,handFamily:inputFamily,onWriting:()=>{if(!trayStowed)setTrayStowed(true);},
+  onLeaveCopy:()=>speaker.stop(),onReturnToCopy:()=>requestAnimationFrame(()=>editor.current?.focus({preventScroll:true}))});
  const view={content:display.content,memos:display.memos,markers:display.markers};
  const paperColor=display.theme==='pure-white'?'#FFFFFF':'#FAF8F5';
  useEffect(()=>{
@@ -115,7 +123,7 @@ export function StudyDesk(){
  useEffect(()=>{if(time>=scene.duration||reduced)setPlaying(false);},[time,scene.duration,reduced]);
  useEffect(()=>{setMeaning(false);speaker.stop();return()=>speaker.stop(true);},[record.index,speaker,display.voice,display.speechRate]);
  useEffect(()=>{setPick(null);setLookupNote('');},[current.id]);
- useEffect(()=>{const onKey=(event:globalThis.KeyboardEvent)=>{if(event.defaultPrevented)return;const intent=audioShortcut(event,composing.current||Date.now()-compositionEnded.current<100||!!settings.current?.open);if(!intent)return;event.preventDefault();if(intent==='play')speaker.play(current.text,{voice:display.voice,rate:display.speechRate});};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey);},[current.text,speaker,display.voice,display.speechRate]);
+ useEffect(()=>{const onKey=(event:globalThis.KeyboardEvent)=>{if(event.defaultPrevented||practice.step>0)return;const intent=audioShortcut(event,composing.current||Date.now()-compositionEnded.current<100||!!settings.current?.open);if(!intent)return;event.preventDefault();if(intent==='play')speaker.play(current.text,{voice:display.voice,rate:display.speechRate});};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey);},[current.text,speaker,display.voice,display.speechRate,practice.step]);
  function changeDisplay(patch:Partial<DeskDisplay>){const next={...display,...patch};setDisplay(next);try{saveRecord(displayKey,next,loadedDisplay.blocked);}catch(e){setNotice((e as Error).message);}if(patch.english||patch.japanese){setAnimateId(null);setTime(1e9);setPlaying(false);}}
  function persist(next:CopyRecord,required=false){try{saveRecord(resolved.copyKey,next,loadedCopy.blocked);setRecord(next);return true;}catch(e){setError((e as Error).message);if(!required)setRecord(next);return false;}}
  function followCaret(){
@@ -187,30 +195,15 @@ export function StudyDesk(){
   <a className="desk-skip" href="#notebook-input">ノートの入力へ</a>
   <header className="desk-header"><a href="/" className="desk-wordmark">The Sentence Book</a><span className="desk-tagline">Learn digitally. Keep it beautifully.</span><button className="settings-button" aria-label="机のテーマ" title="机のテーマ" onClick={()=>settings.current?.showModal()}><Icon name="settings"/></button></header>
   <main className="desk-grid">
+   <aside className={'desk-tray'+(trayStowed?' is-stowed':'')} id="desk-tray" aria-label="道具のトレイ" ref={tray} onKeyDown={e=>{if(e.key==='Escape'&&!trayStowed&&!e.defaultPrevented){e.stopPropagation();stowTray(true,true);}}}>
+    <div className="tray-well" inert={trayStowed}>
    <section className="desk-tools" aria-label="文具とタイマー"><Timer theme={display.theme} visible={display.timerVisible} minutes={display.timerMinutes} change={changeDisplay}/>
     <fieldset className="desk-pens"><legend className="sr-only">マーカーの色</legend>{markerIds.map((id,i)=><label className="pen-choice" key={id}>
-      <input type="radio" name="desk-marker" value={id} checked={display.marker===id} onChange={()=>changeDisplay({marker:id})}/>
+      <input type="radio" name="desk-marker" value={id} checked={display.marker===id} onChange={()=>{changeDisplay({marker:id});requestAnimationFrame(()=>editor.current?.focus({preventScroll:true}));}}/>
       <svg className="pen-art" viewBox={'48 '+penRows[display.theme][i][0]+' 1440 '+penRows[display.theme][i][1]} aria-hidden="true"><image href={'/desk/pens-'+penFiles[display.theme]+'.png'} width="1536" height="1024"/></svg>
       <span className="pen-label">{markerNames[id]}</span><span className="pen-check" aria-hidden="true"><Icon name="check"/></span>
     </label>)}</fieldset>
    </section>
-   <div className="lesson-panel" ref={lessonPanel}>
-    <ol className="lesson-steps" role="tablist" aria-label="学習の5ステップ">{lessonSteps.map((label,i)=><li key={label} role="presentation"><button type="button" role="tab" id={'learning-step-'+i} aria-selected={i===0} aria-controls={i===0?'lesson-copy':undefined} disabled={i!==0}>{label}</button></li>)}</ol>
-   <section className="model-card" id="lesson-copy" role="tabpanel" aria-labelledby="learning-step-0"><div className="model-heading"><h1 id="copy-complete" tabIndex={-1}>{record.phase==='complete'?'Copy complete':'Copy'}</h1><span>{record.entries.length} / {total}</span></div>
-     <p className="model-sentence" lang="en">{current.text}</p><p className={'model-meaning '+(meaning||audio.message?'':'is-hidden')+(audio.message?' audio-error':'')} aria-hidden={!meaning&&!audio.message} role={audio.message?'alert':undefined}>{audio.message||current.meaning||''}</p>
-     <div className="model-actions"><button onClick={playAudio} className="audio-button" aria-keyshortcuts="Alt+R" title="音声を聞く（Mac: Option + R / Windows: Alt + R）"><Icon name="sound"/>{audio.phase==='speaking'?'読み上げ中':audio.phase==='loading'?'音声を準備中':'音声を聞く'}<kbd aria-hidden="true">⌥ / Alt R</kbd></button><button aria-expanded={meaning} onClick={()=>setMeaning(v=>!v)}>{meaning?'意味を閉じる':'意味を見る'}</button>
-      <div className="voice-control" ref={voiceControl}><button type="button" aria-expanded={voiceOpen} onClick={()=>setVoiceOpen(v=>!v)}>声</button>
-       {voiceOpen&&<div className="voice-sheet" role="group" aria-label="読み上げ">
-        <label>英語の声<select value={voices.some(v=>v.voiceURI===display.voice)?display.voice:'auto'} onChange={e=>changeDisplay({voice:e.target.value})}>
-         <option value="auto">自動{selectedVoice?' · '+chooseEnglishVoice(voices)?.name:''}</option>
-         {voices.map(v=><option key={v.voiceURI} value={v.voiceURI}>{v.name} · {v.lang}</option>)}
-        </select></label>
-        <div className="voice-rates" role="group" aria-label="読み上げの速さ">{([[.85,'ゆっくり'],[1,'標準'],[1.1,'少し速く']] as const).map(([rate,label])=><button key={rate} type="button" aria-pressed={display.speechRate===rate} onClick={()=>changeDisplay({speechRate:rate})}>{label}</button>)}</div>
-        <button type="button" className="voice-preview" onClick={playAudio}><Icon name="sound"/>試しに聞く</button>
-       </div>}
-      </div><span>{record.phase==='complete'?'ノートに残りました':'ノートの行に書き写す'}</span></div>
-   </section>
-   </div>
    <section className="index-book" aria-label="学習インデックス"><img src="/desk/index-book.png" alt="" className="index-plate"/>
     <div className="index-left"><h2>My Sentence Book</h2><div className="index-tabs" role="tablist" aria-label="ノートの目次" aria-orientation="vertical">{tabs.map((name,i)=><button key={name} role="tab" id={'index-tab-'+i} aria-selected={tab===i} aria-controls="index-content" tabIndex={tab===i?0:-1} onKeyDown={e=>{if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();const n=e.key==='Home'?0:e.key==='End'?tabs.length-1:(i+(e.key==='ArrowDown'?1:tabs.length-1))%tabs.length;setTab(n);document.getElementById('index-tab-'+n)?.focus();}}} onClick={()=>setTab(i)}>{name}<span aria-hidden="true">{tab===i?'—':''}</span></button>)}</div></div>
     <div className="index-right" id="index-content" role="tabpanel" aria-labelledby={'index-tab-'+tab} tabIndex={0}>
@@ -226,24 +219,46 @@ export function StudyDesk(){
      {tab===5&&<NoteStyle display={display} change={changeDisplay}/>}
     </div>
    </section>
-   <section className="notebook-area" aria-label="A5学習ノート"><div className="writing-controls" ref={writingControls}><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><div className="notebook-tools"><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button>{record.phase==='complete'&&!personalMode&&<button onClick={startPersonal}>ひとことを書く</button>}</div></div><p id="writing-error" role="alert" className="writing-feedback">{error}</p><div className="lookup-bar">{picked?<><span>「<span lang="en">{pickedText}</span>」</span><button type="button" className="lookup-button" onClick={lookUp} disabled={lookingUp} aria-busy={lookingUp}>{lookingUp?'調べています…':'調べて線を引く'}</button><button type="button" className="lookup-cancel" onClick={()=>setPick(null)} disabled={lookingUp}>やめる</button></>:<span className="lookup-hint">書き終えた行の語句をタップすると、調べて線を引けます。</span>}<span role="status" className="lookup-status">{lookupNote}</span></div></div>
+    </div>
+    <TrayHandle stowed={trayStowed} tray={tray} onStow={stowTray}/>
+   </aside>
+   <div className="lesson-panel" ref={lessonPanel}>
+    {practice.tabs}
+   <section className="model-card" id="lesson-copy" role="tabpanel" aria-labelledby="learning-step-0" hidden={practice.step>0}><div className="model-heading"><h1 id="copy-complete" tabIndex={-1}>{record.phase==='complete'?'Copy complete':'Copy'}</h1><span>{record.entries.length} / {total}</span></div>
+     <p className="model-sentence" lang="en">{current.text}</p><p className={'model-meaning '+(meaning||audio.message?'':'is-hidden')+(audio.message?' audio-error':'')} aria-hidden={!meaning&&!audio.message} role={audio.message?'alert':undefined}>{audio.message||current.meaning||''}</p>
+     <div className="model-actions"><button onClick={playAudio} className="audio-button" aria-keyshortcuts="Alt+R" title="音声を聞く（Mac: Option + R / Windows: Alt + R）"><Icon name="sound"/>{audio.phase==='speaking'?'読み上げ中':audio.phase==='loading'?'音声を準備中':'音声を聞く'}<kbd aria-hidden="true">⌥ / Alt R</kbd></button><button aria-expanded={meaning} onClick={()=>setMeaning(v=>!v)}>{meaning?'意味を閉じる':'意味を見る'}</button>
+      <div className="voice-control" ref={voiceControl}><button type="button" aria-expanded={voiceOpen} onClick={()=>setVoiceOpen(v=>!v)}>声</button>
+       {voiceOpen&&<div className="voice-sheet" role="group" aria-label="読み上げ">
+        <label>英語の声<select value={voices.some(v=>v.voiceURI===display.voice)?display.voice:'auto'} onChange={e=>changeDisplay({voice:e.target.value})}>
+         <option value="auto">自動{selectedVoice?' · '+chooseEnglishVoice(voices)?.name:''}</option>
+         {voices.map(v=><option key={v.voiceURI} value={v.voiceURI}>{v.name} · {v.lang}</option>)}
+        </select></label>
+        <div className="voice-rates" role="group" aria-label="読み上げの速さ">{([[.85,'ゆっくり'],[1,'標準'],[1.1,'少し速く']] as const).map(([rate,label])=><button key={rate} type="button" aria-pressed={display.speechRate===rate} onClick={()=>changeDisplay({speechRate:rate})}>{label}</button>)}</div>
+        <button type="button" className="voice-preview" onClick={playAudio}><Icon name="sound"/>試しに聞く</button>
+       </div>}
+      </div><span>{record.phase==='complete'?'ノートに残りました':'ノートの行に書き写す'}</span></div>
+   </section>
+   {practice.card}
+   </div>
+   <section className="notebook-area" aria-label="A5学習ノート" data-in-step={practice.step>0||undefined}><div className="writing-controls" ref={writingControls}><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><div className="notebook-tools"><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button>{record.phase==='complete'&&!personalMode&&<button onClick={startPersonal}>ひとことを書く</button>}</div></div><p id="writing-error" role="alert" className="writing-feedback">{error}</p><div className="lookup-bar">{picked?<><span>「<span lang="en">{pickedText}</span>」</span><button type="button" className="lookup-button" onClick={lookUp} disabled={lookingUp} aria-busy={lookingUp}>{lookingUp?'調べています…':'調べて線を引く'}</button><button type="button" className="lookup-cancel" onClick={()=>setPick(null)} disabled={lookingUp}>やめる</button></>:<span className="lookup-hint">書き終えた行の語句をタップすると、調べて線を引けます。</span>}<span role="status" className="lookup-status">{lookupNote}</span></div></div>
     <div className={'desk-paper-scroll '+(zoom==='read'?'reading':'')} ref={paperViewport} style={isEditing?{height:paperHeight}:undefined} tabIndex={0} aria-label="ノート。入力行に合わせてスクロールします。拡大表示は左右にもスクロールできます">
      <div className="desk-pages">{layout.pages.map(p=><div className="desk-page-row" key={p.index}><div className="desk-paper" ref={p.index===0?paper:undefined}>
       <A5Notebook showPen={!annotationsOnly||!isEditing} layout={rendered} scene={scene} pageIndex={p.index} paperColor={paperColor} view={view} ink={palettes[display.marker]} time={reduced?scene.duration:time} reduced={reduced} personalInk={emptyInk}/>
       {hits.filter(h=>h.page===p.index).map(h=>{const lined=record.lookups.find(l=>l.sentenceId===h.sentenceId&&h.start>=l.start&&h.end<=l.end);const on=!!pick&&pick.sentenceId===h.sentenceId&&h.token>=pick.from&&h.token<=pick.to;return <button type="button" key={h.sentenceId+':'+h.token+':'+h.x} className={'word-hit'+(on?' is-picked':'')} style={{left:h.x*unit,top:h.y*unit,width:h.width*unit,height:h.height*unit}} aria-label={lined?'「'+h.text+'」— '+lined.native:'「'+h.text+'」を選ぶ'} aria-pressed={on} title={lined?.native} onClick={()=>pickWord(h)}/>;})}
       {p.index===position.page&&isEditing&&<textarea ref={editor} id="notebook-input" className={'notebook-input'+(liveInk?' live-ink-input':'')} aria-label={personalMode?'ノートに自分のひとことを書く':'ノートに英文を書き写す'} aria-describedby="writing-help writing-error" aria-invalid={!!error} enterKeyHint={personalMode||record.index===total-1?'done':'next'} spellCheck={false} autoCapitalize="off" autoCorrect="off" wrap="soft" disabled={!fontReady} value={draft} rows={1}
        style={{left:position.x*unit,top:inputTop,width:position.width*unit,height:inputHeight*unit,fontFamily:'"'+inputFamily+'", sans-serif',fontSize:4.1*unit,lineHeight:(5.2*unit)+'px'} as CSSProperties}
-       onScroll={e=>setInputScroll({x:e.currentTarget.scrollLeft/unit,y:e.currentTarget.scrollTop/unit})} onChange={e=>changeDraft(e.target.value)} onSelect={()=>requestAnimationFrame(followCaret)} onKeyUp={e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(e.key))requestAnimationFrame(followCaret);}} onFocus={()=>requestAnimationFrame(followCaret)} onKeyDown={keyDown} onCompositionStart={()=>{composing.current=true;setComposingText(true);}} onCompositionEnd={()=>{composing.current=false;setComposingText(false);compositionEnded.current=Date.now();requestAnimationFrame(()=>follow.current());}}/>}
+       onScroll={e=>setInputScroll({x:e.currentTarget.scrollLeft/unit,y:e.currentTarget.scrollTop/unit})} onBeforeInput={()=>{if(!trayStowed)setTrayStowed(true);}} onChange={e=>changeDraft(e.target.value)} onSelect={()=>requestAnimationFrame(followCaret)} onKeyUp={e=>{if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(e.key))requestAnimationFrame(followCaret);}} onFocus={()=>requestAnimationFrame(followCaret)} onKeyDown={keyDown} onCompositionStart={()=>{composing.current=true;setComposingText(true);}} onCompositionEnd={()=>{composing.current=false;setComposingText(false);compositionEnded.current=Date.now();requestAnimationFrame(()=>follow.current());}}/>}
       {p.index===position.page&&isEditing&&<LiveDraftInk key={personalMode?'personal':current.id} text={draft.length<=500?draft:''} font={display.english} animate={liveInk&&!reduced} visible={liveInk} x={position.x} y={position.y} width={position.width} top={position.y-4.65} height={inputHeight} scrollX={inputScroll.x} scrollY={inputScroll.y}/>}
      </div></div>)}</div>
     </div>
     <p id="writing-help" className="writing-help">{personalMode?'英語でひとこと。80文字以内。Enterで保存します。':record.phase==='complete'?total+'文を保存しました。ノートにひとことを添えたり、PDFにできます。':'Enterで答え合わせ・保存して、次の文へ。入力中も筆跡になります。'} {zoom==='read'?'左右にスクロールして読めます。':''}</p>
     <div className="ink-actions"><button disabled={!record.entries.length||reduced} onClick={()=>{setAnnotationsOnly(false);setAnimateId(record.entries.at(-1)?.sentenceId??null);setTime(0);setPlaying(true);}}>筆跡をもう一度</button><button disabled={time>=scene.duration||reduced} onClick={()=>setPlaying(v=>!v)}>{playing?'筆記を一時停止':'筆記を続ける'}</button><button onClick={()=>{setTime(scene.duration);setPlaying(false);}}>書き終える</button>
      <span className="ink-speed" role="group" aria-label="筆記の速さ">{[1,2,4].map(n=><button key={n} type="button" aria-pressed={speed===n} onClick={()=>setSpeed(n)}>{n}×</button>)}</span></div>
+    {practice.sheet}
    </section>
   </main>
   <footer className="desk-footer"><span>{resolved.binder?`「${resolved.binder.title}」のページ · Museが作成 · ${resolved.page?.model??''}`:'サンプル教材のCopy体験 · 本棚に仕舞ったページも練習できます'}</span><a href="/fonts/README.md">書体とライセンス</a></footer>
-  <p className="desk-notice" role="status">{notice}</p>
+  <p className="desk-notice" role="status">{notice||practice.notice}</p>
   <dialog className="desk-settings theme-settings" ref={settings} aria-labelledby="theme-title" onClick={e=>{if(e.target===e.currentTarget)settings.current?.close();}}>
    <h2 id="theme-title" className="sr-only">机のテーマ</h2>
    <div className="theme-swatches" role="radiogroup" aria-labelledby="theme-title">{themes.map(t=><label key={t} className={'theme-swatch swatch-'+t}>

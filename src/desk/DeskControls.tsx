@@ -72,3 +72,25 @@ export function PrintPanel({display,change,ready,exporting,onExport}:{display:De
   <p className="index-note">100%で印刷。両面は{display.sheet==='A4'?'短辺とじ':'長辺とじ'}、裏は確認問題。両面に対応しないプリンタは、表を刷った紙を裏返して裏を。まず1枚で向きを確かめてください。</p>
  </div>;
 }
+
+// The tray's handle: click to slide it in or out, or drag it like a real tray. Dragging past halfway decides.
+export function TrayHandle({stowed,tray,onStow}:{stowed:boolean;tray:RefObject<HTMLElement|null>;onStow:(stowed:boolean,focusWriting?:boolean)=>void}) {
+ const drag=useRef<{x:number;start:number;moved:boolean;offset:number}|null>(null),dragged=useRef(false);
+ const travel=()=>(tray.current?.getBoundingClientRect().width??0)-6;
+ function end() {
+  const d=drag.current;drag.current=null;
+  if(!d||!tray.current)return;
+  tray.current.classList.remove('is-dragging');tray.current.style.transform='';
+  if(d.moved){const stow=d.offset<-travel()/2;dragged.current=true;onStow(stow,stow);}
+ }
+ return <button type="button" className="tray-pull" aria-controls="desk-tray" aria-expanded={!stowed} aria-label={stowed?'道具のトレイを引き出す':'道具のトレイをしまう'}
+  onPointerDown={e=>{if(e.button!==0)return;drag.current={x:e.clientX,start:stowed?-travel():0,moved:false,offset:0};e.currentTarget.setPointerCapture(e.pointerId);}}
+  onPointerMove={e=>{
+   const d=drag.current;if(!d||!tray.current)return;
+   const dx=e.clientX-d.x;if(!d.moved&&Math.abs(dx)<6)return;
+   d.moved=true;tray.current.classList.add('is-dragging');
+   d.offset=Math.min(0,Math.max(-travel(),d.start+dx));tray.current.style.transform='translateX('+d.offset+'px)';
+  }}
+  onPointerUp={end} onPointerCancel={end}
+  onClick={()=>{if(dragged.current){dragged.current=false;return;}onStow(!stowed,!stowed);}}/>;
+}
