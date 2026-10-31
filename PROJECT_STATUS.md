@@ -1,6 +1,6 @@
 # Sentence Book Muse — progress
 
-Last updated: 2026-10-31 JST. Owner: Claude — published source 05a2e3d as deployment 74494a3f (desk tray, /setup restyle, four practice passes, Muse hand-off). PR #1 is open and not yet merged into main.
+Last updated: 2026-11-01 JST. Owner: Claude — PR #1 merged into main as 5f4a063 at the owner's request; production is deployment 74494a3f (source 05a2e3d, same app code as main).
 
 Local checkout: `/Users/maki/sentence-book-muse`
 Public repository: https://github.com/workwell-research/sentence-book-muse
@@ -8,7 +8,9 @@ Public deployment: https://sentence-book-muse.pages.dev (Cloudflare Pages projec
 
 ## Current scope
 
-**2026-10-31 — Release 05a2e3d → deployment 74494a3f (Claude, at the owner's request).** Committed and pushed to `claude/muse-only-duplex-notes` (PR #1), deployed to `sentence-book-muse.pages.dev` from that branch. Before release: 212 tests, Vite, Worker (`pages:build`). After: production and the deployment URL serve `index-D8iRVB4W.js` containing the tray and both Muse buttons; `/api/health` and `/setup` 200; the in-app browser on production shows the tray and five tabs with the stored Kyoto page intact, no console errors. Main still lacks this work until PR #1 is merged.
+**2026-11-01 — PR #1 merged (Claude, at the owner's request).** `gh pr merge 1 --merge` produced merge commit 5f4a063 on main; both CI checks had passed and the two Codex comments were already addressed. Local main fast-forwarded and contains 05a2e3d and 72e1d1c. No redeploy: production 74494a3f was built from 05a2e3d, and main differs from it only in this status file. Future deploys can come from main.
+
+**2026-10-31 — Release 05a2e3d → deployment 74494a3f (Claude, at the owner's request).** Committed and pushed to `claude/muse-only-duplex-notes` (PR #1), deployed to `sentence-book-muse.pages.dev` from that branch. Before release: 212 tests, Vite, Worker (`pages:build`). After: production and the deployment URL serve `index-D8iRVB4W.js` containing the tray and both Muse buttons; `/api/health` and `/setup` 200; the in-app browser on production shows the tray and five tabs with the stored Kyoto page intact, no console errors. Main received this work on 2026-11-01 (5f4a063).
 
 **2026-10-31 — Reconstruction and Speaking hand off to Muse (Claude; released in 05a2e3d / deployment 74494a3f).** Owner noted that Reconstruction and Speaking give no feedback, suggested Speaking with Muse's voice call, and asked that both ways coexist. The in-app passes are unchanged; Reconstruction gains 「Museに見てもらう」 (shown once a line is written, also on the complete card) and Speaking gains 「Museと話す」 (whenever the lesson has questions). Each copies a message to paste into Muse; nothing is sent from the app and Muse's shared learning state still holds no practice text. `reviewRequest` lists only written lines with the Japanese, the learner's English and the model, and asks Muse not to fault different wording; `talkRequest` asks Muse to ask the questions aloud one by one, reply and follow up, and save corrections for the end, adding the learner's own Reconstruction sentences. The step note shows the copy result (kept visible on mobile). **Verified:** 212 tests (two new in `tests/practice.test.ts`), Vite build; synthetic origin localhost:8806 with a stubbed clipboard captured both messages for the sample, notes shown, no overflow at 375/1440, no console errors. Not checked: pasting into the real Muse app, Muse's voice call behaviour, real clipboard permissions on devices.
 
