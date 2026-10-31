@@ -68,16 +68,27 @@ describe('invitation and sessions', () => {
 });
 
 describe('paid API boundaries', () => {
+  it('generate: denies anonymous calls before counters or upstream fetch', async () => {
+    const e = env(), fetchFn = vi.fn();
+    const response = await handleGenerate(post('generate', generation), e, { fetch: fetchFn });
+    expect(response.status).toBe(401); expect((await response.json()).error.code).toBe('invite_required');
+    expect(fetchFn).not.toHaveBeenCalled(); expect(e.RATE_LIMIT.counts.size).toBe(0);
+  });
+  it('lookup: open without an invitation, but counted before the model call', async () => {
+    const e = env(), fetchFn = vi.fn(async () => Response.json({ choices: [{ message: { content: JSON.stringify({ expression: 'hello', native: 'こんにちは', note: null }) }, finish_reason: 'stop' }] }));
+    const response = await handleLookup(post('lookup', lookup), e, { fetch: fetchFn });
+    expect(response.status).toBe(200); expect(fetchFn).toHaveBeenCalledTimes(1); expect(e.RATE_LIMIT.counts.size).toBeGreaterThan(0);
+  });
+  it('lookup: stops at the shared daily cap without calling the model', async () => {
+    const e = env(), fetchFn = vi.fn();
+    e.RATE_LIMIT = memoryD1({ [`lookup:all:d:${new Date().toISOString().slice(0, 10)}`]: 3000 });
+    const response = await handleLookup(post('lookup', lookup), e, { fetch: fetchFn });
+    expect(response.status).toBe(429); expect(fetchFn).not.toHaveBeenCalled();
+  });
   for (const [route, handler, body] of [['generate', handleGenerate, generation], ['lookup', handleLookup, lookup]] as const) {
-    it(`${route}: denies anonymous calls before counters or upstream fetch`, async () => {
-      const e = env(), fetchFn = vi.fn();
-      const response = await handler(post(route, body), e, { fetch: fetchFn });
-      expect(response.status).toBe(401); expect((await response.json()).error.code).toBe('invite_required');
-      expect(fetchFn).not.toHaveBeenCalled(); expect(e.RATE_LIMIT.counts.size).toBe(0);
-    });
-    it(`${route}: fails closed on missing auth configuration and D1 errors`, async () => {
+    it(`${route}: fails closed on missing configuration and D1 errors`, async () => {
       const fetchFn = vi.fn(), headers = await accessHeaders();
-      expect((await handler(post(route, body, headers), { ...env(), SESSION_SECRET: '' }, { fetch: fetchFn })).status).toBe(503);
+      expect((await handler(post(route, body, headers), route === 'lookup' ? { ...env(), ACCESS_ORIGIN: '' } : { ...env(), SESSION_SECRET: '' }, { fetch: fetchFn })).status).toBe(503);
       const response = await handler(post(route, body, headers), { ...env(), RATE_LIMIT: brokenD1 }, { fetch: fetchFn });
       expect(response.status).toBe(503); expect((await response.json()).error.reason).toBe('rate_limit_unavailable');
       expect(fetchFn).not.toHaveBeenCalled();

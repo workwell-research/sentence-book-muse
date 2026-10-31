@@ -1,6 +1,6 @@
 import { PDFDocument, rgb, LineCapStyle, PrintScaling } from 'pdf-lib';
 import fontkit from '@pdf-lib/fontkit';
-import { A5, visibleLayer, visiblePages } from './a5-layout';
+import { A5, createReviewPage, visibleLayer, visiblePages } from './a5-layout';
 import type { A5Layout, ViewSettings } from './a5-layout';
 import { englishFonts, japaneseFonts } from './fonts';
 import type { JapaneseFontId } from './fonts';
@@ -21,28 +21,35 @@ export async function exportStudyNote(layout:A5Layout,view:ViewSettings,options:
   const doc=await PDFDocument.create();doc.registerFontkit(fontkit);
   doc.setTitle('The Sentence Book - '+layout.source.title);
   doc.setAuthor('The Sentence Book');
-  doc.setSubject('A5 notebook; '+options.sheet+' sheet; actual size 100%; memos '+view.memos+'; fonts '+layout.fonts.english+'/'+layout.fonts.japanese);
+  doc.setSubject('A5 notebook; '+options.sheet+' sheet; actual size 100%; two-sided ('+(options.sheet==='A4'?'flip on short edge':'flip on long edge')+'); memos '+view.memos+'; fonts '+layout.fonts.english+'/'+layout.fonts.japanese);
   doc.catalog.getOrCreateViewerPreferences().setPrintScaling(PrintScaling.None);
   const font=await doc.embedFont(fontBytes??await notebookFont(layout.fonts.japanese),{subset:false});
   const ink=palettes[options.palette],sheet=sheetPlacements(options);
   const notes=[];
-  for(const p of visiblePages(layout,view)) {
+  // A daily note is one long-edge duplex sheet: the copied page(s), then the review page.
+  // Odd pages are backs, so the binding margin moves to the right and the bands mirror.
+  const pages=[...visiblePages(layout,view)];
+  pages.push(createReviewPage(layout,pages.length));
+  for(const [order,p] of pages.entries()) {
+    const back=order%2===1,dx=back?layout.right-layout.left:0;
+    const span=(l:{id:string;x1:number;x2:number})=>back&&l.id.startsWith('band-')?[A5.width-l.x2,A5.width-l.x1]:[l.x1+dx,l.x2+dx];
     const page=doc.addPage([148*mm,210*mm]);notes.push(page);
     page.setTrimBox(0,0,148*mm,210*mm);
-    for(const l of p.lines.filter(l=>visibleLayer(l.layer,view)))page.drawLine({
-      start:{x:l.x1*mm,y:(210-l.y1)*mm},end:{x:l.x2*mm,y:(210-l.y2)*mm},thickness:l.width*mm,color:color(l.accent?ink.title:A5.rule),
-    });
+    for(const l of p.lines.filter(l=>visibleLayer(l.layer,view))) {
+      const [x1,x2]=span(l);
+      page.drawLine({start:{x:x1*mm,y:(210-l.y1)*mm},end:{x:x2*mm,y:(210-l.y2)*mm},thickness:l.width*mm,color:color(l.accent?ink.title:A5.rule)});
+    }
     if(view.content==='study-notes')for(const b of p.boxes) {
-      page.drawRectangle({x:b.x*mm,y:(210-b.y-b.height)*mm,width:b.width*mm,height:b.height*mm,borderWidth:.25*mm,borderColor:color(ink.title)});
-      if(b.checked)page.drawSvgPath('M '+(b.x+.4)+' '+(b.y+1.3)+' l .6 .7 l 1.1 -1.5',{x:0,y:210*mm,scale:mm,borderWidth:.25,borderColor:color(A5.ink)});
+      page.drawRectangle({x:(b.x+dx)*mm,y:(210-b.y-b.height)*mm,width:b.width*mm,height:b.height*mm,borderWidth:.25*mm,borderColor:color(ink.title)});
+      if(b.checked)page.drawSvgPath('M '+(b.x+dx+.4)+' '+(b.y+1.3)+' l .6 .7 l 1.1 -1.5',{x:0,y:210*mm,scale:mm,borderWidth:.25,borderColor:color(A5.ink)});
     }
     if(options.markers)for(const m of p.markers.filter(m=>visibleLayer(m.layer,view)))page.drawLine({
-      start:{x:m.x1*mm,y:(210-m.y)*mm},end:{x:m.x2*mm,y:(210-m.y)*mm},thickness:2.25*mm,color:color(ink.marker),lineCap:LineCapStyle.Round,
+      start:{x:(m.x1+dx)*mm,y:(210-m.y)*mm},end:{x:(m.x2+dx)*mm,y:(210-m.y)*mm},thickness:2.25*mm,color:color(ink.marker),lineCap:LineCapStyle.Round,
     });
     for(const r of p.runs.filter(r=>visibleLayer(r.layer,view)))for(const g of r.glyphs) {
-      if(r.face==='static')page.drawText(g.char,{x:g.x*mm,y:(210-g.y)*mm,size:r.size*mm,font,color:color(r.accent?ink.title:A5.ink)});
+      if(r.face==='static')page.drawText(g.char,{x:(g.x+dx)*mm,y:(210-g.y)*mm,size:r.size*mm,font,color:color(r.accent?ink.title:A5.ink)});
       else for(const part of englishFonts[layout.fonts.english].data[g.char]?.strokes??[])page.drawSvgPath(part.d,{
-        x:g.x*mm,y:(210-g.y)*mm,scale:g.scale*mm,borderColor:color(r.accent?ink.title:A5.ink),
+        x:(g.x+dx)*mm,y:(210-g.y)*mm,scale:g.scale*mm,borderColor:color(r.accent?ink.title:A5.ink),
         borderWidth:(r.id==='title'?.28:.20)/g.scale,borderLineCap:LineCapStyle.Round,
       });
     }

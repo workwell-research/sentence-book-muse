@@ -1,7 +1,7 @@
 import { describe,it,expect } from 'vitest';
 import fs from 'node:fs';
 import { PDFDocument,PrintScaling,PDFRawStream,decodePDFRawStream } from 'pdf-lib';
-import { A5,createA5Layout,createA5Scene,defaultView,visibleLayer,visiblePages } from '../src/handwriting/a5-layout';
+import { A5,createA5Layout,createA5Scene,createReviewPage,defaultView,visibleLayer,visiblePages } from '../src/handwriting/a5-layout';
 import { studySample } from '../src/handwriting/study-content';
 import { exportStudyNote } from '../src/handwriting/study-pdf';
 import { defaultPrintOptions } from '../src/handwriting/print-layout';
@@ -78,7 +78,9 @@ describe('shared A5 notebook',()=>{
   const layout=createA5Layout(studySample);
   for(const sheet of ['A5','A4'] as const) {
    const doc=await PDFDocument.load(await exportStudyNote(layout,defaultView,{...defaultPrintOptions,sheet},bytes));
-   expect(doc.getPageCount()).toBe(layout.pages.length);
+   // Copied page(s) plus the review page on the back.
+   expect(doc.getPageCount()).toBe(layout.pages.length+1);
+   expect(doc.getSubject()).toContain(sheet==='A4'?'flip on short edge':'flip on long edge');
    expect(doc.getPage(0).getWidth()*25.4/72).toBeCloseTo(sheet==='A5'?148:297,6);
    expect(doc.getPage(0).getHeight()*25.4/72).toBeCloseTo(210,6);
    expect(doc.catalog.getOrCreateViewerPreferences().getPrintScaling()).toBe(PrintScaling.None);
@@ -86,5 +88,18 @@ describe('shared A5 notebook',()=>{
    const embedded=doc.context.enumerateIndirectObjects().map(([,o])=>o).filter(o=>o instanceof PDFRawStream);
    expect(embedded.some(o=>Buffer.from(decodePDFRawStream(o as PDFRawStream).decode()).equals(bytes))).toBe(true);
   }
+ });
+ it('puts each meaning with ruled writing rows on the review page, on the same grid as the front',()=>{
+  const layout=createA5Layout(studySample),review=createReviewPage(layout,1);
+  expect(review.lines.filter(l=>l.id.startsWith('rule-'))).toEqual(layout.pages[0].lines.filter(l=>l.id.startsWith('rule-')));
+  const meanings=review.runs.filter(r=>r.face==='static');
+  expect(new Set(meanings.map(r=>r.text))).toEqual(new Set(studySample.sentences.map(s=>s.meaning)));
+  const numbers=review.runs.filter(r=>r.id.startsWith('review-number-'));
+  expect(numbers.map(r=>r.text)).toEqual(studySample.sentences.map((_,i)=>(i+1)+'.'));
+  // Two blank rows to write each sentence: consecutive numbers are at least three rows apart.
+  for(let i=1;i<numbers.length;i++)expect(numbers[i].y-numbers[i-1].y).toBeGreaterThanOrEqual(3*A5.pitch-1e-9);
+  expect(review.runs.find(r=>r.id==='title')!.text).toBe('Review');
+  const unexplained=createA5Layout({...studySample,sentences:studySample.sentences.map(s=>({...s,meaning:undefined}))});
+  expect(createReviewPage(unexplained,1).runs.filter(r=>r.face==='static')).toHaveLength(0);
  });
 });

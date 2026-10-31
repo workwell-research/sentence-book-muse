@@ -64,6 +64,7 @@
   .generation-note { margin-top: 15px; padding-top: 20px; border-top: 1px solid var(--line); }
   .generation-note button { width: 100%; padding: 12px; min-height: 44px; border: 1px solid var(--line); background: transparent; color: var(--muted); border-radius: 3px; font-size: 13px; }
   .generation-note p { font-size: 11px; line-height: 1.9; color: var(--muted); margin: 11px 0; text-align: center; }
+  .generation-note .generate-link { display: flex; justify-content: center; width: 100%; }
   .generation-note .generate-button { background: var(--sage); color: white; border-color: var(--sage); }
   .generation-note .generate-button:hover:enabled { background: #394c38; }
   .generation-note button[aria-busy="true"] { color: var(--sage); border-color: var(--sage); }

@@ -1,7 +1,7 @@
 import {useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
 import type {CSSProperties,KeyboardEvent} from 'react';
 import {A5Notebook} from '../handwriting/A5Notebook';
-import {englishFonts,japaneseFonts} from '../handwriting/fonts';
+import {englishFonts} from '../handwriting/fonts';
 import {supported} from '../handwriting/model';
 import {resolveDeskLesson} from '../lib/study-page';
 import {addLookup,expressionOf,readWordbook,requestLookup,saveWordbookEntry,tokenize} from '../lib/lookup';
@@ -16,12 +16,13 @@ import {LiveDraftInk} from './LiveDraftInk';
 import {audioShortcut,createLessonSpeaker,englishVoices,chooseEnglishVoice} from './audio';
 import type {AudioState} from './audio';
 import {caretOffset,revealDelta,writingPaperHeight} from './viewport';
-import {InviteAccess,useInviteAccess} from '../InviteAccess';
+import {NoteStyle,PrintPanel,useDismiss} from './DeskControls';
+import type {ChangeDisplay} from './DeskControls';
 
 const themeNames={'pure-white':'Pure White',natural:'Natural',walnut:'Walnut'};
 const markerNames={blue:'Blue',pink:'Pink',purple:'Purple',gray:'Gray',orange:'Orange',green:'Green'};
 const lessonSteps=['Copy','Shadowing','Dictation','Reconstruction','Speaking'];
-const tabs=['My Lessons','Topic Index','My Vocabulary','Review','Completed Notes'];
+const tabs=['My Lessons','Topic Index','My Vocabulary','Review','Completed Notes','Note Style'];
 const penRows={ 'pure-white':[[64,134],[209,134],[361,136],[517,135],[677,135],[835,135]],natural:[[49,148],[205,150],[365,150],[523,151],[680,150],[838,150]],walnut:[[87,141],[231,140],[376,140],[520,141],[664,142],[808,142]]};
 const penFiles={'pure-white':'white',natural:'natural',walnut:'walnut'};
 const emptyInk={paths:[],pending:false,pen:null,paused:false,toggle:()=>{},finish:()=>{}};
@@ -29,23 +30,33 @@ function Icon({name}:{name:'sound'|'settings'|'check'}){
  const paths={sound:'M4 9H8L13 5V19L8 15H4ZM17 8Q22 12 17 16',settings:'M4 7H20M4 17H20M8 4V10M16 14V20',check:'M5 12L10 17L20 6'};
  return <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d={paths[name]} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>;
 }
-function Timer({theme,visible,minutes}:{theme:DeskTheme;visible:boolean;minutes:number}) {
+function Timer({theme,visible,minutes,change}:{theme:DeskTheme;visible:boolean;minutes:number;change:ChangeDisplay}) {
  const [timer,setTimer]=useState(()=>idleTimer(minutes)),[announcement,setAnnouncement]=useState('');
+ const [sheet,setSheet]=useState(false),space=useRef<HTMLDivElement>(null);
+ useDismiss(sheet,()=>setSheet(false),space);
  useEffect(()=>{if(timer.state!=='running')return;const id=setInterval(()=>setTimer(t=>timerAt(t,Date.now())),250);return()=>clearInterval(id);},[timer.state]);
  useEffect(()=>{if(timer.state==='finished')setAnnouncement('タイマーが終了しました。');},[timer.state]);
+ // A new length shows at once on a timer that has not started; a running one keeps its deadline.
+ useEffect(()=>{setTimer(t=>t.state==='idle'?idleTimer(minutes):t);},[minutes]);
  const seconds=Math.ceil(timer.remaining/1000),digits=String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(seconds%60).padStart(2,'0');
  const crop=theme==='pure-white'?'16 208 564 502':theme==='natural'?'612 208 570 502':'1210 120 540 600';
- return <div className="timer-space" data-testid="timer-space"><div className="desk-timer" hidden={!visible}>
-  <div className="timer-object"><svg className="timer-plate" viewBox={crop} aria-hidden="true"><image href="/desk/timers.png" width="1774" height="887"/></svg>
+ return <div className="timer-space" data-testid="timer-space" ref={space}><div className="desk-timer" hidden={!visible}>
+  <button type="button" className="timer-object timer-face" aria-label={'タイマーの時間 · '+minutes+'分'} aria-expanded={sheet} onClick={()=>setSheet(v=>!v)}><svg className="timer-plate" viewBox={crop} aria-hidden="true"><image href="/desk/timers.png" width="1774" height="887"/></svg>
    {theme==='walnut'?<svg className="clock-hands" viewBox="0 0 540 600" aria-hidden="true"><g transform="translate(307.5 365)"><circle r="4" fill="#3e352a"/><path d="M0 8V-125" transform={'rotate('+(seconds/3600*360)+')'} stroke="#3e352a" strokeWidth="4" strokeLinecap="round"/><path d="M0 7V-92" transform={'rotate('+(seconds%60*6)+')'} stroke="#78613b" strokeWidth="2"/></g></svg>:<span className="timer-digits" aria-hidden="true">{digits}</span>}
-  </div>
+  </button>
+  {sheet&&<div className="timer-sheet" role="group" aria-label="タイマーの時間">
+   <div className="timer-minutes">{[5,15,25,45,60].map(n=><button key={n} type="button" aria-pressed={minutes===n} onClick={()=>change({timerMinutes:n})}>{n}<small>分</small></button>)}</div>
+   <button type="button" className="timer-stow" onClick={()=>{setSheet(false);change({timerVisible:false});}}>タイマーを片づける</button>
+  </div>}
   <span className={'timer-reading '+(theme==='walnut'?'':'sr-only')} aria-label={'残り '+digits}>{digits}</span>
   <div className="timer-actions"><button onClick={()=>{setTimer(t=>toggleTimer(t,Date.now(),minutes));setAnnouncement(timer.state==='running'?'タイマーを一時停止しました。':'タイマーを開始しました。');}}>{timer.state==='running'?'Pause':timer.state==='paused'?'Resume':'Start'}</button><button onClick={()=>{setTimer(idleTimer(minutes));setAnnouncement('タイマーをリセットしました。');}}>Reset</button></div>
- </div><span className="sr-only" role="status">{announcement}</span></div>;
+ </div>
+ {!visible&&<button type="button" className="timer-ghost" aria-label="タイマーを出す" onClick={()=>change({timerVisible:true})}>+</button>}
+ <span className="sr-only" role="status">{announcement}</span></div>;
 }
 export function StudyDesk(){
- const access=useInviteAccess();
- const [loadedDisplay]=useState(()=>readSaved(displayKey,displaySchema,defaultDisplay));
+ // Daily notes are always long-edge duplex sheets bound on the left; older binding choices are no longer offered.
+ const [loadedDisplay]=useState(()=>{const saved=readSaved(displayKey,displaySchema,defaultDisplay);return {...saved,value:{...saved.value,side:'left',binding:18} as DeskDisplay};});
  // The desk opens a page from the learner's shelf when one is named or remembered; otherwise the sample fixture.
  const [resolved]=useState(()=>resolveDeskLesson(localStorage,location.search,{binding:loadedDisplay.value.binding,side:loadedDisplay.value.side},{english:loadedDisplay.value.english,japanese:loadedDisplay.value.japanese}));
  const lesson=resolved.lesson;
@@ -56,6 +67,8 @@ export function StudyDesk(){
  const [audio,setAudio]=useState<AudioState>({phase:'idle',message:''});
  const [speaker]=useState(()=>createLessonSpeaker(typeof window.SpeechSynthesisUtterance==='function'?window.speechSynthesis:undefined,text=>new SpeechSynthesisUtterance(text),setAudio));
  const [notice,setNotice]=useState(loadedCopy.message||loadedDisplay.message||resolved.notice),[error,setError]=useState('');
+ const [voiceOpen,setVoiceOpen]=useState(false),voiceControl=useRef<HTMLDivElement>(null);
+ useDismiss(voiceOpen,()=>setVoiceOpen(false),voiceControl);
  const [tab,setTab]=useState(0),[meaning,setMeaning]=useState(false),[personalMode,setPersonalMode]=useState(false);
  const [pick,setPick]=useState<{sentenceId:string;from:number;to:number}|null>(null),[lookingUp,setLookingUp]=useState(false),[lookupNote,setLookupNote]=useState('');
  const [wordbook,setWordbook]=useState(()=>readWordbook(localStorage));
@@ -152,10 +165,10 @@ export function StudyDesk(){
  // Tapping written words picks a span: first tap starts it, a later word of the same line extends it, a tap inside clears it.
  function pickWord(hit:WordHit){setLookupNote('');setPick(p=>!p||p.sentenceId!==hit.sentenceId?{sentenceId:hit.sentenceId,from:hit.token,to:hit.token}:hit.token>=p.from&&hit.token<=p.to?null:hit.token>p.to?{...p,to:hit.token}:{...p,from:hit.token});}
  async function lookUp(){
-  if(!picked||!pickedSentence||lookingUp||access.state!=='ready')return;
+  if(!picked||!pickedSentence||lookingUp)return;
   setLookingUp(true);setLookupNote('');
   const outcome=await requestLookup(fetch,{expression:pickedText,sentence:pickedSentence.text,level:resolved.page?.level??'A2',native_language:resolved.page?.native_language??'ja'});
-  if(outcome.kind==='failed'){setLookupNote(outcome.message);if(outcome.code==='invite_required')access.expire();setLookingUp(false);return;}
+  if(outcome.kind==='failed'){setLookupNote(outcome.message);setLookingUp(false);return;}
   const entry={sentenceId:pickedSentence.id,start:picked.start,end:picked.end,expression:pickedText,native:outcome.result.native,note:outcome.result.note,lookedUpAt:new Date().toISOString()};
   let next:CopyRecord;
   try{next=addLookup(record,entry);}catch(e){setLookupNote((e as Error).message);setLookingUp(false);return;}
@@ -171,9 +184,9 @@ export function StudyDesk(){
  const inputTop=(position.y-4.65)*unit;
  return <div className={'study-desk theme-'+display.theme+(isEditing?' is-writing':'')} style={{'--paper':paperColor} as CSSProperties}>
   <a className="desk-skip" href="#notebook-input">ノートの入力へ</a>
-  <header className="desk-header"><a href="/" className="desk-wordmark">The Sentence Book</a><span className="desk-tagline">Learn digitally. Keep it beautifully.</span><button className="settings-button" onClick={()=>settings.current?.showModal()}><Icon name="settings"/>表示・印刷</button></header>
+  <header className="desk-header"><a href="/" className="desk-wordmark">The Sentence Book</a><span className="desk-tagline">Learn digitally. Keep it beautifully.</span><button className="settings-button" aria-label="机のテーマ" title="机のテーマ" onClick={()=>settings.current?.showModal()}><Icon name="settings"/></button></header>
   <main className="desk-grid">
-   <section className="desk-tools" aria-label="文具とタイマー"><Timer theme={display.theme} visible={display.timerVisible} minutes={display.timerMinutes}/>
+   <section className="desk-tools" aria-label="文具とタイマー"><Timer theme={display.theme} visible={display.timerVisible} minutes={display.timerMinutes} change={changeDisplay}/>
     <fieldset className="desk-pens"><legend className="sr-only">マーカーの色</legend>{markerIds.map((id,i)=><label className="pen-choice" key={id}>
       <input type="radio" name="desk-marker" value={id} checked={display.marker===id} onChange={()=>changeDisplay({marker:id})}/>
       <svg className="pen-art" viewBox={'48 '+penRows[display.theme][i][0]+' 1440 '+penRows[display.theme][i][1]} aria-hidden="true"><image href={'/desk/pens-'+penFiles[display.theme]+'.png'} width="1536" height="1024"/></svg>
@@ -184,11 +197,21 @@ export function StudyDesk(){
     <ol className="lesson-steps" role="tablist" aria-label="学習の5ステップ">{lessonSteps.map((label,i)=><li key={label} role="presentation"><button type="button" role="tab" id={'learning-step-'+i} aria-selected={i===0} aria-controls={i===0?'lesson-copy':undefined} disabled={i!==0}>{label}</button></li>)}</ol>
    <section className="model-card" id="lesson-copy" role="tabpanel" aria-labelledby="learning-step-0"><div className="model-heading"><h1 id="copy-complete" tabIndex={-1}>{record.phase==='complete'?'Copy complete':'Copy'}</h1><span>{record.entries.length} / {total}</span></div>
      <p className="model-sentence" lang="en">{current.text}</p><p className={'model-meaning '+(meaning||audio.message?'':'is-hidden')+(audio.message?' audio-error':'')} aria-hidden={!meaning&&!audio.message} role={audio.message?'alert':undefined}>{audio.message||current.meaning||''}</p>
-     <div className="model-actions"><button onClick={playAudio} className="audio-button" aria-keyshortcuts="Alt+R" title="音声を聞く（Mac: Option + R / Windows: Alt + R）"><Icon name="sound"/>{audio.phase==='speaking'?'読み上げ中':audio.phase==='loading'?'音声を準備中':'音声を聞く'}<kbd aria-hidden="true">⌥ / Alt R</kbd></button><button aria-expanded={meaning} onClick={()=>setMeaning(v=>!v)}>{meaning?'意味を閉じる':'意味を見る'}</button><span>{record.phase==='complete'?'ノートに残りました':'ノートの行に書き写す'}</span></div>
+     <div className="model-actions"><button onClick={playAudio} className="audio-button" aria-keyshortcuts="Alt+R" title="音声を聞く（Mac: Option + R / Windows: Alt + R）"><Icon name="sound"/>{audio.phase==='speaking'?'読み上げ中':audio.phase==='loading'?'音声を準備中':'音声を聞く'}<kbd aria-hidden="true">⌥ / Alt R</kbd></button><button aria-expanded={meaning} onClick={()=>setMeaning(v=>!v)}>{meaning?'意味を閉じる':'意味を見る'}</button>
+      <div className="voice-control" ref={voiceControl}><button type="button" aria-expanded={voiceOpen} onClick={()=>setVoiceOpen(v=>!v)}>声</button>
+       {voiceOpen&&<div className="voice-sheet" role="group" aria-label="読み上げ">
+        <label>英語の声<select value={voices.some(v=>v.voiceURI===display.voice)?display.voice:'auto'} onChange={e=>changeDisplay({voice:e.target.value})}>
+         <option value="auto">自動{selectedVoice?' · '+chooseEnglishVoice(voices)?.name:''}</option>
+         {voices.map(v=><option key={v.voiceURI} value={v.voiceURI}>{v.name} · {v.lang}</option>)}
+        </select></label>
+        <div className="voice-rates" role="group" aria-label="読み上げの速さ">{([[.85,'ゆっくり'],[1,'標準'],[1.1,'少し速く']] as const).map(([rate,label])=><button key={rate} type="button" aria-pressed={display.speechRate===rate} onClick={()=>changeDisplay({speechRate:rate})}>{label}</button>)}</div>
+        <button type="button" className="voice-preview" onClick={playAudio}><Icon name="sound"/>試しに聞く</button>
+       </div>}
+      </div><span>{record.phase==='complete'?'ノートに残りました':'ノートの行に書き写す'}</span></div>
    </section>
    </div>
    <section className="index-book" aria-label="学習インデックス"><img src="/desk/index-book.png" alt="" className="index-plate"/>
-    <div className="index-left"><h2>My Sentence Book</h2><div className="index-tabs" role="tablist" aria-label="ノートの目次" aria-orientation="vertical">{tabs.map((name,i)=><button key={name} role="tab" id={'index-tab-'+i} aria-selected={tab===i} aria-controls="index-content" tabIndex={tab===i?0:-1} onKeyDown={e=>{if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();const n=e.key==='Home'?0:e.key==='End'?4:(i+(e.key==='ArrowDown'?1:4))%5;setTab(n);document.getElementById('index-tab-'+n)?.focus();}}} onClick={()=>setTab(i)}>{name}<span aria-hidden="true">{tab===i?'—':''}</span></button>)}</div></div>
+    <div className="index-left"><h2>My Sentence Book</h2><div className="index-tabs" role="tablist" aria-label="ノートの目次" aria-orientation="vertical">{tabs.map((name,i)=><button key={name} role="tab" id={'index-tab-'+i} aria-selected={tab===i} aria-controls="index-content" tabIndex={tab===i?0:-1} onKeyDown={e=>{if(['ArrowDown','ArrowUp','Home','End'].includes(e.key)){e.preventDefault();const n=e.key==='Home'?0:e.key==='End'?tabs.length-1:(i+(e.key==='ArrowDown'?1:tabs.length-1))%tabs.length;setTab(n);document.getElementById('index-tab-'+n)?.focus();}}} onClick={()=>setTab(i)}>{name}<span aria-hidden="true">{tab===i?'—':''}</span></button>)}</div></div>
     <div className="index-right" id="index-content" role="tabpanel" aria-labelledby={'index-tab-'+tab} tabIndex={0}>
      <h2>{tabs[tab]}</h2>
      {tab===0&&<><button className="lesson-link" onClick={()=>{setPersonalMode(false);editor.current?.focus();}}>{resolved.page?.title??lesson.title}<small>Copy · {record.entries.length} / {total}</small></button>
@@ -197,10 +220,12 @@ export function StudyDesk(){
      {tab===1&&<>{resolved.page?resolved.page.sceneTags.map(tag=><p key={tag}>{tag}</p>):<><p>Daily Life</p><p>Small Habits</p></>}<a href="/setup">関心と教材メモを編集</a></>}
      {(tab===2||tab===3)&&<>{layout.source.vocabulary.map(v=><label className="book-word" key={v.id}><input type="checkbox" checked={!!record.checks[v.id]} onChange={e=>persist({...record,checks:{...record.checks,[v.id]:e.target.checked}})}/><span>{v.english}<small>{v.meaning}</small></span></label>)}<p className="index-note">{layout.source.vocabulary.length?'線を引いた語句はここに残ります。復習した印もつけられます。':'まだ語句がありません。見本の語句をタップして調べると、ここに残ります。'}</p>
       {otherLines.length>0&&<><p className="index-subhead">ほかのページで引いた線 · {otherLines.length}</p>{otherLines.slice(0,12).map(e=><p className="wordbook-entry" key={e.lookedUpAt+e.expression}><span lang="en">{e.expression}</span> {e.native}<small>{e.pageTitle}</small></p>)}</>}</>}
-     {tab===4&&(record.phase==='complete'?<><p>{lesson.title}</p><p>{total}文を書き終えました。</p><button onClick={startPersonal}>自分のひとことを書く</button><button onClick={exportPdf} disabled={exporting}>PDFに保存</button></>:<p>{total}文を書き終えると、<br/>ここに一枚のノートが残ります。</p>)}
+     {tab===4&&<>{record.phase==='complete'?<><p>{lesson.title}</p><p>{total}文を書き終えました。</p><button onClick={startPersonal}>自分のひとことを書く</button></>:<p>{total}文を書き終えると、<br/>ここに一枚のノートが残ります。</p>}
+      <PrintPanel display={display} change={changeDisplay} ready={record.entries.length>0} exporting={exporting} onExport={exportPdf}/></>}
+     {tab===5&&<NoteStyle display={display} change={changeDisplay}/>}
     </div>
    </section>
-   <section className="notebook-area" aria-label="A5学習ノート"><div className="writing-controls" ref={writingControls}><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><div className="notebook-tools"><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button>{record.phase==='complete'&&!personalMode&&<button onClick={startPersonal}>ひとことを書く</button>}</div></div><p id="writing-error" role="alert" className="writing-feedback">{error}</p><div className="lookup-bar">{picked?<><span>「<span lang="en">{pickedText}</span>」</span><button type="button" className="lookup-button" onClick={lookUp} disabled={lookingUp||access.state!=='ready'} aria-busy={lookingUp}>{lookingUp?'調べています…':'調べて線を引く'}</button><button type="button" className="lookup-cancel" onClick={()=>setPick(null)} disabled={lookingUp}>やめる</button></>:<span className="lookup-hint">書き終えた行の語句をタップすると、調べて線を引けます。</span>}<span role="status" className="lookup-status">{lookupNote}</span></div>{picked&&access.state!=='ready'&&<InviteAccess />}</div>
+   <section className="notebook-area" aria-label="A5学習ノート"><div className="writing-controls" ref={writingControls}><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><div className="notebook-tools"><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button>{record.phase==='complete'&&!personalMode&&<button onClick={startPersonal}>ひとことを書く</button>}</div></div><p id="writing-error" role="alert" className="writing-feedback">{error}</p><div className="lookup-bar">{picked?<><span>「<span lang="en">{pickedText}</span>」</span><button type="button" className="lookup-button" onClick={lookUp} disabled={lookingUp} aria-busy={lookingUp}>{lookingUp?'調べています…':'調べて線を引く'}</button><button type="button" className="lookup-cancel" onClick={()=>setPick(null)} disabled={lookingUp}>やめる</button></>:<span className="lookup-hint">書き終えた行の語句をタップすると、調べて線を引けます。</span>}<span role="status" className="lookup-status">{lookupNote}</span></div></div>
     <div className={'desk-paper-scroll '+(zoom==='read'?'reading':'')} ref={paperViewport} style={isEditing?{height:paperHeight}:undefined} tabIndex={0} aria-label="ノート。入力行に合わせてスクロールします。拡大表示は左右にもスクロールできます">
      <div className="desk-pages">{layout.pages.map(p=><div className="desk-page-row" key={p.index}><div className="desk-paper" ref={p.index===0?paper:undefined}>
       <A5Notebook showPen={!annotationsOnly||!isEditing} layout={rendered} scene={scene} pageIndex={p.index} paperColor={paperColor} view={view} ink={palettes[display.marker]} time={reduced?scene.duration:time} reduced={reduced} personalInk={emptyInk}/>
@@ -212,37 +237,18 @@ export function StudyDesk(){
      </div></div>)}</div>
     </div>
     <p id="writing-help" className="writing-help">{personalMode?'英語でひとこと。80文字以内。Enterで保存します。':record.phase==='complete'?total+'文を保存しました。ノートにひとことを添えたり、PDFにできます。':'Enterで答え合わせ・保存して、次の文へ。入力中も筆跡になります。'} {zoom==='read'?'左右にスクロールして読めます。':''}</p>
-    <div className="ink-actions"><button disabled={!record.entries.length||reduced} onClick={()=>{setAnnotationsOnly(false);setAnimateId(record.entries.at(-1)?.sentenceId??null);setTime(0);setPlaying(true);}}>筆跡をもう一度</button><button disabled={time>=scene.duration||reduced} onClick={()=>setPlaying(v=>!v)}>{playing?'筆記を一時停止':'筆記を続ける'}</button><button onClick={()=>{setTime(scene.duration);setPlaying(false);}}>書き終える</button></div>
+    <div className="ink-actions"><button disabled={!record.entries.length||reduced} onClick={()=>{setAnnotationsOnly(false);setAnimateId(record.entries.at(-1)?.sentenceId??null);setTime(0);setPlaying(true);}}>筆跡をもう一度</button><button disabled={time>=scene.duration||reduced} onClick={()=>setPlaying(v=>!v)}>{playing?'筆記を一時停止':'筆記を続ける'}</button><button onClick={()=>{setTime(scene.duration);setPlaying(false);}}>書き終える</button>
+     <span className="ink-speed" role="group" aria-label="筆記の速さ">{[1,2,4].map(n=><button key={n} type="button" aria-pressed={speed===n} onClick={()=>setSpeed(n)}>{n}×</button>)}</span></div>
    </section>
   </main>
   <footer className="desk-footer"><span>{resolved.binder?`「${resolved.binder.title}」のページ · Museが作成 · ${resolved.page?.model??''}`:'サンプル教材のCopy体験 · 本棚に仕舞ったページも練習できます'}</span><a href="/fonts/README.md">書体とライセンス</a></footer>
   <p className="desk-notice" role="status">{notice}</p>
-  <dialog className="desk-settings" ref={settings}><div className="settings-heading"><h2>ノートを整える</h2><button onClick={()=>settings.current?.close()}>閉じる</button></div>
-   <div className="settings-columns"><section><h3>机と書体</h3><fieldset><legend>机のテーマ</legend>{themes.map(t=><label key={t}><input type="radio" name="desk-theme" value={t} checked={display.theme===t} onChange={()=>changeDisplay({theme:t})}/>{themeNames[t]}</label>)}</fieldset>
-    <label>英語の書体<select aria-label="英語の書体" value={display.english} onChange={e=>changeDisplay({english:e.target.value as DeskDisplay['english']})}>{Object.entries(englishFonts).map(([id,f])=><option key={id} value={id}>{f.label}</option>)}</select></label>
-    <label>日本語の書体<select aria-label="日本語の書体" value={display.japanese} onChange={e=>changeDisplay({japanese:e.target.value as DeskDisplay['japanese']})}>{Object.entries(japaneseFonts).map(([id,f])=><option key={id} value={id}>{f.label}</option>)}</select></label>
-    <label><input type="checkbox" checked={display.timerVisible} onChange={e=>changeDisplay({timerVisible:e.target.checked})}/>タイマーを表示する</label>
-    <label>リセット後の時間<select aria-label="リセット後の時間" value={display.timerMinutes} onChange={e=>changeDisplay({timerMinutes:Number(e.target.value)})}>{[5,15,25,45,60].map(n=><option key={n} value={n}>{n} 分</option>)}</select></label>
-    <label>筆記の速さ<select aria-label="筆記の速さ" value={speed} onChange={e=>setSpeed(Number(e.target.value))}>{[1,2,4].map(n=><option value={n} key={n}>{n}×</option>)}</select></label>
-    <h3>読み上げ</h3>
-    <label>英語の声<select aria-label="英語の声" value={voices.some(v=>v.voiceURI===display.voice)?display.voice:'auto'} onChange={e=>changeDisplay({voice:e.target.value})}>
-     <option value="auto">自動{selectedVoice?' · '+chooseEnglishVoice(voices)?.name:''}</option>
-     {voices.map(v=><option key={v.voiceURI} value={v.voiceURI}>{v.name} · {v.lang}</option>)}
-    </select></label>
-    <label>読み上げの速さ<select aria-label="読み上げの速さ" value={display.speechRate} onChange={e=>changeDisplay({speechRate:Number(e.target.value) as DeskDisplay['speechRate']})}><option value="0.85">ゆっくり · 0.85×</option><option value="1">標準 · 1×</option><option value="1.1">少し速く · 1.1×</option></select></label>
-    <button className="voice-preview" onClick={playAudio}><Icon name="sound"/>声を試す</button>
-    <p role="status">{audio.phase==='speaking'?'読み上げ中…':audio.phase==='loading'?'音声を準備中…':audio.message||(!selectedVoice?'英語の音声を読み込み中です。端末で利用できる声を表示します。':'使用する声：'+selectedVoice.name+'（'+selectedVoice.lang+'）')}</p>
-   </section><section><h3>ノートに残す内容</h3><label>内容<select aria-label="内容" value={display.content} onChange={e=>changeDisplay({content:e.target.value as DeskDisplay['content']})}><option value="study-notes">単語・イディオムも載せる</option><option value="sentences-only">センテンスのみ</option></select></label>
-    <fieldset disabled={display.content==='sentences-only'}><legend>学習メモ</legend>{(['shown','blank'] as const).map(v=><label key={v}><input type="radio" name="desk-memos" checked={display.memos===v} value={v} onChange={()=>changeDisplay({memos:v})}/>{v==='shown'?'表示する':'空欄にする'}</label>)}</fieldset><p>空欄でも、本文や単語欄は動きません。</p>
-    <label><input type="checkbox" checked={display.markers} onChange={e=>changeDisplay({markers:e.target.checked})}/>画面にマーカーを表示</label>
-    <label><input type="checkbox" checked={display.vocabulary} onChange={e=>changeDisplay({vocabulary:e.target.checked})}/>単語欄を表示</label><label><input type="checkbox" checked={display.grammar} onChange={e=>changeDisplay({grammar:e.target.checked})}/>構文欄を表示</label>
-    <h3>印刷用PDF</h3><p>完成ノートは A5（148 × 210 mm）です。</p>
-    <label>印刷用紙<select aria-label="印刷用紙" value={display.sheet} onChange={e=>changeDisplay({sheet:e.target.value as DeskDisplay['sheet']})}><option value="A5">A5 · 1ページ</option><option value="A4">A4横 · 同じA5を2部</option></select></label>
-    <div className="binding-fields"><label>綴じる側<select aria-label="綴じる側" value={display.side} onChange={e=>changeDisplay({side:e.target.value as DeskDisplay['side']})}><option value="left">左</option><option value="right">右</option></select></label><label>綴じ代<select aria-label="綴じ代" value={display.binding} onChange={e=>changeDisplay({binding:Number(e.target.value) as DeskDisplay['binding']})}>{[12,18,24].map(n=><option value={n} key={n}>{n} mm</option>)}</select></label></div>
-    <label><input type="checkbox" checked={display.printMarkers??display.markers} onChange={e=>changeDisplay({printMarkers:e.target.checked})}/>PDFにマーカーを入れる</label>
-    <p>100%（実際のサイズ）で印刷。A4は面付け済みなので、印刷画面の「1枚あたりのページ数」は1にします。入力途中の文字はPDFに入りません。</p>
-    <button className="pdf-button" disabled={exporting||!record.entries.length} onClick={exportPdf}>{exporting?'PDFを作成中…':'確定したノートをPDFに'}</button>
-   </section></div>
+  <dialog className="desk-settings theme-settings" ref={settings} aria-labelledby="theme-title" onClick={e=>{if(e.target===e.currentTarget)settings.current?.close();}}>
+   <h2 id="theme-title" className="sr-only">机のテーマ</h2>
+   <div className="theme-swatches" role="radiogroup" aria-labelledby="theme-title">{themes.map(t=><label key={t} className={'theme-swatch swatch-'+t}>
+    <input type="radio" name="desk-theme" value={t} checked={display.theme===t} onChange={()=>changeDisplay({theme:t})}/><span className="swatch-art" aria-hidden="true"/><span>{themeNames[t]}</span>
+   </label>)}</div>
+   <button className="theme-close" onClick={()=>settings.current?.close()}>閉じる</button>
   </dialog>
  </div>;
 }

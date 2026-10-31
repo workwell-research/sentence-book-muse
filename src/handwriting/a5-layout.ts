@@ -177,6 +177,43 @@ export function createA5Layout(source:StudyContent,paper:PaperSettings={binding:
   return {pages,left,right,mainRight,railX,personal,personalPage,source,fonts:{...fonts}};
 }
 
+// The back of the daily sheet: each sentence's meaning, then ruled rows to write the English from memory.
+// Built in front orientation on the same grid; the PDF mirrors it for long-edge duplex.
+export function createReviewPage(layout:A5Layout,index:number):A5Page {
+  const {source,fonts,left}=layout,edge=A5.width-layout.right;
+  const wrap=(text:string,width:number,size:number,face:'hand'|'static')=>wrapInk(text,width,size,face,fonts);
+  const page:A5Page={index,runs:[],boxes:[],markers:[],lines:[
+    ...Array.from({length:A5.rows},(_,n)=>({id:'rule-'+n,x1:left,x2:edge,y1:A5.first+n*A5.pitch,y2:A5.first+n*A5.pitch,width:.10,layer:'base' as const})),
+    ...[A5.titleTop,A5.titleBottom,A5.footer].map((y,n)=>({id:'band-'+n,x1:0,x2:edge,y1:y,y2:y,width:.35,layer:'base' as const})),
+  ]};
+  const place=(id:string,text:string,glyphs:Glyph[],x:number,y:number,size:number,face:'hand'|'static',layer:Layer,accent=false)=>
+    page.runs.push({id,sourceId:id,text,x,y,size,face,layer,accent,glyphs:glyphs.map(g=>({...g,x:g.x+x,y}))});
+  const metadata=(id:string,text:string,x:number,y:number,size:number,align:'left'|'right')=>{
+    const g=wrap(text,edge-left,size,'hand')[0]??[],w=g.reduce((n,l)=>n+l.advance,0);
+    place(id,text,g,align==='right'?x-w:x,y-(id==='title'?englishFonts[fonts.english].titleLift*size/200:0),size,'hand','base');
+  };
+  metadata('title','Review',left,A5.titleBaseline,5.65,'left');
+  metadata('classification',source.title,edge,11,3.2,'right');
+  metadata('date',(source.date??'Draft')+' / back',edge,17,2.9,'right');
+  metadata('footer','The Sentence Book / back',edge,206,2.7,'right');
+  const items=source.sentences.map((s,i)=>({n:i+1,meaning:s.meaning?.trim()??''})).filter(s=>s.meaning);
+  const numberWidth=6,meaningWidth=edge-left-numberWidth;
+  // A meaning the notebook font cannot draw is left off the back rather than blocking the whole PDF.
+  const wrapped=items.flatMap(item=>{try{return [{...item,lines:wrap(item.meaning,meaningWidth,2.9,'static')}];}catch{return [];}});
+  // Two writing rows per item when they fit, otherwise one; never shrink the type.
+  const needed=(writing:number)=>wrapped.reduce((n,item)=>n+item.lines.length+writing,0);
+  const writing=needed(2)<=A5.rows?2:needed(1)<=A5.rows?1:0;
+  if(!writing)throw new Error('確認問題が裏面に収まりません。訳を短くしてください。');
+  let row=0;
+  for(const item of wrapped) {
+    const number=wrap(item.n+'.',numberWidth,3.2,'hand')[0]??[];
+    place('review-number-'+item.n,item.n+'.',number,left,A5.first+row*A5.pitch,3.2,'hand','body',true);
+    for(const [i,g] of item.lines.entries())place('review-'+item.n+':'+i,item.meaning,g,left+numberWidth,A5.first+(row+i)*A5.pitch-1,2.9,'static','body');
+    row+=item.lines.length+writing;
+  }
+  return page;
+}
+
 export function visibleLayer(layer:Layer,view:ViewSettings) {
   if(layer==='base'||layer==='body')return true;
   if(view.content==='sentences-only')return false;
