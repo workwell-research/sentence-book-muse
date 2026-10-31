@@ -90,7 +90,7 @@ export function LessonPreview({ draft, model, binders, kept, inbox = false, stat
       <p className="preview-tags">{filing.sceneTags.map(tag => <span key={tag}>{tag}</span>)}</p>
       {status.state === 'filed' ? <>
         <p className="preview-filed" role="status">{status.createdBinder ? `新しい本「${status.binderTitle}」を作って、このページを仕舞いました。` : `「${status.binderTitle}」にこのページを仕舞いました。`}</p>
-        {inbox && <p className="preview-note">教材はこのブラウザの本棚に保存されました。受信箱への完了連絡が済むと、ほかの端末の受信箱からも消えます。</p>}
+        {inbox && <p className="preview-note">このブラウザの本棚に仕舞いました。連絡が済むと、ほかの端末の受信箱からも消えます。</p>}
         <div className="filing-actions"><a className="save-button" href={`/?page=${status.pageId}`}>このページを机で練習する</a><button type="button" className="text-button" onClick={onClose}>閉じる</button></div>
       </> : <>
         <div className="filing-form">
@@ -107,14 +107,14 @@ export function LessonPreview({ draft, model, binders, kept, inbox = false, stat
           </div>}
         </div>
         {status.state === 'failed' && <p className="error" role="alert">{status.message}</p>}
-        {inbox && <p className="preview-note">仕舞うと教材はこのブラウザの本棚に保存され、すべての端末の受信箱から消えます。「使わない」を選ぶと、本棚には保存せず、すべての端末の受信箱から削除します。</p>}
+        {inbox && <p className="preview-note">「仕舞う」でこのブラウザの本棚へ。「使わない」で削除。どちらも、すべての端末の受信箱から消えます。</p>}
         <div className="filing-actions">
           <button type="button" className="save-button" onClick={file} disabled={!canFile}>
             {chosen ? `「${chosen.title}」に仕舞う` : newTitle.trim() ? `新しい本「${newTitle.trim()}」を作って仕舞う` : '新しい本を作って仕舞う'}
           </button>
           <button type="button" className="text-button" onClick={onDiscard}>このページは使わない</button>
         </div>
-        <p className="preview-note">{inbox ? '決めるまでは、ログインしたあなたの受信箱に置いてあります。新しい本は、ここで決めたときだけ作られます。' : kept
+        <p className="preview-note">{inbox ? '決めるまで、受信箱に置いておけます。' : kept
           ? '仕舞うまで、このページは「仕分けを待つページ」に置いてあります。新しい本は、ここで決めたときだけ作られます。'
           : 'このブラウザに置けなかったため、仕舞わずに画面を閉じると消えます。'}</p>
       </>}

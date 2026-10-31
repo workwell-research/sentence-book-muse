@@ -11,3 +11,10 @@ export const palettes = {
 export type PaletteId = keyof typeof palettes;
 export type InkPalette = (typeof palettes)[PaletteId];
 export const paletteIds = ['pink','lavender','blue','green','yellow','gray'] as PaletteId[];
+// On paper the screen accents read as near-graphite and dark ink shows through thin refills
+// (owner's print review, 2026-10-31): print uses a lighter ink and clearer accents.
+export const printInk = '#55595E';
+export const printAccents: Record<PaletteId, string> = {
+  purple:'#7A5CB3', orange:'#B4691E', pink:'#B8517B', lavender:'#7A5CB3',
+  blue:'#2F7BB8', green:'#3F8A4A', yellow:'#9E7A12', gray:'#7D8590',
+};
