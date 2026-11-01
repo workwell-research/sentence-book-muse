@@ -79,6 +79,11 @@ export function missedWords(model:string,typed:string):boolean[] {
  for(let i=0,j=0;i<a.length&&j<b.length;){if(a[i]===b[j]){kept.add(i);i++;j++;}else if(L[i+1][j]>=L[i][j+1])i++;else j++;}
  return a.map((_,i)=>!kept.has(i));
 }
+// Dictation shows the model under a line only when the line differs from it: a missed word, or a different number of words.
+// A line that matches word for word needs no second copy (owner, 2026-11-01).
+export function differsFromModel(model:string,typed:string):boolean {
+ return missedWords(model,typed).some(Boolean)||words(model).length!==words(typed).length;
+}
 
 // Feedback lives with Muse: these messages are copied and pasted into Muse, never sent from the app.
 const ownLines=(record:PracticeRecord,lesson:StudyContent)=>lesson.sentences.flatMap((s,k)=>{const own=record.written.reconstruction[k]?.trim();return own?[{s,own}]:[];});
