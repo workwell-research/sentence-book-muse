@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { emptyCopy, practiceSchema } from '../src/desk/core';
 import { studySample } from '../src/handwriting/study-content';
-import { MAX_LOOKUPS, WORDBOOK_KEY, addLookup, expressionOf, readWordbook, requestLookup, saveWordbookEntry, tokenize } from '../src/lib/lookup';
+import { MAX_LOOKUPS, WORDBOOK_KEY, addLookup, expressionOf, readWordbook, removeLookup, removeWordbookEntry, requestLookup, saveWordbookEntry, tokenize } from '../src/lib/lookup';
 
 const request = { expression: 'giving a talk', sentence: "Next week, I'm giving a talk in Abu Dhabi.", level: 'B1' as const, native_language: 'ja' as const };
 const server = (status: number, body: unknown) => (async () => new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } })) as typeof fetch;
@@ -31,6 +31,12 @@ describe('picking words in the model sentence', () => {
     for (let i = 0; i < MAX_LOOKUPS; i++) full = addLookup(full, { ...entry, start: i, end: i + 1 });
     expect(() => addLookup(full, { ...entry, start: 50, end: 51 })).toThrow('40');
     expect(practiceSchema.parse(JSON.parse(JSON.stringify(again))).lookups).toEqual(again.lookups);
+  });
+  it('erases one line by its id and leaves the others', () => {
+    const two = addLookup(addLookup(emptyCopy(studySample), entry), { ...entry, start: 20, end: 24, expression: 'week' });
+    const one = removeLookup(two, 'lookup-example-story-02-2-15');
+    expect(one.lookups.map(l => l.expression)).toEqual(['week']);
+    expect(removeLookup(one, 'lookup-none').lookups).toEqual(one.lookups);
   });
 });
 
@@ -64,6 +70,19 @@ describe('the shared word list', () => {
     const broken = memory({ [WORDBOOK_KEY]: '{nope' });
     expect(readWordbook(broken)).toEqual({ kind: 'unreadable' });
     expect(() => saveWordbookEntry(broken, word)).toThrow();
+    expect(broken.values.get(WORDBOOK_KEY)).toBe('{nope');
+  });
+  it('drops an erased line from the same page only, case-insensitively, and protects unreadable data', () => {
+    const store = memory();
+    const word = { ...entry, pageId: 'page-1', pageTitle: 'Kyoto', sentence: studySample.sentences[1].text };
+    saveWordbookEntry(store, word);
+    saveWordbookEntry(store, { ...word, pageId: 'page-2', lookedUpAt: '2026-10-30T02:00:00.000Z' });
+    const left = removeWordbookEntry(store, { pageId: 'page-1', expression: 'MADE TIME FOR' });
+    expect(left.map(e => e.pageId)).toEqual(['page-2']);
+    expect(readWordbook(store)).toEqual({ kind: 'ready', entries: left });
+    expect(removeWordbookEntry(store, { pageId: 'page-9', expression: 'nothing' })).toEqual(left);
+    const broken = memory({ [WORDBOOK_KEY]: '{nope' });
+    expect(() => removeWordbookEntry(broken, { pageId: null, expression: 'x' })).toThrow();
     expect(broken.values.get(WORDBOOK_KEY)).toBe('{nope');
   });
 });
