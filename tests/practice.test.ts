@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { studySample } from '../src/handwriting/study-content';
-import { advance, differsFromModel, emptyPractice, itemCount, missedWords, practiceKey, readPractice, restartPass, reviewRequest, savePractice, talkRequest } from '../src/desk/practice';
+import { advance, differsFromModel, emptyPractice, itemCount, missedWords, practiceKey, readPractice, restartPass, reviewRequest, savePractice, setReview, speakingPhaseOf, talkRequest } from '../src/desk/practice';
 import type { PracticeRecord } from '../src/desk/practice';
 
 const storage = () => { const map = new Map<string, string>(); return { map, getItem: (k: string) => map.get(k) ?? null, setItem: (k: string, v: string) => { map.set(k, v); } }; };
@@ -35,14 +35,36 @@ describe('four passes after Copy', () => {
     expect(record.finished.dictation).toBeTruthy();
     expect(advance(record, studySample, 'more').moved).toBe('none');
   });
-  it('ticks shadowing and speaking items one Enter at a time, using the lesson’s questions', () => {
+  it('speaking: Enter after answering plays the sample, the next Enter moves on; two Enters per question', () => {
     let record = at(emptyPractice(studySample), 4);
     expect(itemCount('speaking', studySample)).toBe(studySample.questions!.length);
-    for (let i = 0; i < studySample.questions!.length; i++) record = advance(record, studySample, '').record;
+    for (let i = 0; i < studySample.questions!.length; i++) {
+      expect(speakingPhaseOf(record)).toBe('answer');
+      const heard = advance(record, studySample, '');
+      expect(heard.moved).toBe('checked');
+      expect(speakingPhaseOf(heard.record)).toBe('sample');
+      expect(heard.record.done.speaking).toContain(i);
+      record = advance(heard.record, studySample, '').record;
+    }
     expect(record.done.speaking).toEqual([0, 1, 2]);
     expect(record.finished.speaking).toBeTruthy();
     expect(itemCount('speaking', { ...studySample, questions: undefined })).toBe(0);
     expect(advance(at(emptyPractice({ ...studySample, questions: [] }), 4), { ...studySample, questions: [] }, '').moved).toBe('none');
+  });
+  it('keeps the model’s review of a reconstructed line in the record and drops it on restart', () => {
+    let record = at(emptyPractice(studySample), 3);
+    record = advance(record, studySample, 'I decided to go slow today.').record;
+    expect(record.reviews.reconstruction ?? []).toEqual([]);
+    record = setReview(record, 0, { verdict: 'fine', natural: 'Today I decided to slow down.', note: '「go slow」より「slow down」が自然です。' });
+    expect(record.reviews.reconstruction).toEqual([{ verdict: 'fine', natural: 'Today I decided to slow down.', note: '「go slow」より「slow down」が自然です。' }]);
+    record = setReview(record, 2, { verdict: 'unclear', natural: 'Instead of checking my phone, I opened my notebook.', note: null });
+    expect(record.reviews.reconstruction).toHaveLength(3);
+    expect(record.reviews.reconstruction![1]).toBeNull();
+    const store = storage();
+    savePractice(store, record);
+    expect(readPractice(store, studySample).record.reviews.reconstruction).toHaveLength(3);
+    expect(restartPass(record, 'reconstruction').reviews.reconstruction).toEqual([]);
+    expect(restartPass(record, 'speaking').reviews.reconstruction).toHaveLength(3);
   });
   it('restarts one pass without touching the others', () => {
     let record = at(emptyPractice(studySample), 3);

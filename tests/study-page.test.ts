@@ -47,7 +47,7 @@ describe('a filed page as desk material', () => {
   it('carries Muse’s questions for Speaking and each sentence’s review expression as its Reconstruction hint', () => {
     const lesson = studyContentFromPage(page, binder, paper, defaultFonts);
     if (lesson.kind !== 'ready') throw new Error('expected a ready lesson');
-    expect(lesson.content.questions).toEqual([{ id: 'question-1', en: 'What will you present?', native: '何を発表しますか？' }]);
+    expect(lesson.content.questions).toEqual([{ id: 'question-1', en: 'What will you present?', native: '何を発表しますか？', sample: { en: 'Our new plan.', native: '新しい計画です。' } }]);
     expect(lesson.content.sentences.map(s => s.hint)).toEqual(['giving a talk', 'take a break', undefined, 'short and clear']);
   });
   it('keeps every sentence with its meaning and lists review items as words without drawing lines', () => {

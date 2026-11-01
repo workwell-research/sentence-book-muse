@@ -14,7 +14,9 @@ const written=z.array(z.string().max(500).nullable()).max(40);
 export const practiceSchema=z.object({
  version:z.literal(1),lessonId:z.string(),source:z.string(),step:z.number().int().min(0).max(4),
  pos:z.object({shadowing:index,dictation:index,reconstruction:index,speaking:index}).partial(),
- phase:z.object({dictation:z.enum(['write','check']),reconstruction:z.enum(['write','check'])}).partial(),
+ phase:z.object({dictation:z.enum(['write','check']),reconstruction:z.enum(['write','check']),speaking:z.enum(['answer','sample'])}).partial(),
+ // Reconstruction lines reviewed by the model: a verdict, maybe a more natural phrasing, one short note (null = not reviewed).
+ reviews:z.object({reconstruction:z.array(z.object({verdict:z.enum(['fine','unclear']),natural:z.string().max(200).nullable(),note:z.string().max(240).nullable()}).nullable()).max(40)}).partial().default({}),
  written:z.object({dictation:written,reconstruction:written}),
  drafts:z.object({dictation:z.string().max(500),reconstruction:z.string().max(500)}).partial(),
  done:z.object({shadowing:z.array(index).max(40),speaking:z.array(index).max(40)}),
@@ -22,7 +24,7 @@ export const practiceSchema=z.object({
 });
 export type PracticeRecord=z.infer<typeof practiceSchema>;
 const fingerprint=(lesson:StudyContent)=>JSON.stringify(lesson.sentences.map(s=>[s.id,s.text]));
-export const emptyPractice=(lesson:StudyContent):PracticeRecord=>({version:1,lessonId:lesson.id,source:fingerprint(lesson),step:0,pos:{},phase:{},written:{dictation:[],reconstruction:[]},drafts:{},done:{shadowing:[],speaking:[]},finished:{}});
+export const emptyPractice=(lesson:StudyContent):PracticeRecord=>({version:1,lessonId:lesson.id,source:fingerprint(lesson),step:0,pos:{},phase:{},written:{dictation:[],reconstruction:[]},drafts:{},reviews:{},done:{shadowing:[],speaking:[]},finished:{}});
 
 // An unreadable record is left untouched (blocked) rather than overwritten; a record for other sentences starts over.
 export function readPractice(storage:Pick<Storage,'getItem'>,lesson:StudyContent):{record:PracticeRecord;blocked:boolean} {
@@ -42,6 +44,13 @@ export function savePractice(storage:Pick<Storage,'setItem'>,record:PracticeReco
 export const itemCount=(pass:PassId,lesson:StudyContent)=>pass==='speaking'?(lesson.questions?.length??0):lesson.sentences.length;
 export const positionOf=(record:PracticeRecord,pass:PassId)=>record.pos[pass]??0;
 export const phaseOf=(record:PracticeRecord,pass:PassId)=>(pass==='dictation'||pass==='reconstruction')?record.phase[pass]??'write':'write';
+// Speaking: hear the question and answer aloud, then hear the sample answer; two Enters per question.
+export const speakingPhaseOf=(record:PracticeRecord)=>record.phase.speaking??'answer';
+export type LineReview=NonNullable<PracticeRecord['reviews']['reconstruction']>[number];
+export function setReview(record:PracticeRecord,index:number,review:LineReview):PracticeRecord {
+ const next=structuredClone(record);const lines=[...(next.reviews.reconstruction??[])];while(lines.length<index)lines.push(null);lines[index]=review;
+ next.reviews={...next.reviews,reconstruction:lines};return next;
+}
 
 // Enter moves a pass along: a written line is checked first, then the next item; the last item finishes the pass.
 export function advance(record:PracticeRecord,lesson:StudyContent,typed:string,now=new Date()):{record:PracticeRecord;moved:'checked'|'next'|'finished'|'none'} {
@@ -56,7 +65,10 @@ export function advance(record:PracticeRecord,lesson:StudyContent,typed:string,n
    return {record:next,moved:'checked'};
   }
   next.phase[pass]='write';
- } else if(!next.done[pass].includes(i))next.done[pass]=[...next.done[pass],i];
+ } else if(pass==='speaking') {
+  if(speakingPhaseOf(record)==='answer'){if(!next.done.speaking.includes(i))next.done.speaking=[...next.done.speaking,i];next.phase.speaking='sample';return {record:next,moved:'checked'};}
+  next.phase.speaking='answer';
+ } else if(pass==='shadowing'&&!next.done.shadowing.includes(i))next.done.shadowing=[...next.done.shadowing,i];
  if(i+1>=n){next.finished[pass]=now.toISOString();return {record:next,moved:'finished'};}
  next.pos[pass]=i+1;
  return {record:next,moved:'next'};
@@ -64,8 +76,8 @@ export function advance(record:PracticeRecord,lesson:StudyContent,typed:string,n
 export function restartPass(record:PracticeRecord,pass:PassId):PracticeRecord {
  const next:PracticeRecord=structuredClone(record);
  delete next.finished[pass];next.pos[pass]=0;
- if(pass==='dictation'||pass==='reconstruction'){next.phase[pass]='write';next.written[pass]=[];delete next.drafts[pass];}
- else next.done[pass]=[];
+ if(pass==='dictation'||pass==='reconstruction'){next.phase[pass]='write';next.written[pass]=[];delete next.drafts[pass];if(pass==='reconstruction')next.reviews={...next.reviews,reconstruction:[]};}
+ else {next.done[pass]=[];if(pass==='speaking')delete next.phase.speaking;}
  return next;
 }
 

@@ -11,6 +11,7 @@ export interface RatePolicy { name: string; perMinute: number; perDay: number; g
 export const POLICIES = {
   generate: { name: 'generate', perMinute: 3, perDay: 20, globalPerDay: 300 },
   lookup: { name: 'lookup', perMinute: 20, perDay: 150, globalPerDay: 3000 },
+  review: { name: 'review', perMinute: 10, perDay: 80, globalPerDay: 1500 },
 } as const satisfies Record<string, RatePolicy>;
 
 export type RateScope = 'minute' | 'day' | 'global';

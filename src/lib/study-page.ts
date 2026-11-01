@@ -57,7 +57,7 @@ export function studyContentFromPage(page: LibraryPage, binder: Binder | null, p
     id: `sentence-${String(index + 1).padStart(2, '0')}`, text: normalizeHandText(pair.en), meaning: pair.native,
     ...(hintFor(index) ? { hint: hintFor(index) } : {}),
   }));
-  const questions = page.questions.map((question, index) => ({ id: `question-${index + 1}`, en: question.en, native: question.native }));
+  const questions = page.questions.map((question, index) => ({ id: `question-${index + 1}`, en: question.en, native: question.native, sample: { en: question.sample_answer.en, native: question.sample_answer.native } }));
   if (sentences.some(sentence => !sentence.text || !supported(sentence.text, font))) return { kind: 'unavailable', reason: 'unsupported-text' };
 
   // Muse's review expressions are candidates in the words list only; lines on the paper are the learner's.

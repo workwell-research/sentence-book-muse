@@ -63,7 +63,7 @@
 .step-rows{list-style:none;margin:0;padding:0;counter-reset:step-row}
 .step-row{position:relative;min-height:var(--rule);font:400 17px/var(--rule) "Notebook Klee",serif;color:#383a3d}
 .step-row>span{position:relative;top:5px}
-.step-row:not(.is-model,.is-label,.is-own)::before{counter-increment:step-row;content:counter(step-row);position:absolute;left:-28px;top:5px;width:18px;text-align:right;font:400 10px/var(--rule) Lora,serif;color:var(--tab-ink,#9a9a9a)}
+.step-row:not(.is-model,.is-label,.is-own,.is-advice)::before{counter-increment:step-row;content:counter(step-row);position:absolute;left:-28px;top:5px;width:18px;text-align:right;font:400 10px/var(--rule) Lora,serif;color:var(--tab-ink,#9a9a9a)}
 .row-hand{font:400 17.5px/var(--rule) var(--step-hand),"Notebook Klee",serif;color:#46484b}
 .step-row.is-print{cursor:default}
 .step-row.is-print .row-text{color:color-mix(in srgb,#383a3d 70%,transparent);transition:background-size .3s}
@@ -74,6 +74,15 @@
 .step-row.is-model .row-model{top:3px}
 .step-row.is-model mark{background:linear-gradient(transparent 50%,var(--step-marker) 50% 95%,transparent 95%);color:#383a3d}
 .step-row.is-quiet{font-style:normal}
+/* the model's review of a reconstructed line, written under it in the pen's colour */
+.step-row.is-advice{color:var(--step-pen)}
+.step-row.is-advice .row-advice{font:400 16px/var(--rule) var(--step-hand),"Notebook Klee",serif;top:4px}
+.step-row.is-advice.is-note .row-advice{font:400 12.5px/var(--rule) "Notebook Klee",serif;top:3px}
+.step-card .model-sample{margin:14px 0 0;font-size:13px;line-height:1.5}
+.step-card .model-sample .sample-label{font-size:11px;letter-spacing:.08em;color:var(--step-pen);margin-right:10px}
+.step-card .model-sample [lang=en]{font:400 clamp(17px,1.45vw,22px)/1.4 Lora,Georgia,serif}
+.step-card .model-sample .sample-native{display:block;font-size:12px;color:#697078;margin-top:2px}
+.step-row .step-retry{min-height:0;margin-left:8px;padding:0;border:0;background:none;font:inherit;color:var(--step-pen);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .step-row.is-label{margin-top:var(--rule);font:400 11px/var(--rule) "Notebook Klee",serif;letter-spacing:.08em;color:var(--step-pen)}
 .step-row.is-label>*{top:0}
 .step-input{position:relative;top:4px;display:block;width:100%;height:var(--rule);min-height:0;margin:0;padding:0;border:0;outline:none;resize:none;overflow:hidden;background:transparent;
@@ -88,7 +97,7 @@
  .step-sheet{padding:12px 0 0 0;min-height:60dvh}
  .step-page{padding-left:62px;padding-right:22px}
  .step-page::before{width:34px}
- .step-row:not(.is-model,.is-label,.is-own)::before{left:-22px}
+ .step-row:not(.is-model,.is-label,.is-own,.is-advice)::before{left:-22px}
  .step-row.is-said::after{left:-36px}
  .step-card .step-note:not([role=status]){display:none}
  .step-card .step-note[role=status]{flex-basis:100%;margin-left:0;white-space:normal}

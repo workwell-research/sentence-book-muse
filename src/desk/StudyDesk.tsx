@@ -130,7 +130,7 @@ export function StudyDesk(){
  const inputHeight=Math.min(position.rows,Math.max(2,Math.ceil(draft.length/32)+draft.split('\n').length))*5.2;
  const inputFamily='Sentence Notebook '+({readability:'Readability',tech:'Tech',print:'Print',pen:'Pen'}[display.english])+' Input';
  // Shadowing, Dictation, Reconstruction and Speaking keep their own record; Copy's record is never touched by them.
- const practice=usePractice({lesson,display,handFamily:inputFamily,onWriting:()=>{if(!trayStowed)setTrayStowed(true);},
+ const practice=usePractice({lesson,display,handFamily:inputFamily,level:resolved.page?.level??'A2',nativeLanguage:resolved.page?.native_language??'ja',onWriting:()=>{if(!trayStowed)setTrayStowed(true);},
   onLeaveCopy:()=>speaker.stop(),onReturnToCopy:()=>requestAnimationFrame(()=>editor.current?.focus({preventScroll:true}))});
  const view={content:display.content,memos:display.memos,markers:display.markers};
  const paperColor=display.theme==='pure-white'?'#FFFFFF':'#FAF8F5';

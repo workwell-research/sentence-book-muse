@@ -15,7 +15,7 @@ export interface StudyContent {
   grammar?: { id: string; english: string; label: string };
   personal: string;
   /** Speaking prompts: Muse's questions for the page (the sample has its own). */
-  questions?: { id: string; en: string; native: string }[];
+  questions?: { id: string; en: string; native: string; sample?: { en: string; native: string } }[];
 }
 // Explicitly synthetic Work handoff fixture, never inserted into stored lessons.
 // Span offsets are Unicode code-point indices, end exclusive.
@@ -41,8 +41,8 @@ export const studySample: StudyContent = {
   grammar: {id:'pattern-instead',english:'Instead of checking my phone, I opened my notebook.',label:'Instead of + -ing     /     I + past tense'},
   personal: '',
   questions: [
-    { id:'question-1', en:'What do you like to do on a quiet morning?', native:'静かな朝には、何をするのが好きですか？' },
-    { id:'question-2', en:'What is one small thing you want to remember from today?', native:'今日のことで、覚えておきたい小さなことは何ですか？' },
-    { id:'question-3', en:'When do you make time for yourself?', native:'自分のための時間は、いつつくりますか？' },
+    { id:'question-1', en:'What do you like to do on a quiet morning?', native:'静かな朝には、何をするのが好きですか？', sample:{ en:'I like to drink tea and read a few pages.', native:'お茶を飲んで、数ページ本を読むのが好きです。' } },
+    { id:'question-2', en:'What is one small thing you want to remember from today?', native:'今日のことで、覚えておきたい小さなことは何ですか？', sample:{ en:'I want to remember how calm the morning felt.', native:'朝がどれだけ静かだったかを覚えておきたいです。' } },
+    { id:'question-3', en:'When do you make time for yourself?', native:'自分のための時間は、いつつくりますか？', sample:{ en:'I make time for myself early in the morning, before work.', native:'仕事の前の早朝に、自分の時間をつくります。' } },
   ],
 };
