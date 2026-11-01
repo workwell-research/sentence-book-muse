@@ -29,11 +29,10 @@ export function A5Notebook({layout,scene,view,ink,time,reduced,personalInk,pageI
   const penPage=visible.find(s=>time<s.start+s.duration)?.page;
   return <>{visiblePages(layout,view).filter(p=>pageIndex===undefined||p.index===pageIndex).map(p=>{
     const runs=p.runs.filter(r=>visibleLayer(r.layer,view));
-    const titleId='note-title-'+p.index,descId='note-description-'+p.index;
+    const descId='note-description-'+p.index;
     const spoken=runs.filter(r=>r.layer!=='base'&&(r.layer!=='memo'||time>=(scene.memoStarts?.[r.sourceId]??scene.memoStart))).map(r=>r.text).join(' ');
-    return <svg key={p.index} className="notebook" viewBox="0 0 148 210" role="img" aria-labelledby={titleId+' '+descId}
+    return <svg key={p.index} className="notebook" viewBox="0 0 148 210" role="img" aria-label={layout.source.title+' — '+(p.index+1)+'ページ'} aria-describedby={descId}
       data-page={p.index} data-complete={time>=scene.duration} data-memos={view.memos}>
-      <title id={titleId}>{layout.source.title} — {p.index+1}ページ</title>
       <desc id={descId}>{spoken}{view.memos==='blank'?' 学習メモの欄は空欄です。':''}</desc>
       <g aria-hidden="true">
         <rect width={148} height={210} fill={paperColor??A5.paper}/>
