@@ -3,6 +3,16 @@ import { LESSON_CONTRACT, lessonDraftJsonSchema, lessonDraftSchema, levelSchema,
 import { MUSE_PAGE_INSTRUCTIONS } from './muse-instructions';
 
 const text = (max: number) => z.string().trim().min(1).max(max);
+// Lesson settings the learner chose for Muse: which material Muse may draw on, and when pages should arrive.
+export const weekdays = ['mon','tue','wed','thu','fri','sat','sun'] as const;
+export type Weekday = typeof weekdays[number];
+export const lessonSourceSchema = z.enum(['conversation','conversation_and_social']);
+export type LessonSource = z.infer<typeof lessonSourceSchema>;
+export const deliveryPlanSchema = z.strictObject({
+  days: z.array(z.enum(weekdays)).min(1).max(7).refine(days => new Set(days).size === days.length, 'Duplicate weekday'),
+  time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
+});
+export type DeliveryPlan = z.infer<typeof deliveryPlanSchema>;
 export const learningSummarySchema = z.strictObject({
   level: levelSchema,
   native_language: nativeLanguageSchema,
@@ -13,6 +23,8 @@ export const learningSummarySchema = z.strictObject({
   completed_last_7_days: z.number().int().min(0).max(2000),
   review_candidates: z.array(z.strictObject({ expression: text(120), native: text(300) })).max(12),
   observed_at: z.iso.datetime(),
+  lesson_source: lessonSourceSchema.optional(),
+  delivery: deliveryPlanSchema.optional(),
 }).refine(s => new Set(s.binders.map(b => b.id)).size === s.binders.length, 'Duplicate binder ID');
 export type LearningSummary = z.infer<typeof learningSummarySchema>;
 export const deliverySchema = z.strictObject({ contract: z.literal(LESSON_CONTRACT), delivery_date: z.iso.date(), draft: lessonDraftSchema });
@@ -39,6 +51,8 @@ export function lessonGuide() {
       'The learner chooses the date in their own time zone. Reuse that same date and draft_id on retries. Never invent or change an ID to bypass a duplicate or inbox limit.',
       'Learning state is an explicitly shared snapshot of one browser, not complete history. Check observed_at and updated_at. Unknown accuracy, time spent and reasons for stopping must remain unknown.',
       'If pending or unpractised pages are piling up, offer a shorter review page or skip delivery and report why. Do not infer that the learner is struggling merely because they were inactive.',
+      'lesson_source "conversation" means build pages only from your conversations with the learner; "conversation_and_social" also allows social posts of theirs that you can already see. Without lesson_source, use conversations only.',
+      'delivery lists the weekdays and the local time the learner wants pages. Do not deliver on other weekdays. If your own schedule differs, ask the learner before changing it.',
       'Use review_candidates in another topic where natural. Do not change the requested level without the learner changing their preference.',
       'Use only context the learner authorized Muse to use. Deliver a draft for review; never create binders, adopt pages or alter completed work.',
       'After a validation error, correct and resend at most once. Report delivered only when a server receipt confirms accepted or duplicate. A conflict is not success.',

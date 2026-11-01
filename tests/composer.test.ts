@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { COMPOSER_KEY, readNote, saveNote } from '../src/lib/composer';
+import { COMPOSER_KEY, EMPTY_NOTE, readNote, saveNote, scheduleRequest, scheduleText } from '../src/lib/composer';
 
 function memory(initial: Record<string, string> = {}) {
   const values = new Map(Object.entries(initial));
   return { values, getItem: (key: string) => values.get(key) ?? null, setItem: (key: string, value: string) => { values.set(key, value); } };
 }
-const note = { topic: 'A presentation', level: 'B1' as const, nativeLanguage: 'ja' };
+const note = { topic: 'A presentation', level: 'B1' as const, nativeLanguage: 'ja', source: 'conversation_and_social' as const, days: ['mon' as const, 'wed' as const], time: '06:30' };
 
 describe('local topic note', () => {
   it('restores the learner input without touching other storage', () => {
@@ -28,5 +28,18 @@ describe('local topic note', () => {
   it('propagates unavailable storage so the UI cannot claim a successful save', () => {
     const storage = { getItem: () => null, setItem: () => { throw new Error('quota'); } };
     expect(() => saveNote(storage, note)).toThrow('quota');
+  });
+  it('reads notes saved before the lesson settings existed with the defaults', () => {
+    const storage = memory({ [COMPOSER_KEY]: JSON.stringify({ schemaVersion: 1, topic: '', level: 'A2', nativeLanguage: 'ja' }) });
+    expect(readNote(storage)).toEqual({ kind: 'ready', note: { ...EMPTY_NOTE } });
+  });
+  it('treats an impossible schedule or material choice as unreadable', () => {
+    for (const bad of [{ days: [], time: '07:00' }, { days: ['mon'], time: '25:00' }, { days: ['mon', 'mon'], time: '07:00' }, { source: 'everything' }])
+      expect(readNote(memory({ [COMPOSER_KEY]: JSON.stringify({ schemaVersion: 1, ...note, ...bad }) })).kind).toBe('unreadable');
+  });
+  it('describes the schedule for Muse in plain words', () => {
+    expect(scheduleText(EMPTY_NOTE)).toBe('毎日の7:00');
+    expect(scheduleText({ days: ['wed', 'mon'], time: '06:30' })).toBe('毎週月・水曜日の6:30');
+    expect(scheduleRequest(note)).toContain('毎週月・水曜日の6:30');
   });
 });

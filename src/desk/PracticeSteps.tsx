@@ -110,7 +110,7 @@ export function usePractice({lesson,display,handFamily,onWriting,onLeaveCopy,onR
    onClick={()=>{if(i!==step)choose(i);}}
    onKeyDown={e=>{if(!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();const n=(i+(e.key==='ArrowRight'?1:4))%5;choose(n);requestAnimationFrame(()=>document.getElementById('learning-step-'+n)?.focus());}}>{label}</button>
  </li>)}</ol>;
- if(!pass)return {step,tabs,card:null,sheet:null,notice};
+ if(!pass)return {step,tabs,card:null,sheet:null,notice,choose};
 
  const n=itemCount(pass,lesson),i=item(pass),done=!!record.finished[pass],phase=phaseOf(record,pass);
  const name=practiceSteps[step],nextName=practiceSteps[step+1];
@@ -192,5 +192,5 @@ export function usePractice({lesson,display,handFamily,onWriting,onLeaveCopy,onR
    </div>
   </div>
  </section>;
- return {step,tabs,card,sheet,notice};
+ return {step,tabs,card,sheet,notice,choose};
 }
