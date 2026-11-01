@@ -41,18 +41,19 @@ export function usePractice({lesson,display,handFamily,level,nativeLanguage,onWr
  const typed=useRef(draft);
  const setDraft=(value:string)=>{typed.current=value;setDraftState(value);};
  // Reconstruction: each checked line goes to the model once; the review lives in the record, so it survives reloads.
- const [reviewing,setReviewing]=useState<number|null>(null),[reviewNote,setReviewNote]=useState('');
+ // Failures are kept per line, so a delayed failure for line 1 can be retried from line 1 even after moving on or finishing.
+ const [reviewing,setReviewing]=useState<number|null>(null),[reviewNotes,setReviewNotes]=useState<Record<number,string>>({});
  const input=useRef<HTMLTextAreaElement>(null),paper=useRef<HTMLDivElement>(null),current=useRef<HTMLLIElement>(null);
  const pass=passOf(record.step),step=record.step;
  const persist=(next:PracticeRecord)=>{latest.current=next;setRecord(next);if(loaded.blocked)return;try{savePractice(localStorage,next);}catch{setNotice('練習の記録を保存できませんでした。この画面を閉じると、今回の進み具合は消えます。');}};
  const hush=()=>{window.speechSynthesis?.cancel();setSpeaking(false);setSaid(-1);};
  async function reviewLine(rec:PracticeRecord,i:number) {
   const s=lesson.sentences[i],own=rec.written.reconstruction[i];if(!s||!own)return;
-  setReviewing(i);setReviewNote('');
+  setReviewing(i);setReviewNotes(notes=>{const next={...notes};delete next[i];return next;});
   const outcome=await requestReview(fetch,{meaning:s.meaning||s.text,model:s.text,own,level,native_language:nativeLanguage});
-  setReviewing(null);
-  if(outcome.kind==='failed'){setReviewNote(outcome.message);return;}
+  setReviewing(current=>current===i?null:current);
   if(latest.current.written.reconstruction[i]!==own)return; // the line changed meanwhile
+  if(outcome.kind==='failed'){setReviewNotes(notes=>({...notes,[i]:outcome.message}));return;}
   persist(setReview(latest.current,i,{verdict:outcome.result.verdict,natural:outcome.result.natural,note:outcome.result.note}));
  }
  function speak(text:string,follow=false) {
@@ -167,7 +168,7 @@ export function usePractice({lesson,display,handFamily,level,nativeLanguage,onWr
  } else if(pass==='reconstruction') {
   const s=lesson.sentences[i],checked=phase==='check';
   body=<><p className="model-cue">{s.meaning}</p><p className="model-sentence is-small" lang="en"><Ruled key={step+':'+i+':'+phase} text={s.text} open={checked} label="お手本を見る"/></p></>;
-  actions=<>{s.hint&&<><button type="button" aria-expanded={open} onClick={()=>setOpen(v=>!v)}>{open?'ヒントを閉じる':'ヒント'}</button><em className={"step-hint"+(open?"":" is-hidden")} lang="en">{s.hint}</em></>}{checked&&listen('お手本を聞く')}{museButton}{reviewNote&&!checked?null:reviewNote&&<span className="step-review-error" role="alert">{reviewNote}<button type="button" className="step-chip" onClick={()=>void reviewLine(latest.current,i)}>もう一度添削</button></span>}</>;
+  actions=<>{s.hint&&<><button type="button" aria-expanded={open} onClick={()=>setOpen(v=>!v)}>{open?'ヒントを閉じる':'ヒント'}</button><em className={"step-hint"+(open?"":" is-hidden")} lang="en">{s.hint}</em></>}{checked&&listen('お手本を聞く')}{museButton}</>;
   note=checked?'違う言い方でも大丈夫。Enterで次へ':'自分の英語で書く';
  } else {
   const q=lesson.questions![i];
@@ -209,7 +210,10 @@ export function usePractice({lesson,display,handFamily,level,nativeLanguage,onWr
       if(review.natural)rows.push(<li key={s.id+':natural'} className="step-row is-advice"><span className="row-advice" lang="en">{review.natural}</span></li>);
       if(review.note)rows.push(<li key={s.id+':note'} className="step-row is-advice is-note"><span className="row-advice">{review.note}</span></li>);
       if(review.verdict==='fine'&&!review.natural&&!review.note)rows.push(<li key={s.id+':fine'} className="step-row is-advice is-note"><span className="row-advice">✓ このままで通じます</span></li>);
-     } else rows.push(modelRow(false));
+     } else {
+      rows.push(modelRow(false));
+      if(reviewNotes[k])rows.push(<li key={s.id+':failed'} className="step-row is-advice is-note"><span className="row-advice">{reviewNotes[k]}<button type="button" className="step-chip step-retry" onClick={()=>void reviewLine(latest.current,k)}>もう一度添削</button></span></li>);
+     }
     }
    }
   });

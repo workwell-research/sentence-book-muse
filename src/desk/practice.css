@@ -82,7 +82,7 @@
 .step-card .model-sample .sample-label{font-size:11px;letter-spacing:.08em;color:var(--step-pen);margin-right:10px}
 .step-card .model-sample [lang=en]{font:400 clamp(17px,1.45vw,22px)/1.4 Lora,Georgia,serif}
 .step-card .model-sample .sample-native{display:block;font-size:12px;color:#697078;margin-top:2px}
-.step-card .step-review-error{font-size:11px;color:#883e2d;display:inline-flex;align-items:center;gap:6px}
+.step-row .step-retry{min-height:0;margin-left:8px;padding:0;border:0;background:none;font:inherit;color:var(--step-pen);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .step-row.is-label{margin-top:var(--rule);font:400 11px/var(--rule) "Notebook Klee",serif;letter-spacing:.08em;color:var(--step-pen)}
 .step-row.is-label>*{top:0}
 .step-input{position:relative;top:4px;display:block;width:100%;height:var(--rule);min-height:0;margin:0;padding:0;border:0;outline:none;resize:none;overflow:hidden;background:transparent;
