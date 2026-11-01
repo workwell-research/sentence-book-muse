@@ -38,6 +38,21 @@ describe('/api/review', () => {
     const body = await (await handleReview(post(review), env, { fetch: m.fetchFn })).json();
     expect(body.result).toEqual({ own: review.own, verdict: 'fine', natural: null, note: null });
   });
+  it('asks the model for every field as a string and turns blanks into null', async () => {
+    const m = model(JSON.stringify({ own: review.own, verdict: 'unclear', natural: 'I decided to take it slow today.', note: '' }));
+    const body = await (await handleReview(post(review), env, { fetch: m.fetchFn })).json();
+    expect(body.result).toEqual({ own: review.own, verdict: 'unclear', natural: 'I decided to take it slow today.', note: null });
+    const sent = m.calls[0] as { max_tokens: number; response_format: { json_schema: { schema: { required: string[]; properties: Record<string, { type?: unknown }> } } } };
+    expect(sent.response_format.json_schema.schema.required).toEqual(['own', 'verdict', 'natural', 'note']);
+    expect(sent.response_format.json_schema.schema.properties.natural).toEqual({ type: 'string', maxLength: 200 });
+    expect(sent.max_tokens).toBe(8000);
+  });
+  it('reports a cut-off review in its own words', async () => {
+    const cut = { fetchFn: (async () => new Response(JSON.stringify({ model: 'muse-spark-1.3', choices: [{ message: { content: '{"own": "x"' }, finish_reason: 'length' }] }), { status: 200, headers: { 'content-type': 'application/json' } })) as typeof fetch };
+    const response = await handleReview(post(review), env, { fetch: cut.fetchFn });
+    expect(response.status).toBe(502);
+    expect(await response.json()).toEqual({ error: { code: 'invalid_output', message: '添削が途中で切れたため、採用しませんでした。もう一度お試しください。', reason: 'truncated' } });
+  });
   it('refuses before calling the model: wrong method, no key, bad verdict, echo mismatch', async () => {
     const m = model(JSON.stringify({ own: 'another line', verdict: 'fine' }));
     expect((await handleReview(new Request('https://example.test/api/review'), env, { fetch: m.fetchFn })).status).toBe(405);
