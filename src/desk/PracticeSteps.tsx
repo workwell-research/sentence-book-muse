@@ -11,12 +11,13 @@ import type {PassId,PracticeRecord} from './practice';
 const wordsIn=(text:string)=>/[a-z0-9]/i.test(text);
 // A ruler lies over what the pass keeps closed. It slides down a line to check and back up to hide again;
 // once the pass itself opens the text, the ruler goes back to the tray. Its material follows the desk theme.
+// It is a whole 15 cm ruler across the card, never cut to the sentence's length (owner, 2026-11-01).
 function Ruled({text,open,label}:{text:string;open:boolean;label:string}) {
  const [slid,setSlid]=useState(false),shown=open||slid;
  return <span className={'ruled'+(shown?' is-open':'')+(open?' is-away':slid?' is-slid':'')}>
   <span className="ruled-text" aria-hidden={!shown}>{text}</span>
   <button type="button" className="ruler" aria-label={slid?'定規で隠す':label} aria-pressed={slid} tabIndex={open?-1:0} onClick={()=>setSlid(v=>!v)}>
-   <span className="ruler-scale" aria-hidden="true">{Array.from({length:24},(_,n)=><i key={n} style={{left:40*(n+1)+'px'}}>{n+1}</i>)}</span>
+   <span className="ruler-scale" aria-hidden="true">{Array.from({length:15},(_,n)=><i key={n} style={{left:(n+1)*6.25+'%'}}>{n+1}</i>)}</span>
   </button>
  </span>;
 }
