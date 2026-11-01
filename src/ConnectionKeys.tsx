@@ -14,7 +14,7 @@ export function connectionInstructions(origin: string) {
 ・私が書いている言語で話してください。
 ・1回に1つの手順だけ、短い文で伝えてください。私が「できた」と言ったら次へ進みます。
 ・API、Bearer、エンドポイント、HTTPなどの専門用語は使わないでください。「キー」「貼り付け欄」「ボタン」のような言葉で伝えてください。
-・私の操作は、接続画面 ${origin}/connect の番号とボタン名で伝えてください。
+・私の操作は、Settings（${origin}/settings）の「Museとつなぐ」の番号とボタン名で伝えてください。
   ① Museと共有することを決める：「内容を確かめる」→「この内容で共有する」（このメッセージを送る前に済ませています）
   ② Museに依頼する：このメッセージです
   ③ 接続キーを作る：「キーを作る」
@@ -50,9 +50,9 @@ export function Done({ children }: { children: ReactNode }) {
 }
 export const shortDate = (iso: string) => new Date(iso).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' });
 
-export function ConnectionKeys({ client, keys, onChange, disabled, connected, shared, share, sharePanel }: {
+export function ConnectionKeys({ client, keys, onChange, disabled, connected, shared, share }: {
   client: SupabaseClient; keys: ConnectionKey[]; onChange: (keys: ConnectionKey[]) => void; disabled: boolean;
-  connected: boolean; shared: boolean; share: ReactNode; sharePanel: ReactNode;
+  connected: boolean; shared: boolean; share: ReactNode;
 }) {
   const [read,setRead] = useState(true), [deliver,setDeliver] = useState(true);
   const [issued,setIssued] = useState<IssuedConnectionKey | null>(null), [visible,setVisible] = useState(false);
@@ -92,7 +92,6 @@ export function ConnectionKeys({ client, keys, onChange, disabled, connected, sh
             <label><input type="checkbox" checked={deliver} onChange={e=>setDeliver(e.target.checked)}/>教材を届ける</label>
           </fieldset>
           {share}
-          {sharePanel}
         </li>
         <li className="connect-step">
           <div className="step-top"><span className="step-number">2</span><StepIcon name="copy"/></div>

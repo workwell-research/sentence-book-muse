@@ -100,7 +100,7 @@ body:has(.connect-page) { background: #f6f6f6; }
 
 .connect-login { max-width: 520px; }
 .connect-login label { margin-top: 14px; font-size: 12px; font-weight: 600; }
-.connect-page main input:not([type=checkbox]) { display: block; width: 100%; min-height: 46px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); padding: 10px 12px; border-radius: 3px; margin-top: 6px; font-size: 16px; font-weight: 400; }
+.connect-page main input:not([type=checkbox]):not([type=radio]):not([type=time]) { display: block; width: 100%; min-height: 46px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); padding: 10px 12px; border-radius: 3px; margin-top: 6px; font-size: 16px; font-weight: 400; }
 .connect-address { overflow-wrap: anywhere; margin-top: 10px; font-weight: 600; }
 .connect-consent fieldset { padding: 16px 0 0; margin: 0; border: 0; }
 .connect-consent legend { font-size: 13px; font-weight: 600; }

@@ -4,7 +4,7 @@ Implementation started 2026-10-30. This document describes the implementation an
 
 ## Learner flow
 
-1. Open `/connect`, sign in with an email confirmation code, and enable your personal inbox. Anyone may connect their own Muse; no invitation code is required.
+1. Open `/settings`, sign in with an email confirmation code, and enable your personal inbox. Delivered pages appear at `/inbox` (old `/connect` links forward there; since 2026-11-01 the app has four destinations: 机 `/`, 本棚 `/shelf`, 受信箱 `/inbox`, 設定 `/settings`). Anyone may connect their own Muse; no invitation code is required.
 2. Preview the learning summary from this browser, then explicitly publish it. Updates are manual. Stopping sharing clears the server snapshot and blocks new deliveries.
 3. Use the connection-key section to copy the public instructions to Muse, choose read/delivery permissions, and issue a 30-day key. Paste it directly into Muse’s secure API-key field, never into chat. The key is displayed once; the server stores only its SHA-256 digest. The OAuth path remains supported for compatible clients, but the current Muse OAuth link fails before our consent page. Actual authenticated Muse key compatibility remains to be checked.
 4. Ask Muse to read the guide and current state, then deliver a draft. A schedule is a separate learner choice; the app does not create one.
@@ -69,7 +69,7 @@ MCP uses the official TypeScript SDK, per-request stateless HTTP, with legacy 20
 4. Put the new project's secret API key in Cloudflare Pages `sentence-book-muse` as encrypted `SUPABASE_SECRET_KEY`. The URL and publishable key are public configuration in wrangler.jsonc. Do not use a VITE secret. Cloud settings require a new deployment to take effect.
 5. Verify a real email sign-in, enrollment without an invitation, summary publication, OAuth authorization/refresh/revoke, MCP tool discovery, valid draft delivery and manual filing. Browser mocks and database tests do not establish production OAuth/Muse compatibility or email delivery.
 
-If authentication cannot be configured, `/connect` reports unavailable, and the existing app remains usable. No fallback admits anonymous inbox access.
+If authentication cannot be configured, `/settings` and `/inbox` report unavailable, and the existing app remains usable. No fallback admits anonymous inbox access.
 
 ## Validation
 

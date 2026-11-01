@@ -84,7 +84,7 @@ export function HandwritingDemo() {
    <a href="#demo-controls" className="ink-skip">操作へ移動</a>
    <header className="ink-header">
     <a href="/" className="wordmark">The Sentence Book<span>Learn digitally. Keep it beautifully.</span></a>
-    <a href="/setup" className="setup-link">関心とメモ</a>
+    <a href="/settings" className="setup-link">設定</a>
    </header>
    <main className="ink-workspace">
     <div className="paper-column">

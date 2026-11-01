@@ -18,6 +18,7 @@ import type {AudioState} from './audio';
 import {caretOffset,revealDelta,writingPaperHeight} from './viewport';
 import {NoteStyle,PrintPanel,TrayHandle,useDismiss} from './DeskControls';
 import {usePractice} from './PracticeSteps';
+import {AppHeader} from '../AppHeader';
 import './practice.css';
 import './desk-tray.css';
 import type {ChangeDisplay} from './DeskControls';
@@ -193,7 +194,7 @@ export function StudyDesk(){
  const inputTop=(position.y-4.65)*unit;
  return <div className={'study-desk theme-'+display.theme+(isEditing?' is-writing':'')} style={{'--paper':paperColor} as CSSProperties}>
   <a className="desk-skip" href="#notebook-input">ノートの入力へ</a>
-  <header className="desk-header"><a href="/" className="desk-wordmark">The Sentence Book</a><span className="desk-tagline">Learn digitally. Keep it beautifully.</span><button className="settings-button" aria-label="机のテーマ" title="机のテーマ" onClick={()=>settings.current?.showModal()}><Icon name="settings"/></button></header>
+  <AppHeader current="desk" wide className="desk-header"><button className="settings-button" aria-label="机のテーマ" title="机のテーマ" onClick={()=>settings.current?.showModal()}><Icon name="settings"/></button></AppHeader>
   <main className="desk-grid">
    <aside className={'desk-tray'+(trayStowed?' is-stowed':'')} id="desk-tray" aria-label="道具のトレイ" ref={tray} onKeyDown={e=>{if(e.key==='Escape'&&!trayStowed&&!e.defaultPrevented){e.stopPropagation();stowTray(true,true);}}}>
     <div className="tray-well" inert={trayStowed}>
@@ -209,9 +210,9 @@ export function StudyDesk(){
     <div className="index-right" id="index-content" role="tabpanel" aria-labelledby={'index-tab-'+tab} tabIndex={0}>
      <h2>{tabs[tab]}</h2>
      {tab===0&&<><button className="lesson-link" onClick={()=>{setPersonalMode(false);editor.current?.focus();}}>{resolved.page?.title??lesson.title}<small>Copy · {record.entries.length} / {total}</small></button>
-      {resolved.page&&resolved.binder?<><p>「{resolved.binder.title}」のページ · {resolved.page.level}</p><p className="index-note">Museがあなたの話から作りました。<br/>このブラウザに進み具合を保存します。</p><a href="/setup#shelf">本棚で別のページを選ぶ</a><br/><a href="/?page=sample">サンプル教材に戻る</a></>
-      :<><p>静かな朝の、小さな習慣。</p><p className="index-note">サンプル教材<br/>このブラウザに進み具合を保存します。</p><a href="/setup#shelf">本棚のページを練習する</a></>}</>}
-     {tab===1&&<>{resolved.page?resolved.page.sceneTags.map(tag=><p key={tag}>{tag}</p>):<><p>Daily Life</p><p>Small Habits</p></>}<a href="/setup">関心と教材メモを編集</a></>}
+      {resolved.page&&resolved.binder?<><p>「{resolved.binder.title}」のページ · {resolved.page.level}</p><p className="index-note">Museがあなたの話から作りました。<br/>このブラウザに進み具合を保存します。</p><a href="/shelf">Folderから別のページを選ぶ</a><br/><a href="/?page=sample">サンプル教材に戻る</a></>
+      :<><p>静かな朝の、小さな習慣。</p><p className="index-note">サンプル教材<br/>このブラウザに進み具合を保存します。</p><a href="/shelf">Folderのページを練習する</a></>}</>}
+     {tab===1&&<>{resolved.page?resolved.page.sceneTags.map(tag=><p key={tag}>{tag}</p>):<><p>Daily Life</p><p>Small Habits</p></>}<a href="/settings">Settings</a></>}
      {(tab===2||tab===3)&&<>{layout.source.vocabulary.map(v=><label className="book-word" key={v.id}><input type="checkbox" checked={!!record.checks[v.id]} onChange={e=>persist({...record,checks:{...record.checks,[v.id]:e.target.checked}})}/><span>{v.english}<small>{v.meaning}</small></span></label>)}<p className="index-note">{layout.source.vocabulary.length?'線を引いた語句はここに残ります。復習した印もつけられます。':'まだ語句がありません。見本の語句をタップして調べると、ここに残ります。'}</p>
       {otherLines.length>0&&<><p className="index-subhead">ほかのページで引いた線 · {otherLines.length}</p>{otherLines.slice(0,12).map(e=><p className="wordbook-entry" key={e.lookedUpAt+e.expression}><span lang="en">{e.expression}</span> {e.native}<small>{e.pageTitle}</small></p>)}</>}</>}
      {tab===4&&<>{record.phase==='complete'?<><p>{lesson.title}</p><p>{total}文を書き終えました。</p><button onClick={startPersonal}>自分のひとことを書く</button></>:<p>{total}文を書き終えると、<br/>ここに一枚のノートが残ります。</p>}

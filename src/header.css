@@ -1,0 +1,26 @@
+/* The one header every page shares: wordmark, then the four destinations. */
+.app-header { height: 52px; width: min(960px, calc(100% - 48px)); margin-inline: auto; display: flex; align-items: center; gap: 16px; }
+.app-header.is-wide { width: auto; max-width: 1552px; margin: auto; }
+.app-wordmark { font: 21px Lora, Georgia, serif; letter-spacing: -.03em; text-decoration: none; color: inherit; white-space: nowrap; }
+.app-tagline { font: italic 11px Lora, serif; color: var(--muted, var(--quiet, #656565)); }
+.app-nav { margin-left: auto; display: flex; gap: 4px; }
+.app-nav a { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 10px; font-size: 13px; text-decoration: none; border-radius: 3px; color: inherit; }
+.app-nav a:hover { background: #737b8614; }
+.app-nav a[aria-current="page"] { font-weight: 600; box-shadow: inset 0 -2px var(--sage, #47627a); border-radius: 3px 3px 0 0; }
+.app-count { display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--sage, #47627a); color: #fff; font-size: 11px; font-weight: 600; line-height: 1; }
+.app-header-extra { display: flex; align-items: center; }
+.app-header-extra .settings-button { margin-left: 0; }
+.page-main { width: min(960px, calc(100% - 48px)); margin-inline: auto; flex: 1; padding: 20px 0 56px; }
+.page-footer { width: min(960px, calc(100% - 48px)); margin-inline: auto; display: flex; justify-content: space-between; gap: 20px; padding: 20px 0 24px; font-size: 10px; color: var(--muted, #656565); border: 0; }
+.page-footer i { font-family: Lora, serif; margin-left: 4px; }
+@media (max-width: 760px) {
+  .app-header, .page-main, .page-footer { width: calc(100% - 32px); }
+  .app-header { gap: 10px; }
+  .app-wordmark { font-size: 19px; }
+  .app-tagline { display: none; }
+  .app-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; margin: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; background: var(--paper, #fff); color: var(--ink, #484848); border-top: 1px solid var(--line, #e4e4e4); padding: 4px 8px calc(4px + env(safe-area-inset-bottom)); }
+  .app-nav a { justify-content: center; font-size: 12px; padding: 8px 4px; }
+  .app-nav a[aria-current="page"] { box-shadow: inset 0 2px var(--sage, #47627a); border-radius: 0 0 3px 3px; }
+  body { padding-bottom: 64px; }
+  .page-footer { flex-direction: column; gap: 2px; }
+}
