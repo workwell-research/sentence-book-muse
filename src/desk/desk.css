@@ -115,9 +115,12 @@
 .voice-preview{display:flex;align-items:center;gap:7px}
 
 /* Looking up: the learner taps words already written on the paper; the line is theirs. */
-.word-hit{position:absolute;display:block;margin:0;padding:0;border:0;border-radius:2px;background:transparent;cursor:pointer;z-index:2}
-.word-hit:hover{background:rgba(70,90,110,.08)}
-.word-hit.is-picked{background:rgba(70,90,110,.16)}
+/* .study-desk .word-hit — the shared 44px button minimum (.study-desk button) stretched every hit box 18px below its 5.2mm line, which is what made the selection look so thick. */
+.study-desk .word-hit{position:absolute;display:block;min-height:0;margin:0;padding:0;border:0;border-radius:2px;background:transparent;cursor:pointer;z-index:2}
+/* A tapped word shows the marker band it will get (baseline - 1.6 mm to + 0.7 mm of the 5.2 mm hit box), not a block over the whole line. */
+.word-hit:hover{background:linear-gradient(transparent 48%,color-mix(in srgb,var(--marker-ink,#9fb5c6) 40%,transparent) 48% 92%,transparent 92%)}
+.word-hit.is-picked{background:linear-gradient(transparent 48%,color-mix(in srgb,var(--marker-ink,#9fb5c6) 85%,transparent) 48% 92%,transparent 92%)}
+.lookup-meaning{color:#3b4a56}
 .word-hit:focus-visible{outline:2px solid #8aa0ae;outline-offset:1px}
 .writing-controls .lookup-bar{margin:0;min-height:26px}
 .lookup-list{list-style:none;margin:0 0 6px;padding:0;font-size:12px;display:grid;gap:3px}

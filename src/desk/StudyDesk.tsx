@@ -5,6 +5,8 @@ import {englishFonts} from '../handwriting/fonts';
 import {supported} from '../handwriting/model';
 import {resolveDeskLesson} from '../lib/study-page';
 import {addLookup,expressionOf,readWordbook,requestLookup,saveWordbookEntry,tokenize} from '../lib/lookup';
+import type {LookupOutcome} from '../lib/lookup';
+type LookupResult=Extract<LookupOutcome,{kind:'ready'}>['result'];
 import {displayKey,displaySchema,practiceSchema,defaultDisplay,emptyCopy,validCopy,readSaved,saveRecord,submitCopy,nextCopy,markerIds,themes,idleTimer,timerAt,toggleTimer} from './core';
 import type {CopyRecord,DeskDisplay,DeskTheme} from './core';
 import {deskLayout,confirmedLayout,inputPosition,practiceScene,wordHits} from './note';
@@ -95,6 +97,26 @@ export function StudyDesk(){
  const pickedTokens=useMemo(()=>pickedSentence?tokenize(pickedSentence.text):[],[pickedSentence]);
  const picked=pick&&pickedSentence&&pickedTokens[pick.from]&&pickedTokens[pick.to]?{start:pickedTokens[pick.from].start,end:pickedTokens[pick.to].end}:null;
  const pickedText=picked&&pickedSentence?expressionOf(pickedSentence.text,picked.start,picked.end):'';
+ // The meaning shows as soon as a selection settles (450 ms after the last tap); drawing the line stays the learner's act.
+ const pickKey=picked&&pickedSentence?pickedSentence.id+':'+picked.start+':'+picked.end:'';
+ const pickRef=useRef('');pickRef.current=pickKey;
+ const previewTimer=useRef(0);
+ const [preview,setPreview]=useState<{key:string;result:LookupResult}|null>(null);
+ const shown=preview&&preview.key===pickKey?preview.result:null;
+ useEffect(()=>{
+  if(!pickKey||!pickedSentence||!pickedText||(preview&&preview.key===pickKey))return;
+  const key=pickKey,sentence=pickedSentence.text,expression=pickedText;
+  previewTimer.current=window.setTimeout(()=>{
+   setLookingUp(true);setLookupNote('');
+   void requestLookup(fetch,{expression,sentence,level:resolved.page?.level??'A2',native_language:resolved.page?.native_language??'ja'}).then(outcome=>{
+    if(pickRef.current!==key)return;
+    setLookingUp(false);
+    if(outcome.kind==='failed')setLookupNote(outcome.message);else setPreview({key,result:outcome.result});
+   });
+  },450);
+  return()=>{window.clearTimeout(previewTimer.current);setLookingUp(false);};
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+ },[pickKey]);
  const pageId=resolved.page?.id??null;
  const otherLines=wordbook.kind==='ready'?wordbook.entries.filter(e=>e.pageId!==pageId):[];
  const layout=useMemo(()=>deskLayout(lesson,record,display,personalMode),[lesson,record.personal,record.checks,record.lookups,display.english,display.japanese,display.binding,display.side,personalMode]);
@@ -176,16 +198,21 @@ export function StudyDesk(){
  function pickWord(hit:WordHit){setLookupNote('');setPick(p=>!p||p.sentenceId!==hit.sentenceId?{sentenceId:hit.sentenceId,from:hit.token,to:hit.token}:hit.token>=p.from&&hit.token<=p.to?null:hit.token>p.to?{...p,to:hit.token}:{...p,from:hit.token});}
  async function lookUp(){
   if(!picked||!pickedSentence||lookingUp)return;
-  setLookingUp(true);setLookupNote('');
-  const outcome=await requestLookup(fetch,{expression:pickedText,sentence:pickedSentence.text,level:resolved.page?.level??'A2',native_language:resolved.page?.native_language??'ja'});
-  if(outcome.kind==='failed'){setLookupNote(outcome.message);setLookingUp(false);return;}
-  const entry={sentenceId:pickedSentence.id,start:picked.start,end:picked.end,expression:pickedText,native:outcome.result.native,note:outcome.result.note,lookedUpAt:new Date().toISOString()};
+  let result=shown;
+  if(!result){
+   window.clearTimeout(previewTimer.current); // an explicit lookup replaces the pending preview: one request, not two
+   setLookingUp(true);setLookupNote('');
+   const outcome=await requestLookup(fetch,{expression:pickedText,sentence:pickedSentence.text,level:resolved.page?.level??'A2',native_language:resolved.page?.native_language??'ja'});
+   if(outcome.kind==='failed'){setLookupNote(outcome.message);setLookingUp(false);return;}
+   result=outcome.result;
+  }
+  const entry={sentenceId:pickedSentence.id,start:picked.start,end:picked.end,expression:pickedText,native:result.native,note:result.note,lookedUpAt:new Date().toISOString()};
   let next:CopyRecord;
   try{next=addLookup(record,entry);}catch(e){setLookupNote((e as Error).message);setLookingUp(false);return;}
   if(!persist(next,true)){setLookingUp(false);return;}
   // The page record already holds the line; the shared word list is kept when it is readable.
   try{setWordbook({kind:'ready',entries:saveWordbookEntry(localStorage,{...entry,pageId,pageTitle:resolved.page?.title??lesson.title,sentence:pickedSentence.text})});}catch{/* unreadable word list stays untouched */}
-  setPick(null);setLookingUp(false);
+  setPick(null);setPreview(null);setLookingUp(false);
   // The sentence is already written, so the line and its memo are drawn right away.
   setAnimateId(pickedSentence.id);setAnnotationsOnly(true);setTime(0);setPlaying(true);
  }
@@ -241,9 +268,9 @@ export function StudyDesk(){
    </section>
    {practice.card}
    </div>
-   <section className="notebook-area" aria-label="A5学習ノート" data-in-step={practice.step>0||undefined}><div className="writing-controls" ref={writingControls}><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><div className="notebook-tools"><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button>{record.phase==='complete'&&!personalMode&&<button onClick={startPersonal}>ひとことを書く</button>}</div></div><p id="writing-error" role="alert" className="writing-feedback">{error}</p><div className="lookup-bar">{picked?<><span>「<span lang="en">{pickedText}</span>」</span><button type="button" className="lookup-button" onClick={lookUp} disabled={lookingUp} aria-busy={lookingUp}>{lookingUp?'調べています…':'調べて線を引く'}</button><button type="button" className="lookup-cancel" onClick={()=>setPick(null)} disabled={lookingUp}>やめる</button></>:<span className="lookup-hint">書き終えた行の語句をタップすると、調べて線を引けます。</span>}<span role="status" className="lookup-status">{lookupNote}</span></div></div>
+   <section className="notebook-area" aria-label="A5学習ノート" data-in-step={practice.step>0||undefined}><div className="writing-controls" ref={writingControls}><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><div className="notebook-tools"><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button>{record.phase==='complete'&&!personalMode&&<button onClick={startPersonal}>ひとことを書く</button>}</div></div><p id="writing-error" role="alert" className="writing-feedback">{error}</p><div className="lookup-bar">{picked?<><span>「<span lang="en">{pickedText}</span>」{shown&&<span className="lookup-meaning"> — {shown.native}</span>}</span><button type="button" className="lookup-button" onClick={lookUp} disabled={lookingUp} aria-busy={lookingUp}>{lookingUp?'調べています…':shown?'線を引く':'調べて線を引く'}</button><button type="button" className="lookup-cancel" onClick={()=>setPick(null)} disabled={lookingUp}>やめる</button></>:<span className="lookup-hint">書き終えた行の語句をタップすると意味が出ます。線を引くと、ページに残ります。</span>}<span role="status" className="lookup-status">{lookupNote}</span></div></div>
     <div className={'desk-paper-scroll '+(zoom==='read'?'reading':'')} ref={paperViewport} style={isEditing?{height:paperHeight}:undefined} tabIndex={0} aria-label="ノート。入力行に合わせてスクロールします。拡大表示は左右にもスクロールできます">
-     <div className="desk-pages">{layout.pages.map(p=><div className="desk-page-row" key={p.index}><div className="desk-paper" ref={p.index===0?paper:undefined}>
+     <div className="desk-pages" style={{'--marker-ink':palettes[display.marker].marker} as CSSProperties}>{layout.pages.map(p=><div className="desk-page-row" key={p.index}><div className="desk-paper" ref={p.index===0?paper:undefined}>
       <A5Notebook showPen={!annotationsOnly||!isEditing} layout={rendered} scene={scene} pageIndex={p.index} paperColor={paperColor} view={view} ink={palettes[display.marker]} time={reduced?scene.duration:time} reduced={reduced} personalInk={emptyInk}/>
       {hits.filter(h=>h.page===p.index).map(h=>{const lined=record.lookups.find(l=>l.sentenceId===h.sentenceId&&h.start>=l.start&&h.end<=l.end);const on=!!pick&&pick.sentenceId===h.sentenceId&&h.token>=pick.from&&h.token<=pick.to;return <button type="button" key={h.sentenceId+':'+h.token+':'+h.x} className={'word-hit'+(on?' is-picked':'')} style={{left:h.x*unit,top:h.y*unit,width:h.width*unit,height:h.height*unit}} aria-label={lined?'「'+h.text+'」— '+lined.native:'「'+h.text+'」を選ぶ'} aria-pressed={on} title={lined?.native} onClick={()=>pickWord(h)}/>;})}
       {p.index===position.page&&isEditing&&<textarea ref={editor} id="notebook-input" className={'notebook-input'+(liveInk?' live-ink-input':'')} aria-label={personalMode?'ノートに自分のひとことを書く':'ノートに英文を書き写す'} aria-describedby="writing-help writing-error" aria-invalid={!!error} enterKeyHint={personalMode||record.index===total-1?'done':'next'} spellCheck={false} autoCapitalize="off" autoCorrect="off" wrap="soft" disabled={!fontReady} value={draft} rows={1}
