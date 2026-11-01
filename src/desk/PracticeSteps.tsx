@@ -7,13 +7,17 @@ import type {DeskDisplay} from './core';
 import {advance,itemCount,passIds,missedWords,passOf,phaseOf,positionOf,practiceSteps,readPractice,restartPass,reviewRequest,savePractice,talkRequest,writes} from './practice';
 import type {PassId,PracticeRecord} from './practice';
 
-// The four passes after Copy. The card shows or tapes over what each pass needs; a fresh loose leaf lies over the notebook.
+// The four passes after Copy. The card shows what each pass needs or lays a ruler over it; a fresh loose leaf lies over the notebook.
 const wordsIn=(text:string)=>/[a-z0-9]/i.test(text);
-function Taped({text,open,label}:{text:string;open:boolean;label:string}) {
- const [peeled,setPeeled]=useState(false),shown=open||peeled;
- return <span className={'taped'+(shown?' is-open':'')}>
-  <span className="taped-text" aria-hidden={!shown}>{text}</span>
-  <button type="button" className="tape" aria-label={label} tabIndex={shown?-1:0} onClick={()=>setPeeled(true)}/>
+// A ruler lies over what the pass keeps closed. It slides down a line to check and back up to hide again;
+// once the pass itself opens the text, the ruler goes back to the tray. Its material follows the desk theme.
+function Ruled({text,open,label}:{text:string;open:boolean;label:string}) {
+ const [slid,setSlid]=useState(false),shown=open||slid;
+ return <span className={'ruled'+(shown?' is-open':'')+(open?' is-away':slid?' is-slid':'')}>
+  <span className="ruled-text" aria-hidden={!shown}>{text}</span>
+  <button type="button" className="ruler" aria-label={slid?'定規で隠す':label} aria-pressed={slid} tabIndex={open?-1:0} onClick={()=>setSlid(v=>!v)}>
+   <span className="ruler-scale" aria-hidden="true">{Array.from({length:24},(_,n)=><i key={n} style={{left:40*(n+1)+'px'}}>{n+1}</i>)}</span>
+  </button>
  </span>;
 }
 function Marked({model,typed}:{model:string;typed:string}) {
@@ -138,17 +142,17 @@ export function usePractice({lesson,display,handFamily,onWriting,onLeaveCopy,onR
   note='声に出したら Enter';
  } else if(pass==='dictation') {
   const s=lesson.sentences[i],checked=phase==='check';
-  body=<><p className="model-sentence" lang="en"><Taped key={step+':'+i+':'+phase} text={s.text} open={checked} label="英文を見る"/></p><p className={'model-meaning'+(checked?'':' is-hidden')} aria-hidden={!checked}>{s.meaning}</p></>;
+  body=<><p className="model-sentence" lang="en"><Ruled key={step+':'+i+':'+phase} text={s.text} open={checked} label="英文を見る"/></p><p className={'model-meaning'+(checked?'':' is-hidden')} aria-hidden={!checked}>{s.meaning}</p></>;
   actions=<>{listen('もう一度聞く')}{slowChip}</>;
   note=checked?'Enterで次の文へ':'聞こえたとおりに書く';
  } else if(pass==='reconstruction') {
   const s=lesson.sentences[i],checked=phase==='check';
-  body=<><p className="model-cue">{s.meaning}</p><p className="model-sentence is-small" lang="en"><Taped key={step+':'+i+':'+phase} text={s.text} open={checked} label="お手本を見る"/></p></>;
+  body=<><p className="model-cue">{s.meaning}</p><p className="model-sentence is-small" lang="en"><Ruled key={step+':'+i+':'+phase} text={s.text} open={checked} label="お手本を見る"/></p></>;
   actions=<>{s.hint&&<><button type="button" aria-expanded={open} onClick={()=>setOpen(v=>!v)}>{open?'ヒントを閉じる':'ヒント'}</button><em className={"step-hint"+(open?"":" is-hidden")} lang="en">{s.hint}</em></>}{checked&&listen('お手本を聞く')}{museButton}</>;
   note=checked?'違う言い方でも大丈夫。Enterで次へ':'自分の英語で書く';
  } else {
   const q=lesson.questions![i];
-  body=<><p className="model-sentence is-small" lang="en"><Taped key={step+':'+i} text={q.en} open={false} label="質問の文字を見る"/></p><p className={'model-meaning'+(open?'':' is-hidden')} aria-hidden={!open}>{q.native}</p></>;
+  body=<><p className="model-sentence is-small" lang="en"><Ruled key={step+':'+i} text={q.en} open={false} label="質問の文字を見る"/></p><p className={'model-meaning'+(open?'':' is-hidden')} aria-hidden={!open}>{q.native}</p></>;
   actions=<>{listen('質問を聞く')}<button type="button" aria-expanded={open} onClick={()=>setOpen(v=>!v)}>{open?'訳を閉じる':'訳を見る'}</button>{museButton}</>;
   note='答えたら Enter';
  }

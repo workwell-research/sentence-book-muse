@@ -1,5 +1,5 @@
 /* Shadowing, Dictation, Reconstruction and Speaking, ported from the owner-approved 10/29 prototype
-   (Typing repo docs/assets/desk-tray-2026-10-28/desk-steps.css). The card tapes over what a pass keeps closed;
+   (Typing repo docs/assets/desk-tray-2026-10-28/desk-steps.css). The card lays a ruler over what a pass keeps closed;
    a fresh loose leaf lies where the notebook was. */
 .lesson-steps button{cursor:pointer}
 .lesson-steps button[aria-selected=false]:hover{color:#363636}
@@ -24,21 +24,24 @@
 .step-card .step-hint.is-hidden{display:none}
 .step-card .step-note{margin-left:auto;font-size:11px;color:#697078;white-space:nowrap}
 
-/* Masking tape over what this pass keeps closed; it peels away to check */
-.taped{position:relative;display:inline-block;max-width:100%}
-.taped-text{visibility:hidden}
-.taped.is-open .taped-text{visibility:visible}
-.step-card .tape{position:absolute;inset:-3px -10px -2px -8px;min-height:0;padding:0;border:0;border-radius:0;cursor:pointer;rotate:-.6deg;
- background:repeating-linear-gradient(100deg,#ffffff1f 0 2px,transparent 2px 7px),color-mix(in srgb,var(--step-marker),var(--step-pen) 22%)!important;
- box-shadow:0 1px 1.5px #00000014;opacity:.97;
- -webkit-mask:var(--tape-edge);mask:var(--tape-edge);
- --tape-edge:linear-gradient(#000,#000) 6px 0/calc(100% - 12px) 100% no-repeat,
-  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 8' preserveAspectRatio='none'%3E%3Cpath d='M6 0H1L3 1 0 2 2 3 0 4 3 5 1 6 2 7 0 8H6Z'/%3E%3C/svg%3E") 0 0/6px 8px repeat-y,
-  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 8' preserveAspectRatio='none'%3E%3Cpath d='M0 0H5L3 1 6 2 4 3 6 4 3 5 5 6 4 7 6 8H0Z'/%3E%3C/svg%3E") 100% 0/6px 8px repeat-y;
- transition:translate .45s cubic-bezier(.3,.7,.3,1),rotate .45s,opacity .35s .1s}
-.step-card .tape:hover{translate:0 -1px}
-.step-card .taped.is-open .tape{pointer-events:none;translate:16px -18px;rotate:-7deg;opacity:0}
-@media (prefers-reduced-motion:reduce){.step-card .tape{transition:none}}
+/* A ruler over what this pass keeps closed. Click: it slides down one line (the text shows, the ruler
+   now underlines it); click again: back up. When the pass opens the text itself, the ruler leaves.
+   Material tokens (--ruler-*) live with the tray materials in desk-tray.css: aluminium, aluminium with
+   a wood strip, antique brass. */
+.ruled{position:relative;display:inline-block;max-width:100%}
+.ruled-text{visibility:hidden}
+.ruled.is-open .ruled-text{visibility:visible}
+.step-card .ruler{position:absolute;inset:-5px -30px -3px -16px;min-height:0;padding:0;border:0;border-radius:1.5px;cursor:pointer;overflow:hidden;
+ background:var(--ruler-face)!important;box-shadow:var(--ruler-shadow);
+ transition:translate .45s cubic-bezier(.3,.7,.3,1),opacity .3s}
+.step-card .ruler-scale{position:absolute;left:0;right:0;top:0;bottom:0;
+ background:repeating-linear-gradient(90deg,var(--ruler-tick) 0 1px,transparent 1px 8px) 15px 0/calc(100% - 15px) 5px no-repeat,
+  repeating-linear-gradient(90deg,var(--ruler-tick) 0 1px,transparent 1px 40px) 15px 0/calc(100% - 15px) 9px no-repeat}
+.step-card .ruler-scale i{position:absolute;top:8px;margin-left:-5px;width:10px;text-align:center;font:400 7px/1 Lora,Georgia,serif;font-style:normal;letter-spacing:0;color:var(--ruler-ink)}
+.step-card .ruler:hover{translate:0 -1px}
+.step-card .ruled.is-slid .ruler{translate:0 calc(100% + 6px)}
+.step-card .ruled.is-away .ruler{pointer-events:none;translate:0 calc(100% + 18px);opacity:0}
+@media (prefers-reduced-motion:reduce){.step-card .ruler{transition:none}}
 
 .step-paper{--rule:34px;flex:1;min-height:0;overflow:auto;scrollbar-width:none;border-radius:2px 2px 0 0;outline:none;
  background:var(--paper-tone,#fcfbf8);box-shadow:0 2px 3px #00000014,0 7px 14px #0000000f}
