@@ -1,7 +1,8 @@
-@font-face{font-family:'Sentence Notebook Readability Input';src:url('/fonts/NotebookInput-readability.woff2') format('woff2');font-display:block;ascent-override:100%;descent-override:0%;line-gap-override:0%}
-@font-face{font-family:'Sentence Notebook Tech Input';src:url('/fonts/NotebookInput-tech.woff2') format('woff2');font-display:block;ascent-override:100%;descent-override:0%;line-gap-override:0%}
-@font-face{font-family:'Sentence Notebook Print Input';src:url('/fonts/NotebookInput-print.woff2') format('woff2');font-display:block;ascent-override:100%;descent-override:0%;line-gap-override:0%}
-@font-face{font-family:'Sentence Notebook Pen Input';src:url('/fonts/NotebookInput-pen.woff2') format('woff2');font-display:block;ascent-override:100%;descent-override:0%;line-gap-override:0%}
+/* ?v= on the Input fonts: the files were rebuilt on 2026-11-01 (merged contours); the version makes every browser fetch the new ones instead of a cached copy. Bump it whenever they are rebuilt. */
+@font-face{font-family:'Sentence Notebook Readability Input';src:url('/fonts/NotebookInput-readability.woff2?v=2026-11-01') format('woff2');font-display:block;ascent-override:100%;descent-override:0%;line-gap-override:0%}
+@font-face{font-family:'Sentence Notebook Tech Input';src:url('/fonts/NotebookInput-tech.woff2?v=2026-11-01') format('woff2');font-display:block;ascent-override:100%;descent-override:0%;line-gap-override:0%}
+@font-face{font-family:'Sentence Notebook Print Input';src:url('/fonts/NotebookInput-print.woff2?v=2026-11-01') format('woff2');font-display:block;ascent-override:100%;descent-override:0%;line-gap-override:0%}
+@font-face{font-family:'Sentence Notebook Pen Input';src:url('/fonts/NotebookInput-pen.woff2?v=2026-11-01') format('woff2');font-display:block;ascent-override:100%;descent-override:0%;line-gap-override:0%}
 .study-desk{--desk-ink:#484848;--control-bg:#f7f7f7;--quiet:#656565;--focus:#555;--contact-shadow:rgba(24,20,18,.20);--soft-shadow:rgba(24,20,18,.12);min-height:100vh;color:var(--desk-ink);background:#f6f6f6;font-size:13px;line-height:1.6;padding:0 24px 12px;isolation:isolate}
 .theme-natural{background:#dfc49b url('/desk/desk-oak.png') center top/cover scroll;--desk-ink:#514638;--quiet:#655a4b;--control-bg:#faf8f5;--focus:#745128}
 .theme-walnut{background:#4f3424 url('/desk/desk-walnut.png') center top/cover scroll;--desk-ink:#f2e7d5;--quiet:#e5d4ba;--control-bg:#312c25;--focus:#f4d5a1;--contact-shadow:rgba(12,8,5,.42);--soft-shadow:rgba(12,8,5,.26)}
