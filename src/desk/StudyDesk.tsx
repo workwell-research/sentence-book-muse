@@ -100,12 +100,13 @@ export function StudyDesk(){
  // The meaning shows as soon as a selection settles (450 ms after the last tap); drawing the line stays the learner's act.
  const pickKey=picked&&pickedSentence?pickedSentence.id+':'+picked.start+':'+picked.end:'';
  const pickRef=useRef('');pickRef.current=pickKey;
+ const previewTimer=useRef(0);
  const [preview,setPreview]=useState<{key:string;result:LookupResult}|null>(null);
  const shown=preview&&preview.key===pickKey?preview.result:null;
  useEffect(()=>{
   if(!pickKey||!pickedSentence||!pickedText||(preview&&preview.key===pickKey))return;
   const key=pickKey,sentence=pickedSentence.text,expression=pickedText;
-  const timer=window.setTimeout(()=>{
+  previewTimer.current=window.setTimeout(()=>{
    setLookingUp(true);setLookupNote('');
    void requestLookup(fetch,{expression,sentence,level:resolved.page?.level??'A2',native_language:resolved.page?.native_language??'ja'}).then(outcome=>{
     if(pickRef.current!==key)return;
@@ -113,7 +114,7 @@ export function StudyDesk(){
     if(outcome.kind==='failed')setLookupNote(outcome.message);else setPreview({key,result:outcome.result});
    });
   },450);
-  return()=>{window.clearTimeout(timer);setLookingUp(false);};
+  return()=>{window.clearTimeout(previewTimer.current);setLookingUp(false);};
   // eslint-disable-next-line react-hooks/exhaustive-deps
  },[pickKey]);
  const pageId=resolved.page?.id??null;
@@ -199,6 +200,7 @@ export function StudyDesk(){
   if(!picked||!pickedSentence||lookingUp)return;
   let result=shown;
   if(!result){
+   window.clearTimeout(previewTimer.current); // an explicit lookup replaces the pending preview: one request, not two
    setLookingUp(true);setLookupNote('');
    const outcome=await requestLookup(fetch,{expression:pickedText,sentence:pickedSentence.text,level:resolved.page?.level??'A2',native_language:resolved.page?.native_language??'ja'});
    if(outcome.kind==='failed'){setLookupNote(outcome.message);setLookingUp(false);return;}
