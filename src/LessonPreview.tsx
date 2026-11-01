@@ -91,7 +91,7 @@ export function LessonPreview({ draft, model, binders, kept, inbox = false, stat
       {status.state === 'filed' ? <>
         <p className="preview-filed" role="status">{status.createdBinder ? `新しい本「${status.binderTitle}」を作って、このページを仕舞いました。` : `「${status.binderTitle}」にこのページを仕舞いました。`}</p>
         {inbox && <p className="preview-note">このブラウザの本棚に仕舞いました。連絡が済むと、ほかの端末の受信箱からも消えます。</p>}
-        <div className="filing-actions"><a className="save-button" href={`/?page=${status.pageId}`}>このページを机で練習する</a><button type="button" className="text-button" onClick={onClose}>閉じる</button></div>
+        <div className="filing-actions"><a className="save-button" href={`/?page=${status.pageId}`}>このページをDeskで練習する</a><button type="button" className="text-button" onClick={onClose}>閉じる</button></div>
       </> : <>
         <div className="filing-form">
           <label htmlFor={ids.destination}>仕舞う先</label>

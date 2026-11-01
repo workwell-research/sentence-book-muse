@@ -38,7 +38,7 @@
   .intro p { padding-bottom: 10px; font-size: 13px; color: var(--muted); line-height: 2.1; }
   .workspace { display: grid; grid-template-columns: 1.15fr 1fr; gap: 62px; align-items: start; padding-bottom: 60px; }
   .section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 7px 0 25px; }
-  .section-heading h2 { font-size: 16px; font-weight: 600; }
+  .section-heading h1, .section-heading h2 { font-size: 16px; font-weight: 600; }
   .section-heading > span { color: var(--muted); font-size: 12px; }
   .empty-shelf { min-height: 300px; padding: 46px 20px 50px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
   .empty-shelf-rule { display: block; width: 34px; height: 1px; background: var(--sage); margin-bottom: 23px; }
@@ -200,7 +200,13 @@
 }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .workspace { padding-top: 28px; }
-.section-heading h2 { font-size: 18px; font-weight: 500; }
+.section-heading h1, .section-heading h2 { font-size: 18px; font-weight: 500; }
+.empty-shelf a { color: var(--ink); }
+.connect-inbox h2 { font-family: Lora, -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', sans-serif; font-size: 17px; font-weight: 400; margin: 0; }
+.paste-import > summary { font-size: 16px; color: var(--ink); }
+.paste-import .connect-paper { margin-top: 12px; }
+.block-head h1 { font-size: 22px; font-weight: 500; line-height: 1.4; font-family: Lora, Georgia, serif; }
+.section-heading h1 { font-family: Lora, Georgia, serif; font-size: 22px; }
 /* handwriting.css (loaded with the desk) also sets these on :root, unlayered; this wins on /setup and /connect. */
 html:root { --paper: #fff; --desk: #f6f6f6; --ink: #484848; --muted: #656565; --sage: #47627a; --line: #e4e4e4; color: #484848; background: #f6f6f6; }
 html:root ::selection { color: #303b45; background: #d6e5ef; }

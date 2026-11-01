@@ -4,6 +4,8 @@ A new implementation for the 2026 Meta Global AI Developer Hackathon. Turn somet
 
 ## Current status
 
+**Screens (2026-11-01):** four destinations with one shared header — 机 `/` (practice), 本棚 `/shelf` (approved books), 受信箱 `/inbox` (pages delivered by Muse or pasted in, each filed from there), 設定 `/settings` (Muse connection and lesson settings). `/setup` and `/connect` forward to the new addresses; `/oauth/consent` is unchanged. Stage 1 of [docs/screen-map-2026-11-01.md](docs/screen-map-2026-11-01.md); the desk tray and copy pass are still to come. Older paragraphs below that mention `/setup` or `/connect` describe the previous layout.
+
 This repository includes a **working local study desk and A5 notebook** at `/`, based on the owner's [Work desktop handoff](docs/desktop-study-desk.md). AI generation is connected locally: `/setup` sends a validated request to `/api/generate`, which calls Meta Model API (`muse-spark-1.3`) with structured output and returns a validated page for preview. The previous standalone typography prototype is retained at `/handwriting`.
 
 - Pure White, Natural and Walnut desks; six selectable horizontal pens, a live index book and optional timer. Material PNGs are separate from live text and native controls.
