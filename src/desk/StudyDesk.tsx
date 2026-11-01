@@ -204,7 +204,9 @@ export function StudyDesk(){
   if(!result){
    window.clearTimeout(previewTimer.current); // an explicit lookup replaces the pending preview: one request, not two
    setLookingUp(true);setLookupNote('');
+   const key=pickKey;
    const outcome=await requestLookup(fetch,{expression:pickedText,sentence:pickedSentence.text,level:resolved.page?.level??'A2',native_language:resolved.page?.native_language??'ja'});
+   if(pickRef.current!==key){setLookingUp(false);return;} // the selection moved or a line was erased meanwhile: this answer would write over a record that no longer exists
    if(outcome.kind==='failed'){setLookupNote(outcome.message);setLookingUp(false);return;}
    result=outcome.result;
   }
