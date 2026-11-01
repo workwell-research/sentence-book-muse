@@ -2,7 +2,8 @@
 
 The owner requested a new implementation rather than extending the prior prototype. The new repository name is `sentence-book-muse`.
 
-- Owner clarification: start with interest selection and an empty shelf. Do not fix the number or names of binder themes.
+- Superseded 2026-11-01 (owner): interest selection was removed from /setup in favour of lesson settings for Muse (material: conversation only or also social posts; level; explanation language; delivery days and time). Muse learns interests in conversation; summaries now share `interests: []`.
+- Owner clarification (2026-10-27): start with interest selection and an empty shelf. Do not fix the number or names of binder themes.
 - Interest suggestions and custom choices guide Muse’s practical content; they do not create binders. Learners may skip, edit or clear them. A specific daily topic takes priority over a forced match. SNS-style text is optional learner-supplied material; no account collection.
 - Propose a new binder when no existing one fits, including the first page; create it only with explicit confirmation. Work themes follow the same rule.
 - Build minimal Copy practice first. Detailed typewriter mechanics are optional.

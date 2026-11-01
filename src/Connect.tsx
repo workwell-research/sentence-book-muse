@@ -7,6 +7,7 @@ import type { FilingStatus } from './LessonPreview';
 import { fileDraft, readLibrary } from './lib/library';
 import type { FilingDecision } from './lib/library';
 import { buildLearningSummary } from './lib/learning-summary';
+import { scheduleText } from './lib/composer';
 import { accountRequest, connectionError, museClient } from './lib/muse-client';
 import type { Account } from './lib/muse-client';
 import './styles.css';
@@ -183,7 +184,7 @@ function AccountView({client,session}:{client:SupabaseClient;session:Session}) {
           },'connection')}>解除する<span className="visually-hidden">：{connection.client_name}</span></button></li>)}</ul>
           {feedbackScope==='connection' && <Feedback error={error} message={message}/>}
         </section> : null}
-        <p className="connect-fallback">つながらないときは <a href="/setup#compose">コピーと貼り付けで受け取る</a></p>
+        <p className="connect-fallback">つながらないときは <a href="/setup#own-muse">コピーと貼り付けで受け取る</a></p>
       </>}
   </>;
 }
@@ -194,7 +195,9 @@ function Feedback({error,message}:{error:string;message:string}) {
 
 function Summary({summary}:{summary:LearningSummary}) {
   return <dl className="connect-facts"><div><dt>レベル・訳の言語</dt><dd>{summary.level} · {summary.native_language}</dd></div>
-    <div><dt>関心</dt><dd>{summary.interests.join('、') || '未設定'}</dd></div>
+    <div><dt>何から作るか</dt><dd>{summary.lesson_source === 'conversation_and_social' ? '会話とSNS' : '会話だけ'}</dd></div>
+    {summary.delivery && <div><dt>届けるペース</dt><dd>{scheduleText(summary.delivery)}</dd></div>}
+    {summary.interests.length > 0 && <div><dt>関心</dt><dd>{summary.interests.join('、')}</dd></div>}
     <div><dt>本の一覧</dt><dd>{summary.binders.length ? <ul>{summary.binders.map(book=><li key={book.id}>{book.title} — {book.description}</li>)}</ul> : 'まだありません'}</dd></div>
     <div><dt>このブラウザの練習量</dt><dd>未仕分け {summary.local_pending_count}ページ ／ 未着手 {summary.unpractised_count}ページ ／ 直近7日のCopy完了 {summary.completed_last_7_days}ページ</dd></div>
     <div><dt>復習する語句</dt><dd>{summary.review_candidates.map(word=>`${word.expression}（${word.native}）`).join('、')||'まだありません'}</dd></div>

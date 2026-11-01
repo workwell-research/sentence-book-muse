@@ -128,7 +128,12 @@ describe('explicit minimal summary',()=>{
   it('includes reviewed preferences but excludes topic, raw sentence and personal notes',()=>{
     const values={ [COMPOSER_KEY]:JSON.stringify({schemaVersion:1,topic:'PRIVATE TOPIC',level:'B1',nativeLanguage:'ja'}),[INTERESTS_KEY]:JSON.stringify({schemaVersion:1,interests:['Travel']}),[WORDBOOK_KEY]:JSON.stringify({version:1,entries:[{pageId:null,pageTitle:'PRIVATE TITLE',sentenceId:'s1',start:0,end:4,sentence:'PRIVATE SENTENCE',expression:'test',native:'試す',note:'PRIVATE NOTE',lookedUpAt:new Date().toISOString()}]}) };
     const storage=memory(values);const result=buildLearningSummary(storage);
-    expect(JSON.stringify(result)).not.toContain('PRIVATE');expect(result.interests).toEqual(['Travel']);expect(result.review_candidates).toEqual([{expression:'test',native:'試す'}]);expect(storage.setItem).not.toHaveBeenCalled();
+    expect(JSON.stringify(result)).not.toContain('PRIVATE');expect(result.interests).toEqual([]);expect(result.lesson_source).toBe('conversation');expect(result.delivery).toEqual({days:['mon','tue','wed','thu','fri','sat','sun'],time:'07:00'});expect(result.review_candidates).toEqual([{expression:'test',native:'試す'}]);expect(storage.setItem).not.toHaveBeenCalled();
+  });
+  it('still accepts summaries shared before the lesson settings existed, and rejects an impossible schedule',()=>{
+    expect(learningSummarySchema.safeParse(summary).success).toBe(true);
+    expect(learningSummarySchema.safeParse({...summary,delivery:{days:['mon'],time:'7:00'}}).success).toBe(false);
+    expect(learningSummarySchema.safeParse({...summary,lesson_source:'conversation_and_social',delivery:{days:['sat','sun'],time:'08:15'}}).success).toBe(true);
   });
   it('blocks sharing on unreadable data without overwriting it',()=>{const storage=memory({[WORDBOOK_KEY]:'{bad'});expect(()=>buildLearningSummary(storage)).toThrow();expect(storage.setItem).not.toHaveBeenCalled();});
 });

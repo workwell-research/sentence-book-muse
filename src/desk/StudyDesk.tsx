@@ -236,7 +236,7 @@ export function StudyDesk(){
         <div className="voice-rates" role="group" aria-label="読み上げの速さ">{([[.85,'ゆっくり'],[1,'標準'],[1.1,'少し速く']] as const).map(([rate,label])=><button key={rate} type="button" aria-pressed={display.speechRate===rate} onClick={()=>changeDisplay({speechRate:rate})}>{label}</button>)}</div>
         <button type="button" className="voice-preview" onClick={playAudio}><Icon name="sound"/>試しに聞く</button>
        </div>}
-      </div><span>{record.phase==='complete'?'ノートに残りました':'ノートの行に書き写す'}</span></div>
+      </div>{record.phase==='complete'&&<button type="button" className="copy-next" style={{color:palettes[display.marker].title}} onClick={()=>practice.choose(1)}>Shadowingへ</button>}<span>{record.phase==='complete'?'ノートに残りました':'ノートの行に書き写す'}</span></div>
    </section>
    {practice.card}
    </div>
@@ -252,7 +252,7 @@ export function StudyDesk(){
      </div></div>)}</div>
     </div>
     <p id="writing-help" className="writing-help">{personalMode?'英語でひとこと。80文字以内。Enterで保存します。':record.phase==='complete'?total+'文を保存しました。ノートにひとことを添えたり、PDFにできます。':'Enterで答え合わせ・保存して、次の文へ。入力中も筆跡になります。'} {zoom==='read'?'左右にスクロールして読めます。':''}</p>
-    <div className="ink-actions"><button disabled={!record.entries.length||reduced} onClick={()=>{setAnnotationsOnly(false);setAnimateId(record.entries.at(-1)?.sentenceId??null);setTime(0);setPlaying(true);}}>筆跡をもう一度</button><button disabled={time>=scene.duration||reduced} onClick={()=>setPlaying(v=>!v)}>{playing?'筆記を一時停止':'筆記を続ける'}</button><button onClick={()=>{setTime(scene.duration);setPlaying(false);}}>書き終える</button>
+    <div className="ink-actions"><button disabled={!record.entries.length||reduced} onClick={()=>{setAnnotationsOnly(false);setAnimateId(record.entries.at(-1)?.sentenceId??null);setTime(0);setPlaying(true);}}>筆跡をもう一度</button><button disabled={time>=scene.duration||reduced} onClick={()=>setPlaying(v=>!v)}>{playing?'筆記を一時停止':'筆記を続ける'}</button><button disabled={time>=scene.duration||reduced} onClick={()=>{setTime(scene.duration);setPlaying(false);}}>最後まで表示</button>
      <span className="ink-speed" role="group" aria-label="筆記の速さ">{[1,2,4].map(n=><button key={n} type="button" aria-pressed={speed===n} onClick={()=>setSpeed(n)}>{n}×</button>)}</span></div>
     {practice.sheet}
    </section>
