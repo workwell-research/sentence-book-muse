@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { studySample } from '../src/handwriting/study-content';
-import { advance, emptyPractice, itemCount, missedWords, practiceKey, readPractice, restartPass, reviewRequest, savePractice, talkRequest } from '../src/desk/practice';
+import { advance, differsFromModel, emptyPractice, itemCount, missedWords, practiceKey, readPractice, restartPass, reviewRequest, savePractice, talkRequest } from '../src/desk/practice';
 import type { PracticeRecord } from '../src/desk/practice';
 
 const storage = () => { const map = new Map<string, string>(); return { map, getItem: (k: string) => map.get(k) ?? null, setItem: (k: string, v: string) => { map.set(k, v); } }; };
@@ -11,6 +11,12 @@ describe('four passes after Copy', () => {
     expect(missedWords('Today, I decided to slow down.', 'today i decided slow down')).toEqual([false, false, false, true, false, false]);
     expect(missedWords('A warm cup of tea.', 'A warm cup of tea')).toEqual([false, false, false, false, false]);
     expect(missedWords('I can’t stop.', "I can't stop")).toEqual([false, false, false]);
+  });
+  it('shows the model under a dictation line only when the line differs', () => {
+    expect(differsFromModel('A warm cup of tea.', 'a warm cup of tea')).toBe(false);
+    expect(differsFromModel('I put on my shoes.', 'I put on my shose')).toBe(true);
+    expect(differsFromModel('I put on my shoes.', 'I put on my my shoes')).toBe(true);
+    expect(differsFromModel('I put on my shoes.', 'I put on shoes')).toBe(true);
   });
   it('checks a written line before moving on, and finishes on the last sentence', () => {
     let record = at(emptyPractice(studySample), 2);
