@@ -30,9 +30,13 @@ export async function handleReview(request: Request, env: ModelEnv & RateLimitEn
 
   const result = await requestStructuredJson(env, {
     messages: buildReviewMessages(review), schemaName: REVIEW_CONTRACT, schema: reviewResultJsonSchema,
-    maxTokens: 3000, reasoningEffort: 'low',
+    // Reasoning shares this budget and has been seen to exceed 2,500 tokens on a one-line verdict; the object itself is tiny.
+    maxTokens: 8000, reasoningEffort: 'low',
   }, options);
-  if (!result.ok) return upstreamFailure(result.code);
+  if (!result.ok) {
+    if (result.code === 'truncated_output') return fail(502, 'invalid_output', '添削が途中で切れたため、採用しませんでした。もう一度お試しください。', 'truncated');
+    return upstreamFailure(result.code);
+  }
   let output: unknown;
   try { output = JSON.parse(result.content); } catch {
     return fail(502, 'invalid_output', '添削を読み取れませんでした。もう一度お試しください。', 'not_json');
