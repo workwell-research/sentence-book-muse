@@ -2,6 +2,7 @@ import json,math,sys
 from pathlib import Path
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
+from fontTools.ttLib.removeOverlaps import removeOverlaps
 
 root=Path(sys.argv[1]);out=root/'public/fonts';U=16384;scale=U/200;r=(.2/(4.1/200))/2
 for id in ['readability','tech','print','pen']:
@@ -30,5 +31,8 @@ for id in ['readability','tech','print','pen']:
  family='Sentence Notebook '+data['name']+' Input'
  fb.setupNameTable({'familyName':family,'styleName':'Regular','uniqueFontIdentifier':family+' 1.0','fullName':family,'psName':family.replace(' ',''),'version':'Version 1.0','copyright':'Derivative of licensed EMS centerlines. Original credits and OFL notices: public/fonts/README.md.','licenseDescription':'SIL Open Font License, Version 1.1. See accompanying notices.','licenseInfoURL':'https://openfontlicense.org/'})
  fb.setupOS2(sTypoAscender=U,sTypoDescender=0,sTypoLineGap=0,usWinAscent=U,usWinDescent=U//2)
- fb.setupPost();fb.setupMaxp();fb.font.flavor='woff2';path=out/('NotebookInput-'+id+'.woff2');fb.save(path)
+ fb.setupPost();fb.setupMaxp()
+ # Each segment and joint was drawn as its own shape; merge them, or browsers show the seams as thin light lines (owner's 2026-11-01 report).
+ removeOverlaps(fb.font,removeHinting=True)
+ fb.font.flavor='woff2';path=out/('NotebookInput-'+id+'.woff2');fb.save(path)
  print(path.name,path.stat().st_size)
