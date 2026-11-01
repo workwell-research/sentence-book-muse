@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { Session, SupabaseClient } from '@supabase/supabase-js';
 import { AppHeader, PageFooter } from './AppHeader';
 import { ConnectionKeys } from './ConnectionKeys';
@@ -6,7 +6,7 @@ import { AccountLine, ConnectionsList, EnrollBlock, Feedback, Login, ShareSectio
 import { EMPTY_NOTE, dayLabel, readNote, saveNote, scheduleRequest } from './lib/composer';
 import type { ComposerNote, Level, NoteRead } from './lib/composer';
 import { buildLearningSummary } from './lib/learning-summary';
-import { accountRequest, museClient } from './lib/muse-client';
+import { accountRequest, connectionError, museClient } from './lib/muse-client';
 import { weekdays } from '../shared/muse-connection';
 import './styles.css';
 import './connect.css';
@@ -14,6 +14,8 @@ import './connect.css';
 // Settings: the things decided once. ① the Muse connection, ② the lessons Muse makes.
 export function SettingsPage() {
   const muse = useMuseSession();
+  // Saving lesson settings can publish a new shared version; the connection section must then read the account again.
+  const [reshared, setReshared] = useState(0);
   return <div className="connect-page">
     <a className="skip-link" href="#main">本文へ</a>
     <AppHeader current="settings"/>
@@ -21,16 +23,17 @@ export function SettingsPage() {
       <h1 className="visually-hidden" lang="en">Settings</h1>
       {muse.error ? <section className="connect-block"><div className="block-head"><p className="kicker" lang="en">Muse</p><h2>Museとの接続</h2></div><p className="connect-error" role="alert">{muse.error}</p><button className="text-button" onClick={muse.retry}>もう一度読み込む</button></section>
         : !muse.ready || !muse.client ? <p className="connect-loading" role="status">開いています…</p>
-        : muse.session ? <ConnectionSettings key={muse.session.user.id} client={muse.client} session={muse.session}/> : <Login client={muse.client}/>}
-      <LessonSettings/>
+        : muse.session ? <ConnectionSettings key={muse.session.user.id} client={muse.client} session={muse.session} reshared={reshared}/> : <Login client={muse.client}/>}
+      <LessonSettings onReshared={() => setReshared(value => value + 1)}/>
     </main>
     <PageFooter/>
   </div>;
 }
 
-function ConnectionSettings({client,session}:{client:SupabaseClient;session:Session}) {
+function ConnectionSettings({client,session,reshared}:{client:SupabaseClient;session:Session;reshared:number}) {
   const actions = useAccount(client, session.user.id);
-  const {account} = actions;
+  const {account, refresh, setError} = actions;
+  useEffect(()=>{ if (reshared) void refresh().catch(failure=>setError(connectionError(failure))); },[reshared,refresh,setError]);
   return <>
     <AccountLine client={client} session={session} actions={actions}/>
     <Feedback actions={actions} scope="account"/>
@@ -63,7 +66,7 @@ async function reshare(): Promise<'shared' | 'local' | 'failed'> {
   } catch (error) { return error instanceof Error && error.message === 'not_configured' ? 'local' : 'failed'; }
 }
 
-function LessonSettings() {
+function LessonSettings({ onReshared }: { onReshared: () => void }) {
   const [initial] = useState(restore);
   const [note, setNote] = useState<ComposerNote>(initial.kind === 'ready' ? initial.note : EMPTY_NOTE);
   const [message, setMessage] = useState('');
@@ -93,6 +96,7 @@ function LessonSettings() {
     setDirty(false); setFailed(false); setSaving(true); setMessage('保存しました。Museとの共有を確かめています…');
     const result = await reshare();
     setSaving(false); setShared(result);
+    if (result !== 'local') onReshared();
     setMessage(result === 'shared' ? '保存しました。Museと共有している内容も新しくしたので、次のレッスンから使われます。'
       : result === 'local' ? '保存しました。Museに使ってもらうには、上の「Museとつなぐ」で共有してください。'
       : '保存しました。ただ、Museとの共有は新しくできませんでした。上の「Museとつなぐ」で共有し直してください。');

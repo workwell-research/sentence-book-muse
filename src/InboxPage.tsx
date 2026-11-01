@@ -118,7 +118,9 @@ export function InboxPage() {
     <main className="page-main" id="main">
       <section className="connect-block" aria-labelledby="inbox-title">
         <div className="block-head"><h1 id="inbox-title" lang="en">Inbox</h1>
-          {member && <button className="text-button block-action" disabled={busy} onClick={()=>void act(refresh,'inbox')}>更新</button>}</div>
+          {muse.session && account && member && <button className="text-button block-action" disabled={busy} onClick={()=>void act(refresh,'inbox')}>更新</button>}
+          {muse.session && !account && <button className="text-button block-action" disabled={busy} onClick={()=>void act(refresh,'inbox')}>読み込む</button>}</div>
+        <Feedback actions={actions} scope="account"/>
         {muse.error && <p className="connect-error" role="alert">{muse.error} <button className="text-button" onClick={muse.retry}>もう一度読み込む</button></p>}
         {pending.kind === 'unreadable' && <p className="connect-error" role="alert">このブラウザに置いたページを読み込めませんでした。元のデータを守るため、上書きしていません。</p>}
         <div className="connect-paper">
