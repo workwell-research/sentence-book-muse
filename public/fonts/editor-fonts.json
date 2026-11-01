@@ -8,23 +8,25 @@
   "files": [
     {
       "path": "NotebookInput-pen.woff2",
-      "bytes": 187524,
-      "sha256": "4d6bbd5d30a9c57750df388a2c48513d89ecf0a733413d75b83dd312801db38c"
+      "bytes": 107240,
+      "sha256": "814612dd674064603607192a771454b59293f65b2a26330b863253d42884a73c"
     },
     {
       "path": "NotebookInput-print.woff2",
-      "bytes": 170376,
-      "sha256": "4f5e04a771713f315ac0f59410a050d3dbd550ffa18969a61beb7eaa8d0af767"
+      "bytes": 90888,
+      "sha256": "69c20ab1fdabe9c17c2346279b5a15da4b765cb7f121e90f24123e7a49dd5aca"
     },
     {
       "path": "NotebookInput-readability.woff2",
-      "bytes": 161472,
-      "sha256": "10927d484717e0e2727ebac68610c895cbf7f5300b7b7df1176ab6081d52a26c"
+      "bytes": 85572,
+      "sha256": "deee7109c82b5471d008952d0baec773b53e01b229215ca8f7573c819ed74357"
     },
     {
       "path": "NotebookInput-tech.woff2",
-      "bytes": 198456,
-      "sha256": "1adb43a6a6f525ac8add2669941a2014713e98ed121ad64f9240b2ac87a3a225"
+      "bytes": 116488,
+      "sha256": "7c9adcf9175dc570625094f2e76b7b3a2f7421cd0c57592e875847db60af0549"
     }
-  ]
+  ],
+  "overlaps": "merged with fontTools removeOverlaps (skia-pathops) since 2026-11-01; earlier builds kept every segment as its own contour",
+  "skiaPathops": "0.8.0.post2"
 }
