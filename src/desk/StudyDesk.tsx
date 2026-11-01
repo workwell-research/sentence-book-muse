@@ -4,7 +4,7 @@ import {A5Notebook} from '../handwriting/A5Notebook';
 import {englishFonts} from '../handwriting/fonts';
 import {supported} from '../handwriting/model';
 import {resolveDeskLesson} from '../lib/study-page';
-import {addLookup,expressionOf,readWordbook,requestLookup,saveWordbookEntry,tokenize} from '../lib/lookup';
+import {addLookup,expressionOf,readWordbook,removeLookup,removeWordbookEntry,requestLookup,saveWordbookEntry,tokenize} from '../lib/lookup';
 import type {LookupOutcome} from '../lib/lookup';
 type LookupResult=Extract<LookupOutcome,{kind:'ready'}>['result'];
 import {displayKey,displaySchema,practiceSchema,defaultDisplay,emptyCopy,validCopy,readSaved,saveRecord,submitCopy,nextCopy,markerIds,themes,idleTimer,timerAt,toggleTimer} from './core';
@@ -76,7 +76,7 @@ export function StudyDesk(){
  const [voiceOpen,setVoiceOpen]=useState(false),voiceControl=useRef<HTMLDivElement>(null);
  useDismiss(voiceOpen,()=>setVoiceOpen(false),voiceControl);
  const [tab,setTab]=useState(0),[meaning,setMeaning]=useState(false),[personalMode,setPersonalMode]=useState(false);
- const [pick,setPick]=useState<{sentenceId:string;from:number;to:number}|null>(null),[lookingUp,setLookingUp]=useState(false),[lookupNote,setLookupNote]=useState('');
+ const [pick,setPick]=useState<{sentenceId:string;from:number;to:number}|null>(null),[lookingUp,setLookingUp]=useState(false),[lookupNote,setLookupNote]=useState(''),[lookupQuiet,setLookupQuiet]=useState(false);
  const [wordbook,setWordbook]=useState(()=>readWordbook(localStorage));
  const [zoom,setZoom]=useState<'fit'|'read'>(()=>matchMedia('(max-width: 760px)').matches?'read':'fit');
  const [annotationsOnly,setAnnotationsOnly]=useState(false),[composingText,setComposingText]=useState(false),[inputScroll,setInputScroll]=useState({x:0,y:0});
@@ -99,12 +99,14 @@ export function StudyDesk(){
  const pickedText=picked&&pickedSentence?expressionOf(pickedSentence.text,picked.start,picked.end):'';
  // The meaning shows as soon as a selection settles (450 ms after the last tap); drawing the line stays the learner's act.
  const pickKey=picked&&pickedSentence?pickedSentence.id+':'+picked.start+':'+picked.end:'';
+ // A pick inside a line already drawn shows that line's meaning and offers to erase it, with no new lookup.
+ const lined=picked&&pickedSentence?record.lookups.find(l=>l.sentenceId===pickedSentence.id&&picked.start>=l.start&&picked.end<=l.end)??null:null;
  const pickRef=useRef('');pickRef.current=pickKey;
  const previewTimer=useRef(0);
  const [preview,setPreview]=useState<{key:string;result:LookupResult}|null>(null);
  const shown=preview&&preview.key===pickKey?preview.result:null;
  useEffect(()=>{
-  if(!pickKey||!pickedSentence||!pickedText||(preview&&preview.key===pickKey))return;
+  if(!pickKey||!pickedSentence||!pickedText||lined||(preview&&preview.key===pickKey))return;
   const key=pickKey,sentence=pickedSentence.text,expression=pickedText;
   previewTimer.current=window.setTimeout(()=>{
    setLookingUp(true);setLookupNote('');
@@ -195,7 +197,7 @@ export function StudyDesk(){
  function keyDown(e:KeyboardEvent<HTMLTextAreaElement>){if(e.key!=='Enter'||e.shiftKey||e.altKey||e.metaKey||e.ctrlKey)return;if(e.repeat){e.preventDefault();return;}if(e.nativeEvent.isComposing||composing.current||e.keyCode===229||e.repeat||Date.now()-compositionEnded.current<100){return;}e.preventDefault();confirm();}
  function playAudio(){speaker.play(current.text,{voice:display.voice,rate:display.speechRate});}
  // Tapping written words picks a span: first tap starts it, a later word of the same line extends it, a tap inside clears it.
- function pickWord(hit:WordHit){setLookupNote('');setPick(p=>!p||p.sentenceId!==hit.sentenceId?{sentenceId:hit.sentenceId,from:hit.token,to:hit.token}:hit.token>=p.from&&hit.token<=p.to?null:hit.token>p.to?{...p,to:hit.token}:{...p,from:hit.token});}
+ function pickWord(hit:WordHit){setLookupNote('');setLookupQuiet(false);setPick(p=>!p||p.sentenceId!==hit.sentenceId?{sentenceId:hit.sentenceId,from:hit.token,to:hit.token}:hit.token>=p.from&&hit.token<=p.to?null:hit.token>p.to?{...p,to:hit.token}:{...p,from:hit.token});}
  async function lookUp(){
   if(!picked||!pickedSentence||lookingUp)return;
   let result=shown;
@@ -215,6 +217,13 @@ export function StudyDesk(){
   setPick(null);setPreview(null);setLookingUp(false);
   // The sentence is already written, so the line and its memo are drawn right away.
   setAnimateId(pickedSentence.id);setAnnotationsOnly(true);setTime(0);setPlaying(true);
+ }
+ function eraseLine(){
+  if(!lined)return;
+  const line=lined;
+  if(!persist(removeLookup(record,line.id),true))return;
+  try{setWordbook({kind:'ready',entries:removeWordbookEntry(localStorage,{pageId,expression:line.expression})});}catch{/* unreadable word list stays untouched */}
+  setPick(null);setPreview(null);setLookupQuiet(true);setLookupNote('「'+line.expression+'」の線を消しました。');
  }
  function startPersonal(){setPersonalMode(true);changeDisplay({content:'study-notes'});requestAnimationFrame(()=>{editor.current?.focus({preventScroll:true});follow.current();});}
  async function exportPdf(sides:PrintSides='both'){setExporting(true);try{const {exportStudyNote}=await import('../handwriting/study-pdf');const bytes=await exportStudyNote(confirmedLayout(layout,record,display),view,{...display,notebook:'a5',palette:display.marker,markers:display.printMarkers??display.markers},undefined,sides);const url=URL.createObjectURL(new Blob([new Uint8Array(bytes)],{type:'application/pdf'}));const a=document.createElement('a');a.href=url;a.download=(display.sheet==='A4'?'sentence-book-a5-on-a4':'sentence-book-a5')+(sides==='both'?'':'-'+sides)+'.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);setNotice(sides==='front'?'表のPDFを作成しました。刷ったら紙を裏返して入れ直し、裏を刷ってください。':sides==='back'?'裏のPDFを作成しました。表を刷った紙を裏返して入れてください。':'PDFを作成しました。100%（実際のサイズ）で両面印刷してください。');}catch(e){setNotice((e as Error).message);}finally{setExporting(false);}}
@@ -268,7 +277,7 @@ export function StudyDesk(){
    </section>
    {practice.card}
    </div>
-   <section className="notebook-area" aria-label="A5学習ノート" data-in-step={practice.step>0||undefined}><div className="writing-controls" ref={writingControls}><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><div className="notebook-tools"><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button>{record.phase==='complete'&&!personalMode&&<button onClick={startPersonal}>ひとことを書く</button>}</div></div><p id="writing-error" role="alert" className="writing-feedback">{error}</p><div className="lookup-bar">{picked?<><span>「<span lang="en">{pickedText}</span>」{shown&&<span className="lookup-meaning"> — {shown.native}</span>}</span><button type="button" className="lookup-button" onClick={lookUp} disabled={lookingUp} aria-busy={lookingUp}>{lookingUp?'調べています…':shown?'線を引く':'調べて線を引く'}</button><button type="button" className="lookup-cancel" onClick={()=>setPick(null)} disabled={lookingUp}>やめる</button></>:<span className="lookup-hint">書き終えた行の語句をタップすると意味が出ます。線を引くと、ページに残ります。</span>}<span role="status" className="lookup-status">{lookupNote}</span></div></div>
+   <section className="notebook-area" aria-label="A5学習ノート" data-in-step={practice.step>0||undefined}><div className="writing-controls" ref={writingControls}><div className="notebook-toolbar"><span>A5 · 148 × 210 mm</span><div className="notebook-tools"><button onClick={()=>setZoom(v=>v==='fit'?'read':'fit')}>{zoom==='fit'?'拡大して読む':'紙全体を見る'}</button>{record.phase==='complete'&&!personalMode&&<button onClick={startPersonal}>ひとことを書く</button>}</div></div><p id="writing-error" role="alert" className="writing-feedback">{error}</p><div className="lookup-bar">{lined?<><span>「<span lang="en">{lined.expression}</span>」<span className="lookup-meaning"> — {lined.native}</span></span><button type="button" className="lookup-button lookup-erase" onClick={eraseLine}>線を消す</button><button type="button" className="lookup-cancel" onClick={()=>setPick(null)}>やめる</button></>:picked?<><span>「<span lang="en">{pickedText}</span>」{shown&&<span className="lookup-meaning"> — {shown.native}</span>}</span><button type="button" className="lookup-button" onClick={lookUp} disabled={lookingUp} aria-busy={lookingUp}>{lookingUp?'調べています…':shown?'線を引く':'調べて線を引く'}</button><button type="button" className="lookup-cancel" onClick={()=>setPick(null)} disabled={lookingUp}>やめる</button></>:<span className="lookup-hint">書き終えた行の語句をタップすると意味が出ます。線を引くと、ページに残ります。線のある語をタップすると、消せます。</span>}<span role="status" className={'lookup-status'+(lookupQuiet?' is-quiet':'')}>{lookupNote}</span></div></div>
     <div className={'desk-paper-scroll '+(zoom==='read'?'reading':'')} ref={paperViewport} style={isEditing?{height:paperHeight}:undefined} tabIndex={0} aria-label="ノート。入力行に合わせてスクロールします。拡大表示は左右にもスクロールできます">
      <div className="desk-pages" style={{'--marker-ink':palettes[display.marker].marker} as CSSProperties}>{layout.pages.map(p=><div className="desk-page-row" key={p.index}><div className="desk-paper" ref={p.index===0?paper:undefined}>
       <A5Notebook showPen={!annotationsOnly||!isEditing} layout={rendered} scene={scene} pageIndex={p.index} paperColor={paperColor} view={view} ink={palettes[display.marker]} time={reduced?scene.duration:time} reduced={reduced} personalInk={emptyInk}/>

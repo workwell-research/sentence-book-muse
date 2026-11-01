@@ -80,6 +80,8 @@ export function addLookup(record: CopyRecord, entry: Omit<LookupEntry, 'id'>): C
   if (others.length >= MAX_LOOKUPS) throw new Error(`このページに引ける線は${MAX_LOOKUPS}本までです。`);
   return { ...record, lookups: [...others, { ...entry, id }] };
 }
+// A line drawn by mistake is erased from the page; the same expression leaves the shared word list below.
+export const removeLookup = (record: CopyRecord, id: string): CopyRecord => ({ ...record, lookups: record.lookups.filter(lookup => lookup.id !== id) });
 
 // The shared word list across pages: every line the learner drew, newest first.
 export const WORDBOOK_KEY = 'sentence-book-muse:wordbook:v1';
@@ -112,8 +114,16 @@ export function readWordbook(storage: WordbookStorage): WordbookRead {
 export function saveWordbookEntry(storage: WordbookStorage, entry: WordbookEntry): WordbookEntry[] {
   const current = readWordbook(storage);
   if (current.kind === 'unreadable') throw new Error('unreadable-storage');
-  const same = (item: WordbookEntry) => item.pageId === entry.pageId && item.expression.toLowerCase() === entry.expression.toLowerCase();
-  const entries = [wordbookEntrySchema.parse(entry), ...current.entries.filter(item => !same(item))].slice(0, MAX_WORDBOOK);
+  const entries = [wordbookEntrySchema.parse(entry), ...current.entries.filter(item => !sameLine(item, entry))].slice(0, MAX_WORDBOOK);
   storage.setItem(WORDBOOK_KEY, JSON.stringify({ version: 1, entries }));
+  return entries;
+}
+const sameLine = (item: WordbookEntry, line: Pick<WordbookEntry, 'pageId' | 'expression'>) =>
+  item.pageId === line.pageId && item.expression.toLowerCase() === line.expression.toLowerCase();
+export function removeWordbookEntry(storage: WordbookStorage, line: Pick<WordbookEntry, 'pageId' | 'expression'>): WordbookEntry[] {
+  const current = readWordbook(storage);
+  if (current.kind === 'unreadable') throw new Error('unreadable-storage');
+  const entries = current.entries.filter(item => !sameLine(item, line));
+  if (entries.length !== current.entries.length) storage.setItem(WORDBOOK_KEY, JSON.stringify({ version: 1, entries }));
   return entries;
 }

@@ -135,6 +135,7 @@
 .lookup-cancel{border:0;background:none;color:#6d6a63;text-decoration:underline}
 .lookup-hint{font-size:11px;color:#8a857c}
 .lookup-status{font-size:11px;color:#883e2d;flex-basis:100%}
+.lookup-status.is-quiet{color:#6d6a63}
 .index-subhead{font-size:11px!important;color:#69645c;margin-top:16px!important}
 .wordbook-entry{font-size:11px!important;margin:6px 0!important}
 .wordbook-entry span[lang=en]{font-family:'Lora',Georgia,serif;font-size:12px}
