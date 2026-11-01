@@ -1,12 +1,14 @@
 # Sentence Book Muse — progress
 
-Last updated: 2026-11-01 JST. Owner: Claude — PR #4 (Input webfont seams), PR #5 (ruler instead of masking tape) and PR #6 (versioned font URLs) merged into main (61c0ece) and deployed as 7d5a6d82. Production and main carry the same app code.
+Last updated: 2026-11-01 JST. Owner: Claude — `claude/dictation-model-row` (PR #7, model row only when the line differs) open against main, not deployed; production is deployment 7d5a6d82 (source 61c0ece), main 61c0ece.
 
 Local checkout: `/Users/maki/sentence-book-muse`
 Public repository: https://github.com/workwell-research/sentence-book-muse
 Public deployment: https://sentence-book-muse.pages.dev (Cloudflare Pages project `sentence-book-muse`, created 2026-10-30; the earlier personal prototype's project `sentence-book-workwell` is untouched)
 
 ## Current scope
+
+**2026-11-01 — Dictation shows the model under a line only when the line differs (Claude, at the owner's 「ディクテーションの下に、もう一度同じ文章出す必要ない気がするな」; PR #7 on `claude/dictation-model-row`, not merged or deployed).** `practice.ts` gains `differsFromModel` (a missed word, or a different word count); `PracticeSteps.tsx` renders the Dictation model row only then, Reconstruction unchanged. **Verified:** 223 tests (4 new), tsc, Vite build; synthetic QA: a correct first line shows no model row, 「quite」 for 「quiet」 shows the model with 「quiet」 marked. **Not verified:** production.
 
 **2026-11-01 — Release 61c0ece → deployment 7d5a6d82: PR #4, #5 and #6 merged (Claude, at the owner's 「まとめて公開」).** Both PRs had green CI and one Codex comment each: on #4 (P1) the status entry was already in f054c41; on #5 (P2, slid ruler covering the translation in Speaking) ad64640 already reserved room under the line. Replied and resolved. #4 merged as 96589aa; #5 then conflicted in PROJECT_STATUS.md, merged main into the branch keeping both entries, CI re-ran, merged as 48651ba; deployed 2181dc63. On production the in-app browser then still rendered the page's own Tech Input face with seams while a cache-busted `FontFace` load of the same URL was clean: the rebuilt woff2 files kept their names and a tab's in-memory font cache kept the old decode (Pages serves them with `max-age=0, must-revalidate`, so fresh loads were fine). PR #6 adds `?v=2026-11-01` to the four `@font-face` URLs in `desk.css` (bump on the next rebuild); merged as 61c0ece, deployed 7d5a6d82. **Verified on production:** bundle `index-BXaPBnR4.js`; the CSS references `NotebookInput-tech.woff2?v=2026-11-01`; a 35/70 px probe in the page's own Tech Input face shows no seams; the Dictation card shows the whole aluminium ruler on Pure White. **Not verified:** the owner's own browser and the other themes on production (same CSS as synthetic QA). Rollback: deployment 687584f0.
 
@@ -310,6 +312,7 @@ No Meta/API call, credential setup, Pages deployment, physical-device test or ph
 ## Work in progress
 | Owner | Files | Work |
 | --- | --- | --- |
+| Claude — dictation model row | src/desk/practice.ts, src/desk/PracticeSteps.tsx, tests/practice.test.ts | 2026-11-01: PR #7 open, not merged or deployed |
 | Claude — step-card ruler | src/desk/PracticeSteps.tsx, practice.css, desk-tray.css | 2026-11-01: tape → themed ruler, whole 15 cm across the card; PR #5 merged (48651ba) and deployed (7d5a6d82) |
 | Claude — Input webfont overlap fix | scripts/build-editor-font.py, public/fonts/NotebookInput-*.woff2, editor-fonts.json, src/desk/desk.css (?v=), docs | 2026-11-01: PR #4 and #6 merged, deployed 7d5a6d82, production probe clean. Owner to confirm on a Dictation page |
 | Claude — screen reorganisation stage 1 | src/lib/routes.ts, src/{AppHeader,museSession,ShelfPage,InboxPage,SettingsPage,Connect,Shelf,ConnectionKeys,main}.tsx, header.css, connect.css, styles.css, desk/StudyDesk.tsx, handwriting/HandwritingDemo.tsx, tests/routes.test.ts, README, docs | 2026-11-01: implemented and checked locally (222 tests, build, synthetic QA, mobile); committed 535919c, Codex fixes 31ee5a5, PR #3 merged (8f1457b) and deployed (687584f0) on 2026-11-01; signed-in production check left to the owner. Next: stage 2 (desk tray and index) and stage 3 (copy) |

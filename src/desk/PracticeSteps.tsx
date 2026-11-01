@@ -4,7 +4,7 @@ import type {StudyContent} from '../handwriting/study-content';
 import {palettes} from '../handwriting/palettes';
 import {chooseEnglishVoice} from './audio';
 import type {DeskDisplay} from './core';
-import {advance,itemCount,passIds,missedWords,passOf,phaseOf,positionOf,practiceSteps,readPractice,restartPass,reviewRequest,savePractice,talkRequest,writes} from './practice';
+import {advance,differsFromModel,itemCount,passIds,missedWords,passOf,phaseOf,positionOf,practiceSteps,readPractice,restartPass,reviewRequest,savePractice,talkRequest,writes} from './practice';
 import type {PassId,PracticeRecord} from './practice';
 
 // The four passes after Copy. The card shows what each pass needs or lays a ruler over it; a fresh loose leaf lies over the notebook.
@@ -176,7 +176,7 @@ export function usePractice({lesson,display,handFamily,onWriting,onLeaveCopy,onR
     aria-label={pass==='dictation'?`${k+1}文目を聞いて書く`:`${k+1}文目を自分の英語で書く`}
     onBeforeInput={onWriting} onChange={e=>{setDraft(e.target.value);const next=structuredClone(latest.current);next.drafts[pass as 'dictation'|'reconstruction']=e.target.value;persist(next);}}/></li>);
    else rows.push(<li key={s.id} ref={k===i&&!done?current:undefined} className="step-row"><span className="row-hand" lang="en">{typed??''}</span></li>);
-   if(typed!=null&&(k<i||done||phase==='check'))rows.push(<li key={s.id+':model'} className={'step-row is-model'+(pass==='reconstruction'?' is-quiet':'')}><span className="row-model" lang="en">{pass==='dictation'?<Marked model={s.text} typed={typed}/>:s.text}</span></li>);
+   if(typed!=null&&(k<i||done||phase==='check')&&(pass!=='dictation'||differsFromModel(s.text,typed)))rows.push(<li key={s.id+':model'} className={'step-row is-model'+(pass==='reconstruction'?' is-quiet':'')}><span className="row-model" lang="en">{pass==='dictation'?<Marked model={s.text} typed={typed}/>:s.text}</span></li>);
   });
  } else {
   (lesson.questions??[]).forEach((q,k)=>{
