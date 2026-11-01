@@ -15,6 +15,7 @@ http.createServer(async(req,res)=>{
     const json=(data,status=200)=>{res.writeHead(status,{'Content-Type':'application/json','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
     if(url.pathname==='/__qa/control'){failAction=body.failAction??'';if(body.connections===false)account.connections=[];if(body.seed){draft.draft_id='40000000-0000-4000-8000-000000000002';account.inbox=[{draft_id:draft.draft_id,draft,status:'pending',received_at:new Date().toISOString()}];}json({ready:true});return;}
     if(url.pathname==='/api/access'){json({authorized:false});return;}
+    if(url.pathname==='/api/review'){const own=String(body.own??'');const unclear=/\bxx\b/i.test(own);json({contract:'sentence_book_review_v1',result:{own,verdict:unclear?'unclear':'fine',natural:unclear?body.model:own.trim()===String(body.model).trim()?null:'（合成QA）'+body.model,note:unclear?'（合成QA）意味が伝わりにくいので、お手本の形にしてみましょう。':own.trim()===String(body.model).trim()?null:'（合成QA）この言い方でも通じます。'},model:'synthetic-qa',usage:null});return;}
     if(url.pathname==='/api/lookup'){json({contract:'sentence_book_lookup_v1',result:{expression:body.expression,native:'（合成QAの意味）',note:null},model:'synthetic-qa',usage:null});return;}
     if(url.pathname==='/api/muse/config'){json({configured:true,url:origin,publishableKey:'synthetic-public-key',origin});return;}
     if(url.pathname==='/auth/v1/otp'){json({});return;}

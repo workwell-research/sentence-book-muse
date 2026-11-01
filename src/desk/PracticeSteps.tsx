@@ -4,7 +4,9 @@ import type {StudyContent} from '../handwriting/study-content';
 import {palettes} from '../handwriting/palettes';
 import {chooseEnglishVoice} from './audio';
 import type {DeskDisplay} from './core';
-import {advance,differsFromModel,itemCount,passIds,missedWords,passOf,phaseOf,positionOf,practiceSteps,readPractice,restartPass,reviewRequest,savePractice,talkRequest,writes} from './practice';
+import {advance,differsFromModel,itemCount,passIds,missedWords,passOf,phaseOf,positionOf,practiceSteps,readPractice,restartPass,reviewRequest,savePractice,setReview,speakingPhaseOf,talkRequest,writes} from './practice';
+import {requestReview} from '../lib/review';
+import type {ReviewRequest} from '../../shared/review-schema';
 import type {PassId,PracticeRecord} from './practice';
 
 // The four passes after Copy. The card shows what each pass needs or lays a ruler over it; a fresh loose leaf lies over the notebook.
@@ -26,8 +28,8 @@ function Marked({model,typed}:{model:string;typed:string}) {
  return <>{model.split(/(\s+)/).map((part,i)=>{if(!part||/^\s+$/.test(part)||!wordsIn(part))return part;return missed[k++]?<mark key={i}>{part}</mark>:part;})}</>;
 }
 
-export function usePractice({lesson,display,handFamily,onWriting,onLeaveCopy,onReturnToCopy}:{
- lesson:StudyContent;display:DeskDisplay;handFamily:string;onWriting:()=>void;onLeaveCopy:()=>void;onReturnToCopy:()=>void;
+export function usePractice({lesson,display,handFamily,level,nativeLanguage,onWriting,onLeaveCopy,onReturnToCopy}:{
+ lesson:StudyContent;display:DeskDisplay;handFamily:string;level:ReviewRequest['level'];nativeLanguage:ReviewRequest['native_language'];onWriting:()=>void;onLeaveCopy:()=>void;onReturnToCopy:()=>void;
 }) {
  const [loaded]=useState(()=>readPractice(localStorage,lesson));
  const [record,setRecord]=useState<PracticeRecord>(loaded.record);
@@ -38,10 +40,21 @@ export function usePractice({lesson,display,handFamily,onWriting,onLeaveCopy,onR
  const [draft,setDraftState]=useState(()=>{const p=passOf(loaded.record.step);return p&&writes(p)?loaded.record.drafts[p as 'dictation'|'reconstruction']??'':'';});
  const typed=useRef(draft);
  const setDraft=(value:string)=>{typed.current=value;setDraftState(value);};
+ // Reconstruction: each checked line goes to the model once; the review lives in the record, so it survives reloads.
+ const [reviewing,setReviewing]=useState<number|null>(null),[reviewNote,setReviewNote]=useState('');
  const input=useRef<HTMLTextAreaElement>(null),paper=useRef<HTMLDivElement>(null),current=useRef<HTMLLIElement>(null);
  const pass=passOf(record.step),step=record.step;
  const persist=(next:PracticeRecord)=>{latest.current=next;setRecord(next);if(loaded.blocked)return;try{savePractice(localStorage,next);}catch{setNotice('練習の記録を保存できませんでした。この画面を閉じると、今回の進み具合は消えます。');}};
  const hush=()=>{window.speechSynthesis?.cancel();setSpeaking(false);setSaid(-1);};
+ async function reviewLine(rec:PracticeRecord,i:number) {
+  const s=lesson.sentences[i],own=rec.written.reconstruction[i];if(!s||!own)return;
+  setReviewing(i);setReviewNote('');
+  const outcome=await requestReview(fetch,{meaning:s.meaning||s.text,model:s.text,own,level,native_language:nativeLanguage});
+  setReviewing(null);
+  if(outcome.kind==='failed'){setReviewNote(outcome.message);return;}
+  if(latest.current.written.reconstruction[i]!==own)return; // the line changed meanwhile
+  persist(setReview(latest.current,i,{verdict:outcome.result.verdict,natural:outcome.result.natural,note:outcome.result.note}));
+ }
  function speak(text:string,follow=false) {
   const engine=window.speechSynthesis;if(!engine)return;
   engine.cancel();
@@ -56,7 +69,7 @@ export function usePractice({lesson,display,handFamily,onWriting,onLeaveCopy,onR
  const play=(p=pass)=>{
   if(!p||p==='reconstruction')return;
   const i=item(p);
-  if(p==='speaking'){const q=lesson.questions?.[i];if(q)speak(q.en);}
+  if(p==='speaking'){const q=lesson.questions?.[i];if(q)speak(speakingPhaseOf(latest.current)==='sample'&&q.sample?q.sample.en:q.en);}
   else speak(lesson.sentences[i].text,p==='shadowing');
  };
  const focusWork=()=>requestAnimationFrame(()=>{const p=passOf(record.step);if(!p)return;(p&&writes(p)&&phaseOf(record,p)==='write'&&!record.finished[p]?input.current:paper.current)?.focus({preventScroll:true});});
@@ -86,7 +99,12 @@ export function usePractice({lesson,display,handFamily,onWriting,onLeaveCopy,onR
   const {record:next,moved}=advance(record,lesson,typed.current);
   if(moved==='none')return;
   persist(next);setOpen(false);
-  if(moved==='checked'){hush();focusWork();return;}
+  if(moved==='checked'){
+   hush();
+   if(pass==='reconstruction')void reviewLine(next,positionOf(next,pass));
+   if(pass==='speaking'){const q=lesson.questions?.[positionOf(next,'speaking')];if(q?.sample)speak(q.sample.en);}
+   focusWork();return;
+  }
   setDraft('');
   if(moved==='finished'){hush();requestAnimationFrame(()=>paper.current?.focus({preventScroll:true}));return;}
   requestAnimationFrame(()=>{input.current?.focus({preventScroll:true});});
@@ -131,8 +149,8 @@ export function usePractice({lesson,display,handFamily,onWriting,onLeaveCopy,onR
  let body:ReactNode=null,actions:ReactNode=null,note='';
  if(done) {
   const allDone=passIds.every(p=>record.finished[p]);
-  body=<><p className="model-sentence step-done">{nextName?`次は ${nextName}。`:allDone?'4つの練習が終わりました。':`${name}が終わりました。`}</p><p className="model-meaning"/></>;
-  actions=<>{nextName&&<button type="button" className="step-next" onClick={()=>choose(step+1)}>{nextName}へ</button>}<button type="button" className="step-chip" onClick={()=>{persist(restartPass(record,pass));setDraft('');requestAnimationFrame(()=>{focusWork();play(pass);});}}>もう一度</button>{museButton}</>;
+  body=<><p className="model-sentence step-done">{nextName?`次は ${nextName}。`:allDone?'4つの練習が終わりました。':`${name}が終わりました。`}</p><p className="model-meaning">{pass==='speaking'?'ここでは採点しません。Museと話すと、声でフィードバックがもらえます。':''}</p></>;
+  actions=<>{nextName&&<button type="button" className="step-next" onClick={()=>choose(step+1)}>{nextName}へ</button>}<button type="button" className="step-chip" onClick={()=>{persist(restartPass(record,pass));setDraft('');requestAnimationFrame(()=>{focusWork();play(pass);});}}>もう一度</button>{museButton}{pass==='speaking'&&museButton}</>;
  } else if(!n) {
   body=<p className="model-sentence is-small">この教材には質問がありません。</p>;
  } else if(pass==='shadowing') {
@@ -149,13 +167,16 @@ export function usePractice({lesson,display,handFamily,onWriting,onLeaveCopy,onR
  } else if(pass==='reconstruction') {
   const s=lesson.sentences[i],checked=phase==='check';
   body=<><p className="model-cue">{s.meaning}</p><p className="model-sentence is-small" lang="en"><Ruled key={step+':'+i+':'+phase} text={s.text} open={checked} label="お手本を見る"/></p></>;
-  actions=<>{s.hint&&<><button type="button" aria-expanded={open} onClick={()=>setOpen(v=>!v)}>{open?'ヒントを閉じる':'ヒント'}</button><em className={"step-hint"+(open?"":" is-hidden")} lang="en">{s.hint}</em></>}{checked&&listen('お手本を聞く')}{museButton}</>;
+  actions=<>{s.hint&&<><button type="button" aria-expanded={open} onClick={()=>setOpen(v=>!v)}>{open?'ヒントを閉じる':'ヒント'}</button><em className={"step-hint"+(open?"":" is-hidden")} lang="en">{s.hint}</em></>}{checked&&listen('お手本を聞く')}{museButton}{reviewNote&&!checked?null:reviewNote&&<span className="step-review-error" role="alert">{reviewNote}<button type="button" className="step-chip" onClick={()=>void reviewLine(latest.current,i)}>もう一度添削</button></span>}</>;
   note=checked?'違う言い方でも大丈夫。Enterで次へ':'自分の英語で書く';
  } else {
   const q=lesson.questions![i];
-  body=<><p className="model-sentence is-small" lang="en"><Ruled key={step+':'+i} text={q.en} open={false} label="質問の文字を見る"/></p><p className={'model-meaning'+(open?'':' is-hidden')} aria-hidden={!open}>{q.native}</p></>;
-  actions=<>{listen('質問を聞く')}<button type="button" aria-expanded={open} onClick={()=>setOpen(v=>!v)}>{open?'訳を閉じる':'訳を見る'}</button>{museButton}</>;
-  note='答えたら Enter';
+  // Hear the question, answer aloud, then hear the sample answer. No scoring here: Muse does that in a voice call.
+  const sampling=speakingPhaseOf(record)==='sample'&&!!q.sample;
+  body=<><p className="model-sentence is-small" lang="en"><Ruled key={step+':'+i} text={q.en} open={false} label="質問の文字を見る"/></p><p className={'model-meaning'+(open?'':' is-hidden')} aria-hidden={!open}>{q.native}</p>
+   {sampling&&q.sample&&<p className="model-sample"><span className="sample-label">お手本</span><span lang="en">{q.sample.en}</span><span className="sample-native">{q.sample.native}</span></p>}</>;
+  actions=<>{listen(sampling?'お手本を聞く':'質問を聞く')}<button type="button" aria-expanded={open} onClick={()=>setOpen(v=>!v)}>{open?'訳を閉じる':'訳を見る'}</button>{museButton}</>;
+  note=sampling?'お手本を聞いたら Enter で次へ':q.sample?'声に出して答えたら Enter':'答えたら Enter';
  }
  const card=<section className="model-card step-card" id="lesson-pass" role="tabpanel" aria-labelledby={'learning-step-'+step} style={style}>
   <div className="model-heading"><h1>{done?`${name} complete`:name}</h1><span>{done?n:Math.min(i+1,n)} / {n}</span></div>
@@ -176,7 +197,21 @@ export function usePractice({lesson,display,handFamily,onWriting,onLeaveCopy,onR
     aria-label={pass==='dictation'?`${k+1}文目を聞いて書く`:`${k+1}文目を自分の英語で書く`}
     onBeforeInput={onWriting} onChange={e=>{setDraft(e.target.value);const next=structuredClone(latest.current);next.drafts[pass as 'dictation'|'reconstruction']=e.target.value;persist(next);}}/></li>);
    else rows.push(<li key={s.id} ref={k===i&&!done?current:undefined} className="step-row"><span className="row-hand" lang="en">{typed??''}</span></li>);
-   if(typed!=null&&(k<i||done||phase==='check')&&(pass!=='dictation'||differsFromModel(s.text,typed)))rows.push(<li key={s.id+':model'} className={'step-row is-model'+(pass==='reconstruction'?' is-quiet':'')}><span className="row-model" lang="en">{pass==='dictation'?<Marked model={s.text} typed={typed}/>:s.text}</span></li>);
+   if(typed!=null&&(k<i||done||phase==='check')) {
+    const modelRow=(marked:boolean)=><li key={s.id+':model'} className={'step-row is-model'+(marked?'':' is-quiet')}><span className="row-model" lang="en">{marked?<Marked model={s.text} typed={typed}/>:s.text}</span></li>;
+    if(pass==='dictation'){if(differsFromModel(s.text,typed))rows.push(modelRow(true));}
+    else {
+     // The model's review is written under the line in the pen's colour; the reference sentence appears only when the line did not come through.
+     const review=record.reviews.reconstruction?.[k];
+     if(reviewing===k)rows.push(<li key={s.id+':reviewing'} className="step-row is-advice is-note"><span className="row-advice">添削しています…</span></li>);
+     else if(review){
+      if(review.verdict==='unclear'&&review.natural?.trim()!==s.text.trim())rows.push(modelRow(false)); // the corrected line already shows the model when they match
+      if(review.natural)rows.push(<li key={s.id+':natural'} className="step-row is-advice"><span className="row-advice" lang="en">{review.natural}</span></li>);
+      if(review.note)rows.push(<li key={s.id+':note'} className="step-row is-advice is-note"><span className="row-advice">{review.note}</span></li>);
+      if(review.verdict==='fine'&&!review.natural&&!review.note)rows.push(<li key={s.id+':fine'} className="step-row is-advice is-note"><span className="row-advice">✓ このままで通じます</span></li>);
+     } else rows.push(modelRow(false));
+    }
+   }
   });
  } else {
   (lesson.questions??[]).forEach((q,k)=>{
