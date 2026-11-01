@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { COMPOSER_KEY, EMPTY_NOTE, readNote, saveNote, scheduleRequest, scheduleText } from '../src/lib/composer';
+import { COMPOSER_KEY, EMPTY_NOTE, readNote, saveNote, saveTopic, scheduleRequest, scheduleText } from '../src/lib/composer';
 
 function memory(initial: Record<string, string> = {}) {
   const values = new Map(Object.entries(initial));
@@ -41,5 +41,17 @@ describe('local topic note', () => {
     expect(scheduleText(EMPTY_NOTE)).toBe('毎日の7:00');
     expect(scheduleText({ days: ['wed', 'mon'], time: '06:30' })).toBe('毎週月・水曜日の6:30');
     expect(scheduleRequest(note)).toContain('毎週月・水曜日の6:30');
+  });
+  it('keeps a fallback topic without saving unsaved settings, and never overwrites unreadable data', () => {
+    const storage = memory();
+    saveNote(storage, note);
+    saveTopic(storage, 'A late train');
+    expect(readNote(storage)).toEqual({ kind: 'ready', note: { ...note, topic: 'A late train' } });
+    const fresh = memory();
+    saveTopic(fresh, 'Coffee');
+    expect(readNote(fresh)).toEqual({ kind: 'ready', note: { ...EMPTY_NOTE, topic: 'Coffee' } });
+    const broken = memory({ [COMPOSER_KEY]: '{bad' });
+    expect(() => saveTopic(broken, 'x')).toThrow('unreadable-storage');
+    expect(broken.values.get(COMPOSER_KEY)).toBe('{bad');
   });
 });

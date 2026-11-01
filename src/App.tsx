@@ -3,7 +3,7 @@ import { useId, useMemo, useState } from 'react';
 import { LessonPreview } from './LessonPreview';
 import type { FilingStatus } from './LessonPreview';
 import { Shelf } from './Shelf';
-import { EMPTY_NOTE, dayLabel, readNote, saveNote, scheduleRequest } from './lib/composer';
+import { EMPTY_NOTE, dayLabel, readNote, saveNote, saveTopic, scheduleRequest } from './lib/composer';
 import type { ComposerNote, Level, NoteRead } from './lib/composer';
 import { readPendingDrafts, removePendingDraft, savePendingDraft } from './lib/generation';
 import type { PendingRead } from './lib/generation';
@@ -59,6 +59,7 @@ export function App() {
   const [shared, setShared] = useState<'shared' | 'local' | 'failed' | null>(null);
   const [saving, setSaving] = useState(false);
   const [scheduleCopied, setScheduleCopied] = useState('');
+  const [topicSaved, setTopicSaved] = useState('');
   const [fallbackOpen, setFallbackOpen] = useState(() => location.hash === '#own-muse');
   const [failed, setFailed] = useState(false);
   const [dirty, setDirty] = useState(false);
@@ -198,7 +199,10 @@ export function App() {
             <label htmlFor={topicId}>作ってほしい話題</label>
             <textarea id={topicId} value={note.topic} maxLength={2000} rows={3}
               placeholder="たとえば、今日は電車が遅れて、コーヒーを買う時間がなかった。"
-              onChange={event => setNote(current => ({ ...current, topic: event.target.value }))} />
+              aria-describedby={`${topicId}-saved`}
+              onChange={event => { const topic = event.target.value; setNote(current => ({ ...current, topic })); if (blocked) return;
+                try { saveTopic(window.localStorage, topic); setTopicSaved('話題はこのブラウザに残ります。'); } catch { setTopicSaved('話題を保存できませんでした。書いた文はこの画面に残っています。'); } }} />
+            <p className="own-muse-intro" id={`${topicId}-saved`} role="status">{topicSaved}</p>
             {musePrompt ? <>
               <div className="own-muse-actions"><button type="button" className="text-button" onClick={copyPrompt}>Museへの頼み方をコピー</button><span role="status">{promptCopied}</span></div>
               <textarea className="own-muse-prompt" readOnly value={musePrompt} rows={5} aria-label="Museへの頼み方" onFocus={event => event.currentTarget.select()} />

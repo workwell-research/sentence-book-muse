@@ -36,6 +36,13 @@ export function saveNote(storage: NoteStorage, note: ComposerNote): void {
   storage.setItem(COMPOSER_KEY, JSON.stringify({ schemaVersion: 1, ...note }));
 }
 
+// The fallback topic is kept as it is typed, without saving lesson settings the learner has not saved yet.
+export function saveTopic(storage: NoteStorage, topic: string): void {
+  const saved = readNote(storage);
+  if (saved.kind === 'unreadable') throw new Error('unreadable-storage');
+  storage.setItem(COMPOSER_KEY, JSON.stringify({ schemaVersion: 1, ...saved.note, topic }));
+}
+
 const dayNames: Record<Weekday, string> = { mon: '月', tue: '火', wed: '水', thu: '木', fri: '金', sat: '土', sun: '日' };
 export const dayLabel = (day: Weekday) => dayNames[day];
 export function scheduleText(note: Pick<ComposerNote, 'days' | 'time'>): string {
