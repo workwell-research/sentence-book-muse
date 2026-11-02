@@ -2,6 +2,7 @@ import type { Level } from '../../shared/lesson-schema';
 import { deliveryPlanSchema, lessonSourceSchema, weekdays } from '../../shared/muse-connection';
 import type { LessonSource, Weekday } from '../../shared/muse-connection';
 export type { Level } from '../../shared/lesson-schema';
+import { currentLang, t } from './lang';
 // Lesson settings for Muse. `topic` is used only when copying a request to Muse by hand.
 export interface ComposerNote { topic: string; level: Level; nativeLanguage: string; source: LessonSource; days: Weekday[]; time: string }
 export const COMPOSER_KEY = 'sentence-book-muse:composer:v1';
@@ -44,12 +45,15 @@ export function saveTopic(storage: NoteStorage, topic: string): void {
 }
 
 const dayNames: Record<Weekday, string> = { mon: '月', tue: '火', wed: '水', thu: '木', fri: '金', sat: '土', sun: '日' };
-export const dayLabel = (day: Weekday) => dayNames[day];
+export const dayLabel = (day: Weekday) => t(dayNames[day]);
 export function scheduleText(note: Pick<ComposerNote, 'days' | 'time'>): string {
   const days = weekdays.filter(day => note.days.includes(day));
-  return (days.length === 7 ? '毎日' : '毎週' + days.map(dayLabel).join('・') + '曜日') + 'の' + note.time.replace(/^0/, '');
+  const time = note.time.replace(/^0/, '');
+  if (currentLang() === 'en') return (days.length === 7 ? 'every day' : 'every ' + days.map(dayLabel).join(', ')) + ' at ' + time;
+  return (days.length === 7 ? '毎日' : '毎週' + days.map(dayLabel).join('・') + '曜日') + 'の' + time;
 }
 // The schedule itself lives in Muse; this message asks Muse to match it.
 export function scheduleRequest(note: Pick<ComposerNote, 'days' | 'time'>): string {
+  if (currentLang() === 'en') return `Please set the schedule for delivering The Sentence Book lessons to ${scheduleText(note)}. If your current schedule differs, change the schedule to match. On the other days, you need not send anything.`;
   return `The Sentence Bookのレッスンを届ける予定を、${scheduleText(note)}にしてください。今の予定と違えば、予定のほうを合わせてください。届けない曜日には、何も送らなくて大丈夫です。`;
 }
