@@ -67,9 +67,10 @@ export function PrintPanel({display,change,ready,exporting,onExport}:{display:De
    <label><input type="radio" name="print-sheet" checked={display.sheet==='A4'} onChange={()=>change({sheet:'A4'})}/>A4に2部</label>
   </fieldset>
   <label className="print-check"><input type="checkbox" checked={display.printMarkers??display.markers} onChange={e=>change({printMarkers:e.target.checked})}/>マーカーも印刷</label>
+  <label className="print-check"><input type="checkbox" checked={display.printFilled} onChange={e=>change({printFilled:e.target.checked})}/>全文を書き終えた形で（見本用）</label>
   <div className="print-sides" role="group" aria-label="PDFにする"><button className="pdf-button" disabled={!ready||exporting} onClick={()=>onExport('both')}>{exporting?'作成中…':'両面'}</button>
    <button disabled={!ready||exporting} onClick={()=>onExport('front')}>表だけ</button><button disabled={!ready||exporting} onClick={()=>onExport('back')}>裏だけ</button></div>
-  <p className="index-note">100%で印刷。両面は{display.sheet==='A4'?'短辺とじ':'長辺とじ'}、裏は確認問題。両面に対応しないプリンタは、表を刷った紙を裏返して裏を。まず1枚で向きを確かめてください。</p>
+  <p className="index-note">{display.printFilled&&'まだ書いていない文も、お手本どおりに書いた形で印刷します。学習の記録は変わりません。'}100%で印刷。両面は{display.sheet==='A4'?'短辺とじ':'長辺とじ'}、裏は確認問題。両面に対応しないプリンタは、表を刷った紙を裏返して裏を。まず1枚で向きを確かめてください。</p>
  </div>;
 }
 
