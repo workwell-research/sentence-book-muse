@@ -1,4 +1,4 @@
-import { useCallback, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useSyncExternalStore } from 'react';
 import { en } from './en';
 
 // Display language of the connection and settings screens. The learner's book keeps its own languages; only the chrome changes.
@@ -23,10 +23,14 @@ export const currentLang = (): Lang => current;
 export function setLang(lang: Lang, storage: LangStorage | null = null): void {
   current = lang;
   try { storage?.setItem(LANG_KEY, lang); } catch { /* the choice still applies to this page */ }
-  if (typeof document !== 'undefined') document.documentElement.lang = lang;
   listeners.forEach(listener => listener());
 }
 export function useLang(): Lang { return useSyncExternalStore(subscribe, currentLang, () => 'ja'); }
+// Only a translated screen marks the document with the chosen language; the other routes stay Japanese for assistive technology.
+export function useDocumentLang(): void {
+  const lang = useLang();
+  useEffect(() => { document.documentElement.lang = lang; return () => { document.documentElement.lang = 'ja'; }; }, [lang]);
+}
 
 // Texts are keyed by their Japanese wording. A line without an English version stays Japanese rather than going blank.
 export function translate(lang: Lang, ja: string, vars?: Vars): string {

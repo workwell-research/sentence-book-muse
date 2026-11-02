@@ -6,7 +6,7 @@ import { AccountLine, ConnectionsList, EnrollBlock, Feedback, Login, ShareSectio
 import { EMPTY_NOTE, dayLabel, readNote, saveNote, scheduleRequest } from './lib/composer';
 import type { ComposerNote, Level, NoteRead } from './lib/composer';
 import { buildLearningSummary } from './lib/learning-summary';
-import { useT } from './lib/lang';
+import { useDocumentLang, useT } from './lib/lang';
 import { accountRequest, connectionError, museClient } from './lib/muse-client';
 import { weekdays } from '../shared/muse-connection';
 import './styles.css';
@@ -15,6 +15,7 @@ import './connect.css';
 // Settings: the things decided once. ① the Muse connection, ② the lessons Muse makes.
 export function SettingsPage() {
   const muse = useMuseSession(), t = useT();
+  useDocumentLang();
   // Saving lesson settings can publish a new shared version; the connection section must then read the account again.
   const [reshared, setReshared] = useState(0);
   return <div className="connect-page">

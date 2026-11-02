@@ -1,6 +1,6 @@
 import type { Session, SupabaseClient } from '@supabase/supabase-js';
 import { AppHeader, LanguageSwitch, PageFooter } from './AppHeader';
-import { useT } from './lib/lang';
+import { useDocumentLang, useT } from './lib/lang';
 import { AccountLine, Consent, EnrollBlock, Feedback, Login, ShareSection, useAccount, useMuseSession } from './museSession';
 import './styles.css';
 import './connect.css';
@@ -8,6 +8,7 @@ import './connect.css';
 // /oauth/consent: Muse arrives here to ask for permission. Everything else about the account lives in the settings.
 export function Connect() {
   const muse = useMuseSession(), t = useT();
+  useDocumentLang();
   return <div className="connect-page">
     <a className="skip-link" href="#main">{t('本文へ')}</a>
     <AppHeader><LanguageSwitch/></AppHeader>
