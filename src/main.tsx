@@ -4,6 +4,7 @@ import '@fontsource/lora/latin-400.css';
 import '@fontsource/lora/latin-400-italic.css';
 import { StudyDesk } from './desk/StudyDesk';
 import { HandwritingDemo } from './handwriting/HandwritingDemo';
+import { browserStorage, readLang, setLang } from './lib/lang';
 import { resolveRoute } from './lib/routes';
 
 const pages = {
@@ -14,5 +15,6 @@ const pages = {
 };
 const { route, replace } = resolveRoute(window.location.pathname, window.location.hash, window.location.search);
 if (replace) window.history.replaceState(null, '', replace);
+setLang(readLang(browserStorage(), window.location.search), browserStorage());
 const Page = route === 'desk' ? StudyDesk : route === 'handwriting' ? HandwritingDemo : pages[route];
 createRoot(document.getElementById('root')!).render(<StrictMode><Suspense fallback={<p>開いています…</p>}><Page /></Suspense></StrictMode>);

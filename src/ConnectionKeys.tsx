@@ -4,6 +4,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { LESSON_CONTRACT } from '../shared/lesson-schema';
 import type { ConnectionKey, IssuedConnectionKey } from '../shared/muse-connection';
 import { accountRequest, connectionError } from './lib/muse-client';
+import { locale, useT } from './lib/lang';
 
 // The learner only copies this to Muse; Muse explains the steps in plain words and handles the technical part.
 export function connectionInstructions(origin: string) {
@@ -48,12 +49,13 @@ function StepIcon({ name }: { name: IconName }) {
 export function Done({ children }: { children: ReactNode }) {
   return <p className="step-done"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>{children}</p>;
 }
-export const shortDate = (iso: string) => new Date(iso).toLocaleDateString('ja-JP', { month: 'numeric', day: 'numeric' });
+export const shortDate = (iso: string) => new Date(iso).toLocaleDateString(locale(), { month: 'numeric', day: 'numeric' });
 
 export function ConnectionKeys({ client, keys, onChange, disabled, connected, shared, share }: {
   client: SupabaseClient; keys: ConnectionKey[]; onChange: (keys: ConnectionKey[]) => void; disabled: boolean;
   connected: boolean; shared: boolean; share: ReactNode;
 }) {
+  const t = useT();
   const [read,setRead] = useState(true), [deliver,setDeliver] = useState(true);
   const [issued,setIssued] = useState<IssuedConnectionKey | null>(null), [visible,setVisible] = useState(false);
   const [busy,setBusy] = useState(false), [error,setError] = useState(''), [message,setMessage] = useState('');
@@ -76,66 +78,66 @@ export function ConnectionKeys({ client, keys, onChange, disabled, connected, sh
   }
   async function copy(value:string, secret=false) {
     setError('');
-    try {await navigator.clipboard.writeText(value);if(live.current)setMessage(secret?'キーをコピーしました。Museの貼り付け欄に貼ってください。':'コピーしました。Museのチャットに貼ってください。');}
-    catch {if(live.current){setMessage('');setError(secret?'コピーできませんでした。「表示」を押して、キーを選んでコピーしてください。':'コピーできませんでした。下の文を選んでコピーしてください。');if(!secret)setInstructions(true);}}
+    try {await navigator.clipboard.writeText(value);if(live.current)setMessage(secret?t('キーをコピーしました。Museの貼り付け欄に貼ってください。'):t('コピーしました。Museのチャットに貼ってください。'));}
+    catch {if(live.current){setMessage('');setError(secret?t('コピーできませんでした。「表示」を押して、キーを選んでコピーしてください。'):t('コピーできませんでした。下の文を選んでコピーしてください。'));if(!secret)setInstructions(true);}}
   }
   return <section className="connect-block" id="connection-key" aria-labelledby="connect-title">
-    <div className="block-head"><p className="kicker" lang="en">Connect</p><h2 id="connect-title">Museとつなぐ</h2>{connected && <Done>つながっています</Done>}</div>
+    <div className="block-head"><p className="kicker" lang="en">Connect</p><h2 id="connect-title">{t('Museとつなぐ')}</h2>{connected && <Done>{t('つながっています')}</Done>}</div>
     <details className="connect-guide" open={open} onToggle={event=>setOpen(event.currentTarget.open)}>
-      <summary>{connected ? 'つなぎ直す' : 'つなぎ方'}</summary>
+      <summary>{connected ? t('つなぎ直す') : t('つなぎ方')}</summary>
       <ol className="connect-steps">
         <li className={shared ? 'connect-step is-done' : 'connect-step'}>
           <div className="step-top"><span className="step-number">1</span><StepIcon name="share"/></div>
-          <h3>Museと共有することを決める</h3>
-          <fieldset className="step-permissions" disabled={locked}><legend className="visually-hidden">Museと共有すること</legend>
-            <label><input type="checkbox" checked={read} onChange={e=>setRead(e.target.checked)}/>学習内容</label>
-            <label><input type="checkbox" checked={deliver} onChange={e=>setDeliver(e.target.checked)}/>教材を届ける</label>
+          <h3>{t('Museと共有することを決める')}</h3>
+          <fieldset className="step-permissions" disabled={locked}><legend className="visually-hidden">{t('Museと共有すること')}</legend>
+            <label><input type="checkbox" checked={read} onChange={e=>setRead(e.target.checked)}/>{t('学習内容')}</label>
+            <label><input type="checkbox" checked={deliver} onChange={e=>setDeliver(e.target.checked)}/>{t('教材を届ける')}</label>
           </fieldset>
           {share}
         </li>
         <li className="connect-step">
           <div className="step-top"><span className="step-number">2</span><StepIcon name="copy"/></div>
-          <h3>Museに依頼する</h3>
-          <p>この文をコピーして、Museのチャットに貼ります。あとはMuseが案内します。</p>
-          <div className="step-actions"><button className="save-button" type="button" onClick={()=>void copy(connectionInstructions(location.origin))}>コピー</button>
-            <button className="text-button" type="button" aria-expanded={instructions} aria-controls="muse-instructions" onClick={()=>setInstructions(!instructions)}>{instructions?'閉じる':'中身を見る'}</button></div>
-          {instructions && <label className="connect-instructions" id="muse-instructions"><span className="visually-hidden">Museに依頼する文</span><textarea readOnly rows={12} value={connectionInstructions(location.origin)} onFocus={e=>e.target.select()}/></label>}
+          <h3>{t('Museに依頼する')}</h3>
+          <p>{t('この文をコピーして、Museのチャットに貼ります。あとはMuseが案内します。')}</p>
+          <div className="step-actions"><button className="save-button" type="button" onClick={()=>void copy(connectionInstructions(location.origin))}>{t('コピー')}</button>
+            <button className="text-button" type="button" aria-expanded={instructions} aria-controls="muse-instructions" onClick={()=>setInstructions(!instructions)}>{instructions?t('閉じる'):t('中身を見る')}</button></div>
+          {instructions && <label className="connect-instructions" id="muse-instructions"><span className="visually-hidden">{t('Museに依頼する文')}</span><textarea readOnly rows={12} value={connectionInstructions(location.origin)} onFocus={e=>e.target.select()}/></label>}
         </li>
         <li className={active.length ? 'connect-step is-done' : 'connect-step'}>
           <div className="step-top"><span className="step-number">3</span><StepIcon name="key"/></div>
-          <h3>接続キーを作る</h3>
-          <p>Museと接続するためのキーを作成します。</p>
+          <h3>{t('接続キーを作る')}</h3>
+          <p>{t('Museと接続するためのキーを作成します。')}</p>
           <form onSubmit={e=>{e.preventDefault();void act(issue);}}>
-            <div className="step-actions"><button className="save-button" disabled={locked || (!read && !deliver)}>{busy?'作っています…':'キーを作る'}</button></div>
+            <div className="step-actions"><button className="save-button" disabled={locked || (!read && !deliver)}>{busy?t('作っています…'):t('キーを作る')}</button></div>
           </form>
-          {!read && !deliver && <p className="step-wait">①で共有することを選んでください</p>}
-          {active.length > 0 && !issued && <Done>作成済み・{shortDate(active[0].expires_at)}まで</Done>}
+          {!read && !deliver && <p className="step-wait">{t('①で共有することを選んでください')}</p>}
+          {active.length > 0 && !issued && <Done>{t('作成済み・{date}まで', { date: shortDate(active[0].expires_at) })}</Done>}
         </li>
         <li className={issued ? 'connect-step is-current' : 'connect-step'}>
           <div className="step-top"><span className="step-number">4</span><StepIcon name="paste"/></div>
-          <h3>Museの貼り付け欄に貼る</h3>
-          <p>キーをコピーして、Museが開いた貼り付け欄に貼ります。</p>
+          <h3>{t('Museの貼り付け欄に貼る')}</h3>
+          <p>{t('キーをコピーして、Museが開いた貼り付け欄に貼ります。')}</p>
           {issued ? <div ref={result} tabIndex={-1} className="step-key">
-            <label><span className="visually-hidden">今回のキー</span><input type={visible?'text':'password'} readOnly value={issued.token} autoComplete="off" spellCheck={false} onFocus={e=>e.target.select()}/></label>
-            <div className="step-actions"><button className="save-button" type="button" onClick={()=>void copy(issued.token,true)}>キーをコピー</button>
-              <button className="text-button" type="button" aria-pressed={visible} onClick={()=>setVisible(!visible)}>{visible?'隠す':'表示'}</button>
-              <button className="text-button" type="button" onClick={()=>{setIssued(null);setVisible(false);setMessage('');}}>閉じる</button></div>
-            <p className="step-note">このキーは今だけ表示されます。チャットには貼りません。</p>
-          </div> : <p className="step-wait">③のあとで</p>}
+            <label><span className="visually-hidden">{t('今回のキー')}</span><input type={visible?'text':'password'} readOnly value={issued.token} autoComplete="off" spellCheck={false} onFocus={e=>e.target.select()}/></label>
+            <div className="step-actions"><button className="save-button" type="button" onClick={()=>void copy(issued.token,true)}>{t('キーをコピー')}</button>
+              <button className="text-button" type="button" aria-pressed={visible} onClick={()=>setVisible(!visible)}>{visible?t('隠す'):t('表示')}</button>
+              <button className="text-button" type="button" onClick={()=>{setIssued(null);setVisible(false);setMessage('');}}>{t('閉じる')}</button></div>
+            <p className="step-note">{t('このキーは今だけ表示されます。チャットには貼りません。')}</p>
+          </div> : <p className="step-wait">{t('③のあとで')}</p>}
         </li>
       </ol>
     </details>
     {error && <p className="connect-error" role="alert">{error}</p>}
     <p className="connect-message" role="status">{message}</p>
-    {keys.length > 0 && <div className="connect-keylist"><h3>作ったキー</h3>
+    {keys.length > 0 && <div className="connect-keylist"><h3>{t('作ったキー')}</h3>
       <ul className="connect-rows">{keys.map(key=>{const expired=Date.parse(key.expires_at)<=Date.now();return <li key={key.id}><div>
-        <h4>{key.label}</h4><p>{[key.read_summary?'読む':'',key.deliver_drafts?'届ける':''].filter(Boolean).join('・')} ／ {expired?'期限切れ':`${shortDate(key.expires_at)}まで`}</p></div>
+        <h4>{key.label}</h4><p>{[key.read_summary?t('読む'):'',key.deliver_drafts?t('届ける'):''].filter(Boolean).join(t('・'))}{t(' ／ ')}{expired?t('期限切れ'):t('{date}まで', { date: shortDate(key.expires_at) })}</p></div>
         <button className="text-button" type="button" disabled={locked} onClick={()=>void act(async()=>{
           await accountRequest(client,{action:'revoke_key',key_id:key.id});
           if(!live.current)return;
           onChange(keys.filter(k=>k.id!==key.id));if(issued?.key.id===key.id){setIssued(null);setVisible(false);}
-          setMessage('キーを無効にしました。Museに残っていれば削除してください。');
-        })}>無効にする<span className="visually-hidden">：{key.label}</span></button></li>;})}</ul>
-      <p className="step-note">止めたいときは「無効にする」。ログアウトしてもキーは有効です。</p></div>}
+          setMessage(t('キーを無効にしました。Museに残っていれば削除してください。'));
+        })}>{t('無効にする')}<span className="visually-hidden">{t('：')}{key.label}</span></button></li>;})}</ul>
+      <p className="step-note">{t('止めたいときは「無効にする」。ログアウトしてもキーは有効です。')}</p></div>}
   </section>;
 }

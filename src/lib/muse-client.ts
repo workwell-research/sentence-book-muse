@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Connection, ConnectionKey, InboxItem, SharedState } from '../../shared/muse-connection';
+import { t } from './lang';
 
 export interface Account { member: boolean; state?: SharedState; inbox?: InboxItem[]; connections?: Connection[]; keys?: ConnectionKey[] }
 let clientPromise: Promise<SupabaseClient> | null = null;
@@ -24,7 +25,7 @@ export async function accountRequest<T = Account>(client: SupabaseClient, action
 }
 export function connectionError(error: unknown): string {
   const code = error instanceof Error ? error.message : '';
-  return ({
+  const text = ({
     key_limit:'有効な接続キーは5個までです。使わないキーを無効にしてから発行してください。',
     not_configured:'接続機能の準備中です。今の教材は本棚から練習できます。',
     unauthorized:'ログインの期限が切れました。一度ログアウトして、確認コードで入り直してください。',
@@ -34,5 +35,6 @@ export function connectionError(error: unknown): string {
     'unreadable-storage':'このブラウザの保存データを読み取れないため、処理を止めました。元のデータは残しています。',
     delivery_conflict:'このページは別の端末で処理済みです。最新の受信箱を読み込み直してください。',
     invalid_authorization:'接続の依頼を確認できません。Museから接続をやり直してください。',
-  } as Record<string,string>)[code] ?? '処理を完了できませんでした。接続を確認して、もう一度お試しください。';
+  } as Record<string,string>)[code];
+  return t(text ?? '処理を完了できませんでした。接続を確認して、もう一度お試しください。');
 }
