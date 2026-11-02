@@ -1,45 +1,105 @@
 # The Sentence Book — Muse
 
-A new implementation for the 2026 Meta Global AI Developer Hackathon. Turn something you want to say into a personal English page, review its proposed binder, file it, and practise one sentence at a time.
+**Your life becomes your textbook.**
 
-## Current status
+The Sentence Book turns the context a learner shares with their personal AI into a daily English lesson, then helps them practise it and build a printable book, page by page.
 
-**Screens (2026-11-01):** four destinations with one shared header — 机 `/` (practice), 本棚 `/shelf` (approved books), 受信箱 `/inbox` (pages delivered by Muse or pasted in, each filed from there), 設定 `/settings` (Muse connection and lesson settings). `/setup` and `/connect` forward to the new addresses; `/oauth/consent` is unchanged. Stage 1 of [docs/screen-map-2026-11-01.md](docs/screen-map-2026-11-01.md); the desk tray and copy pass are still to come. Older paragraphs below that mention `/setup` or `/connect` describe the previous layout.
+It is a language-learning app and a working example of a broader idea: a personal AI agent can bring context into a focused application without making the user explain their life again every day.
 
-This repository includes a **working local study desk and A5 notebook** at `/`, based on the owner's [Work desktop handoff](docs/desktop-study-desk.md). AI generation is connected locally: `/setup` sends a validated request to `/api/generate`, which calls Meta Model API (`muse-spark-1.3`) with structured output and returns a validated page for preview. The previous standalone typography prototype is retained at `/handwriting`.
+Built for the **2026 Meta Global AI Developer Hackathon**.
 
-- Pure White, Natural and Walnut desks; six selectable horizontal pens, a live index book and optional timer. Material PNGs are separate from live text and native controls.
-- A read-only source card and one native editor on the current A5 line. Letters draw as they are typed. Enter checks/saves the sentence and focuses the next line immediately, without rewriting it. The eighth correct entry completes Copy. Five pastel paper index tabs highlight Copy; stages2–5 stay disabled with preparation labels. Animation does not complete learning.
-- Copy practises either the synthetic eight-sentence sample or any page filed on the shelf (`/?page=<pageId>`, remembered for the next visit). Each page keeps its own drafts, confirmed progress, personal English writing and review marks locally; display choices are shared.
-- Fixed physical A5 composition with measured wrapping, continuation pages and independent SVG/vector PDF renderers. Memo shown/blank retains reserved rows; Japanese phrase glosses are lifted 1mm.
-- Readability Italic default, EMS Tech, Print and Pen; independent Klee One/Zen Kurenaido Japanese. Native input fonts derive from the same English centerlines with matching advances.
-- Pause/resume, replay/finish and reduced motion. Mobile has fixed-paper zoom, caret-following horizontal scroll and Enter-only check-and-advance.
-- A5 portrait finished notes with binding margins; A5 printer sheets or original-size two-up on landscape A4. Export uses confirmed text only, with optional markers and blank memos.
-- [Desk architecture and limitations](docs/desktop-study-desk.md); [shared handwriting and font provenance](docs/handwriting-prototype.md).
-- Earlier interest/topic-note flow preserved at `/setup`.
+- **Live app:** https://sentence-book-muse.pages.dev
+- **3-minute demo:** https://youtu.be/zr776QRw8jw
+- **English connection/settings screen:** https://sentence-book-muse.pages.dev/settings?lang=en
+- **Implementation and verification history:** [PROJECT_STATUS.md](PROJECT_STATUS.md)
 
-- Vite + React + TypeScript application with an empty shelf; themes have no fixed names or count.
-- First-run interest selection with multiple choices, custom additions, skip, edit and local persistence. Interest selection does not create binders.
-- A topic, explanation-language and level note saved locally in this browser.
-- 「教材を作る」 on `/setup`: one request per distinct content (draft ID reused on retry), a bounded server call to Meta Model API with `response_format: json_schema` derived from the shared Zod contract, validation on the server and again in the browser, a read-only preview, and local storage of the page under `sentence-book-muse:pending-drafts:v1` as 「仕分けを待つページ」.
-- `/api/generate` returns coded errors (503 when no key is configured, 400/413 for bad or oversized requests, 429 with Retry-After, 502 for upstream or non-conforming output, 504 on timeout) and never stores anything server-side. `/api/health` reports whether generation is configured and which model id is used, never the key.
-- Filing: the preview ends with Muse's proposal and the learner's decision — create the proposed (editable) new binder, choose any existing binder, or discard. Binders and pages live under `sentence-book-muse:library:v1` with app-issued IDs; a draft can be filed only once and a new binder is created only through that explicit choice. The shelf lists binders with their pages and the pages still waiting. Existing binders are sent to the model as the only valid existing destinations.
-- Design only, not implemented: [a routine in which the learner's own Muse makes and delivers the day's page](docs/own-muse-routine.md) (connector + inbox + learning-state summary, with a phased plan and the open questions).
-- Bring your own Muse: 「自分のMuseアプリで作る場合」 on `/setup` gives a copyable guide (the same instructions the server uses, the JSON Schema and a request bound to a local ticket); the JSON the Muse app returns is pasted back, validated exactly like a server page, and reviewed and filed the same way (作成 「あなたのMuseアプリ」).
-- A filed page opens on the desk from the shelf (「机で練習する」) or straight after filing. Its English is folded to keyboard characters, its meanings back 「意味を見る」, and Muse's review expressions become candidates in the words list.
-- The lines on the paper are the learner's: after writing a sentence, tap the words you do not understand on the notebook line itself (a later word extends the span); 「調べて線を引く」 asks Muse (`/api/lookup`, `sentence_book_lookup_v1`) for the meaning of exactly that span in that sentence, and the line with its memo is drawn under the written words right away. Every line is kept with the page and in a shared word list (`sentence-book-muse:wordbook:v1`) shown under My Vocabulary. Shadowing and the later stages, and deployment, are not implemented yet.
+## The problem
 
-The owner clarified that standalone `lesson-schema-v2` is unavailable. The new [`sentence_book_page_v1` contract](docs/generation-contract.md) and shared validator define this version’s generation format. They are wired into the live local generation flow as of 2026-10-29 (see PROJECT_STATUS.md for the real calls and browser checks). Deployment and physical-device behavior remain unverified; filing and Copy practice of a generated page were checked in the local browser on 2026-10-29/30. The synthetic local Copy flow is implemented separately.
+Generic lessons teach useful situations, but not necessarily the things you want to say about your own life. Free conversation asks you to produce those expressions before you have practised them. Writing a diary or choosing a new prompt every day adds another task.
 
-## Provenance
+The Sentence Book connects these experiences: your own Muse prepares a lesson from the context available to it, delivers it on a schedule, and the app provides structured practice before you return to conversation.
 
-The author has a separate personal prototype, built and published before the hackathon. This project starts new first-party application code. The concept and design lessons inform this implementation. The initial five-theme scaffold was removed after the owner chose an open-ended shelf. No old application source, lesson corpus, illustrations or saved audio are copied into this repository. The new handwriting runtime uses third-party EMS-derived stroke fonts and selectable Klee One / Zen Kurenaido Japanese fonts, explicitly licensed and credited under SIL OFL 1.1; see public/licenses/. Font data is not claimed as first-party hackathon work.
+## Why Meta: two distinct roles
 
-The supplied rebuild design references a prior lesson schema whose source is unavailable. This project uses the design’s field requirements and a newly authored contract; no legacy schema compatibility is claimed. Commit timestamps are supporting records; they do not by themselves establish originality or rule eligibility. Dependencies and fonts remain third-party work under their own licenses. Do not describe this scaffold as the completed submission.
+**The learner's own Muse supplies personal context and lessons.** With the learner's permission, it can use their conversations and social posts that it can access, read a shared learning-state summary, and deliver a lesson draft to their inbox. The schedule runs in Muse, not in a background timer inside this web app.
+
+**Meta Model API supplies focused help during practice.** The app calls `muse-spark-1.3` through server-side routes for contextual expression meanings and English reconstruction feedback. The provider key stays on the server.
+
+This separation is the point of the project: the personal agent knows the learner's context; the application provides a specific learning experience. Social posting is optional. The app does not independently collect a learner's social-media accounts or automatically publish posts.
+
+A possible longer-term loop is life and posts → personal lessons → expressions the learner can use → new conversations or posts. This is a product hypothesis, not a measured engagement or learning result.
+
+## Try it
+
+1. Open the live **Desk** and try the built-in sample page.
+2. To receive personal lessons, open **Settings**, sign in, create an inbox, and choose what to share with Muse.
+3. Follow the connection instructions: review the shared summary and permissions, ask Muse to connect, create a connection key, and enter it into Muse's secure input.
+4. Ask Muse to deliver lessons at your preferred time. Settings include lesson material, level, explanation language, delivery days and time; the schedule request must be conveyed to Muse.
+5. Open **Inbox**, preview an arriving draft, and decide whether to file it in an existing or new binder. Delivery does not automatically file a page.
+6. Open the filed page from **Folder**, practise on **Desk**, and export a notebook PDF.
+
+Copy-and-paste lesson import remains available in Inbox when a direct connection is unavailable. Your personal Muse account and its available features are required for the personal-agent workflow; the public sample does not require that connection.
+
+## Five stages of practice
+
+1. **Copy:** type the model sentences onto the notebook. The handwriting appears as you type. Tap an expression for its meaning and keep it with a marker line.
+2. **Shadowing:** listen and repeat, with replay and slower speech.
+3. **Dictation:** listen, write what you hear, and compare it with the model.
+4. **Reconstruction:** use the meaning as a cue to write your own English. Meta Model API checks the line and provides a correction or short advice when needed; a valid alternative need not match the model word for word.
+5. **Speaking:** hear a question, answer aloud, and hear the sample answer. The app does not record or score your speech. A copyable request takes the practice back to your own Muse. In the demo, Muse asks aloud, the learner answers by voice, and Muse returns written feedback; this is not a claim of embedded real-time voice conversation.
+
+In-app playback uses the browser's speech synthesis and available voices. It is separate from Muse's voice features.
+
+## A notebook worth keeping
+
+- Three desk themes: Pure White, Natural and Walnut.
+- Four English handwriting faces, two Japanese faces, pens, markers and a timer.
+- Browser-local binders, filed pages, vocabulary and practice records.
+- A measured A5 layout rendered independently on screen and in vector PDF.
+- A5 output or two original-size A5 copies on landscape A4, with front-only, back-only and duplex export.
+- Review backs with meaning prompts and writing space.
+- An optional **filled sample** export for demonstrations. It prints the completed form of a lesson without changing actual practice progress.
+
+Print at 100% and test one sheet first; duplex orientation and paper handling depend on the printer.
+
+## Architecture and data boundaries
+
+- **Frontend:** React, TypeScript and Vite.
+- **Application backend:** Cloudflare Pages Functions.
+- **Model calls:** Meta Model API, with shared Zod contracts, structured output, server validation and browser-side validation.
+- **Personal connection:** authenticated learner accounts, a cloud inbox and an explicitly shared learning-state summary, backed by Supabase.
+- **Agent interface:** lesson guide, shared learning-state read and draft delivery. The demonstrated personal-Muse path uses a scoped connection key. OAuth/MCP support is also implemented for compatible clients; do not assume every client has the same connection flow.
+- **Abuse controls:** same-origin/canonical-origin checks and D1-backed usage counters for model routes.
+
+Local practice and filed books are not a fully synchronized cloud library. A shared learning summary and cloud inbox are distinct from the browser's complete local records. The learner controls sharing and filing.
+
+Connection keys are scoped, revocable and expire after 30 days. Only their hashes are stored server-side. Never include a live key, session token or private lesson in an issue, screenshot or submission.
+
+### Model access
+
+The current practice routes `/api/lookup` and `/api/review` do **not** require the old shared invitation code. They retain origin checks, validation and usage limits.
+
+Current limits (per hashed client address per minute / per day / shared per day):
+
+- Expression lookup: **20 / 150 / 3,000**
+- Reconstruction review: **10 / 80 / 1,500**
+
+The earlier `/api/generate` route remains invitation-gated, with limits **3 / 20 / 300**. It is not the current personal-Muse lesson workflow or a visible lesson-generation entry point. Limits count attempts, not dollars; missing usage-counter configuration or store failures stop model requests.
+
+## Current release and verification
+
+As recorded on **2026-11-02**, the latest release entry is main commit `9287e9f` / deployment `5ade9c52` (PR #13). It includes the filled-sample PDF option, the earlier erase-marker feature, and Japanese/English selection for connection and settings screens. Desk, Inbox and Folder are not fully translated into English.
+
+[PROJECT_STATUS.md](PROJECT_STATUS.md) records:
+- Owner-reported daily Muse delivery at 07:00 and filing of delivered pages.
+- Production checks of expression/reconstruction features and real-model reconstruction feedback.
+- 238 passing tests and a successful TypeScript/Vite build for the latest release, plus synthetic PDF checks and a production check of the new print option.
+
+These are dated development and owner reports, not a new independent end-to-end audit or a guarantee across all devices. The separate Reconstruction-back printing branch is not merged and is not included in this release. Browser-local storage, browser voice availability and printer-specific behavior remain relevant limitations.
 
 ## Local development
 
-Use Node.js 22.12+ (CI uses Node 24).
+Use **Node.js 22.12 or later** (CI uses Node 24).
 
 ```sh
 npm ci
@@ -47,7 +107,9 @@ npm run types
 npm run dev
 ```
 
-The browser app uses `http://127.0.0.1:5307`. This is a separate origin from the prior app. The earlier flow uses `sentence-book-muse:composer:v1` and `sentence-book-muse:interests:v1`. The desk adds `sentence-book-muse:desk-display:v1` and `sentence-book-muse:sample-copy:v1`; it does not read or migrate the prior application’s data. Existing topic notes are preserved when interests are added or changed.
+The frontend runs at `http://127.0.0.1:5307`. This command does not start the Pages Functions.
+
+For the full local Pages build:
 
 ```sh
 npm test
@@ -56,48 +118,31 @@ npm run pages:build
 npm run pages:dev
 ```
 
-The last command serves `dist` and the Functions on `http://127.0.0.1:8797`. `npm run dev` serves the frontend only. The generate route still returns 503 with or without credentials.
+Pages development uses port `8797`. Configure the exact local origin in `ACCESS_ORIGIN`. Copy `.dev.vars.example` to a gitignored `.dev.vars` and supply the server-side values required by the features you are testing. Use a separate QA backend for account/inbox tests; do not point destructive fixtures at production.
 
-## Deployment
+- `META_MODEL_API_KEY`: server-side model credential.
+- `MODEL_API_BASE_URL` / `MODEL_ID`: provider configuration; current defaults are Meta Model API and `muse-spark-1.3`.
+- `RATE_SALT` and the `RATE_LIMIT` D1 binding: usage counters.
+- `SUPABASE_SECRET_KEY`: server-only account/inbox backend credential; configure corresponding project settings separately.
+- `INVITE_CODE_SHA256` / `SESSION_SECRET`: retained invitation-gated generation route.
 
-Public site: https://sentence-book-muse.pages.dev (Cloudflare Pages project `sentence-book-muse`, production branch `main`). Deploys are manual for now:
+Never put model or backend secret keys in `VITE_*` variables, frontend assets or Git. The example file contains historical invitation wording; the route distinction above describes current behavior.
 
-```bash
-npm run build && npx wrangler pages deploy dist --project-name sentence-book-muse --branch main
+Deployment is manual and separate from testing:
+
+```sh
+npm run build
+npx wrangler pages deploy dist --project-name sentence-book-muse --branch main
 ```
 
-`META_MODEL_API_KEY` is an encrypted Pages secret (`wrangler pages secret put META_MODEL_API_KEY --project-name sentence-book-muse`, value piped from the ignored `.dev.vars`); a secret set after a deployment applies from the next deployment. `MODEL_API_BASE_URL` and `MODEL_ID` are plain vars in `wrangler.jsonc`. Usage caps: `/api/generate` 3 per minute, 20 per day per client address and 300 per day in total; `/api/lookup` 20 / 150 / 3,000. Counts live in the D1 database `sentence-book-muse-limits` (binding `RATE_LIMIT` in `wrangler.jsonc`; created with `wrangler d1 create`, no migration needed) and addresses are hashed with the `RATE_SALT` secret. Over the cap the route answers 429 `rate_limited` with `Retry-After`; without the binding or on a counter-store error it answers 503. Generation retries consume another slot; these are attempt limits, not a dollar budget.
+Deploy only the intended reviewed commit and verify the resulting release. Keep the separate pre-hackathon prototype and its storage/deployment untouched.
 
-## Invitation-only model access
+## Provenance and licenses
 
-Generation and expression lookup require a shared invitation code. The app checks a signed, expiring HttpOnly cookie on every paid request; viewing, practice and local imports remain public. Code entry is inline on `/setup` and beside a selected phrase on the desk. See [invitation setup, rotation and old-deployment cleanup](docs/invitation-access.md). No invitation or model secret is bundled into frontend assets.
+The author has a separate personal prototype built before the hackathon. This repository is a new first-party application implementation informed by that concept and design experience. No old application source, lesson corpus, illustrations or saved audio are copied into this repository.
 
-## Local verification
+The project defines a new `sentence_book_page_v1` contract; it does not claim compatibility with the unavailable prior lesson schema. Third-party dependencies and fonts remain third-party work, not newly authored hackathon assets.
 
-For the current typing interaction, run `QA_ORIGIN=http://127.0.0.1:5327 node scripts/qa-live-ink.mjs` against a dedicated Vite dev server. It checks live stroke progression, editing/Undo, composition fallback, restore, four English faces and mobile Enter behavior; evidence is in `.impeccable/review/live-input/`.
+The handwriting runtime uses EMS-derived stroke fonts and Klee One / Zen Kurenaido Japanese fonts, with SIL OFL 1.1 notices and attribution. See [font provenance](public/fonts/README.md), [licenses](public/licenses/) and [the generation contract](docs/generation-contract.md). Commit dates alone are not proof of competition eligibility.
 
-Run `npm test` and `npm run build`. With a dedicated Vite development origin, `QA_ORIGIN=http://127.0.0.1:5327 npm run qa:desk` checks the local Copy flow, persistence/failure handling, 18 theme/color pairs, font advances, desktop/mobile layouts, timer and actual PDF downloads in disposable Chrome contexts. `QA_ORIGIN=http://127.0.0.1:5327 node scripts/qa-desk-review.mjs` checks reachable mobile Enter behavior/caret scrolling, personal editing and animation resume. Neither script touches the user's preview storage. Current evidence is in `.impeccable/review/desk/`; exported fixtures are `output/pdf/desk-a5-completed.pdf` and `output/pdf/desk-a5-on-a4-blank.pdf`.
-
-`npm run qa:a5` targets the retained `/handwriting` prototype; `qa:handwriting` and `qa:print` alias it and need not all be repeated. For the interest flow, use a separate `npm run pages:dev` origin and `node scripts/qa-scaffold.mjs`. Synthetic IME events are not real OS/mobile-keyboard verification. Physical devices, audio and printed output require separate checks.
-
-Current Enter-flow QA: `node scripts/qa-enter-flow.mjs` checks atomic advancement, focus, legacy confirmed records, failure guards and the five learning index tabs. Run against the dedicated development origin5327; evidence is in `.impeccable/review/enter-flow/`. The earlier desk/PDF captures remain dated evidence.
-
-## Next implementation steps
-
-1. Done 2026-10-29: request, prompt, structured output and validation on both sides are connected; `muse-spark-1.3` confirmed. For local Functions, copy `.dev.vars.example` to the ignored `.dev.vars`. `MODEL_API_BASE_URL`/`MODEL_ID` can point the same code at another OpenAI-compatible host (for example OpenRouter `meta/muse-spark-1.3`).
-2. Done 2026-10-29 (late) and 2026-10-30: explicit filing approval, binders with stable IDs, duplicate-draft rejection, multi-page persistence, and the desk's Copy flow opening filed pages with per-page progress.
-3. Done 2026-10-30: invitation checks, D1 attempt caps and fail-closed errors protect the model routes. Provider-side monetary budgets and semantic quality checks remain separate work.
-4. Deploy to the separate `sentence-book-muse` project with its encrypted model and invitation secrets. After verifying production, retire obsolete deployment URLs. Do not replace the existing personal prototype.
-
-Personal accounts, account sync, OAuth/MCP, the old curriculum, saved audio, the full five-pass course and the prior Notebook/Cards are outside this version's scope.
-
-## References
-
-- [Cloudflare Pages Functions secrets](https://developers.cloudflare.com/pages/functions/bindings/#secrets)
-- [Pages Functions TypeScript](https://developers.cloudflare.com/pages/functions/typescript/)
-- [Pages Functions configuration](https://developers.cloudflare.com/pages/functions/wrangler-configuration/)
-- [Meta Model API quickstart](https://dev.meta.ai/docs/quickstart)
-
-See `PROJECT_STATUS.md` for performed checks and `docs/decisions.md` for the current scope.
-
-2026-10-27 interaction refinement: English-only learning index tabs color only the current step. Enter checks/saves/advances without Next buttons; Option+R (Mac) / Alt+R (Windows) reads the current model. Dedicated CUA checks and the 78-test suite are recorded in `PROJECT_STATUS.md`; older browser scripts were adapted, not rerun in this increment.
+Older design documents and chronological status entries may describe superseded plans. For the present submission, use this README together with the newest release entries in [PROJECT_STATUS.md](PROJECT_STATUS.md).
