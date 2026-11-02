@@ -1,5 +1,5 @@
 import {describe,it,expect,vi} from 'vitest';
-import {emptyCopy,confirmCopy,nextCopy,submitCopy,validCopy,defaultDisplay,idleTimer,timerAt,toggleTimer,readSaved,practiceSchema,saveRecord} from '../src/desk/core';
+import {emptyCopy,completedCopy,confirmCopy,nextCopy,submitCopy,validCopy,defaultDisplay,idleTimer,timerAt,toggleTimer,readSaved,practiceSchema,saveRecord} from '../src/desk/core';
 import {deskLayout,confirmedLayout,inputPosition,wordHits} from '../src/desk/note';
 import {studySample} from '../src/handwriting/study-content';
 
@@ -60,6 +60,19 @@ describe('notebook Copy record',()=>{
   expect(hits[0].y).toBeCloseTo(39.2-4.1);
   const stale={...state,lookups:[{...line,expression:'wrote DOWN'}]};
   expect(deskLayout(studySample,stale,defaultDisplay).source).toEqual(deskLayout(studySample,emptyCopy(studySample),defaultDisplay).source);
+ });
+ it('prints a filled sample from any record without changing the record',()=>{
+  const line={id:'l1',sentenceId:studySample.sentences[0].id,start:0,end:4,expression:'Make',native:'作る',note:null,lookedUpAt:'now'};
+  const partial={...nextCopy(confirmCopy({...emptyCopy(studySample),draft:studySample.sentences[0].text},studySample,'now'),studySample),lookups:[line],checks:{[studySample.vocabulary[0].id]:true}};
+  const filled=completedCopy(partial,studySample,'later');
+  expect(validCopy(filled,studySample)).toBe(true);expect(filled.phase).toBe('complete');expect(filled.entries).toHaveLength(studySample.sentences.length);
+  expect(filled.lookups).toEqual(partial.lookups);expect(filled.checks).toEqual(partial.checks);
+  expect(partial.entries).toHaveLength(1);expect(partial.phase).toBe('editing');
+  const plan=deskLayout(studySample,filled,defaultDisplay),shown=confirmedLayout(plan,filled,defaultDisplay);
+  const ids=new Set(studySample.sentences.map(s=>s.id));
+  for(const id of ids)expect(shown.pages.some(p=>p.runs.some(r=>r.sourceId===id))).toBe(true);
+  expect(JSON.stringify(confirmedLayout(plan,partial,defaultDisplay).pages)).not.toContain(studySample.sentences[7].id);
+  expect(defaultDisplay.printFilled).toBe(false);
  });
  it('protects unreadable stored data and does not claim a failed save',()=>{
   const setItem=vi.fn();vi.stubGlobal('localStorage',{getItem:()=>'{invalid',setItem});
