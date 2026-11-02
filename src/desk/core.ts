@@ -12,9 +12,11 @@ export const displaySchema=z.object({
  english:z.enum(['readability','tech','print','pen']),japanese:z.enum(['klee','zen']),
  memos:z.enum(['shown','blank']),markers:z.boolean(),vocabulary:z.boolean(),grammar:z.boolean(),
  content:z.enum(['study-notes','sentences-only']),sheet:z.enum(['A5','A4']),side:z.enum(['left','right']),binding:z.union([z.literal(12),z.literal(18),z.literal(24)]),printMarkers:z.boolean().nullable(),
+ // Print every sentence as written, for a sample note; the practice record itself is left as it is.
+ printFilled:z.boolean().default(false),
 });
 export type DeskDisplay=z.infer<typeof displaySchema>;
-export const defaultDisplay:DeskDisplay={version:1,theme:'pure-white',marker:'blue',timerVisible:true,timerMinutes:25,voice:'auto',speechRate:1,english:'readability',japanese:'klee',memos:'shown',markers:true,vocabulary:true,grammar:true,content:'study-notes',sheet:'A5',side:'left',binding:18,printMarkers:null};
+export const defaultDisplay:DeskDisplay={version:1,theme:'pure-white',marker:'blue',timerVisible:true,timerMinutes:25,voice:'auto',speechRate:1,english:'readability',japanese:'klee',memos:'shown',markers:true,vocabulary:true,grammar:true,content:'study-notes',sheet:'A5',side:'left',binding:18,printMarkers:null,printFilled:false};
 // A line the learner drew under an expression they looked up; offsets are code points in the sentence.
 export const lookupEntrySchema=z.object({id:z.string().min(1),sentenceId:z.string().min(1),start:z.number().int().nonnegative(),end:z.number().int().positive(),expression:z.string().min(1).max(120),native:z.string().min(1).max(120),note:z.string().max(200).nullable(),lookedUpAt:z.string()}).refine(v=>v.end>v.start,'A line covers at least one character');
 export type LookupEntry=z.infer<typeof lookupEntrySchema>;
@@ -47,6 +49,10 @@ export function confirmCopy(record:CopyRecord,lesson:StudyContent,now:string):Co
 export function nextCopy(record:CopyRecord,lesson:StudyContent):CopyRecord {
  if(record.phase!=='confirmed')return record;
  return record.index===lesson.sentences.length-1?{...record,phase:'complete'}:{...record,index:record.index+1,phase:'editing',draft:''};
+}
+/** The record as it would be once every line is copied: for printing a sample without writing it. Checks, lines and the personal note stay. */
+export function completedCopy(record:CopyRecord,lesson:StudyContent,now:string):CopyRecord {
+ return {...record,index:lesson.sentences.length-1,phase:'complete',draft:'',entries:lesson.sentences.map(s=>({sentenceId:s.id,text:s.text,confirmedAt:now}))};
 }
 /** One user action checks, records and opens the next line; legacy confirmed records stay resumable. */
 export function submitCopy(record:CopyRecord,lesson:StudyContent,now:string):CopyRecord {
