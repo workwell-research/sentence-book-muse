@@ -9,7 +9,7 @@ It is a language-learning app and a working example of a broader idea: a persona
 Built for the **2026 Meta Global AI Developer Hackathon**.
 
 - **Live app:** https://sentence-book-muse.pages.dev
-- **3-minute demo:** https://youtu.be/dnnXryEMOBs
+- **3-minute demo:** https://youtu.be/P3pbuOrL3ZQ
 - **English connection/settings screen:** https://sentence-book-muse.pages.dev/settings?lang=en
 - **Implementation and verification history:** [PROJECT_STATUS.md](PROJECT_STATUS.md)
 
