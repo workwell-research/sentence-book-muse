@@ -4,7 +4,7 @@ A new implementation for the 2026 Meta Global AI Developer Hackathon. Turn somet
 
 ## What it is (as of 2026-11-04)
 
-The learner's own Muse writes a short English page about what they want to say; the learner files it into a binder, practises it one sentence at a time on an A5 desk, and prints it as a real notebook page. Everything the learner writes stays in their browser; Muse sees only the summary they chose to share.
+The learner's own Muse writes a short English page about what they want to say; the learner files it into a binder, practises it one sentence at a time on an A5 desk, and prints it as a real notebook page. Practice records, books and drawn lines are stored only in the learner's browser. A sentence leaves it only when the learner asks for something: a Reconstruction line sent for review, or a tapped span sent for its meaning, each forwarded to the model and not stored on the server. Muse sees only the summary the learner chose to share.
 
 Public site: https://sentence-book-muse.pages.dev — four destinations with one header: 机 `/` (desk), 本棚 `/shelf` (folder of approved books), 受信箱 `/inbox` (pages delivered by Muse or pasted in), 設定 `/settings` (Muse connection, lesson settings, display language). Progress and verification records are in [PROJECT_STATUS.md](PROJECT_STATUS.md).
 
